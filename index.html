@@ -1,4 +1,390 @@
-<h1>
-  Under construction. 
-  <!-- More to be added soon. -->
-</h1>
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Kyler Siegel's homepage</title>
+
+<style>
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+h3 {
+    font-size: 25px;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: normal;
+    margin:0;
+    padding:0;
+}
+
+p {
+    font-size: 20px;
+}
+</style>
+
+	<style>
+	* {
+	    box-sizing: border-box;
+	}
+
+	/* Create two unequal columns that floats next to each other */
+	.column {
+	    float: left;
+	    padding: 10px;
+	    height: 300px; /* Should be removed. Only for demonstration */
+	}
+
+	.left {
+	  width: 70%;
+	}
+
+	.right {
+	  width: 30%;
+	}
+
+	/* Clear floats after the columns */
+	.row:after {
+	    content: "";
+	    display: table;
+	    clear: both;
+	}
+	</style>
+
+	<style type="text/css">
+	 .row { vertical-align: top; height:auto !important; }
+	 .list {display:none; }
+	 .show {display: none; }
+	 .hide:target + .show {display: inline; }
+	 .hide:target {display: none; }
+	 .hide:target ~ .list {display:inline; }
+	 @media print { .hide, .show { display: none; } }
+	 </style>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+</head>
+
+<body>
+
+
+
+	<h1> Kyler Siegel's homepage </h1>
+
+
+
+
+<div class="row">
+  <div class="column left">
+
+
+	<a href="https://www.flickr.com/photos/manduitalia/"><img src="portrait2.jpg" style="width:200px;height:242px;"></a>
+	<a href="https://www.flickr.com/photos/manduitalia/"><img src="selfportrait.png" style="width:200px;height:242px;"></a>
+
+	<h2> About me.	</h2> 
+	<p>
+		As of November 2020, I'm an assistant professor in the mathematics department at the University of Southern California. Previously, I was a Ritt Assisant Professor in the mathematics department at Columbia University. Before that I was an NSF postdoctoral research fellow and pure mathematics instructor at Columbia during 2017-2019 and at MIT during 2016-2017. 
+	</p>
+
+	<h2> Research interests.	</h2> 
+	<p>
+		I work in symplectic geometry, a branch of mathematics lying somewhere at the intersection of smooth topology, differential geometry, algebraic geometry, and mathematical physics.
+		I like to study the complicated algebraic gadgets arising in Floer theory and symplectic field theory and apply them to classification problems in symplectic geometry or try to say new things about Hamiltonian dynamical systems.
+		These invariants also have some rather intruiging connections to things like string theory and algebraic geometry, which means there are lots of surprises in store. 
+	</p>
+
+	<h2> Contact. </h2>
+	<ul>	
+		<li><h4><b> Email: </b> kyler.siegel@usc.edu or kylersiegel@gmail.com.</h4></li>
+
+		<li><h4><b> Office: </b> currently N/A due to <a href="covid19.html">Covid-19</a>.</h4>  </li>
+	</ul>
+
+	<h2> Recent math papers. </h2>
+	<ul>
+
+		<h4><li><em> Computing higher symplectic capacities II.</em> In preparation. 
+				<div class="row">
+		<a href="#hidechscII" class="hide" id="hidechscII">Description.</a>
+		<a href="#showchscII" class="show" id="showchscII">Description:</a>
+		<div class="list">
+		We compute the filtered L-infinity algebra corresponding cobordism maps associated to convex toric domains of any dimension. By introducing a "fully rounding" operation, we use to a deformation argument to reduce to the case of polydisks, where we explicitly enumerate pseudoholomorphic curves.
+		Our main statement can also be interpreted in terms of tropical geometry and gives a quantitative version of closed string mirror symmetry for this class of examples.	
+		</div>
+		</div>
+		</h4>
+
+
+		<h4><li><em> On the embedding complexity of Liouville manifolds,</em> with Sheel Ganatra. In preparation. 
+				<div class="row">
+		<a href="#hideLC" class="hide" id="hideLC">Description.</a>
+		<a href="#showLC" class="show" id="showLC">Description:</a>
+		<div class="list">
+		We define a family  of symplectic invariants which obstruct exact symplectic embeddings between Liouville manifolds, using the general formalism of linearized contact homology and its $\mathcal{L}_\infty$ structure. As our primary application, we investigate embeddings between normal crossing divisor complements in complex projective space, giving a complete characterization in many cases. 
+Our main embedding results are deduced explicitly from pseudoholomorphic curves, without appealing to Hamiltonian or virtual perturbations.	
+		</div>
+		</div>
+		</h4>
+
+
+		<h4><li><em> Computing higher symplectic capacities I</em>,
+		<a href="https://arxiv.org/abs/1911.06466"> arXiv:1911.06466</a>. To appear in <em>International Mathematics Research Notices.</em>   <a href="chsc_v2.py" download>Python code</a> (updated 3/27/20).
+				<div class="row">
+		<a href="#hidechscI" class="hide" id="hidechscI">Abstract.</a>
+		<a href="#showchscI" class="show" id="showchscI">Abstract:</a>
+		<div class="list">
+	We present recursive formulas which compute the recently defined higher symplectic capacities for all convex toric domains. 
+In the special case of four-dimensional ellipsoids, we apply homological perturbation theory to the associated filtered L-infinity algebras and we prove that the resulting structure coefficients count punctured pseudoholomorphic curves in cobordisms between ellipsoids. 
+As sample applications, we produce new previously inaccessible obstructions for the stabilized ellipsoid problem and for stabilized polydisk embeddings, and we give new counts of curves with tangency constraints. 	
+		</div>
+		</div>
+		</h4>
+
+		</li> 
+
+		<h4><li><em> Curve counting in symplectic ellipsoids,</em> with Dusa McDuff. In preparation.
+		</h4>
+		</li> 
+
+		<h4><li><em> Counting curves with local tangency constraints</em>, with Dusa McDuff, <a href="https://arxiv.org/abs/1906.02394"> arXiv:1906.02394</a>. Submitted. <a href="tangency_recursion.py" download>Python code.</a>
+		<div class="row">
+		<a href="#hidetan" class="hide" id="hidetan">Abstract.</a>
+		<a href="#showtan" class="show" id="showtan">Abstract:</a>
+		<div class="list">
+		We construct invariants of any semipositive symplectic manifold which count rational curves satisfying multibranched tangency constraints to a local divisor. We also construct analogous invariants counting punctured curves with negative ends on a small skinny ellipsoid, and we prove that these counts coincide at least in dimension four. We then give a formula describing how tangency constraints arise as point constraints are pushed together, and we use this to recursively compute all invariants in dimension four in terms of Gromov-Witten invariants of blowups.
+		</div>
+		</div>
+		</h4>
+		</li> 
+
+		<h4><li><em> Higher symplectic capacities and the stabilized ellipsoid into polydisk problem</em>, with Dan Cristofaro-Gardiner, available <a href="stab_ell_poly.pdf">here</a>. 
+		<div class="row">
+		<a href="#hidestab" class="hide" id="hidestab">Abstract.</a>
+		<a href="#showstab" class="show" id="showstab">Abstract:</a>
+		<div class="list">
+		In this note we give a brief survey of the capacities defined in the paper below. We then apply them to the stabilized embedding problem of ellipsoids into polydisks and show that they prove a conjecture of Cristofaro-Gardiner, Frenkel, and Schlenk.
+		</div>
+		</div>
+		</h4>
+		</li> 
+
+
+
+
+
+		<h4><li><em> Higher symplectic capacities</em>, <a href="https://arxiv.org/abs/1902.01490"> arXiv:1902.01490</a>. Submitted.
+		<div class="row">
+		<a href="#hidehsc" class="hide" id="hidehsc">Abstract.</a>
+		<a href="#showhsc" class="show" id="showhsc">Abstract:</a>
+		<div class="list">
+		We construct a new family of symplectic capacities indexed by certain symmetric polynomials, defined using rational symplectic field theory. We prove various structural properties of the capacities and discuss the connections with the equivariant L-infinity structure on symplectic cohomology and curve counts with tangency conditions. We also give some preliminary computations in basic examples and show that they give new state of the art symplectic embedding obstructions.
+		</div>
+		</div>
+		</h4>
+		</li> 
+
+		<h4><li><em> Squared Dehn twists and deformed symplectic invariants</em>, <a href="https://arxiv.org/abs/1609.08545">arXiv:1609.08545</a>. Submitted.
+		<div class="row">
+		<a href="#hide1" class="hide" id="hide1">Abstract.</a>
+		<a href="#show1" class="show" id="show1">Abstract:</a>
+		<div class="list">
+		We establish an infinitesimal version of fragility for squared Dehn twists around even dimensional Lagrangian spheres. The precise formulation involves twisting the Fukaya category by a closed two-form or bulk deforming it by a half-dimensional cycle. As our main application, we compute the twisted and bulk deformed symplectic cohomology of the subflexible Weinstein manifolds constructed in \cite{murphysiegel}.
+		</div>
+		</div>
+		</h4>
+		</li> 
+		
+
+		<h4><li><em> Subflexible symplectic manifolds</em>, with Emmy Murphy, <a href="https://msp.org/gt/2018/22-4/gt-v22-n4-p11-p.pdf"> Geometry & Topology, 22(4), 2367-2401 (2018)</a></em>, <a href="https://arxiv.org/abs/1510.01867">arXiv:1510.01867</a>.
+		<div class="row">
+		<a href="#hide2" class="hide" id="hide2">Abstract.</a>
+		<a href="#show2" class="show" id="show2">Abstract:</a>
+		<div class="list">
+		We introduce a class of Weinstein domains which are sublevel sets of flexible Weinstein manifolds but are not themselves flexible. These manifolds exhibit rather subtle behavior with respect to both holomorphic curve invariants and symplectic flexibility. We construct a large class of examples and prove that every flexible Weinstein manifold can be Weinstein homotoped to have a nonflexible sublevel set.
+		</div>
+		</div>
+		</li>
+		</h4>
+
+		<h4><li><em>Rationally convex domains and singular Lagrangian surfaces in C<sup>2</sup></em>, with Stefan Nemirovski, <a href="https://link.springer.com/article/10.1007%2Fs00222-015-0598-4"> Inventiones mathematicae, Vol. 203, No. 1 (2016)</a></em>, <a href="https://arxiv.org/abs/1410.4652">arxiv:1410.4652</a>
+		<div class="row">
+		<a href="#hide3" class="hide" id="hide3">Abstract.</a>
+		<a href="#show3" class="show" id="show3">Abstract:</a>
+		<div class="list">
+		We give a complete characterization of those disk bundles over surfaces which embed as rationally convex strictly pseudoconvex domains in C^2. We recall some classical obstructions and prove some deeper ones related to symplectic and contact topology. We explain the close connection to Lagrangian surfaces with isolated singularities and develop techniques for constructing such surfaces. Our proof also gives a complete characterization of Lagrangian surfaces with open Whitney umbrellas, answering a question first posed by Givental in 1986.
+		</div>
+		</div>
+		</li>		
+	</h4>
+	</ul>
+
+	
+
+	<h2> Some older papers. </h2>
+
+	<ul>
+		<h4><li> 
+		My PhD thesis is available <a href="https://searchworks.stanford.edu/view/11849312">here</a>. Note: this is essentially subsumed by the above three papers, which are also slightly more up-to-date.
+	</li>
+	</h4>
+
+		<h4><li><em> A Geometric proof of a faithful linear-categorial surface mapping class group action</em> (Columbia senior thesis), <a href="https://arxiv.org/abs/1108.3676"> arXiv:1108.367v1</a>.
+		<div class="row">
+		<a href="#hide4" class="hide" id="hide4">Abstract.</a>
+		<a href="#show4" class="show" id="show4">Abstract:</a>
+		<div class="list">
+		We give completely combinatorial proofs of the main results of [3] using polygons. Namely, we prove that the mapping class group of a surface with boundary acts faithfully on a finitely-generated linear category. Along the way we prove some foundational results regarding the relevant objects from bordered Heegaard Floer homology.
+		</div>
+		</div>
+		</li>
+	</h4>
+
+
+
+		<h4><li><em> Stick index of knots and links in the cubic lattice</em>, with Colin Adams, Michelle Chu, Thomas Crawford, Stephanie Jensen, and Liyang Zhang, <a href="http://www.worldscientific.com/doi/abs/10.1142/S0218216511009935">Journal of Knot Theory and its Ramifications, Vol. 21, No. 5 (2012)</a>, <a href="https://arxiv.org/abs/1205.5256">arxiv:1205.5256</a>.	
+		<div class="row">
+		<a href="#hide5" class="hide" id="hide5">Abstract.</a>
+		<a href="#show5" class="show" id="show5">Abstract:</a>
+		<div class="list">
+		The cubic lattice stick index of a knot type is the least number of sticks necessary to construct the knot type in the 3-dimensional cubic lattice. We present the cubic lattice stick index of various knots and links, including all (p, p + 1)-torus knots, and show how composing and taking satellites can be used to obtain the cubic lattice stick index for a relatively large infinite class of knots. We present several bounds relating cubic lattice stick index to other known invariants. Finally, we define and consider lattice torsion index.
+		</div>
+		</div></li>
+	</h4>
+
+		<h4><li><em>Applying Poincare's polyhedron theorem to groups of hyperbolic isometries</em>, <a href="Poincare.pdf">preprint</a> (Columbia junior thesis).
+		<div class="row">
+		<a href="#hide6" class="hide" id="hide6">Abstract.</a>
+		<a href="#show6" class="show" id="show6">Abstract:</a>
+		<div class="list">
+		We present a computer algorithm which confirms that an approximately discete subgroup of PSL(2,C) is in fact discrete. The algorithm proceeds by constructing the Dirichlet domain of the subgroup in H<sup>3</sup> , and then checks that the hypotheses of Poincares Theorem for Fundametal Polyhedra are satisfied. In order to check that the hypotheses are exactly satisfied, we rely on group theoretical properties resulting from certain geometric conditions of the Dirichlet domain. We begin in Section 1 with a review of relevant background material. In Section 2 we provide a formal statement of the problem, including the restrictions we impose upon the subgroup of PSL(2,C). In Section 3 we introduce the geometric conditions which must apply for our algorithm to hold, and we prove that these are generically satisfied. We then show in Section 4 that these conditions are in fact sufficient to verify the hypotheses of Poincare's Theorem. In Section 5 we look at the field containing our matrix entries.
+		</div>
+		</div>
+		</li>
+	</h4>
+
+	</ul>
+
+<h2> Other projects. </h2>
+
+	<ul> 
+
+		<h4><li>
+
+
+
+
+
+<div class="row">
+		<a href="#hidesem" class="hide" id="hidesem">Symplectic embedding machine.</a>
+		<a href="#showsem" class="show" id="showsem">Symplectic embedding machine:</a>
+		<div class="list">
+	In these videos, we use computer optimization techniques to find a Hamiltonian flow which squeezes the four-dimensional ellipsoid E(1,5) into the four-ball of smallest possible area. Using pseudoholomorphic curve invariants, one can prove that the smallest possible ball has area 5/2. The numerical embedding found here is close to the theoretical optimal. The left video depicts (in the moment map projection) the final flow as a function of training time. The center video depicts the best Hamiltonian flow found in the moment map projection, while the right video is a 3D projection. See <a href="Squeeze.zip">here</a> for some code (in Tensorflow).
+
+	<br><br>
+
+	For an in depth study of this approach to symplectic embeddings, see the <a href="http://www-personal.umich.edu/~singhnav/Optimization_on_Symplectic_Embeddings.pdf">work</a> of my <a href="http://www.math.columbia.edu/programs-math/undergraduate-program/summer-undergraduate-research/">summer 2019 REU students</a> Alex Gajewski, Eli Goldin, Jakwanul Safin, Navtej Singh and Junhui Zhang (coadvised by Simon Rezchikov, with special thanks to Thibault Langlais).
+		</div>
+		</div>
+
+<!-- 	<video width="320" height="240" controls>
+  <source src="training.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<video width="320" height="240" controls>
+  <source src="trajectory.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<video width="320" height="240" controls>
+  <source src="trajectory3d.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video> -->
+	<video width="300" controls>
+  <source src="training.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<video width="300" controls>
+  <source src="trajectory.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+<video width="300" controls>
+  <source src="trajectory3d.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+	</h4>
+
+
+
+		<h4><li><em>Numerical computations of symplectic capacities</em>. Code available <a href="https://github.com/kylersiegel/SymplecticCapacities">here</a> (based on a workshop hosted by 
+			Tel Aviv University and ICERM (see <a href="http://www.math.tau.ac.il/~ostrover/Workshop/CST/Workshop-CST.html">here</a> and <a href="https://icerm.brown.edu/international_programs/archive.php">here</a>).
+		</li>	
+	</h4>
+			
+		<h4><li><em>A Novel Unsupervised Clustering Algorithm for Binning DNA Fragments in Metagenomics</em>, with Kristen Altenburger, Yusing Hon, Jessey Lin, and Chenglong Yu, <a href="http://www.ingentaconnect.com/content/ben/cbio/2015/00000010/00000002/art00012"> Current Bioinformatics, Vol. 10, No. 2 (2015)</a>. Code available <a href="https://github.com/kylersiegel/PuzzleCluster">here</a>.
+		<div class="row">
+		<a href="#hidepc" class="hide" id="hidepc">Abstract.</a>
+		<a href="#showpc" class="show" id="showpc">Abstract:</a>
+		<div class="list">
+		As metagenomic projects gather large quantities of genomic data from novel microbial species, there is a great need for improved computational tools to sort and understand such data. An important part is the ``binning problem'', namely to determine the number of species present in a sample and to sort DNA fragments by species of origin.
+
+		We present PuzzleCluster, a new clustering algorithm for unsupervised binning in metagenomics. Besides implementing a new clustering approach, PuzzleCluster introduces several other new features, such as using word agreement information for increased clustering accuracy, and estimating clustering parameters by fitting data with the expectation maximization algorithm. PuzzleCluster uses no prior assumptions about the genetic makeup or number of species present. Our tests show that PuzzleCluster frequently outperforms the best existing unsupervised binning programs.
+		</div>
+		</div>
+		</li>	
+	</ul>
+</h4>
+
+	
+	<h2> Teaching </h2>
+
+	<ul> 
+		<li><h4>
+		Fall 2020: <a href="http://kylersiegel.xyz/425a">Fundamental concepts of analysis</a>.
+		</h4></li>
+
+		<li><h4>
+		Some past courses: <a href="http://math.columbia.edu/~kyler/ODE.html">Ordinary differential equations</a>, <a href="http://math.columbia.edu/~kyler/MA1.html">Introduction to Modern Algebra I</a>.
+		</h4></li>
+	</ul>
+
+
+
+	<!-- <h2> Some <a href="notes.html"> notes</a>. </h2> -->
+
+	<h2> Conferences and seminars </h2>
+	<ul>
+		<h4><li>Western hemisphere virtual symplectic <a href="https://sites.google.com/view/virtual-symplectic-geometer">seminar</a>.</h4>
+
+
+		<h4><li> <a href="https://kylerec.wordpress.com">Kylerec</a> workshop in symplectic topology. <a href="http://math.mit.edu/~kyler/workshop/main.html">2016 version</a>.</li></h4>
+
+
+	</ul>
+
+  </div>
+  <div class="column right">
+<img src="curves.png" style="width:110%;height:730%;">
+<!-- <img src="testback2.png" style="width:100%;height:100%;">
+<img src="testback2.png" style="width:100%;height:100%;">
+<img src="testback2.png" style="width:100%;height:100%;">
+<img src="testback2.png" style="width:100%;height:100%;">
+<img src="testback2.png" style="width:100%;height:100%;"> -->
+  </div>
+</div>
+
+
+</body>
+
+</html>
