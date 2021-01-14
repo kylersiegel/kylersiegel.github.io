@@ -1,0 +1,596 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 535a: Differential Geometry</title>
+
+  	<style type="text/css">
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </head>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+
+
+  	<h1> Math 535a: Differential Geometry <br>
+    USC Spring 2021  <br>
+
+</h1>
+
+
+<h2>
+  	Instructor: Kyler Siegel (kyler.siegel@usc.edu)  <br>
+
+    Lectures: 11:00 - 11:50am (LA time), Mondays, Wednesdays, and Fridays via Zoom <br>
+
+
+  	</h2>
+
+          <img src="535a/image1.jpg" width="750"/><br>
+
+
+  	<h2> Teaching assistant: Mark Ebert (markeber@usc.edu) <br>
+
+
+  	<h2> About.	</h2> 
+  	<p>
+    This course is an introduction to smooth manifolds. Roughly speaking, these are spaces which look locally like Euclidean space, but may have nontrivial global structure. The smooth structure allows us make sense of notions such as derivatives of maps, tangent vectors, embeddings, etc in this abstract setting. Although the basic definitions will appear at first glance somewhat abstruse, once set up properly the theory of smooth manifolds is remarkably rich, and plays a fundamental role in modern geometry.
+  	</p>
+
+  	<h2> Prerequisites. </h2>
+  	<p>
+     We will assume familiarity with
+     <li> <em>basic point set topology</em>: topological spaces, subspaces, quotient spaces, compactness, Hausdorffness, first and second countability, etc
+     <li><em>basic linear algebra</em>:determinants, dual spaces, etc
+     <li><em>basic multivariable calculus and real analysis</em>: partial and total derivatives, multivariable chain rule, multiple integrals, etc.
+  	</p>
+    If you are feeling a bit rusty on some of these, I recommend reading the appendix and Lee. You can also check out appendices A and D in Tu. Some knowledge of basic algebraic topology (especially homology and cohomology) will be also helpful, but we will not assume any prior exposure.
+
+          <img src="535a/image2.jpg" width="750"/><br>
+
+
+<h2> Topics.</h2>
+<p>
+  Some of the topics we may cover over the course of the semester (time permitting) include:
+<li> topological manifolds, maximal atlases, smooth manifolds
+  <li> examples of smooth manifolds
+  <li> smooth maps between smooth manifolds
+      <li> tangent vectors and the tangent bundle
+        <li> vector fields and the Lie bracket
+    <li> Lie groups and Lie algebras
+    <li> vector bundles
+    <li> covectors and the cotangent bundle, differentials of functions
+      <li> submersions, immersions, embeddings
+<li> inverse function theorem and implicit function theorem
+  <li> Lie group actions and quotient manifolds
+    <li> Whitney's embedding and approximation theorems
+      <li> tensors and multilinear algebra, differential forms 
+          <li> orientations, integration of differential forms
+            <li> Stokes' theorem
+              <li> de Rham cohomology and the re Rham theorem
+                <li> foliations and the Frobenius theorem
+                  <li> degree theory.
+
+  </p>
+
+  	<h2> Textbook. </h2>
+  	<p>
+  <li>Primary: <em> Introduction to Smooth Manifolds </em> - John M. Lee </li>
+
+  <li>Secondary: <em> An Introduction to Manifolds </em> - Loring W. Tu </li>
+ 
+<p>
+ We will be primarily following Lee's book. This text is rather lengthy compared to others, but it is very well-organized and comprehensive. I suggest reading the relevant sections early (ideally in advance of the lectures) and often. You should think of the lectures as a guide to help develop your intuition about key concepts, with the primary textbook providing much fuller details and further elaborations. For an alternative perspective I recommend the secondary textbook by Tu, which provides a well-written and concise approach and covers similar material. Note that there are also numerous other popular introductory texts on smooth manifolds, and I encourage you to further utilize any references you find beneficial.
+
+</p>
+
+
+  	
+  	</p>
+      <img src="535a/image3.jpg" width="700"/><br>
+
+
+<h2> Live lecture notes and recordings. </h2>
+
+<p> The lectures and discussion sessions will be held via Zoom. The links and passwords can be found on Blackboard. Afterwards, Zoom recordings will appear on Blackboard. We strongly urge all students to attend the live lectures and discusssions if at all possible. Moreover, you are encouraged to actively participate by following along and asking and answering questions. We <em>strongly</em> request that you turn on your video feed in order to create a more responsive and social atmosphere.<p>
+
+ <p> We understand that in some cases certain students will not be able to attend all live lectures due to time zone difficulties or other extenuating circumstances. In this case it is your responsibility to follow along with the recordings and other class materials. </p>
+
+<p>
+The lectures will primarily involve notes written in real time on an ipad. In addition to viewing lectures in Zoom via screen sharing, you will have the option of viewing the lecture notes in real time via <a href="https://uscedu-my.sharepoint.com/:f:/g/personal/kylersie_usc_edu/EgXJlVM8C8pGjwU80IZoe2UBLHJQ3-F3Ib7mBRmSka66oA?e=60h0Vr">this link</a>.
+  Some of you might find this useful if you wish to backreference something that happened earlier in the lecture. The completed past lecture notes will also be stored there. Note: the syncing is not instanteous, so you may sometimes need to refresh the document. </p>
+
+<h2> Communication and discussion boards.</h2>
+
+USC has opted to use the messaging application Slack to facilitate communication between amongst students, and between students, instuctors, and TAs. Stay tuned for more details about our Slack workspace. You are encouraged to regularly post content (questions, answers, comments) on Slack. We will try to give responses as soon as possible.
+
+
+<h2> Problem sets.</h2>
+
+      <p> In addition to the lectures, there will be weekly problem sets. These will be listed on this website (see the schedule below) and will be handed in via Gradescope. Late homeworks will not be accepted without prior approval from the instructor or TA.
+
+    <p>
+      Much of the course material will be developed in the problem sets. It is very important to do all of the problem sets to the best of your ability and to challenge yourself to solve the problems on your own, as this is the most effective way to absorb the material. We expect students to devote a significant amount of time to the problem sets. 
+    </p>
+
+    <p>
+      While working on the problem sets, you are allowed to consult or collaborate with your peers, as well as textbooks and the internet (apart from cheating websites such as Chegg or Cramster). However, you must write down attributions for any peer, textbook, website etc from which you took any significant ideas. Moreover, <i> you must attempt all problems on your own and your submitted solutions must be written out originally and individually.</i> Submissions which are copied or suspiciously similar are subject to being rejected and potential disciplinary action.
+  	 </p>
+
+
+     <h2> Exams</h2>
+  	<p> There will be one midterm exam and one final exam. These will most likely be 24 hour take home exams. The midterm will occur in early March and the final will occur in early May (precise dates TBA).
+  	</p> 
+
+
+
+  	<h2> Grading scheme. </h2>
+  	<p>  Homeworks: 40%, midterm exam: 25%, final exam: 35%.
+  	</p> 
+
+
+
+  	<h2> Office hours.</h2>
+  	<p>
+      For the time being, Kyler's office hours will be by appointment (in the future we may pick a fixed time if the class prefers to do it that way). If you wish to meet, please send Kyler an email with your availability and requested time, and he will try to accomodate as best he can. If you have any confusions / questions / comments / clarifications whatsover you are encouraged to come to office hours. Kyler will also typically stick around after the lecture so that is also a good time to ask additional questions. 
+</p>
+
+
+
+
+  <h2> Tentative schedule </h2>
+
+<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+<table>
+  <tr style="border-bottom:2px solid black">
+    <th>Date</th>
+    <th>Material</th>
+    <th>References</th>    
+    <th>Problem Set</th>
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 1/15/21</td>
+    <td> Topological manifolds, smooth structures, examples of smooth manifolds </td>
+    <td> Lee &#167;1, Tu &#167;1,&#167;5. I also suggest reading the appendix of Lee and/or appendices A,D of Tu if you need a refresher.</td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 1/18/21 <em>(MLK day - no class)</em></td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 1/20/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 1/22/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 1/25/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 1/27/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 1/29/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr> 
+
+  <tr>
+    <td>Monday 2/1/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 2/3/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 2/5/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 2/8/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 2/10/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 2/12/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 2/15/21 <em>(President's day - no class)</em></td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 2/17/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 2/19/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 2/22/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 2/24/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 2/26/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+
+  <tr>
+    <td>Monday 3/1/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 3/3/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 3/5/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 3/8/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 3/10/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 3/12/21 <em>(wellness day - no class)</em></td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 3/15/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 3/17/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 3/19/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 3/22/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 3/24/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 3/26/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 3/29/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 3/31/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 4/2/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 4/5/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 4/7/21 <em>(wellness day - no class)</em></td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 4/9/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 4/12/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 4/14/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 4/16/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 4/19/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 4/21/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 4/23/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>
+    <td>Monday 4/26/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td>Wednesday 4/28/21</td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Friday 4/30/21 <em>(wellness day - no class)</em></td>
+    <td> </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+  <tr>  
+    <td><b>Final exam</b>: Wednesday 5/5/21 (tentative date) </td>
+    <td>  </td>
+    <td> </td>
+    <td> </td>  
+  </tr>
+
+</table>
+
+ 
+
+&nbsp;
+
+<div style="font-size:80%">
+Image sources: <a href="535a/image_sources.txt">here</a>.
+</div>
+
+
+  </body>
+
+  </html>
