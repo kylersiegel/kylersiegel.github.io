@@ -494,7 +494,7 @@ USC has opted to use the messaging application Slack to facilitate communication
 
   <tr>
     <td>Monday 4/5/21</td>
-    <td> More multilinear algebra and tensor fields. </td>
+    <td> More multilinear algebra and tensor fields.</td>
     <td> &#167;12.</td>
     <td> </td>  
   </tr>
@@ -503,13 +503,13 @@ USC has opted to use the messaging application Slack to facilitate communication
     <td>Wednesday 4/7/21 <em>(wellness day - no class)</em></td>
     <td> </td>
     <td> </td>
-    <td><a href="535a/pset11.pdf">Problem set 11</a> (due Wednesday 4/14/21 by 11:59pm LA time). </td>  
+    <td> </td>  
   </tr>
 
   <tr style="border-bottom:2px solid black">
     <td>Friday 4/9/21</td>
-    <td> Brief introduction to Riemannian metrics. Differential forms.</td>
-    <td>&#167;13, &#167;14.</td>
+    <td> </td>
+    <td> </td>
     <td> </td>  
   </tr>
 
