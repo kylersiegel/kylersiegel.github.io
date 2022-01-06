@@ -1,0 +1,292 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 635: Quantitative aspects of Morse and Floery theory</title>
+
+  	<style type="text/css">
+
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+
+
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+/*  h1{
+    color:  rgb(169, 3, 252);
+  }
+
+  h2{
+    color:  rgb(223, 3, 252);
+  }
+*/
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </head>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+
+
+  	<h1> Math 635: Quantitative aspects of Morse and Floer theory<br>
+    USC Spring 2021  <br>
+
+          <img src="635/image.jpg" width="650"/><br>
+
+</h1>
+
+
+<h2>
+  	Instructor.
+</h2>
+   
+   <p>  Kyler Siegel (kyler.siegel@usc.edu)  </p>
+
+<h2>
+  Time and location.
+</h2>
+<p> To be determined. Note that we will meet over Zoom during the first week (at least). 
+</p>
+
+
+
+
+<h2> Mailing list.</h2>
+
+<p>     Please email Kyler if you would like to receive emails about the course, including Zoom links.
+</p>
+
+
+  	<h2> About.	</h2> 
+  	<p>
+    This course is an introduction to Morse and Floer theory from the quantitative viewpoint. In the first half of the course, we will begin by briefly covering the basics of these theories, with a particular emphasis on action filtrations and the Hofer norm. We will also introduce persistent homology, an important tool for extracting information from a filtered chain complex (this also plays a central role in topological data analysis).
+</p>
+
+<p>
+  In the second half of the course, we will discuss various applications and recent advances in symplectic geometry. The topics will mostly be based on recent papers and will be chosen partly based on the interests of the audience. In the last few weeks of the course each student will give a presentation on a relevant topic, chosen in consultation with the instructor.
+  	</p>
+
+       <img src="635/image2.jpg" width="350"/><br>
+
+  	<h2> Prerequisites. </h2>
+  	<p>
+     We will assume familiarity with smooth manifolds and differential forms, as well as basic algebraic topology. Some acquaintance with symplectic geometry is helpful but not required.
+
+
+<h2> Topics list (tentative).</h2>
+<p>
+  Some of the topics we may cover over the course of the semester (time permitting) include:
+<li> Morse homology
+  <li> Floer homology
+    <li> Persistent homology and barcodes
+      <li> Symplectic distances between domains 
+        <li> Obstructions for finding roots of Hamiltonian diffeomorphisms
+          <li> Knotted symplectic embeddings
+            <li> Existence of infinitely many periodic orbits for Hamiltonian systems
+
+  </p>
+
+  	<h2> References (preliminary list). </h2>
+  	<p>
+
+<h4>Foundations:</h4>
+
+    <li><em>Morse theory and Floer homology </em> - Audin and Damian
+
+    <li><em> Topological persistence in geometry and analysis</em> - Polterovich, Rosen, Samvelyan and Zhang
+
+<h4>Applications:</h4>
+
+<li><em>Autonomous Hamiltonian flows, Hofer's geometry and persistence modules</em> - Polterovich and Shelukhin
+
+<li><em>Symplectically knotted codimension-zero embeddings of domains in $\mathbb{R}^4$</em> - Gutt and Usher
+
+<li><em>Boundary depth in Floer theory and its applications to Hamiltonian dynamics and coisotropic submanifolds</em> - Usher
+
+<li><em>On the Hofer-Zehnder conjecture</em> - Shelukhin
+
+<li><em>Symplectic Banach-Mazur distances between subsets of $\mathbb{C}^n$</em> - Usher
+
+<h2> Lecture notes. </h2>
+
+<p> The lecture notes will be updated regularly and available <a href="635/635_lecture_notes.pdf">here</a>. </p>
+
+
+
+
+
+     <h2> Participant presentations.</h2>
+  	<p> Near the end of the term, each registered participant in the course will give a talk based on a topic relevant to the course, chosen in consultation with the instructor. Details will follow.
+  	</p> 
+
+
+
+
+
+  	<h2> Office hours.</h2>
+  	<p>
+     By appointment, in person or over Zoom. Please email Kyler whenever you'd like to meet and we'll find a time that works.
+</p>
+
+
+
+
+  <h2> Tentative schedule </h2>
+
+<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+<table>
+  <tr style="border-bottom:2px solid black">
+    <th>Date</th>
+    <th>Material</th>
+    <th>References</th>    
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>Monday 1/10/12 or Wednesday 1/12/22</td>
+    <td> Introduction</td>
+    <td></td>
+  </tr>
+
+<!--   <tr>
+    <td><em></em></td>
+    <td> </td>
+    <td> </td>
+  </tr> -->
+
+<!--   <tr>  
+    <td></td>
+    <td> </td>
+    <td> </td>
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td> </td>
+    <td> </td>
+  </tr>
+
+  <tr>  
+    <td></td>
+    <td> </td>
+    <td></td> 
+  </tr> -->
+
+ 
+</table>
+
+ 
+
+
+
+&nbsp;
+
+<div style="font-size:80%">
+Image sources: <a href="635/image_sources.txt">here</a>.
+</div>
+
+  </body>
+
+  </html>
