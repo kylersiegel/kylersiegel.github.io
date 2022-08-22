@@ -1,0 +1,613 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 434: Geometry and transformations</title>
+
+  	<style type="text/css">
+
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+
+
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/javascript">
+
+function insert_random_image() {
+    var num_images = 42;
+    var ind1 = Math.floor(Math.random()*num_images)+1;
+    var ind2 = Math.floor(Math.random()*num_images)+1;
+    while (ind2 == ind1) {
+        ind2 = Math.floor(Math.random()*num_images)+1;
+    }
+    var ind3 = Math.floor(Math.random()*num_images)+1;
+    while (ind3 == ind1 || ind3 == ind2){
+        ind3 = Math.floor(Math.random()*num_images)+1;
+    }        
+
+    var out = '<div class=\"row\"><img src=\"434/DALLE_images_434/img'+ind1+'.png\" style=\"width:15%\", ><img src=\"434/DALLE_images_434/img'+ind2+'.png\" style=\"width:15%\"><img src=\"434/DALLE_images_434/img'+ind3+'.png\" style=\"width:15%\"></div>'; 
+    return out;
+}
+</script>
+
+  </head>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+  	<h1> Math 434: Geometry and transformations<br>
+    USC Fall 2022  <br>
+    </h1>
+
+<script type="text/javascript">
+    document.write(insert_random_image());
+</script>
+
+
+
+
+<h2> Instructor. </h2>
+<p>  <li> Primary: Kyler Siegel (kyler.siegel@usc.edu)
+<li> Teaching assistant: Gin Park (ginpark@usc.edu)
+  </p>
+
+
+<h2> Time and location. </h2>
+<p> We will typically meet on Mondays, Wednesdays, and Fridays, 2:00-2:50pm, in <a href="https://maps.usc.edu/?id=1928#!m/552410?ct/53723,53722,55414,55415,55418">KAP 166</a> (see the schedule below for academic holidays and other modifications). We may occasionally meet over Zoom.</p>
+
+<h2> Mailing list.</h2>
+<p> If for some reason you aren't currently registered for this course on Blackboard please email Kyler to make sure you receive class emails.</p>
+
+<h2> About. </h2>
+<p> This course is an introduction to low dimensional geometry, through the lens of Felix Klein's $“$Erlangen Program$”$. We will investigate geometric properties of surfaces in detail, with a special focus on the fundamental trichotomy between Euclidean, elliptic, and hyperbolic geometries. Along the way we will introduce key notions such as geodesics, curvature, and isometries, and we will also naturally encounter various important notions in topology and group theory. Towards the end we will peak into the vast world of three-dimensional geometry, and we will try to approach the question $“$What is the shape of our universe?$”$.
+
+
+</p>
+
+<h2> Prerequisites.</h2>
+<p> We will assume proficiency in multivariable calculus. Knowledge of linear algebra and complex numbers is also recommended. Some familiarity with topology and group theory will also be very helpful, although we will not assume you have seen these.</p>
+
+<script type="text/javascript">
+    document.write(insert_random_image(  ));
+</script>
+
+<h2> Topics list (tentative).</h2>
+
+<p>
+Some of the topics we may cover over the course of the semester (time permitting) include:
+<li> Euclidean geometry and the parallel postulate (and the failure thereof)
+<li> elliptic geometry
+<li> hyperbolic geometry 
+<li> basics of complex analysis
+<li> isometry groups and Möbius transformations
+<li> geodesics and curvature
+<li> global geometry of surfaces and the Gauss-Bonnet theorem
+<li> gluing constructions and fundamental domains
+<li> tessellations
+<li> three-manifolds and cosmic topology
+</p>
+
+
+<h2> Texts. </h2>
+<p>
+<h4>Primary textbook:</h4>
+<li id="H18"><a href="https://mphitchman.com/">[H18]</a> <em>Geometry, with an introduction to cosmic topology</em> - Hitchman</li>
+<p>Note that the digital version is freely available <a href="https://mphitchman.com/download.html">here</a>. If you're like me and you prefer have a paper copy which you can hold in your hands, the print version is also quite inexpensive (at least as far as textbooks go).</p>
+
+<h4> Secondary textbooks (tentative):</h4>            
+<li id="B09"><a href="https://bookstore.ams.org/stml-49">[B09]</a> <em>Low-Dimensional Geometry: From Euclidean Surfaces to Hyperbolic Knots</em> - Bonahon
+<li id="RS05"><a href="https://www.cambridge.org/core/books/geometry-and-topology/E8760E076BFE88077594662A282CD97A">[RS05]</a><em> Geometry and topology</em> - Reid and Szendroi
+<li id="S98"><a href="https://link.springer.com/book/10.1007/978-1-4612-0607-1">[S98]</a> <em> Geometry: plane and fancy</em> - Singer
+</p>
+
+<script type="text/javascript">
+    document.write(insert_random_image());
+</script>
+
+<h2>
+Problem sets.
+</h2>
+<p>
+In addition to the lectures, there will be weekly problem sets. These will be listed on this website (see the schedule below). Late homeworks will not be accepted. However, we will drop the lowest problem set score.
+</p>
+
+<p>
+Much of the course material will be developed in the problem sets. It is very important to do all of the problem sets to the best of your ability and to challenge yourself to solve the problems on your own, as this is the most effective way to absorb the material. We expect students to devote a significant amount of time to the problem sets.
+</p>
+
+<p>
+While working on the problem sets, you are allowed to consult or collaborate with your peers, as well as textbooks and the internet (apart from cheating websites such as Chegg or Cramster). However, you must write down attributions for any peer, textbook, website etc from which you took any significant ideas. Moreover, you must attempt all problems on your own and your submitted solutions must be written out originally and individually. Submissions which are copied or suspiciously similar are subject to being rejected and potential disciplinary action.
+</p>
+
+<h2> Exams. </h2>
+<p> There will be one midterm (most likely during regular class time) and one final exam (scheduled by the registrar).</p>
+
+<h2> Grading scheme.</h2>
+<p> Problem sets: 35%, midterm exam: 25%, final exam: 40%. We will drop the lowest problem set grade.
+ </p>
+
+<h2> Office hours. </h2>
+<p> To be announced. </p>
+
+
+<script type="text/javascript">
+    document.write(insert_random_image(  ));
+</script>
+
+  <h2> Tentative schedule. </h2>
+
+<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+
+
+<table>
+  <tr style="border-bottom:2px solid black">
+    <th>$\#$</th>
+    <th>Date</th>    
+    <th>Material</th>
+    <th>References</th>    
+    <th>Problem set</th>
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>1</td>    
+    <td>Monday 8/22/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>2</td>    
+    <td>Wednesday 8/24/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>3</td>    
+    <td>Friday 8/26/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>4</td>    
+    <td>Monday 8/29/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>5</td>    
+    <td>Wednesday 8/31/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>6</td>    
+    <td>Friday 9/2/22</td>
+    <td></td>
+    <td></td> 
+    <td></td>   
+  </tr>  
+
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 9/5/22: Labor day - no class</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>7</td>    
+    <td>Wednesday 9/7/22</td>
+    <td></td>
+    <td></td> 
+    <td></td>   
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>8</td>    
+    <td>Friday 9/9/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>9</td>    
+    <td>Monday 9/12/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>10</td>    
+    <td>Wednesday 9/14/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>11</td>    
+    <td>Friday 9/16/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr> 
+
+  <tr>
+    <td>12</td>    
+    <td>Monday 9/19/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>13</td>    
+    <td>Wednesday 9/21/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>14</td>    
+    <td>Friday 9/23/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>15</td>    
+    <td>Monday 9/26/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>16</td>    
+    <td>Wednesday 9/28/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>17</td>    
+    <td>Friday 9/30/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>18</td>    
+    <td>Monday 10/3/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>19</td>    
+    <td>Wednesday 10/5/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>20</td>    
+    <td>Friday 10/7/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>21</td>    
+    <td>Monday 10/10/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>22</td>    
+    <td style="color:blueviolet;">Wednesday 10/12/22</td>
+    <td style="color:blueviolet;">midterm exam during class (tentative date)</td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td></td>    
+    <td style="color:blue;">Friday 10/14/22: Fall recess - no class</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>23</td>    
+    <td>Monday 10/17/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>24</td>    
+    <td>Wednesday 10/19/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>25</td>    
+    <td>Friday 10/21/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>26</td>    
+    <td>Monday 10/24/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>27</td>    
+    <td>Wednesday 10/26/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>28</td>    
+    <td>Friday 10/28/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr> 
+
+
+ <tr>
+    <td>29</td>    
+    <td>Monday 10/31/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>30</td>    
+    <td>Wednesday 11/2/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>31</td>    
+    <td>Friday 11/4/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>32</td>    
+    <td>Monday 11/7/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>33</td>    
+    <td>Wednesday 11/9/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td></td>    
+    <td style="color:blue;">Friday 11/11/22: Veterans day - no class</td>    
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>34</td>    
+    <td>Monday 11/14/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>35</td>    
+    <td>Wednesday 11/16/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>36</td>    
+    <td>Friday 11/18/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>37</td>    
+    <td>Monday 11/21/22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Wednesday 11/23/22: Thanksgiving break - no class</td>     
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td></td>    
+    <td style="color:blue;">Friday 11/25/22: Thanksgiving break - no class</td>         
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>38</td>    
+    <td>Monday 11/28/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>39</td>    
+    <td>Wednesday 11/30/22</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>40</td>    
+    <td>Friday 12/2/22 <text style="color:green;">(last day of class)</text></td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+</tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td></td>    
+    <td style="color:red">Friday 12/9/22: 2-4pm</td>
+    <td style="color:red">final exam</td>
+    <td></td>
+    <td></td>    
+  </tr>
+</tr>
+
+Friday, December 9  2-4 p.m.
+
+</table>
+
+<div style="font-size:80%">
+Image sources: <a href="434/image_sources.txt">here</a>.
+</div>
+
+  </body>
+
+  </html>
