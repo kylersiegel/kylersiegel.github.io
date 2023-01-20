@@ -1,0 +1,381 @@
+\documentclass[11pt, reqno]{amsart}
+\usepackage{textcmds} 
+\usepackage{amsmath, amssymb, amsfonts, amstext, verbatim, amsthm, mathrsfs}
+\usepackage{microtype}
+\usepackage[all]{xy}
+\usepackage[modulo]{lineno}
+\usepackage[usenames]{color}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{xspace}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[centertags]{amsmath}
+\usepackage{amsthm}
+\usepackage{rotating}
+\usepackage[margin=3.5cm]{geometry}
+\usepackage{dsfont}
+\usepackage{bm}
+\usepackage{color}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage[all]{xy}
+\usepackage{euscript}
+\usepackage[T1]{fontenc}
+\usepackage{mathbbol}
+\usepackage{nccmath}
+\usepackage{marginnote}
+\usepackage{stmaryrd}
+%D undelete this if you want to show the labels
+%\usepackage{showkeys}
+\usepackage{youngtab}
+\usepackage{tikz}
+\usepackage{blkarray}
+\usepackage{comment}
+
+
+\usepackage{graphics,graphicx}  %% comment for "draft" mode w/o pictures
+%s\usepackage[draft]{graphics, graphicx} %% un-comment for "draft mode"
+
+
+\setcounter{tocdepth}{2}% to get subsubsections in toc
+
+\let\oldtocsection=\tocsection
+%
+\let\oldtocsubsection=\tocsubsection
+
+
+\renewcommand{\tocsection}[2]{\hspace{0em}\oldtocsection{#1}{#2}}
+\renewcommand{\tocsubsection}[2]{\hspace{1em}\oldtocsubsection{#1}{#2}}
+
+\usepackage[backref,colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue,citebordercolor={0 0 1},urlbordercolor={0 0 1},linkbordercolor={0 0 1}]{hyperref} %needs to be 
+
+
+\tikzset{node distance=3cm, auto}
+
+\makeatletter
+\def\@secnumfont{\bfseries}
+\def\section{\@startsection{section}{1}%
+  \z@{.7\linespacing\@plus\linespacing}{.5\linespacing}%
+  {\normalfont\Large\bfseries}}
+\def\subsection{\@startsection{subsection}{2}%
+  \z@{.5\linespacing\@plus.7\linespacing}{-.5em}%
+  {\normalfont\large\bfseries}}
+  \def\subsubsection{\@startsection{subsubsection}{3}%
+  \z@{.5\linespacing\@plus.7\linespacing}{-.5em}%
+  {\normalfont\bfseries}}
+\makeatother
+
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+%\theoremstyle{plain}
+\theoremstyle{definition}
+\newtheorem{thm}{Theorem}%[subsection]
+\newtheorem{thm*}[thm]{Theorem*}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{problem}[thm]{Problem}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem{rmk}[thm]{Remark}
+\newtheorem{disclaimer}[thm]{Disclaimer}
+\newtheorem{assumption}[thm]{Assumption}
+\newtheorem{conjecture}[thm]{Conjecture}
+\newtheorem{definition}[thm]{Definition}
+\newtheorem{example}[thm]{Example}
+\theoremstyle{remark}
+\numberwithin{equation}{subsection} 
+\newtheorem{defn}[thm]{Definition}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+
+
+\newcommand{\partitions}{\op{Part}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Ee}{\mathcal{E}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\reversecomm}[1]{\reversemarginpar\marginpar{\tiny #1}}
+\newcommand{\Ynonver}{\Y^{\op{nonver}}}
+\newcommand{\Ynonhor}{\Y^{\op{nonhor}}}
+
+
+\newenvironment{itemlist}
+   { \begin{list} {$\bullet$}
+         { \setlength{\topsep}{.5ex}  \setlength{\itemsep}{.5ex} \setlength{\leftmargin}{2.5ex} } }
+   { \end{list} }
+   
+   \newcommand{\s}{{\mathfrak s}}
+     \renewcommand{\wr}{{{\rm w}}}
+      \newcommand{\pbar}{{\p_J}}
+      \newcommand{\Bl}{{\rm Bl}}
+   \newcommand{\PSL}{{\rm PSL}}
+   \newcommand{\TJ}{{\widetilde J}}
+   \newcommand{\TC}{{\widetilde C}}
+   \newcommand{\TA}{{\widetilde A}}
+      \newcommand{\Tz}{{\widetilde z}}
+      \newcommand{\TD}{{\widetilde D}}
+\newcommand{\bp}{{\bf p}}
+\newcommand{\bc}{{\bf c}}
+   \newcommand{\bz}{{\bf z}}
+\newcommand{\nbhd}{{\rm nbhd}}
+\newcommand{\intt}{{\rm int\,}}
+\newcommand{\NI}{{\noindent}}
+\newcommand{\Pp}{{\mathcal P}}
+\newcommand{\Ii}{{\mathcal I}}
+\newcommand{\Qq}{{\mathcal Q}}
+\newcommand{\Oo}{{\mathcal O}}
+\newcommand{\Cc}{{\mathcal C}}
+\newcommand{\Nn}{{\mathcal N}}
+\newcommand{\Mm}{{\mathcal M}}
+\newcommand{\oMm}{{\ov{\mathcal M}}}
+\newcommand{\Jj}{{\mathcal J}}
+\newcommand{\im}{{\rm im\,}}
+\newcommand{\CZ}{{\rm CZ}}
+\newcommand{\ov}{\overline}
+\newcommand{\ou}{\ov{u}}
+\newcommand{\al}{{\alpha}}
+\newcommand{\Al}{{\Alpha}}
+\newcommand{\be}{{\beta}}
+\newcommand{\Be}{{\Beta}}
+\newcommand{\Om}{{\Omega}}
+\newcommand{\om}{{\omega}}
+\newcommand{\de}{{\delta}}
+\newcommand{\De}{{\Delta}}
+\newcommand{\ga}{{\gamma}}
+\newcommand{\Ga}{{\Gamma}}
+\newcommand{\io}{{\iota}}
+\newcommand{\ka}{{\kappa}}
+\newcommand{\la}{{\lambda}}
+\newcommand{\La}{{\Lambda}}
+\newcommand{\si}{{\sigma}}
+\newcommand{\Si}{{\Sigma}}
+\newcommand{\less} {{\smallsetminus}}
+\newcommand{\p}{{\partial}}
+\newcommand{\MS}{{\medskip}}
+\newcommand{\ord}{{\rm ord}}
+\newcommand{\er}{{\Diamond}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\H}{\mathbb{H}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\lam}{\lambda}
+\renewcommand{\sc}{\op{SC}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calQ}{\mathcal{Q}}
+\renewcommand{\bar}{\mathcal{B}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bdy}{\partial}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\orange}[1]{{\color{orange}#1}}
+\newcommand{\Ci}{\mathcal{C}_\infty}
+\newcommand{\Ai}{\mathcal{A}_\infty}
+\newcommand{\Li}{\mathcal{L}_\infty}
+\newcommand{\IBLi}{\mathcal{IBL}_\infty}
+\newcommand{\BVi}{\mathcal{BV}_\infty}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\dcalM}{\dashover{\mathcal{M}}}
+\newcommand{\calMdisc}{\mathcal{M}^{\op{disc}}}
+\newcommand{\ovlcalMdisc}{\ovl{\mathcal{M}}^{\op{disc}}}
+\newcommand{\wh}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\frakg}{\mathfrak{g}}
+\newcommand{\frakh}{\mathfrak{h}}
+\newcommand{\ovl}{\overline}
+\newcommand{\op}[1]{{\operatorname{#1}}}
+\newcommand{\e}{\eps}
+\newcommand{\Sh}{{\op{Sh}}}
+\newcommand{\des}{{\op{des}}}
+\newcommand{\std}{{\op{std}}}
+\newcommand{\Eval}{{\op{Eval}}}
+\newcommand{\can}{{\op{can}}}
+\newcommand{\sh}{\op{SH}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\Lamo}{\Lambda_{\geq 0}}
+\newcommand{\chlin}{\op{CH}_{\op{lin}}}
+\newcommand{\chlinn}{\sc_{S^1,+}}
+\newcommand{\ch}{\op{CH}}
+\newcommand{\lin}{{\op{lin}}}
+\newcommand{\ip}{\, \lrcorner \,}
+\newcommand{\cz}{{\op{CZ}}}
+\newcommand{\ind}{\op{ind}}
+\newcommand{\lleq}{\ll}
+\newcommand{\rreq}{\rr}
+\newcommand{\sft}{{\op{SFT}}}
+\newcommand{\cha}{{\op{CHA}}}
+\newcommand{\ev}{{\op{ev}}}
+\newcommand{\Op}{\mathcal{O}p}
+\newcommand{\nil}{\varnothing}
+\newcommand{\comm}[1]{\marginpar{\tiny #1}}
+\newcommand{\sss}{\vspace{2.5 mm}}
+\renewcommand{\leqq}{\preceq}
+\renewcommand{\geqq}{\succeq}
+\newcommand{\orbset}{\mathfrak{S}}
+\newcommand{\sign}{\diamondsuit}
+\newcommand{\aug}{\e}
+\newcommand{\auglin}{\e_\lin}
+\newcommand{\fv}{\mathfrak{h}}
+\newcommand{\capac}{\mathfrak{c}}
+\newcommand{\dapac}{\mathfrak{d}}
+\newcommand{\gapac}{\mathfrak{g}}
+\newcommand{\rapac}{\mathfrak{r}}
+\newcommand{\bb}{\frak{b}}
+\renewcommand{\Im}{\op{Im}}
+\newcommand{\sm}{\op{Sm}}
+\newcommand{\fix}{{\op{fix}}}
+\newcommand{\triv}{\Xi}
+\newcommand{\m}{\mathfrak{m}}
+\newcommand{\cl}{\mathfrak{cl}}
+\newcommand{\cllin}{{\mathfrak{cl}_\lin}}
+\newcommand{\gw}{\op{GW}}
+\renewcommand{\lll}{\Langle}
+\newcommand{\rrr}{\Rangle}
+\newcommand{\daug}{\delta}
+\newcommand{\dcap}{d}
+\newcommand{\ellipse}{\tikz \draw (0,0) ellipse (.1cm and .03cm);}
+\newcommand{\Xring}{\oset{\circ}{X}}
+\newcommand{\Xellipse}{\oset[-.2ex]{\ellipse}{X}}
+\newcommand{\smx}{\oset[-.5ex]{\frown}{\times}}
+\newcommand{\ovo}{\oset[-.3ex]{\frown}}
+\newcommand{\anch}{\op{anch}}
+\newcommand{\sk}{{\op{sk}}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\TT}{\T^{\bullet}}
+\newcommand{\fib}{g}
+\newcommand{\val}{\op{val}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\bl}{\op{Bl}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\pd}{\op{PD}}
+\newcommand{\pt}{pt}
+\newcommand{\aut}{\op{Aut}}
+\newcommand{\simp}{s}
+\newcommand{\wind}{\op{wind}}
+\renewcommand{\sp}{\op{sp}}
+\newcommand{\ex}{\op{ex}}
+\newcommand{\bull}{\textbullet\hspace{0.25cm}}
+\renewcommand{\bar}{\mathcal{B}}
+\newcommand{\id}{\op{id}}
+\newcommand{\bv}{\mathcal{BV}}
+\newcommand{\ii}{\mathfrak{i}}
+\newcommand{\jj}{\mathfrak{j}}
+\newcommand{\mom}{\op{mom}}
+\newcommand{\tri}{\triangle}
+\newcommand{\sht}{\op{short}}
+\newcommand{\lng}{\op{long}}
+\newcommand{\wc}{\widehat}
+\newcommand{\leftgen}{\xi}
+\newcommand{\rightgen}{\zeta}
+\newcommand{\lonegen}{\tau}
+\newcommand{\frakl}{\mathfrak{l}}
+\newcommand{\frakr}{\mathfrak{r}}
+\newcommand{\frakp}{\mathfrak{p}}
+\newcommand{\shookrightarrow}{\overset{s}\hookrightarrow}
+\newcommand{\so}{\op{SO}}
+\newcommand{\stab}{\op{stab}}
+\newcommand{\orb}{\op{orb}}
+
+
+\setlength{\marginparwidth}{2.9cm}
+
+\makeatletter
+\newcommand{\dashover}[2][\mathop]{#1{\mathpalette\df@over{{\dashfill}{#2}}}}
+\newcommand{\fillover}[2][\mathop]{#1{\mathpalette\df@over{{\solidfill}{#2}}}}
+\newcommand{\df@over}[2]{\df@@over#1#2}
+\newcommand\df@@over[3]{%
+  \vbox{
+    \offinterlineskip
+    \ialign{##\cr
+      #2{#1}\cr
+      \noalign{\kern1pt}
+      $\m@th#1#3$\cr
+    }
+  }%
+}
+\newcommand{\dashfill}[1]{%
+  \kern-.5pt
+  \xleaders\hbox{\kern.5pt\vrule height.4pt width \dash@width{#1}\kern.5pt}\hfill
+  \kern-.5pt
+}
+\newcommand{\dash@width}[1]{%
+  \ifx#1\displaystyle
+    2pt
+  \else
+    \ifx#1\textstyle
+      1.5pt
+    \else
+      \ifx#1\scriptstyle
+        1.25pt
+      \else
+        \ifx#1\scriptscriptstyle
+          1pt
+        \fi
+      \fi
+    \fi
+  \fi
+}
+\newcommand{\solidfill}[1]{\leaders\hrule\hfill}
+\makeatother
+
+
+
+\begin{document}
+
+\title{535a Spring 2023 Problem Set \#2} 
+
+%\date{\today}
+
+\maketitle
+
+%\tableofcontents
+
+\begin{problem}
+Consider the function $f: \R \rightarrow \R$ defined by
+\begin{align*}
+f(x) = \begin{cases}
+\exp\left(-\frac{1}{1-x^2}\right) & x \in (-1,1)\\ 
+0 & x \in \R \setminus (-1,1).
+\end{cases}
+\end{align*}
+Show that this function is smooth and has compact support. This is called a ``bump function''.
+Can you find a real analytic function $\R \rightarrow \R$ which has compact support and is not identically zero?
+
+\end{problem}
+
+\begin{problem}
+Prove that the open unit ball $B^n = \{(x^1,\dots,x^n) \in \R^n\;:\; \sum_{i=1}^n (x^i)^2 < 1\}$ is diffeomorphic to $\R^n$, when both are equipped with their standard smooth structures. {\em Hint: if you get stuck you may consult problem 1.4 in Tu.}
+\end{problem}
+
+\begin{problem}
+Let $M$ be any (non-empty) $n$-dimensional smooth manifold, and let $C^{\infty}(M)$ denote the set of smooth functions from $M$ to $\R$. Prove that $C^{\infty}(M)$ is naturally a real vector space, and it is infinite dimensional.
+\end{problem}
+
+\begin{problem} 
+Lee {\em second edition} 1-9
+\end{problem}
+
+
+\begin{problem} 
+Lee {\em second edition} 2-3
+\end{problem}
+
+
+
+\end{document}
