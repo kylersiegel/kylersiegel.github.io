@@ -1,0 +1,988 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<title>Symplectic Capacities Project Homepage</title>
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-8" />
+		<meta name="description" content="Comutational project, symplectic capacities, ICERM and TAU" />
+		<meta name="author" content="KS"/>
+
+
+		<link rel="stylesheet" type="text/css" href="style.css" />
+
+
+
+<!-- SCRIPTS. TO BE PUT IN A SEPARATE FILE (js) -->
+
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+  			tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+		});
+	</script>
+	
+	<script type="text/x-mathjax-config">
+	// defining macros
+	// to use in latex - type \"name of macro", e.g. \R would give \mathbb{R}
+	
+		// !!! DON'T FORGET the commas!
+				MathJax.Hub.Config({
+			  TeX: {
+			    Macros: {
+			      R: "{\\mathbb{R} }",
+			      N: "{\\mathbb{N} }",
+			      bold: ["{\\bf #1}",1],
+			      om: "{\\omega}",
+			      vphi: "{\\varphi}",
+			      epsi: "{\\varepsilon}",
+			      de: "{\\partial}",
+			      calE: "{\\mathcal{E}}",
+			      calA: "{\\mathcal{A}}",
+			      calF: "{\\mathcal{F}}",
+			      calK: "{\\mathcal{K}}",
+			      x :	"{\\mathbf{x}}",
+			      Mat:  "{\\operatorname{Mat}}"
+			    }
+			  }
+			});
+
+	</script>
+
+	<script type="text/javascript"
+  		src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+	
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+  		TeX: { equationNumbers: { autoNumber: "all" } }
+		});
+	</script>
+
+	
+<!--  END OF SCRIPTS FOR NOW -->
+	
+<!-- IN CASE AN INEER CSS NEEDED -->
+	<style type="text/css">
+	</style>
+
+	
+	</head>
+    
+
+<body>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~ CONTENT ~~~~~~~~~~~~~~~~~~~~~~~~~ -->	
+<div id="container">
+	
+
+<div id="navigation">
+	<a href="#">The Project</a>
+	<a href="#theoretical_background">Theoretical Background</a>
+	<a href="#algorithm">The Algorithm</a>
+	<a href="#examples">Examples</a>
+	<a href="#conclusion">Conclusion</a>
+	<a href="#references">References</a>
+	<a href="#team">The Team</a>
+</div>
+
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~HEADER~~~~~~~~~~~~~ -->
+	<div id="header">
+		
+	</div> <!-- end of header div -->
+	<!--  ~~~~~~~~~~~~~~~~~~~~~~~~END OF HEADER~~~~~~~~~~~~~~~ -->
+
+
+
+	
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ######################################################################################
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~MAIN CONTENT~~~~~~~~~~~~~~~~~ -->
+	<div class="content">
+
+		<div class="stupid_separation"> <br/></div>
+		<h1 class="title">
+			Computational Symplectic Capacities
+		</h1>
+		<span class="sub_sec_title">
+				Graduate student team-based research workshop supported by the Institute for Computational and Experimental Research in Mathematics (<a href="https://icerm.brown.edu/home/">ICERM</a>), and by the European Research Council (<a href="https://erc.europa.eu">ERC</a>)
+
+			</span>
+
+
+	<h2 class="title" id="the_project">
+		About the Project
+	</h2>
+	<p>
+		In May 2015 a group of graduate students gathered for the Computational Symplectic Topology Workshop's 
+		<a href="http://www.math.tau.ac.il/~ostrover/Workshop/CST/Workshop-CST.html">first seat</a>, 
+		in which they started work on the symplectic capacities project. The goal of this project was to design a computer program that calculates a symplectic invariant called symplectic capacity, specifically the symplectic capacity known as Ekeland-Hofer-Zehnder capacity for convex domains in the classical phase space.
+	</p>
+	<p>
+		The development had started off by implementing an algorithm given in the PhD thesis of G&ouml;ing-Jaeschke from 1998 (see <a href="#GJ">[GJ]</a>).	The team then adapted it according to the project's needs, also using new computational tools now available, such as some of MATLAB's built-in functions.
+	</p>
+	<p>
+		Once this was achieved, the team went on to use this computational tool and pursue with ambition numerical evidence to some famous long standing conjectures regarding symplectic capacities, such as Viterbo's conjecture, which is detailed in the <a href="#theoretical_background">background</a> section of this site; and moreover, attempt to demystify several aspect of the behaviour of the capcity function.
+	</p>
+	<p>
+		This website is meant to succinctly explain about the project and its results.
+		<br/>
+		The implementation of the project is written in MATLAB, and its code is based <a href="http://github.com/itamarr/symp-cap">here</a> (github), including test results.
+		<br/>
+	</p>
+	
+	
+		
+	<div class="stupid_separation" id="theoretical_background"> <br/><br/></div>
+	
+	<h2 class="title">
+		Theoretical Background
+	</h2>
+	
+	<p>
+		We give a brief survey of the required theoretical background from symplectic topology,
+		a full theoretical exposition can be found in the books by 
+			McDuff and Salamon (<a href="#McDS">[McDS]</a>) or by 
+			Hofer and Zehnder (<a href="#HZ2">[HZ2]</a>).
+	</p>
+	
+	<span class="sec_title">Symplectic Manifolds and Symplectic Capacities</span>
+	<p>
+		A <span class="defn">symplectic manifold</span> $(M,\om)$ is a smooth manifold $M$ equipped with a closed non-degenerate 2-form $\om$, called a symplectic form.
+		A first example would be the standard symplectic vector space $\R^{2n}$, with coordinates $q_1, \ldots, q_n, p_1,\ldots, p_n$, equipped with the standard symplectic form $\om_0 = \sum_{i=1}^n dp_i \wedge dq_i$.
+		Locally, by Darboux theorem, any symplectic manifold looks like the standard $(\R^{2n},\om_0)$. 
+		Thus, there are no local invariants in symplectic geometry, as opposed to the situation in Riemannian geometry.
+		However, numerical global invariants do exist, symplectic capacities are a significant example of such symplectic measurements.
+	</p>
+	<p>
+		This theory of symplectic capacities started with the fundamental work of 
+			Gromov on pseudoholomorphic curves (<a href="#G">[G]</a>), 
+		followed then by the influential works of 
+			Ekeland and Hofer (<a href="#EH">[EH]</a>) and 
+			Hofer and Zehnder (<a href="#HZ1">[HZ1]</a>) 
+		on variational theory in Hamiltonian systems,
+		and the work of Viterbo on generating functions (<a href="#V2">[V2]</a>).
+	</p>
+	<p>
+		
+		We deal with symplectic capacities of submanifolds of $\R ^{2n}$ equipped with the standard symplectic form, so we'll only describe this case.
+	</p>
+	
+	<p>
+		Let us use the following notations:
+		<ul>
+			<li>
+				$B_{2n}(r) = \{ x\in \R^{2n} \ |\  \|x\| < r \}$  the open ball of radius $r$ centered at the origin,
+				and
+			</li>
+			<li>
+				$Z_{2n}(r) = \{ x\in \R^{2n} : q_1^2 + p_1^2 < r^2 \} = B_2(r) \times \R^{2(n-1)}$, a cylinder.
+			</li>
+		</ul>
+	</p>
+	
+	<p>
+	
+		<div class="definition">
+			A <span class="defn">symplectic capacity</span> on $\R^{2n}$ is a function $c$ defined on open subsets of $\R^{2n}$, taking non-negative values, with the following properties:
+			<ul class="numbered">
+				<li>(Monotonicity) If $U \subset V$, then $c(U) \leq c(V)$, </li>
+				<li>(Invariance) If $\vphi$ is a symplectomorphism, then $c(\vphi(U)) = c(U)$,</li>
+				<li>(Homogeneity) For all $\alpha > 0$, $c(\alpha U) = \alpha^2 c(U)$,</li>
+				<li>(Non-triviality) $c (B_{2n}(1)) > 0$ and $c(Z_{2n}(1)) < \infty$.</li>
+			</ul>
+		</div>
+		A symplectic capacity $c$ is said to be <span class="defn">normalized</span>, if $c (B_{2n}(1)) = c(Z_{2n}(1)) = \pi $, and <b>henceforth all symplectic capacities in this text are assumed to be normalized</b>.
+	</p>
+	<p>
+	
+		It is a-priori unclear whether a symplectic capacity exists, but currently there is already a list of symplectic capacities introduced in various ways.
+		The concept was introduced by I. Ekeland and H. Hofer in 1990, although, in fact, the first symplectic capacity (the symplectic width) was constructed by M. Gromov, related to the Non-Squeezing theorem he proved in 1985.
+	</p>
+	
+	<p>
+		The project focuses on a certain capacity, called the Ekeland-Hofer-Zehnder capacity, $c_{EHZ}$ defined for convex domains in $\R^{2n}$, which is also normalized.
+		<br/>
+		Let $K$ be a compact strictly convex set in $\R^{2n}$, such that $0$ is in the interior of $K$ and the boundary $\de K$ is smooth of class $C^2$.
+		Denote $H(x) = \| x \|_K^2$, where $\| x \|_K = inf \{ \lambda>0 : x \in \lambda K \} $ is the semi-norm with respect to the convex body $K$, where by convex body we mean here and henceforth a compact convex set with non-empty interior in $\R^{2n}$.
+		(It is a semi-norm in the sense that it is only positively homogeneous, since $K$ might not be symmetric; Being a semi-norm would be enough for our purposes). 
+	
+		By definition, $K = \{ x\in \R^{2n} : \|x\|_K \leq 1 \}$ and $\de K = H^{-1} (1)$.	
+		Note also that the Hamiltonian vector field $X_H = J \nabla H$ defines a flow on $\de K$, where $J$ is a fixed almost complex structure on $\R^{2n}$.
+		<br/>
+		
+		Consider the space of periodic orbits of $X_H$,
+		\begin{equation}
+  			\calE_K = \left\{ z \in C^2(\R,\de K) : \dot z = X_H\circ z,\ z(0)=z(T) \text{ for some }T>0\right\} \;.
+  			\label{eq:def_space_of_periodic_orbits}
+		\end{equation}
+		
+		<div class="definition">
+			The <span class="defn">action</span> of an orbit $z \in \calE_K$ with period $T$ is
+			$\calA (z) = \frac{1}{2}\int_{0}^T \left<-J\dot z,z\right> dt \;.$
+		</div>
+		
+		<div class="definition">
+			The <span class="defn">Ekeland-Hofer-Zehnder capacity</span> of $K$ is the quantity
+			\begin{equation}
+				c_{EHZ} (K) = \inf \left\{  |\calA (z)| : z \in \calE _K  \right\} \;.
+				\label{eq:def_EHZ_capacity}
+			\end{equation}
+		</div>
+		
+		We denote by $\calK$ the set of all compact strictly convex subsets of $\R^{2n}$ which have $C^2$ boundary.
+		
+		<div class="theorem"> (Ekeland, Hofer, Zehnder)
+		 	The functional $c_{EHZ}$ is a capacity on $\calK$. 
+		</div>
+		
+		This theorem is a combination of results from 
+			<a href="#EH">[EH]</a> and 
+			<a href="#HZ2">[HZ2]</a>, 
+		that amounts to the fact that on the class of convex domains in $\R^{2n}$, 
+		two symplectic capacities &mdash; the Ekeland-Hofer capacity $c_{EH}$ and the Hofer-Zehnder capacity $c_{HZ}$ which are defined in a much more general setting &mdash; coincide, 
+		and they are equal to the Ekeland-Hofer-Zehnder capacity $c_{EHZ}$ as defined above.
+		
+	</p>
+	<p>
+		
+		For computational purposes we use the next result which is based on Clarke's duality principle (see <a href="#C">[C]</a>).
+		<div class="theorem">
+			For a convex body $K$ containing $0$, it holds that
+			\begin{equation}
+				c_{EHZ}(K)=\min_{z\in\mathcal{E}}\frac{\pi}{2}\int_0^{2\pi}h_K^2(\dot{z}(t))dt,
+			\end{equation}
+			where
+			\begin{equation}
+				\mathcal{E}=\left\{z\in W^{1,2}(\mathbb{S}^1,\mathbb{R}) \Bigg\vert \int_0^{2\pi}z(t)dt=0, \frac{1}{2}\int_0^{2\pi}\langle Jz,\dot{z}\rangle=1\right\},
+			\end{equation}
+			and $h_K(v)=\lVert v\rVert_{K^\circ}$.
+		</div>
+		
+		For proof see <a href="#HZ2">[HZ2, section 1.5]</a>; cf. Rabinowitz in <a href="#R">[R]</a> and	Weinstein in <a href="#W">[W]</a>.
+		
+	</p>
+	
+	<span class="sec_title" id="known-capacities">Known Capacity Values</span>
+	<p>
+		There are a few cases in which symplectic capacities are known analytically. Foy any compact connected domain with smooth boundary in $\R^2$, Siburg showed in <a href="#Si">[Si]</a> that its symplectic capacity would equal its Lebesgue measure.
+		Other examples where symplectic capacities can be computed precisely include polydiscs, ellipsoids (see <a href="#HZ2">[HZ2]</a>), and convex Reinhardt domains (see <a href="#Hn">[Hn]</a>).
+		Further, we wish to remark that Nir proved in <a href="#N">[N]</a> that the $c_{EHZ}$ capacity of the standard simplex in $\R^{2n}$ is $\frac{1}{2n}$; where by the standard simplex we mean the simplex whose vertices are 0 and the standard unit vectors in $\R^{2n}$.
+<!--
+ For ellipsoids in any even dimension, the capacity is $\pi$ times the minimal symplectic radius squared; see <a href="#HZ2">[HZ2]</a> sectoin 2.1 for details. In the case of polydiscs, any normalized capacity would give the minimum over the capacity of the disks considered as 2 dimensional objects; see <a href="#McDS">[McDS]</a> section 13.1 for further discussion regarding polydiscs. For Reinhardt domains see treatment by Hermann in <a href="#Hn">[Hn]</a>. In the case of the standard simplex, viz. the simplex whose vertices are 0 and the standard unit vectors in $\R^{2n}$, Nir proved in <a href="#N">[N]</a> that the $c_{EHZ}$ capacity of the simplex is $\frac{1}{2n}$.
+	</p>
+	<p>
+As an example, let's consider the class of ellipsoids. Given an ellipsoid $\mathcal{E}$, one can change the base of the space and arrive at the next representation of the ellipsoid. Assume that the symplectic basis is given by $q_1,\ldots,q_n,p_1,\ldots,p_n$, and $x_{q_j}$ is the $q_j$'th coordinate of $x$, and likewise for $x_{p_j}$. In these coordinates,
+\begin{equation}
+	\mathcal{E}=\left\{x\in\mathbb{R}\Bigg\vert \sum_{j=1}^{n}\frac{1}{r_j^2}(x_{q_j}^2+x_{p_j}^2)\leq 1\right\}.
+\end{equation}
+The numbers $r_1,\ldots,r_n$ can be assumed to be ordered, without any loss of generality, like so $0< r_1(\mathcal{E})\leq\ldots\leq r_n(\mathcal{E})$.
+These are symplectic invariants of $\mathcal{E}$, called the <i>symplectic radii</i>, and in fact it's known that,
+\begin{equation}
+	c(\mathcal{E})=\pi r_1(\mathcal{E})^2
+\end{equation}
+for any weakly nontrivial symplectic capacity $c$ on the class of symplectic manifolds.
+For further details see section 2.1 in <a href="#HZ2">[HZ2]</a>.
+-->
+	</p>
+	<span class="sec_title">Known Conjectures</span>
+	<p>
+	
+		Following Viterbo's work, it is interesting to establish a connection between symplectic capacities and the approach of Riemannian geometry. For instance, one can ask about the relations between symplectic capacities and volume. 
+		Some of the questions arising in this fashion are in the flavor of the isoperimetric inequality.
+	</p>
+	<p>
+		Viterbo conjectured that among all convex bodies in $\R^{2n}$ of a given volume, the Euclidean ball has maximal symplectic capacity. The precise statement is the following.
+		<div class="conjecture"> (Viterbo's Symplectic Isoperimetric Conjecture)
+			Let $K$ be any convex body in $\R^{2n}$, and any symplectic capacity $c$,
+			\begin{equation} 
+				\frac{c(K)}{c\left( B \right)} 
+					\leq 
+				\left( \frac{Vol (K) }{Vol (B)} \right) ^{1/n} \;,
+				\label{viterbo_ineq_expression}
+			\end{equation}
+			where $B=B^{2n}(1)$ is the unit ball in $\R^{2n}$.
+		</div>
+<!--
+		To be precise, consider the following relation between the a capacity $c$ of a (convex) set $K$ and the unit ball in $\R^{2n}$
+		\begin{equation} 
+			\frac{c(K)}{c\left( B_{2n} \right)} 
+				\leq 
+			\gamma_n \left( \frac{Vol (K) }{Vol (B_{2n})} \right) ^{1/n} \;,
+			\label{viterbo_ineq_expression}
+		\end{equation}
+		
+		where the constant $\gamma_n$ is of interest.
+		
+	</p>		
+	<p>
+		A result by Viterbo is the following linear bound.
+		<div class="theorem"> (Viterbo, <a href="#V1">[V1]</a>)
+			For any symplectic capacity $c$, $\gamma_n \leq 4n$ when $K$ is a general convex set, and $\gamma_n\leq n$ when $K$ is centrally symmetric.
+		</div>
+		
+		Viterbo then conjectured that:
+		
+		<div class="conjecture"> (Viterbo's Symplectic Isoperimetric Conjecture)
+			The best constant in (\ref{viterbo_ineq_expression}) is $\gamma_n = 1$, for any choice of convex body $K$ and any normalized symplectic capacity.
+		</div>
+-->
+		
+		We want to note also that for the special class of convex Reinhardt domains, Hermann showed that this conjecture holds 
+			(see <a href="#Hn">[Hn]</a>). 
+		
+	</p>
+	<p>
+		We also considered the following conjecture as presented by Akopyan, Karasev and Petrov in <a href="#AKP">[AKP]</a>.
+		<div class="conjecture"> (Symplectic subadditivity conjecture)
+			If a convex body $K \subset \R^{2n}$ is covered by a finite set of convex bodies $\{ K_i \}$
+			then for some symplectic capacity $c$, 
+			\begin{equation}
+				c(K) \leq \sum_i c(K_i) \;,
+			\end{equation}
+		</div>
+		Note that we only checked this conjecture for $c_{EHZ}$.
+	</p>
+	<p>
+		As part of the project, we designed and ran tests to try and refute both these conjectures. However, we could not find any counterexamples.
+	</p>
+
+	<span class="sec_title" id="discretization">Towards Computations - Discretization </span>
+	<p>
+				In her thesis, G&ouml;ing-Jaeschke developed a method of discretizing the minimization problem at hand, which we used in our implementation. Let us briefly describe this method, and note that the full details are given in <a href="#GJ">[GJ]</a>. First, recall that we want to solve the following minimization problem, which is equivalent to our initial one.
+				We consider the set
+					\begin{equation}
+						M = \left\{ x\in H^{1}([0,1],\R^{2n})\,:\, \int_0^1 \dot x(t)dt = 0\right\}
+					\end{equation}
+					
+				and the functional 
+					\begin{equation}
+						\calF_K(x) = \int_0^1h_K^2(-J\dot x(t))dt \;.
+						\label{eq:functional}
+					\end{equation}
+					
+				Our minimization problem is the following constrained one:
+					\begin{equation}
+						\lambda = \inf\left\{ \calF_K(x) : \, x\in M,\, \int_0^1\langle -J\dot x(t),x(t)\rangle dt = 1\right\}
+						\label{MinProblem}
+					\end{equation}
+				We know that it has at least one solution, denoted by $u$. 
+				
+	</p>
+	
+	<p>			
+				
+				In order to numerically solve the minimization problem (\ref{MinProblem}), 
+				we follow the general outline presented in <a href="#GJ">[GJ]</a>.
+				<br/>
+			
+				
+				Given $m\in\N$, divide the interval $[0,1]$ to $m$ subintervals 
+					$I_{m,k}:=(\frac{k}{m},\frac{k+1}{m})$, $k=0,\dots,m-1$, of length $\frac{1}{m}$, 
+				and consider only $H^1$-functions that are linear on each subinterval,
+				
+				\begin{equation}
+					W_m:=\left\{u\in H^1([0,1],\R^{2n})\ \big|\ |\dot u|_{I_{m,k}} \equiv\text{const},
+					\ \int_0^1u(t)dt=0,\ \int_0^1\left<-J\dot u,u\right>=1 \right\},
+				\end{equation}
+				
+				where $J\in\Mat(2n,\R)$ is the standard complex structure on $\R^{2n}$,
+				
+				\begin{equation*}
+					J= \left(\begin{array}{cc}
+						0 & I_n\\ -I_n & 0
+						\end{array}\right).
+				\end{equation*}
+				
+				Let $u\in W_m$, then $\dot u$ is piece-wise constant, and can be represented by a vector 
+				$\dot \x= (\dot x_1,\dots,\dot x_{m})\in \R^{2n\cdot m}$. In this case, the functional to minimize (\ref{eq:functional}) takes the form
+				
+				\begin{equation}
+					F(\dot\x) = \frac{1}{m} \sum_{j=1}^{m} G(-J \dot x_j),
+				\end{equation}
+				
+				and its gradient is
+				\begin{equation}
+					\nabla F (\dot\x) = \frac{1}{m} (J\nabla G(-J\dot x_1),\dots,J\nabla G(-J\dot x_{m})).
+				\end{equation}
+				
+				The constraints are given by
+				\begin{eqnarray}
+					0 &=& \ell(\dot\x) = \sum_{j=0}^{m-1}\dot x_j, \label{eq:lincon}\\
+					0 &=& q(\dot\x) = \frac{1}{m^2} \sum_{k=1}^{m-1}\sum_{j=0}^{k-1}\left<-J \dot x_k, \dot x_j\right> -1 = \frac{1}{m^2} \dot \x^T A \dot \x -1,\label{eq:quadcon}
+				\end{eqnarray}
+				
+				where 
+				
+				\begin{equation*}
+					A:=\left(\begin{array}{cccc}
+						0_{2n} & -J_{2n} & \cdots & -J_{2n}\\
+						\vdots & \ddots & & \vdots\\
+						\vdots & & \ddots & -J_{2n}\\
+						0_{2n} & \cdots & \cdots & 0_{2n}
+					\end{array}\right) \in \Mat(\R, 2n\cdot m),
+				\end{equation*}
+
+				and the gradient of the quadratic constraint is 
+				\begin{equation*}
+					\nabla q(\dot\x) = \frac{1}{m^2} (A+A^T)\dot \x.
+				\end{equation*}
+				
+				To minimize the functional $F$ under the constraints $\ell,q$ we use the MATLAB library function named 
+				<font face="courier"><a href="http://www.mathworks.com/help/optim/ug/fmincon.html">fmincon</a></font>. 
+				This function receives as input the functional, its gradient, the constraints and their gradients, 
+				together with a starting point in  $\R^{2n\cdot m}$ and iteratively searches for a local minimum. 
+				The function <font face="courier">fmincon</font> enables choosing a minimization algorithm out of a given list. 
+				After numerically experimenting the possible algorithms, we chose "active-set" as it produced the best results in terms of accuracy and run-time. 
+				To choose a starting vector, we randomly pick a vector in $\R^{2n\cdot m}$, 
+				then shift and rescale it to satisfy conditions (\ref{eq:lincon}), (\ref{eq:quadcon}).
+				
+	<div class="stupid_separation" id="algorithm"> <br/><br/></div>
+	<h2 class="title">
+		The Algorithm
+	</h2>
+	
+	<p>
+		The project contains several sub-modules, each with its own computational purpose, yet all of them use the basic function called Capacity which calculates the capacity of a given polytope. In this section we explain the algorithm of this function which relies on the discretization presented in A. G&ouml;ing-Jaeschke's PhD thesis <a href="#GJ">[GJ]</a>.
+	</p>
+	<p>
+		We present the algorithm, with modifications, here:
+	</p>
+<pre><code><ol>
+<li> If needed move the polytope's centroid to 0.</li>
+<li> Generate a random path.
+<ol><li>Put <i>x</i><sub>0</sub>:= a random vector of size (<i>2*n*m</i>, 1) with entries in [-1,1].</li>
+<li>Correct the vector so that the sum of the entries in each dimension is 0.</li>
+<li>Put <i>l</i>:=<i>x</i><sub>0</sub><sup>T</sup><i>A</i><sub>2n</sub><i>x</i><sub>0</sub>.</li>
+<li>if (<i>l</i>&lt;&epsilon;), go back to step 2.3.</li>
+<li>If (<i>l</i>&lt;0) invert the direction of the path.</li>
+<li>Normalize the path by <sup>1</sup>&frasl;<sub><i>l</i></sub>.</li></ol></li>
+<li>Find the action minimizer
+<ol><li>Use MATLAB's <font face="courier"><b>fmincon</b></font> to find the action minimizer. Keep the output in [minimizer, minimizerAction].</li>
+<li>for k=1 to <font face="courier">exp</font>
+<ol><li>Break the minimizer's path into twice as many smaller sections.</li>
+<li>Multiply <i>m</i> by 2, and recalculate the constraints matrix.</li>
+<li>If <i>m</i> is large enough, increase the tolerance used for <font face="courier"><b>fmincon</b></font>.</li>
+<li>Use <font face="courier"><b>fmincon</b></font> as before.</li>
+<li>If the change in the minimizer's action is small, stop the iterations.</li>
+</ol></li></ol></li>
+<li>If required, reconstruct the characteristic.</li>
+<li>Return 2*<i>F</i>(minimizer).</li>
+</ol>
+</code>
+</pre>
+
+	<p>
+	Let's explain some of the points in the algorithm. First, this is the general form of the algorithm, in the sense that it's agnostic to the question of "what type  of convex body (e.g. ellipsoids, simplices, etc.) are we considering?". It is known that one can approximate a convex body by polytopes, and that approximation translates to capacities. Yet, this requires proof, and further, this approach takes a heavy toll in terms of running time. In cases where the norm of the dual body is known analytically, the algorithm is much more precise and takes far less time.
+	</p>
+
+	<p>
+	With this in mind, we'll continue with polytopes as a prime example. The input of the algorithm, therefore, is a matrix $P$ whose rows are the extreme points of the convex hull for which we want to calculate the capacity. Therefore, the dimensions of $P$ is $k\times 2n$ where $k$ is the number of points and $2n$ is the dimension of the ambient Euclidean space.
+	</p>
+
+	<p>
+We begin by centralizing the polytope, so to increase the accuracy of the action function. Recall that the Hamiltonian is the norm of the convex body, whence we need the centroid of the convex body to be at 0. We then generate a random starting path in the dual space.
+This path is represented by constant vectors, as explained in the theoretical section of this site. We then fix the path so that it closes to a closed path, and then calculate the constraint function on this path, i.e., $x^TA_{2n}x$. We continue generating such random paths until we reach one whose constraint value is not too small, since we later normalize by this value and would like to avoid loss of significance due to small numbers division. Finally for this part of the algorithm, we check if the constraint value is negative, since this indicates the path is going in the wrong direction, in which case we fix by reversing the order of the vertices.
+	</p>
+	<p>
+For the action minimizing section of the algorithm, note that we iterate the minimization process a few times (the stopping conditions for this are configurable parameters of the algorithm). The idea behind this procedure is to begin with a rough approximation of the action, and then fine tune this value until we don't produce further meaningful improvements. The reason we do this is to improve the running time of the algorithm, and at least empirically this produced satisfying results. Note that we have no proof that this phenomenon holds true in all cases.
+	</p>
+
+	<p>
+The procedure of iteration consists in both increasing the number of subintervals, thus allowing finer paths; and in increasing the tolerance values for the <font face="courier"><b>fmincon</b></font> function. Some of these values are configurable, and generally have been tested to produce better running time.
+	</p>
+
+	<p>
+For completeness we remind the reader that the function to minimize is given by
+\begin{equation}
+		F(x)=\frac{1}{m}\sum_{j=0}^{m-1}G(-J_{2n}x_j),
+\end{equation}
+where $x_j$ is the derivative of the characteristic in the interval $I_j$. Note that in $G$ is where a change of the convex body, e.g. from polytope to ellipsoid, affects the implementation. The linear constraints supplied to <font face="courier"><b>fmincon</b></font> is the discretized version of the constraint $\int_0^1\tilde{u}\operatorname{d}t=0$, namely,
+\begin{equation}
+	\sum_{j=0}^{m-1}x_j=0,
+\end{equation}
+where $\tilde{u}$ is the piecewise constant derivatives. The nonlinear constraints supplied to <font face="courier"><b>fmincon</b></font> is given by the function
+\begin{equation}
+	c(x)=\frac{1}{m^2}x^TA_{2n}x-1
+\end{equation}
+	</p>
+	<p>
+A final remark on the minimization, is that the algorithm we use in <font face="courier"><b>fmincon</b></font> is called 'active set'. This choice was made after several attempts to find the most suitable of algorithms, during which all others gave worse results - either in running time or in numerical result.
+	</p>
+	<p>
+The last non-trivial step in the Capacity function is to reconstruct the characteristic out of the minimizer of the dual problem.
+Theoretically this is achieved by integration, and so the implementation of the <font face="courier">ReconstructCharacteristic</font> function simply consists of summing of the correct terms in the right factors.
+	</p>
+	
+	
+	<div class="stupid_separation" id="examples"> <br/><br/></div>	
+	<h2 class="title">
+		Examples
+	</h2>
+	
+	<p>
+
+We ran different tests, attempting to better understand the behaviour of the capacity function, and to test the correctness of some conjectures.
+	</p>
+<span class="sec_title">Symplectic Capacity of a Disk in $\R^2$</span>
+	<p>
+One of the basic convex bodies is a disk in the 2 dimensional Euclidean plane. Since the Ekeland-Hofer-Zehnder capacity is normalized, we know that the output of our program for the disk of radius 1 should be $\pi$.
+To calculate the capacity of a disk one can either calculate its dual norm and plug it into the algorithm above, or one can approximate by regular polygons.
+Here we'll discuss approximation by polygons, since this approximation is more general in the sense that if the result for the disk is correct, then it's likely that the program would also work for other approximated bodies.
+	</p>
+	<p>
+	Therefore, here are the results of our program for regular polygons in $\R^2$ with increasing number of edges. Indeed, we see that as the number of edges increases, so does the result approach $\pi$.
+	</p>
+
+<p>
+	<div class="table_title" align="center">Symplectic capacity of $m$-gons approximating a disk in $\R^2$</div>
+	<div class="CSSTableGenerator">
+	<table>
+		<tr>
+			<td>Number of Edges = $m$</td>
+			<td>Capacity</td>
+		</tr>
+		<tr>
+			<td>21</td>
+			<td>3.0974</td>
+		</tr>
+		<tr>
+			<td>22</td>
+			<td>3.1016</td>
+		</tr>
+		<tr>
+			<td>23</td>
+			<td>3.1052</td>
+		</tr>
+		<tr>
+			<td>24</td>
+			<td>3.1089</td>
+		</tr>
+		<tr>
+			<td>25</td>
+			<td>3.1112</td>
+		</tr>
+		<tr>
+			<td>26</td>
+			<td>3.1137</td>
+		</tr>
+		<tr>
+			<td>27</td>
+			<td>3.1159</td>
+		</tr>
+		<tr>
+			<td>28</td>
+			<td>3.1179</td>
+		</tr>
+		<tr>
+			<td>29</td>
+			<td>3.1196</td>
+		</tr>
+		<tr>
+			<td>30</td>
+			<td>3.1212</td>
+		</tr>
+		<tr>
+			<td>31</td>
+			<td>3.1226</td>
+		</tr>
+		<tr>
+			<td>32</td>
+			<td>3.1291</td>
+		</tr>
+		<tr>
+			<td>33</td>
+			<td>3.1253</td>
+		</tr>
+		<tr>
+			<td>34</td>
+			<td>3.1264</td>
+		</tr>
+		<tr>
+			<td>35</td>
+			<td>3.1273</td>
+		</tr>
+		<tr>
+			<td>36</td>
+			<td>3.1283</td>
+		</tr>
+		<tr>
+			<td>37</td>
+			<td>3.1291</td>
+		</tr>
+		<tr>
+			<td>38</td>
+			<td>3.1299</td>
+		</tr>
+		<tr>
+			<td>39</td>
+			<td>3.1306</td>
+		</tr>
+		<tr>
+			<td>40</td>
+			<td>3.1314</td>
+		</tr>
+
+	</table>
+	</div>
+</p>
+
+	<br/>
+	<span class="sec_title">Symplectic Capacity of $l_p$ Balls in $\R^2$</span>
+	<p>
+Running the Capacity function on $l_p$ unit balls in $\R^2$, denoted by $B_p(1)$, yields the following results when approximating them with 50 random points scaled by the appropriate norm.
+	</p>
+	<div class="table_title" align="center">Symplectic capacity of unit balls in $\R^2$ with $l_p$ norm for varried $p$, approximated by random 50-gons</div>
+	<div class="CSSTableGenerator">
+	<table>
+	<tr>
+		<td>Capacity</td>
+		<td>$p$ Value</td>	
+	</tr>
+	<tr>
+		<td>1.9774</td>
+		<td>1.01</td>
+	</tr>
+	<tr>
+		<td>3.1137</td>
+		<td>2</td>
+	</tr>
+	<tr>
+		<td>3.5076</td>
+		<td>3</td>
+	</tr>
+	<tr>
+		<td>3.6910</td>
+		<td>4</td>
+	</tr>
+	<tr>
+		<td>3.8887</td>
+		<td>8</td>
+	</tr>
+	<tr>
+		<td>3.8548</td>
+		<td>10</td>
+	</tr>
+	</table>
+	</div>
+
+<!--
+	<p>
+Of course, as in the case of Euclidean disks, the norms are known analytically, whence we could write a version of the Capacity function that handles $l_p$ balls specifically.
+However, this has not been done.
+	</p>
+-->
+	<br/>
+	<span class="sec_title">Symplectic Capacity of the Standard Simplex in $\R^{2n}$</span>
+	<p>
+	The standard simplex is the simplex whose vertices are 0 and the unit vectors in $\R^{2n}$.
+The capacity of the standard simplex has been computed by Nir in <a href="#N">[N]</a> to be $\frac{1}{2n}$.
+	</p>
+	<p>
+Our capacity function gave the following results:
+	</p>
+
+	<div class="table_title" align="center">Symplectic capacity of the standard simplex in $\R^{2n}$</div>
+	<div class="CSSTableGenerator">
+	<table>
+	<tr>
+		<td>Half Dimension = $n$</td>
+		<td>E.H.Z. Capacity</td>
+		<td>Theoretical Value = $\frac{1}{2n}$</td>
+		<td>Running Time (sec)</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>0.5008</td>
+		<td>0.5</td>
+		<td>20</td>
+	</tr>
+	<tr>
+		<td>2</td>
+		<td>0.2520</td>
+		<td>0.25</td>
+		<td>15</td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td>0.1700</td>
+		<td>0.1667</td>
+		<td>9</td>
+	</tr>
+	<tr>
+		<td>4</td>
+		<td>0.1264</td>
+		<td>0.125</td>
+		<td>15</td>
+	</tr>
+	<tr>
+		<td>5</td>
+		<td>0.1021</td>
+		<td>0.1</td>
+		<td>152</td>
+	</tr>
+	<tr>
+		<td>6</td>
+		<td>0.0856</td>
+		<td>0.0833</td>
+		<td>53</td>
+	</tr>
+	<tr>
+		<td>7</td>
+		<td>0.0740</td>
+		<td>0.0714</td>
+		<td>46</td>
+	</tr>
+	<tr>
+		<td>8</td>
+		<td>0.0634</td>
+		<td>0.0625</td>
+		<td>549</td>
+	</tr>
+	<tr>
+		<td>9</td>
+		<td>0.0577</td>
+		<td>0.0556</td>
+		<td>135</td>
+	</tr>
+	<tr>
+		<td>10</td>
+		<td>0.0533</td>
+		<td>0.05</td>
+		<td>186</td>
+	</tr>
+	</table>
+	</div>
+
+	<p>
+		Note that the results of the program are very close to the theoretical value.
+	</p>
+
+	<br/>
+	<span class="sec_title" id="ellipsoid_capacity">Symplectic Capacity of Ellipsoids in $\R^{2n}$</span>
+	<p>
+		As mentioned in the <a href="#known-capacities">theoretical section</a>, the symplectic capacities for ellipsoids are known analytically. Moreover, all symplectic capacities coincide for ellipsoids, and give the following result. For details see <a href="#HZ2">[HZ2]</a>, and in the notations there we calculate that for a symplectic capacity $c$ and an ellipsoid $E$ we have that,
+		\begin{equation}
+			c(E)=\pi r_1(E)^2,
+		\end{equation}
+		where $r_1(E)$ is the smallest symplectic radius of the ellipsoid.
+	</p>
+	<p>
+Therefore, we implemented a version of the Capacity function that calculates the capacity of ellipsoids, given in symplectic form.
+That is, the input for this version of the function receives a vector of symplectic radii as input, and finds its capacity using the general algorithm described <a href="#algorithm">above</a>.
+	</p>
+
+	<p>
+		In this example we show the results of the Capacity function for a couple of ellipsoids. Note that they are of dimension twice the number of radii. Further, note that although our implementation can only find the $c_{EHZ}$ capacity of ellipsoids already given in symplectic form, the order of the radii makes no difference.
+	</p>
+
+	<div class="table_title" align="center">Symplectic capacity of ellipsoids in $\R^{2n}$</div>
+	<div class="CSSTableGenerator">
+	<table>
+	<tr>
+		<td>Half dimension = $n$</td>
+		<td>Radii</td>
+		<td>Capacity</td>
+		<td>Theoretical Value</td>
+		<td>Running time (sec)</td>
+	</tr>
+	<tr>
+		<td>6</td>
+		<td>[1 2 3 4 5 6]</td>
+		<td>3.1485</td>
+		<td>3.1415</td>
+		<td>288</td>
+	</tr>
+	<tr>
+		<td>3</td>
+		<td>[5 3 6]</td>
+		<td>28.3117</td>
+		<td>28.2743</td>
+		<td>13.4</td>
+	</tr>
+	</table>
+	</div>
+
+	<p>
+		Note that the calculated value by the program is indeed very close to the theoretical value.
+	</p>
+
+	<br/>
+	<span class="sec_title">Symplectic Capacity of the Lagrangian Product of a Triangle and a Circle in $\mathbb{R}^4$</span>
+	<p>
+		Following F. Schlenk, denote by $\triangle(a) = \left\{0< q_1,q_2 \Big| \frac{q_1}{a} + \frac{q_2}{a} < 1 \right\}$ an open right triangle with side length $a$, and by $\square = \left\{0< p_1,p_2 \Big| 0< p_i<1,\quad i=1,2 \right\}$ an open square of side length 1.
+	</p>
+	<p>
+
+		We consider the Lagrangian product $\triangle(\pi)\times \square$. The interior of this product is symplectomorphic to a Euclidean ball with the same volume. See <i>Lemma 5.3.1</i> in <a href="#Sc">[Sc]</a>.
+		It therefore follows that all symplectic capacities should yield $\pi$ for this product.
+	<p>
+		In our implementation, to compute the Lagrangian product of bodies for which the dual norm is not known analytically, we construct the product of two polytopes representing the bodies, then compute the extreme points of this product. The result of this calculation is then supplied as input to the Capacity function.
+	</p>
+	<p>
+		Following the theoretical results above, we constructed the polytope $\triangle(\pi)\times \square$ and tested the program for various values of the number of subintervals $m$ (for details see <a href="#discretization">Discretization</a> above), and got the following:
+	</p>
+
+	<div class="table_title" align="center">Symplectic capacity of $\triangle(\pi)\times \square$ for different number $m$ of subintervals</div>
+	<div class="CSSTableGenerator">
+	<table>
+	<tr>
+		<td>Number of Subintervals = $m$</td>
+		<td>Capacity</td>
+	</tr>
+	<tr>
+		<td>30</td>
+		<td>3.1651</td>
+	</tr>
+	<tr>
+		<td>60</td>
+		<td>3.1603</td>
+	</tr>
+	<tr>
+		<td>120</td>
+		<td>3.1539</td>
+	</tr>
+	</table>
+	</div>
+
+<div class="stupid_separation" id="conclusion"> <br/><br/></div>
+	<h2 class="title">
+		Conclusion
+	</h2>
+	<p>
+		As mentioned, while working on the project, we did not find any counter examples for the conjectures in the theoretical section above, but there are several directions for further investigation.
+		It is our hope that this project would help anyone interested in symplectic capacities, both theoretically and computationally. We hope this project could be used further in advancing research, in asking new questions, and perhaps in answering them as well.
+	</p>
+
+	<div class="stupid_separation" id="references"> <br/><br/></div>
+	<h2 class="title">
+		References
+	</h2>
+	<p>
+		<ul class="ref">
+		<li id="AAO"><b>[AAO]</b> - S. Artstein-Avidan and Y. Ostrover, <i>Bounds for minkowski billiard trajectories in convex bodies</i>, International Mathematics Research Notices <b>2014</b> (2014), no. 1, 165-193.
+		</li>
+	
+		<li id="AKP"><b>[AKP]</b> - A. Akopyan, R. Karasev, and F. Petrov, <i>Bang's problem and symplectic invariants</i>, ArXiv e-prints (April 2014), available at <a href="http://adsabs.harvard.edu/abs/2014arXiv1404.0871A"><font face="courier">1404.0871</font></a>.
+		</li>
+
+		<li id="C"><b>[C]</b> -
+			F.H. Clarke, <i>Shorter Notes: A Classical Variational Principle for Periodic Hamiltonian Trajectories.</i>,
+				Proceedings of the American Mathematical Society (1979): 186-188.
+		</li>
+
+		<li id="EH"><b>[EH]</b> - 
+			I. Ekeland and H. Hofer, <i>Symplectic topology and Hamiltonian dynamics</i>, Mathematische Zeitschrift, 200 (1989), no. 3, 355-378.
+		</li>
+		
+		
+		<li id="GJ"><b>[GJ]</b> - A. G&ouml;ing-Jaeschke et al., <i>Parameter estimation and bessel processes in financial models
+				and numerical analysis in hamiltonian dynamics</i>, Ph.D. Thesis, 1998.
+		</li>
+		
+		<li id="G"><b>[G]</b> - M. Gromov, 
+			<i>"Pseudo holomorphic curves in symplectic manifolds."</i> Inventiones mathematicae 82.2 (1985): 307-347.
+		</li>
+		
+		<li id="Hn"> <b>[Hn]</b> - D. Hermann, 
+			<i>Non-equivalence of symplectic capacities for open sets with restricted
+contact type boundary</i>. Pr&eacute;publication d'Orsay num&eacute;ro 32 (29/4/1998).
+		</li>
+		
+		<li id="HZ1"><b>[HZ1]</b> - H. Hofer, E. Zehnder. <i>A new capacity for symplectic manifolds</i>, Analysis, et cetera,
+				405-427, Academic Press, Boston, MA, 1990
+		</li>		
+
+		<li id="HZ2"><b>[HZ2]</b> - H. Hofer and E. Zehnder, <i>Symplectic invariants and hamiltonian dynamics</i>, Birkh&auml;user
+			Advanced Texts Basler Lehrb&uuml;cher, Birkh&auml;user Basel, 2012.
+		</li>
+		
+		<li id="McDS"> <b>[McDS]</b> - D. McDuff and D. Salamon, <i>Introduction to symplectic topology</i>, 
+			Oxford University Press, 1998.
+		</li>
+		
+		<li id="N"><b>[N]</b> - Y. Nir, <i>On closed characteristics and billiards in convex bodies</i>. Diss. Tel Aviv University, 2013.</li>
+		
+		<li id="R"> <b>[R]</b> -
+			P.H. Rabinowitz, <i>Periodic solutions of Hamiltonian systems.</i>, Communications on Pure and Applied Mathematics 31.2 (1978): 157-184.
+		</li>
+
+		<li id="Sc"><b>[Sc]</b> - Schlenk Felix, <i>Embedding Problems in Symplectic Geometry</i>, de Gruyter Expositions in Mathematics, vol. 40, Berlin, 2005.
+		</li>
+
+		<li id="Si"><b>[Si]</b> - Siburg, K. F., <i>Symplectic capacities in two dimensions</i>, Manuscripta Math. 78 (1993), no. 2, 149-163.
+		
+		
+		<li id="V1"> <b>[V1]</b>
+			-	C. Viterbo, <i>Metric and isoperimetric problems in symplectic geometry.</i>, 
+				J. Amer. Math. Soc. 13 (2000), no. 2, 411431.
+		</li>
+		
+		
+		<li id="V2"> <b>[V2]</b> - C. Viterbo, <i>"Symplectic topology as the geometry of generating functions."</i> 
+			Mathematische Annalen 292.1 (1992): 685-710.
+		</li>
+		
+		<li id="W"><b>[W]</b> -
+			A. Weinstein, <i>Periodic orbits for convex Hamiltonian systems.</i>, Annals of Mathematics (1978): 507-518.
+		</li>
+
+		</ul>
+	</p>	
+	
+	<div class="stupid_separation" id="team"> <br/><br/></div>
+	<h2 class="title">
+		The Team
+	</h2>
+		
+	<p>
+		Gautam Banhatti, University of Muenster, 
+		<br/>
+		Robert Castellano, Columbia University, 
+		<br/>
+		Yaniv Ganor, Tel-Aviv University,
+		<br/>
+		Jeremy Lane, University of Toronto,
+		<br/>	
+		Christopher Policastro, University of California, Berkeley,
+		<br/>
+		Itamar Rauch, Tel-Aviv University,
+		<br/>	
+		Karina Samvelyan, Tel-Aviv University,
+		<br/>
+		Kyler Bryce Siegel, Stanford University,
+		<br/>
+		Emmanuel Tsukerman, University of California, 
+		<br/>
+		Shira Tanny, Tel-Aviv University.
+		
+
+	</p>
+	</div> <!-- end of content div -->
+	<!-- ~~~~~~~~~~~~~~~~~~~ END OF MAIN CONTENT~~~~~~~~~~~~~~~~~~~~~ -->
+
+	
+	
+	
+	<!-- ~~~~~~~~~~~~~~~~~~~FOOTER~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<div class="footer">
+	
+	
+	</div> <!-- end of footer div -->
+	<!-- ~~~~~~~~~~~~~~END OF FOOTER~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+</div> <!-- end of container div -->
+<!-- ~~~~~~~~~~~~ END OF CONTAINER ~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+</body>
+	
+</html>
