@@ -3,23 +3,9 @@
   <html>
 
   <head>
-  	<title>Math 635: Quantitative aspects of Morse and Floery theory</title>
-    
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8TCLYDQRHC"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-8TCLYDQRHC');
-    </script>
-
-    <script async src="//static.getclicky.com/101355699.js"></script>
-    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101355699ns.gif" /></p></noscript>
+  	<title>Math 635a: XX</title>
 
   	<style type="text/css">
-
   	 .row { vertical-align: top; height:auto !important; }
   	 .list {display:none; }
   	 .show {display: none; }
@@ -30,8 +16,6 @@
   	 </style>
 
   <style>
-
-
   table {
       font-family: arial, sans-serif;
       border-collapse: collapse;
@@ -47,15 +31,6 @@
   tr:nth-child(even) {
       background-color: #dddddd;
   }
-
-/*  h1{
-    color:  rgb(169, 3, 252);
-  }
-
-  h2{
-    color:  rgb(223, 3, 252);
-  }
-*/
 
   </style>
 
@@ -131,397 +106,555 @@ p.mar {
 
   </head>
 
+    <style>
+        iframe {
+            display: block; /* Removes inline space */
+            margin: 0;      /* Removes default margins */
+            width: 100%;    /* Adjust the size as needed */
+            height: auto;
+            border: none;   /* Remove default border */
+        }
+    </style>
+
 <body style="font-size:125%; margin-right:10%; margin-left:.75%">
 
 
 
-  	<h1> Math 635: Quantitative aspects of Morse and Floer theory<br>
-    USC Spring 2022  <br>
-
-          <img src="635/image.jpg" width="650"/><br>
+  	<h1> Almost toric methods in symplectic and algebraic geometry <br>
+    Math 635, USC Fall 2024  <br>
 
 </h1>
 
 
-<h2>
-  	Instructor.
-</h2>
-   
-   <p>  Kyler Siegel (kyler.siegel@usc.edu)  </p>
+<h2> Instructors. </h2>
+<ul>
+ <li> Kyler Siegel (kyler.siegel@usc.edu) </li>
+<!-- <li> Teaching assistant: TBA</li> -->
+</ul>
 
-<h2>
-  Time and location.
-</h2>
-<p> We will meet in KAP 245, <b>10:40-11:55am on Wednesdays and Fridays</b>.
-   For the first two weeks we met over Zoom (meeting id: <a href="https://usc.zoom.us/j/95973733808?pwd=Q0Y2UW8zRWxnQXh3dElJR09nMDdNUT09">959 7373 3808</a>).
-</p>
+<img src="635_fall_2024/ATF.jpg" width=50% height=350px>
 
-
-
-
-<h2> Mailing list.</h2>
-
-<p>     Please email Kyler if you would like to receive emails about the course, including Zoom links.
-</p>
-
+<h2> Time and location. </h2>
+<p> TBA - please be sure to contact Kyler to get on the mailing list ASAP to keep informed. </p>
 
   	<h2> About.	</h2> 
   	<p>
-    This course is an introduction to Morse and Floer theory from the quantitative viewpoint. In the first half of the course, we will begin by briefly covering the basics of these theories, with a particular emphasis on action filtrations and the Hofer norm. We will also introduce persistent homology, an important tool for extracting information from a filtered chain complex (this also plays a central role in topological data analysis).
-</p>
+      Toric geometry roughly studies spaces equipped with torus actions, with parallel frameworks in both algebraic and symplectic geometry. The torus symmetry allows us to reduce essentially any geometric problem to combinatorics, and this gives a potent laboratory for computing examples and generating and testing conjectures. Almost toric geometry generalizes toric geometry by studying systems with certain extra singularities which arise frequently in nature and which vastly extend the range of applicability.
+      These spaces are also largely combinatorial in nature, but they require additional input from integral affine geometry. 
+      In this course, we will introduce almost toric geometry from the perspectives of both algebraic and symplectic geometry, discuss many examples and tools, and finally explore various recent breakthroughs which rely on insights from almost toric geometry.
 
-<p>
-  In the second half of the course, we will discuss various applications and recent advances in symplectic geometry. The topics will mostly be based on recent papers and will be chosen partly based on the interests of the audience. In the last few weeks of the course each student will give a presentation on a relevant topic, chosen in consultation with the instructor.
   	</p>
-
-       <img src="635/image2.jpg" width="350"/><br>
 
   	<h2> Prerequisites. </h2>
   	<p>
-     We will assume familiarity with smooth manifolds and differential forms, as well as basic algebraic topology. Some acquaintance with symplectic geometry is helpful but not required.
+    I will assume familiarity with smooth manifolds, Lie groups, and basic commutative algebra. Some familiarity with the basics of symplectic geometry and complex algebraic geometry will be helpful but not required.
+  	</p>
 
 
-<h2> Topics list (tentative).</h2>
-<p>
-  Some of the topics we may cover over the course of the semester (time permitting) include:
-<li> Morse homology
-  <li> Floer homology
-    <li> Persistent homology and barcodes
-      <li>Hofer's norm</li>
-      <li> Symplectic distances between domains 
-        <li> Obstructions for finding roots of Hamiltonian diffeomorphisms
-          <li> Knotted symplectic embeddings
-            <li> Existence of infinitely many periodic orbits for Hamiltonian systems
-
-  </p>
-
-  	<h2> References (preliminary list). </h2>
-  	<p>
-
-<h4>Foundations:</h4>
-
-    <li id="PRSZ21"><a href="https://arxiv.org/abs/1904.04044">[PRSZ21]</a><em> Topological persistence in geometry and analysis</em> - Polterovich, Rosen, Samvelyan and Zhang
-
-    <li id="AD10"><a href="https://link.springer.com/book/10.1007/978-1-4471-5496-9#:~:text=It%20defines%20the%20Morse%20complex,develops%20some%20of%20their%20applications.&text=Floer%20homology%20is%20an%20infinite,proof%20of%20the%20Arnold%20conjecture.">[AD10]</a> <em> Morse theory and Floer homology </em> - Audin and Damian
-
-    <li id="PR14"><a href="https://bookstore.ams.org/crmm-34#:~:text=This%20is%20a%20book%20on,for%20problems%20of%20classical%20mechanics.&text=The%20present%20book%20focuses%20on%20function%20spaces%20associated%20with%20a%20symplectic%20manifold.">[PR14]</a><em> Function theory on symplectic manifolds </em> - Polterovich and Rosen
-
-    <li id="M63"><a href="https://press.princeton.edu/books/paperback/9780691080086/morse-theory-am-51-volume-51">[M63]</a> <em>Morse theory </em> - Milnor
-
-    <li id="MS17"><a href="https://global.oup.com/academic/product/introduction-to-symplectic-topology-9780198794899?cc=us&lang=en&">[MS17]</a> <em>Introduction to symplectic topology</em> - McDuff and Salamon
-
-
-<h4>Persistence homology:</h4>
-
-<li id="CZ05"> <a href="https://geometry.stanford.edu/papers/zc-cph-05/zc-cph-05.pdf">[CZ05]</a><em> Computing persistence homology</em> - Carlsson and Zomorodian
-
-<li id="C09"><a href="https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/S0273-0979-09-01249-X.pdf">[C09]</a> Topology and Data - Carlsson
-
-<h4>Applications to infinite Hofer diameter:</h4>
-
-<li id="S00"><a href="https://msp.org/pjm/2000/193-2/pjm-v193-n2-p10-s.pdf">[S00]</a> <em>On the action spectrum for closed symplectically aspherical manifolds </em> - Schwarz
-
-<li id="U11"><a href="https://arxiv.org/abs/1107.4599">[U11]</a> <em>Hofer's metrics and boundary depth</em> - Usher
-
-<li id="McD08"><a href="https://arxiv.org/abs/0801.1328">[McD08]</a> <em>Monodromy in Hamiltonian Floer theory</em> - McDuff
-
-<h4>Applications to detecting powers of Hamiltonian diffeomorphisms:</h4>
-
-<li id="PS15"><a href="https://link.springer.com/article/10.1007/s00029-015-0201-2?noAccess=true">[PS15]</a> <em>Autonomous Hamiltonian flows, Hofer's geometry and persistence modules</em> - Polterovich and Shelukhin
-
-<!-- <li><em>Symplectically knotted codimension-zero embeddings of domains in $\mathbb{R}^4$</em> - Gutt and Usher -->
-
-<!-- 
-<li><em>On the Hofer-Zehnder conjecture</em> - Shelukhin
-
-<li><em>Symplectic Banach-Mazur distances between subsets of $\mathbb{C}^n$</em> - Usher
-
-<li><em>Boundary depth in Floer theory and its applications to Hamiltonian dynamics and coisotropic submanifolds</em> - Usher-->
-
-<h2> Lecture notes. </h2>
-
-<p> The lecture notes will be updated regularly and available <a href="635/635_lecture_notes.pdf">here</a> (be sure to refresh to update your cache). Note that Zoom recordings should also be available by Blackboard (let me know if you do not have access).
-</p>
+<h2> Topics.</h2>
+The first part of the course will cover the basics of toric algebraic geometry (lattice, cones, fans, toric varieties, toric divisors, toric morphisms, etc) and toric symplectic geometry (Hamiltonian group actions, Lagrangian toric fibrations, Delzant polytopes, etc). 
+After introducing the basics of integral affine geometry, we will then discuss symplectic almost toric fibrations and their connections with algebraic $\mathbb{Q}$-Gorenstein deformations, along with various geometric constructions (blowing up, rational blowdowns, visible Lagrangian and symplectic curves, etc).
+In the last part of the course we will explore various advanced topics, depending on time and audience interest, including possibly things like:
+<ul>
+  <li> tropical geometry </li>
+  <li> exotic Lagrangians and Markov triples</li>
+  <li> deformations of the projective plane </li>
+  <li> classification of Fano varieties</li>
+  <li> Newton-Okounkov bodies</li>
+  <li> cusp singularities of surfaces and Looijenga's conjecture</li>
+  <li>mirror symmetry for log Calabi-Yau surfaces</li>
+  <li> toric degenerations.</li>
+</ul>
 
 
 
 
+  	<h2> Textbooks and references. </h2>
+  Toric algebraic geometry:
+  <ul>
+    <li> <em><a href="https://dacox.people.amherst.edu/toric.html">Toric varieties</a></em> - Cox, Little, and Schenk </li>
+    <li> <em><a href="https://dacox.people.amherst.edu/lectures/coxcimpa.pdf">Lectures on toric varieties</a></em> - Cox</li>
+    <li> <em><a href="https://www2.math.ethz.ch/education/bachelor/lectures/fs2015/math/alg_geom/brasselet">Introduction to toric varieties</a></em> - Brasselet</li>
+  </ul>
 
-     <h2> Participant presentations.</h2>
-  	<p> Near the end of the term, each registered participant in the course will give a talk based on a topic relevant to the course, chosen in consultation with the instructor.
-  	</p> 
+  Toric symplectic geometry:
+  <ul>
+    <li> <em><a href="https://people.math.ethz.ch/~acannas/Papers/toric.pdf">Symplectic toric manifolds</a></em> - da Silva</li>
+  </ul>
+
+  Lagrangian torus fibrations:
+  <ul>
+    <li><em><a href="https://arxiv.org/abs/2110.08643">Lectures on Lagrangian torus fibrations</a></em> - Evans</li>
+    <li><em><a href="https://arxiv.org/abs/math/0210033">Four dimensions from two in symplectic topology</a></em> - Symington</li>
+  </ul>
+
+
+Advanced topics:
+<ul>
+  <li> TBD. </li>
+</ul>
 
 
 
+
+<h2> Problem sets.</h2>
+
+    There will be weekly problem sets for the first roughly half of the course.
+
+<h2> Student presentations and writeups.</h2>
+
+  Each student will give a short presentation on a relevant chosen topic (in consultation with Kyler), towards the end of the semester.
+  In addition, each presenter will be expected to submit a typed up writeup to accompany their presentation.
+
+
+  	<h2> Grading scheme. </h2>
+  	The grade will be based on problem sets (primarily checked for completeness) and final presentations plus writeups.
 
 
   	<h2> Office hours.</h2>
-  	<p>
-     By appointment, in person or over Zoom. Please email Kyler whenever you'd like to meet and we'll find a time that works.
-</p>
-
+    <ul>
+ <li> Location: KAP 400C</li>
+ <li> Time: TBA </li>
+</ul>
 
 
 
   <h2> Tentative schedule </h2>
 
-<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+<i> Note: this schedule (along with the above information) is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
 
 
 
 <table>
-  <tr style="border-bottom:2px solid black">
+ <tr style="border-bottom:2px solid black">
     <th>$\#$</th>
     <th>Date</th>    
     <th>Material</th>
     <th>References</th>    
+    <th>Problem set</th>
   </tr>
+
+
 
   <tr style="border-bottom:2px solid black">
-    <td>1</td>
-    <td>Friday 1/14/22 at 10:40am via Zoom</td>
-    <td> Introduction. Crash course in Morse theory and its implications. </td>
-    <td>Any standard reference on Morse theory (e.g. Milnor's <a href="#M63">book</a> or <a href="#AD10">[AD10]</a>).</td>
+  <tr>
+    <td>1</td>    
+    <td>TBD</td>
+    <td>TBD </td>
+    <td>TBD</td>
+    <td>TBD</td>    
   </tr>
 
-  <tr>
+  <!-- <tr>
     <td>2</td>    
-    <td>Wednesday 1/19/22 at 10:40am via Zoom</td>
-    <td> Quantitative Morse homology. Filtered chain complexes, persistence modules, and barcodes.</td>
-    <td> §1,4 of  <a href="#PRSZ21">[PRSZ21]</a>  </td>
+    <td>Wednesday 1/11/23</td>
+    <td>Atlases on spheres and real projective sphere. Smooth compatibility of local coordinate charts. </td>
+    <td>Lee &#167;1,&#167;2</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td></td>    
+    <td>Friday 1/13/23</td>
+    <td> The definition of a smooth manifold and various examples. Smooth maps between smooth manifolds. Diffeomorphisms.</td>
+    <td>Lee &#167;1</td>
+    <td></td>    
   </tr>
 
    <tr style="border-bottom:2px solid black">
-    <td>3</td>    
-    <td>Friday 1/21/22 at 10:40am via Zoom</td>
-    <td> More on persistence modules and barcodes. Interleaving distance and bottleneck distance.</td>
-    <td> §1,2 of  <a href="#PRSZ21">[PRSZ21]</a></td>
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 1/16/23: MLK day - no class</td>
+    <td></td>
+    <td></td>
+    <td></td>    
   </tr>
 
   <tr>
-    <td>4</td>
-    <td>Wednesday 1/26/22 at 10:40am in KAP 245</td>
-    <td> Finite metric spaces and topological data analysis. Begin proof of normal form theorem.</td>
-    <td> <a href="#C09">[C09]</a>, §2.1 of  <a href="#PRSZ21">[PRSZ21]</a> </td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>5</td>      
-    <td>Friday 1/28/22 at 10:40am in KAP 245</td>
-    <td> Complete proof of normal form theorem. Computing barcodes.</td>
-    <td> §2.1 of [PRSZ21], <a href="#CZ05">[CZ05]</a></td>
+    <td>3</td>    
+    <td>Wednesday 1/18/23</td>
+    <td>Smooth maps between smooth manifolds. Composition of smooth maps is smooth. Checking smoothness in some explicit examples. Distinct smooth structures on $\mathbb{R}$ which are diffeomorphic. Definition of Lie groups. </td>
+    <td>Lee &#167;2</td>
+    <td><a href="535a_spring_2023/pset2.pdf">Problem set 2</a> (due Wednesday 1/25/23 by 11:59pm LA time).</td>    
   </tr>
 
-   <tr>
-        <td>6</td>
-    <td>Wednesday 2/2/22 at 10:40am in KAP 245</td>
-    <td> Computing barcodes via Smith normal form over $\mathbb{F}[t]$. Begin proof of the isometry theorem.</td>
-    <td> <a href="#CZ05">[CZ05]</a>, §3 of  <a href="#PRSZ21">[PRSZ21]</a>.</td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>7</td>      
-    <td>Friday 2/4/22 at 10:40am in KAP 245</td>
-    <td> Complete proof of the isometry theorem. Boundary depth. </td>
-    <td> §3,4.2 of <a href="#PRSZ21">[PRSZ21]</a> </td>
-  </tr>
-
-   <tr>
-    <td>8</td>    
-    <td>Wednesday 2/9/22 at 10:40am in KAP 245</td>
-    <td>Introduction to the Hamiltonian diffeomorphism group. </td>
-    <td> §7.1,7.2,7.3 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.1 of <a href="#PR14">[PR14]</a></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>9</td>      
-    <td>Friday 2/11/22 at 10:40am in KAP 245</td>
-    <td> Finish proof that Ham is a group. The flux homomorphism. The Hofer norm. Displacement energy.</td>
-    <td>  §7.3,§7.4 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.1,§1.3.3 of <a href="#PR14">[PR14]</a> </td>
-  </tr>
-
-   <tr>
-    <td>10</td>    
-    <td>Wednesday 2/16/22 at 10:40am via Zoom</td>
-    <td>Ham as an infinite-dimensional Lie group. The action spectrum. </td>
-    <td> §7.4 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.2,§1.3.3,§1.3.4,§4.2 of <a href="#PR14">[PR14]</a></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>11</td>      
-    <td>Friday 2/18/22 at 10:40am in KAP 245</td>
-    <td> More on the action spectrum. Subadditive spectral invariants.</td>
-    <td> §4.2,§4.3,§4.7 of <a href="#PR14">[PR14]</a> </td>
-  </tr>
-
-   <tr>
-    <td>12</td>    
-    <td>Wednesday 2/23/22 at 10:40am in KAP 245</td>
-    <td>More on subadditive spectral invariants. Spectral displacement energy and spectral width. The Calabi homomorphism.</td>
-    <td> §4.1,§4.3,§4.4,§4.7 of <a href="#PR14">[PR14]</a></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>13</td>      
-    <td>Friday 2/25/22 at 10:40am in KAP 245</td>
-    <td> More on the Calabi homomorphism. Lower bounds on the spectral displacement energy.</td>
-    <td>§4.1,§4.3 of <a href="#PR14">[PR14]</a></td>
-  </tr>
-
-   <tr>
+    <tr>
+    <td>4</td>    
+    <td>Friday 1/20/23</td>
+    <td>First examples of Lie groups. Bump functions and partitions of unity. Sample applications. Paracompactness.</td>
+    <td>Lee &#167;2</td>
     <td></td>    
-    <td style="color:red;">Wednesday 3/2/22 - class canceled (instructor conflict).</td>
-    <td> </td>
-    <td></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>14</td>      
-    <td>Friday 3/4/22 at 10:40am in KAP 245</td>
-    <td>Group seminorms. The Poisson bracket inequality. Positivity of spectral width. </td>
-    <td>§3.5,§4.6 of <a href="#PR14">[PR14]</a></td>
   </tr>
 
-     <tr>
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>5</td>    
+    <td>Monday 1/23/23</td>
+    <td>Proof of the existence of partitions of unity. Introducion to tangent spaces.</td>
+    <td>Lee &#167;2,&#167;3</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>6</td>    
+    <td>Wednesday 1/25/23</td>
+    <td>Tangent vectors and tangent spaces. Definition in terms of derivations and description of tangent spaces to $\mathbb{R}^n$.</td>
+    <td>Lee &#167;3</td>
+    <td><a href="535a_spring_2023/pset3.pdf">Problem set 3</a> (due Wednesday 2/3/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>7</td>    
+    <td>Friday 1/27/23</td>
+    <td>More on tangent spaces. Pushforwards of tangent vectors. The basis of coordinate tangent vectors.</td>
+    <td>Lee &#167;3</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>8</td>    
+    <td>Monday 1/30/23</td>
+    <td> The chain rule in terms of compositions of pushforwards. Change of basis for tangent vectors.</td>
+    <td>Lee &#167;3</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>9</td>    
+    <td>Wednesday 2/1/23</td>
+    <td> Tangent vectors to smooth curves. The tangent bundle as a smooth manifold. Maps of constant rank, submersions, and immersions. </td>
+    <td>Lee &#167;3,&#167;4</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>10</td>    
+    <td>Friday 2/3/23</td>
+    <td>More on maps of constant rank. Topological and smooth embeddings. Local diffeomorphisms. The constant rank theorem and inverse function theorem.</td>
+    <td>&#167;4</td>
+    <td><a href="535a_spring_2023/pset4.pdf">Problem set 4</a> (due Friday 2/10/23 by 11:59pm LA time).</td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>11</td>    
+    <td>Monday 2/6/23</td>
+    <td> Proof of the inverse function theorem.</td>
+    <td>&#167;4</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>12</td>    
+    <td>Wednesday 2/8/23</td>
+    <td>Proof of the constant rank theorem. The implicit function theorem. </td>
+    <td>&#167;4</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>13</td>    
+    <td>Friday 2/10/23</td>
+    <td>Proof of the implicit function theorem. The Baire category theorem. The global rank theorem. Smoothly embedded submanifolds</td>
+    <td>&#167;4,&#167;5</td>
+    <td><a href="535a_spring_2023/pset5.pdf">Problem set 5</a> (due Monday 2/20/23 by 11:59pm LA time).</td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>14</td>    
+    <td>Monday 2/13/23</td>
+    <td>Review of the global rank theorem. Smoothly embedded submanifolds. Characterization in terms of local $k$-slices. Uniqueness of the smooth structure on an embedded submanifold. </td>
+    <td>&#167;5</td>
+    <td></td>    
+  </tr>
+
+  <tr>
     <td>15</td>    
-    <td>Wednesday 3/9/22 at 10:40am in KAP 245</td>
-    <td>Introduction to Hamiltonian Floer theory in the monotone setting.</td>
-    <td> </td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>16</td>      
-    <td>Friday 3/11/22 at 10:40am in KAP 245</td>
-    <td>Floer's equation and the Novikov ring. The Conley-Zehnder index. </td>
-    <td></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td></td>      
-    <td style="color:red;">Spring break 3/13/22 to 3/20/22 - NO CLASS</td>
-    <td> </td>
-    <td></td>
+    <td>Wednesday 2/15/23</td>
+    <td> Regular points, singular points, regular values, singular values. Constant rank level set theorem. Regular level set theorem. Various characterizations of the tangent space to a submanifold as a subspace of the tangent space of the ambient manifold.</td>
+    <td>&#167;5</td>
+    <td></td>    
   </tr>
 
-     <tr>
+    <tr>
+    <td>16</td>    
+    <td>Friday 2/17/23</td>
+    <td>Immersed submanifolds and examples. Null subsets of manifolds and their basic properties. Statement of Sard's theorem.</td>
+    <td>&#167;5,&#167;6</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 2/20/23: President's day - no class</td>
+    <td></td>
+    <td></td>
+    <td><a href="535a_spring_2023/pset6.pdf">Problem set 6</a> (due Monday 2/27/23 by 11:59pm LA time).</td>    
+  </tr>
+
+  <tr>
     <td>17</td>    
-    <td>Wednesday 3/23/22 at 10:40am in KAP 245</td>
-    <td> Floer homology as a quantitative invariant I. </td>
-    <td> </td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>18</td>      
-    <td>Friday 3/25/22 at 10:40am in KAP 245</td>
-    <td> Floer homology as a quantitative invariant II.</td>
-    <td></td>
+    <td>Wednesday 2/22/23</td>
+    <td> Sard's theorem and its proof.</td>
+    <td>&#167;6</td>
+    <td></td>    
   </tr>
 
-     <tr>
+    <tr>
+    <td>18</td>    
+    <td>Friday 2/24/23</td>
+    <td> Completion of the proof of Sard's theorem. The (strong and weak) Whitney embedding and immersion theorems.</td>
+    <td>&#167;6</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
     <td>19</td>    
-    <td>Wednesday 3/30/22 at 10:40am in KAP 245</td>
-    <td> The spectral norm and its basic properties. The Hofer diameter of the two-torus is infinite.</td>
-    <td> <a href="#S00">[S00]</a> </td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>20</td>      
-    <td>Friday 4/1/22 at 10:40am in KAP 245</td>
-    <td> More on the spectral norm. Boundary depth and the Hofer diameter.</td>
-    <td><a href="#U11">[U11]</a></td>
+    <td> Monday 2/27/23</td>
+    <td>Proof of the weak Whitney immersion theorem. Introduction to vector fields. </td>
+    <td>&#167;6,8</td>
+    <td></td>    
   </tr>
 
-     <tr>
+  <tr>
+    <td>20</td>    
+    <td>Wednesday 3/1/23</td>
+    <td> Vector fields and derivations. Local and global frames. Parallelizable manifolds.</td>
+    <td>&#167;8</td>
+    <td><a href="535a_spring_2023/pset7.pdf">Problem set 7</a> (due Wednesday 3/8/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
     <td>21</td>    
-    <td>Wednesday 4/6/22 at 10:40am in KAP 245</td>
-    <td> Partial symplectic quasi-states. Proof that the universal cover of Ham has infinite Hofer diameter. </td>
-    <td> §4.5,§6.3.1 of <a href="#PR14">[PR14]</a></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>22</td>      
-    <td>Friday 4/8/22 at 10:40am in KAP 245</td>
-    <td> Descending (asymptotic) spectral invariants from $\widetilde{Ham}$ to $Ham$. Applications to infinite Hofer diameter.</td>
-    <td><a href="#McD08"]>[McD08]</td>
+    <td>Friday 3/3/23</td>
+    <td> Pushing forward vector fields along diffeomorphisms. Lie bracket of vector fields and basic properties.  </td>
+    <td>&#167;7,8</td>
+    <td></td>    
   </tr>
 
-     <tr>
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>22</td>    
+    <td>Monday 3/6/23</td>
+    <td> The Lie algebra of vector fields on a smooth manifold. The Lie algebra of left invariant vector fields on a Lie group. </td>
+    <td>&#167;7,8</td>
+    <td></td>    
+  </tr>
+
+  <tr>
     <td>23</td>    
-    <td>Wednesday 4/13/22 at 10:40am in KAP 245</td>
-    <td><em>Zejing Wang</em>: "Topics in topological data analysis"</td>
-    <td><a href="https://arxiv.org/pdf/2102.10593.pdf">Iqbal et al</a></td>
-  </tr>
-   
-     <tr style="border-bottom:2px solid black">
-    <td>24</td>      
-    <td>Friday 4/15/22 at 10:40am in KAP 245</td>
-    <td> <em>Siyang Liu</em>: "Legendrian contact homology and persistent homology"</td>
-    <td><a href="https://link.springer.com/article/10.1007/s00029-020-00598-y">Rizell-Sullivan</a></td>
+    <td>Wednesday 3/8/23</td>
+    <td> The Lie algebra of the general linear group. The orthogonal group as a smooth manifold. </td>
+    <td>&#167;7</td>
+    <td><a href="535a_spring_2023/pset8.pdf">Problem set 8</a> (due Wednesday 3/22/23 by 11:59pm LA time).</td>    
   </tr>
 
-       <tr>
-    <td>25 I</td>    
-    <td>Wednesday 4/20/22 at 10:40am in KAP 245</td>
-    <td><em>Haosen Wu</em>: "Non-Archimedean approach to the normal form theorem for barcodes" </td>
-    <td><a href="https://arxiv.org/abs/1502.07928">Usher-Zhang</a></td>
-  </tr>
-   
-       <tr>
-    <td>25 II</td>    
-    <td>Wednesday 4/20/22 at 11:20am in KAP 245</td>
-    <td><em>Sanat Mulay</em>: "Manifold learning" </td>
-    <td> <a href="https://link.springer.com/article/10.1007/s00454-008-9053-2">Niyogi-Smale-Weinberger</a></td>
+    <tr>
+    <td>24</td>    
+    <td>Friday 3/10/23</td>
+    <td> The Lie algebra of the orthogonal group. Ordinary differential equations and integral curves of vector fields.</td>
+    <td>&#167;7,9</td>
+    <td><a href="535a_spring_2023/midterm.pdf">Midterm.</a> <a href="535a_spring_2023/midterm_with_solutions.pdf">Sample solutions.</a></td>    
   </tr>
 
      <tr style="border-bottom:2px solid black">
-    <td>26</td>      
-    <td>Friday 4/22/22 at 10:40am in KAP 245</td>
-    <td><em>Alec Sahakian</em>: "A-model topological string theory and quantum cohomology"</td>
-    <td></td>
-  </tr>
-
-       <tr>
-    <td>27 I</td>    
-    <td>Wednesday 4/27/22 at 10:40am in KAP 245</td>
-    <td><em>David O'Connor</em>: "Geodesics in the Hamiltonian diffeomorphism group"</td>
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 3/13/23: Spring recess - no class</td>
     <td> </td>
+    <td></td>
+    <td></td>    
   </tr>
-   
-          <tr>
-    <td>27 II</td>    
-    <td>Wednesday 4/27/22 at 11:20am in KAP 245</td>
-    <td><em>Jonathan Michala</em>: "The Hofer-Zehnder conjecture"</td>
-    <td><a href="https://arxiv.org/pdf/1905.04769.pdf">Shelukhin</a></td>
+
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Wednesday 3/15/23: Spring recess - no class</td>
+    <td> </td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td></td>    
+    <td style="color:blue">Friday 3/17/23: Spring recess - no class</td>
+    <td> </td>
+    <td></td>
+    <td></td>    
   </tr>
 
      <tr style="border-bottom:2px solid black">
-    <td>28</td>      
-    <td>Friday 4/29/22 at 10:40am in KAP 245</td>
-    <td><em>Boxi Hao</em>: "The Hofer-Zehnder capacity"</td>
-    <td>§12.4 of <a href="#MS17">[MS17]</a> </td>
+  <tr>
+    <td>25</td>    
+    <td>Monday 3/20/23</td>
+    <td>More on ordinary differential equations. Reduction to first order and reducing time-dependent ODEs to autonomous ones. The fundamental theorem and proof sketch of existence. Integral curves of vector fields. </td>
+    <td>&#167;9</td>
+    <td></td>    
   </tr>
 
+  <tr>
+    <td>26</td>    
+    <td>Wednesday 3/22/23</td>
+    <td> Flows of vector fields and examples. Normal form near a regular point of a vector field. Flowout theorem. </td>
+    <td>&#167;9</td>
+    <td><a href="535a_spring_2023/pset9.pdf">Problem set 9</a> (due Monday 4/3/23 by 11:59pm LA time).</td>    
+  </tr>
 
+    <tr>
+    <td>27</td>    
+    <td>Friday 3/24/23</td>
+    <td> More on flowout theorem. Proof of normal form near regular points of vector fields. Motivation for and definition of Lie derivatives. Fundamental theorem of Lie derivatives and its proof. </td>
+    <td>&#167;9</td>
+    <td></td>    
+  </tr>
 
-         <tr>
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>28</td>    
+    <td>Monday 3/27/23</td>
+    <td> Finish proof of fundamental theorem of Lie derivatives. Commuting flows and Lie derivatives. </td>
+    <td>&#167;9</td>
+    <td></td>    
+  </tr>
+
+  <tr>
     <td>29</td>    
-    <td>Wednesday 5/4/22 at 10:40am in KAP 245</td>
-    <td><em>Jishnu Bose</em>: "Barcodes and topological entropy of Hamiltonian diffeomorphisms"</td>
-    <td> <a href="https://arxiv.org/abs/2111.03983">Cineli-Ginzburg-Gurel</a></td>
+    <td>Wednesday 3/29/23</td>
+    <td> From local frames to local coordinates. Introduction to vector bundles. Trivial bundles and vector bundle isomorphisms. The Möbius bundle. </td>
+    <td>&#167;10</td>
+    <td></td>    
   </tr>
-   
+
+    <tr>
+    <td>30</td>    
+    <td>Friday 3/31/23</td>
+    <td>Recap of vector bundles. Sections of a vector bundle form a vector space. Dual vector spaces and dual bases. The canonical map from $V$ to $V^{**}$. Introduction to the cotangent bundle.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
+
      <tr style="border-bottom:2px solid black">
-    <td>30</td>      
-    <td>Friday 5/6/22 at 10:40am in KAP 245</td>
-    <td> Detecting non-autonomous Hamiltonian diffeomorphisms</td>
-    <td>  <a href="#PS15">[PS15]</a></td>
+  <tr>
+    <td>31</td>    
+    <td>Monday 4/3/23</td>
+    <td>The smooth structure and local coordinates on cotangent bundles. Covector fields. Differentials of functions.</td>
+    <td>&#167;11</td>
+    <td><a href="535a_spring_2023/pset10.pdf">Problem set 10</a> (due Monday 4/10/23 by 11:59pm LA time).</td>    
   </tr>
 
+  <tr>
+    <td>32</td>    
+    <td>Wednesday 4/5/23</td>
+    <td> More on covector fields and differentials of functions. Naturality under pullback. Definition of line integrals and coordinate independence.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
 
-<div style="font-size:80%">
-Image sources: <a href="635/image_sources.txt">here</a>.
-</div>
+    <tr>
+    <td>33</td>    
+    <td>Friday 4/7/23</td>
+    <td> Exact and closed differential one-forms. Line integrals of exact one-forms are path independent and vanish on loops. A differential one-form which is closed but not exact. The Poincaré lemma.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
 
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>34</td>    
+    <td>Monday 4/10/23</td>
+    <td>Multilinear algebra. Symmetric and alternating tensors.</td>
+    <td>&#167;12</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>35</td>    
+    <td>Wednesday 4/12/23</td>
+    <td>Smooth group actions and the quotient manifold theorem.</td>
+    <td>&#167;21</td>
+    <td><a href="535a_spring_2023/pset11.pdf">Problem set 11</a> (due Wednesday 4/19/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>36</td>    
+    <td>Friday 4/14/23</td>
+    <td>Review of closed and exact differential one-forms. Definition of the first de Rham cohomology group and simple examples. More on multilinear algebra. Symmetric product and wedge product of tensors.</td>
+    <td>&#167;12</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>37</td>    
+    <td>Monday 4/17/23</td>
+    <td>More on multilinear algebra and tensors. Characterization of tensor fields as operations on vector fields.</td>
+    <td>&#167;14</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>38</td>    
+    <td>Wednesday 4/19/23</td>
+    <td>Differential $k$-forms. The exterior derivative and its properties.</td>
+    <td>&#167;14</td>
+    <td><a href="535a_spring_2023/pset12.pdf">Problem set 12</a> (due Sunday 4/30/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>39</td>    
+    <td>Friday 4/21/23</td>
+    <td> Intrinsic definition of the exterior derivative. Orientations on vector spaces and manifolds.</td>
+    <td>&#167;14,15,16</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>40</td>    
+    <td>Monday 4/24/23</td>
+    <td>More on orientations on manifolds. Orienting boundaries of manifolds-with-boundary. The oriented double cover.</td>
+    <td>&#167;15,16</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>41</td>    
+    <td>Wednesday 4/26/23</td>
+    <td>More on orientations. Integrating differential forms on manifolds. </td>
+    <td>&#167;15,16</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>42</td>    
+    <td>Friday 4/28/23</td>
+    <td> More on integrating differential forms. Independence of the definition on choice of partition of unity. Integrations over parametrizations. Stokes' theorem. Brief introduction to degree theory.</td>
+    <td>&#167;16,17</td>
+    <td><a href="535a_spring_2023/535a_spring_2021_final.pdf">Final exam from Spring 2021.</a> <a href="535a_spring_2023/535a_spring_2021_final_with_solutions.pdf">Sample solutions.</a></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:red">Wednesday 5/3/23: 11am-1pm</td>
+    <td style="color:red">final exam</td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  -->
+</table>
+
+ 
+
+&nbsp;
+
+<!-- <div style="font-size:80%">
+Image sources: XX.
+</div> -->
 
 
   </body>
