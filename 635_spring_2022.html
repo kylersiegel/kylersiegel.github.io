@@ -1,0 +1,529 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 635: Quantitative aspects of Morse and Floery theory</title>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8TCLYDQRHC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-8TCLYDQRHC');
+    </script>
+
+    <script async src="//static.getclicky.com/101355699.js"></script>
+    <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/101355699ns.gif" /></p></noscript>
+
+  	<style type="text/css">
+
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+
+
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+/*  h1{
+    color:  rgb(169, 3, 252);
+  }
+
+  h2{
+    color:  rgb(223, 3, 252);
+  }
+*/
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </head>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+
+
+  	<h1> Math 635: Quantitative aspects of Morse and Floer theory<br>
+    USC Spring 2022  <br>
+
+          <img src="635_spring_2022/image.jpg" width="650"/><br>
+
+</h1>
+
+
+<h2>
+  	Instructor.
+</h2>
+   
+   <p>  Kyler Siegel (kyler.siegel@usc.edu)  </p>
+
+<h2>
+  Time and location.
+</h2>
+<p> We will meet in KAP 245, <b>10:40-11:55am on Wednesdays and Fridays</b>.
+   For the first two weeks we met over Zoom (meeting id: <a href="https://usc.zoom.us/j/95973733808?pwd=Q0Y2UW8zRWxnQXh3dElJR09nMDdNUT09">959 7373 3808</a>).
+</p>
+
+
+
+
+<h2> Mailing list.</h2>
+
+<p>     Please email Kyler if you would like to receive emails about the course, including Zoom links.
+</p>
+
+
+  	<h2> About.	</h2> 
+  	<p>
+    This course is an introduction to Morse and Floer theory from the quantitative viewpoint. In the first half of the course, we will begin by briefly covering the basics of these theories, with a particular emphasis on action filtrations and the Hofer norm. We will also introduce persistent homology, an important tool for extracting information from a filtered chain complex (this also plays a central role in topological data analysis).
+</p>
+
+<p>
+  In the second half of the course, we will discuss various applications and recent advances in symplectic geometry. The topics will mostly be based on recent papers and will be chosen partly based on the interests of the audience. In the last few weeks of the course each student will give a presentation on a relevant topic, chosen in consultation with the instructor.
+  	</p>
+
+       <img src="635_spring_2022/image2.jpg" width="350"/><br>
+
+  	<h2> Prerequisites. </h2>
+  	<p>
+     We will assume familiarity with smooth manifolds and differential forms, as well as basic algebraic topology. Some acquaintance with symplectic geometry is helpful but not required.
+
+
+<h2> Topics list (tentative).</h2>
+<p>
+  Some of the topics we may cover over the course of the semester (time permitting) include:
+<li> Morse homology
+  <li> Floer homology
+    <li> Persistent homology and barcodes
+      <li>Hofer's norm</li>
+      <li> Symplectic distances between domains 
+        <li> Obstructions for finding roots of Hamiltonian diffeomorphisms
+          <li> Knotted symplectic embeddings
+            <li> Existence of infinitely many periodic orbits for Hamiltonian systems
+
+  </p>
+
+  	<h2> References (preliminary list). </h2>
+  	<p>
+
+<h4>Foundations:</h4>
+
+    <li id="PRSZ21"><a href="https://arxiv.org/abs/1904.04044">[PRSZ21]</a><em> Topological persistence in geometry and analysis</em> - Polterovich, Rosen, Samvelyan and Zhang
+
+    <li id="AD10"><a href="https://link.springer.com/book/10.1007/978-1-4471-5496-9#:~:text=It%20defines%20the%20Morse%20complex,develops%20some%20of%20their%20applications.&text=Floer%20homology%20is%20an%20infinite,proof%20of%20the%20Arnold%20conjecture.">[AD10]</a> <em> Morse theory and Floer homology </em> - Audin and Damian
+
+    <li id="PR14"><a href="https://bookstore.ams.org/crmm-34#:~:text=This%20is%20a%20book%20on,for%20problems%20of%20classical%20mechanics.&text=The%20present%20book%20focuses%20on%20function%20spaces%20associated%20with%20a%20symplectic%20manifold.">[PR14]</a><em> Function theory on symplectic manifolds </em> - Polterovich and Rosen
+
+    <li id="M63"><a href="https://press.princeton.edu/books/paperback/9780691080086/morse-theory-am-51-volume-51">[M63]</a> <em>Morse theory </em> - Milnor
+
+    <li id="MS17"><a href="https://global.oup.com/academic/product/introduction-to-symplectic-topology-9780198794899?cc=us&lang=en&">[MS17]</a> <em>Introduction to symplectic topology</em> - McDuff and Salamon
+
+
+<h4>Persistence homology:</h4>
+
+<li id="CZ05"> <a href="https://geometry.stanford.edu/papers/zc-cph-05/zc-cph-05.pdf">[CZ05]</a><em> Computing persistence homology</em> - Carlsson and Zomorodian
+
+<li id="C09"><a href="https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/S0273-0979-09-01249-X.pdf">[C09]</a> Topology and Data - Carlsson
+
+<h4>Applications to infinite Hofer diameter:</h4>
+
+<li id="S00"><a href="https://msp.org/pjm/2000/193-2/pjm-v193-n2-p10-s.pdf">[S00]</a> <em>On the action spectrum for closed symplectically aspherical manifolds </em> - Schwarz
+
+<li id="U11"><a href="https://arxiv.org/abs/1107.4599">[U11]</a> <em>Hofer's metrics and boundary depth</em> - Usher
+
+<li id="McD08"><a href="https://arxiv.org/abs/0801.1328">[McD08]</a> <em>Monodromy in Hamiltonian Floer theory</em> - McDuff
+
+<h4>Applications to detecting powers of Hamiltonian diffeomorphisms:</h4>
+
+<li id="PS15"><a href="https://link.springer.com/article/10.1007/s00029-015-0201-2?noAccess=true">[PS15]</a> <em>Autonomous Hamiltonian flows, Hofer's geometry and persistence modules</em> - Polterovich and Shelukhin
+
+<!-- <li><em>Symplectically knotted codimension-zero embeddings of domains in $\mathbb{R}^4$</em> - Gutt and Usher -->
+
+<!-- 
+<li><em>On the Hofer-Zehnder conjecture</em> - Shelukhin
+
+<li><em>Symplectic Banach-Mazur distances between subsets of $\mathbb{C}^n$</em> - Usher
+
+<li><em>Boundary depth in Floer theory and its applications to Hamiltonian dynamics and coisotropic submanifolds</em> - Usher-->
+
+<h2> Lecture notes. </h2>
+
+<p> The lecture notes will be updated regularly and available <a href="635_spring_2022/635_lecture_notes.pdf">here</a> (be sure to refresh to update your cache). Note that Zoom recordings should also be available by Blackboard (let me know if you do not have access).
+</p>
+
+
+
+
+
+     <h2> Participant presentations.</h2>
+  	<p> Near the end of the term, each registered participant in the course will give a talk based on a topic relevant to the course, chosen in consultation with the instructor.
+  	</p> 
+
+
+
+
+
+  	<h2> Office hours.</h2>
+  	<p>
+     By appointment, in person or over Zoom. Please email Kyler whenever you'd like to meet and we'll find a time that works.
+</p>
+
+
+
+
+  <h2> Tentative schedule </h2>
+
+<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+<table>
+  <tr style="border-bottom:2px solid black">
+    <th>$\#$</th>
+    <th>Date</th>    
+    <th>Material</th>
+    <th>References</th>    
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+    <td>1</td>
+    <td>Friday 1/14/22 at 10:40am via Zoom</td>
+    <td> Introduction. Crash course in Morse theory and its implications. </td>
+    <td>Any standard reference on Morse theory (e.g. Milnor's <a href="#M63">book</a> or <a href="#AD10">[AD10]</a>).</td>
+  </tr>
+
+  <tr>
+    <td>2</td>    
+    <td>Wednesday 1/19/22 at 10:40am via Zoom</td>
+    <td> Quantitative Morse homology. Filtered chain complexes, persistence modules, and barcodes.</td>
+    <td> §1,4 of  <a href="#PRSZ21">[PRSZ21]</a>  </td>
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+    <td>3</td>    
+    <td>Friday 1/21/22 at 10:40am via Zoom</td>
+    <td> More on persistence modules and barcodes. Interleaving distance and bottleneck distance.</td>
+    <td> §1,2 of  <a href="#PRSZ21">[PRSZ21]</a></td>
+  </tr>
+
+  <tr>
+    <td>4</td>
+    <td>Wednesday 1/26/22 at 10:40am in KAP 245</td>
+    <td> Finite metric spaces and topological data analysis. Begin proof of normal form theorem.</td>
+    <td> <a href="#C09">[C09]</a>, §2.1 of  <a href="#PRSZ21">[PRSZ21]</a> </td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>5</td>      
+    <td>Friday 1/28/22 at 10:40am in KAP 245</td>
+    <td> Complete proof of normal form theorem. Computing barcodes.</td>
+    <td> §2.1 of [PRSZ21], <a href="#CZ05">[CZ05]</a></td>
+  </tr>
+
+   <tr>
+        <td>6</td>
+    <td>Wednesday 2/2/22 at 10:40am in KAP 245</td>
+    <td> Computing barcodes via Smith normal form over $\mathbb{F}[t]$. Begin proof of the isometry theorem.</td>
+    <td> <a href="#CZ05">[CZ05]</a>, §3 of  <a href="#PRSZ21">[PRSZ21]</a>.</td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>7</td>      
+    <td>Friday 2/4/22 at 10:40am in KAP 245</td>
+    <td> Complete proof of the isometry theorem. Boundary depth. </td>
+    <td> §3,4.2 of <a href="#PRSZ21">[PRSZ21]</a> </td>
+  </tr>
+
+   <tr>
+    <td>8</td>    
+    <td>Wednesday 2/9/22 at 10:40am in KAP 245</td>
+    <td>Introduction to the Hamiltonian diffeomorphism group. </td>
+    <td> §7.1,7.2,7.3 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.1 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>9</td>      
+    <td>Friday 2/11/22 at 10:40am in KAP 245</td>
+    <td> Finish proof that Ham is a group. The flux homomorphism. The Hofer norm. Displacement energy.</td>
+    <td>  §7.3,§7.4 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.1,§1.3.3 of <a href="#PR14">[PR14]</a> </td>
+  </tr>
+
+   <tr>
+    <td>10</td>    
+    <td>Wednesday 2/16/22 at 10:40am via Zoom</td>
+    <td>Ham as an infinite-dimensional Lie group. The action spectrum. </td>
+    <td> §7.4 of <a href="#PRSZ21">[PRSZ21]</a>, §1.3.2,§1.3.3,§1.3.4,§4.2 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>11</td>      
+    <td>Friday 2/18/22 at 10:40am in KAP 245</td>
+    <td> More on the action spectrum. Subadditive spectral invariants.</td>
+    <td> §4.2,§4.3,§4.7 of <a href="#PR14">[PR14]</a> </td>
+  </tr>
+
+   <tr>
+    <td>12</td>    
+    <td>Wednesday 2/23/22 at 10:40am in KAP 245</td>
+    <td>More on subadditive spectral invariants. Spectral displacement energy and spectral width. The Calabi homomorphism.</td>
+    <td> §4.1,§4.3,§4.4,§4.7 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>13</td>      
+    <td>Friday 2/25/22 at 10:40am in KAP 245</td>
+    <td> More on the Calabi homomorphism. Lower bounds on the spectral displacement energy.</td>
+    <td>§4.1,§4.3 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+
+   <tr>
+    <td></td>    
+    <td style="color:red;">Wednesday 3/2/22 - class canceled (instructor conflict).</td>
+    <td> </td>
+    <td></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>14</td>      
+    <td>Friday 3/4/22 at 10:40am in KAP 245</td>
+    <td>Group seminorms. The Poisson bracket inequality. Positivity of spectral width. </td>
+    <td>§3.5,§4.6 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+
+     <tr>
+    <td>15</td>    
+    <td>Wednesday 3/9/22 at 10:40am in KAP 245</td>
+    <td>Introduction to Hamiltonian Floer theory in the monotone setting.</td>
+    <td> </td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>16</td>      
+    <td>Friday 3/11/22 at 10:40am in KAP 245</td>
+    <td>Floer's equation and the Novikov ring. The Conley-Zehnder index. </td>
+    <td></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td></td>      
+    <td style="color:red;">Spring break 3/13/22 to 3/20/22 - NO CLASS</td>
+    <td> </td>
+    <td></td>
+  </tr>
+
+     <tr>
+    <td>17</td>    
+    <td>Wednesday 3/23/22 at 10:40am in KAP 245</td>
+    <td> Floer homology as a quantitative invariant I. </td>
+    <td> </td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>18</td>      
+    <td>Friday 3/25/22 at 10:40am in KAP 245</td>
+    <td> Floer homology as a quantitative invariant II.</td>
+    <td></td>
+  </tr>
+
+     <tr>
+    <td>19</td>    
+    <td>Wednesday 3/30/22 at 10:40am in KAP 245</td>
+    <td> The spectral norm and its basic properties. The Hofer diameter of the two-torus is infinite.</td>
+    <td> <a href="#S00">[S00]</a> </td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>20</td>      
+    <td>Friday 4/1/22 at 10:40am in KAP 245</td>
+    <td> More on the spectral norm. Boundary depth and the Hofer diameter.</td>
+    <td><a href="#U11">[U11]</a></td>
+  </tr>
+
+     <tr>
+    <td>21</td>    
+    <td>Wednesday 4/6/22 at 10:40am in KAP 245</td>
+    <td> Partial symplectic quasi-states. Proof that the universal cover of Ham has infinite Hofer diameter. </td>
+    <td> §4.5,§6.3.1 of <a href="#PR14">[PR14]</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>22</td>      
+    <td>Friday 4/8/22 at 10:40am in KAP 245</td>
+    <td> Descending (asymptotic) spectral invariants from $\widetilde{Ham}$ to $Ham$. Applications to infinite Hofer diameter.</td>
+    <td><a href="#McD08"]>[McD08]</td>
+  </tr>
+
+     <tr>
+    <td>23</td>    
+    <td>Wednesday 4/13/22 at 10:40am in KAP 245</td>
+    <td><em>Zejing Wang</em>: "Topics in topological data analysis"</td>
+    <td><a href="https://arxiv.org/pdf/2102.10593.pdf">Iqbal et al</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>24</td>      
+    <td>Friday 4/15/22 at 10:40am in KAP 245</td>
+    <td> <em>Siyang Liu</em>: "Legendrian contact homology and persistent homology"</td>
+    <td><a href="https://link.springer.com/article/10.1007/s00029-020-00598-y">Rizell-Sullivan</a></td>
+  </tr>
+
+       <tr>
+    <td>25 I</td>    
+    <td>Wednesday 4/20/22 at 10:40am in KAP 245</td>
+    <td><em>Haosen Wu</em>: "Non-Archimedean approach to the normal form theorem for barcodes" </td>
+    <td><a href="https://arxiv.org/abs/1502.07928">Usher-Zhang</a></td>
+  </tr>
+   
+       <tr>
+    <td>25 II</td>    
+    <td>Wednesday 4/20/22 at 11:20am in KAP 245</td>
+    <td><em>Sanat Mulay</em>: "Manifold learning" </td>
+    <td> <a href="https://link.springer.com/article/10.1007/s00454-008-9053-2">Niyogi-Smale-Weinberger</a></td>
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+    <td>26</td>      
+    <td>Friday 4/22/22 at 10:40am in KAP 245</td>
+    <td><em>Alec Sahakian</em>: "A-model topological string theory and quantum cohomology"</td>
+    <td></td>
+  </tr>
+
+       <tr>
+    <td>27 I</td>    
+    <td>Wednesday 4/27/22 at 10:40am in KAP 245</td>
+    <td><em>David O'Connor</em>: "Geodesics in the Hamiltonian diffeomorphism group"</td>
+    <td> </td>
+  </tr>
+   
+          <tr>
+    <td>27 II</td>    
+    <td>Wednesday 4/27/22 at 11:20am in KAP 245</td>
+    <td><em>Jonathan Michala</em>: "The Hofer-Zehnder conjecture"</td>
+    <td><a href="https://arxiv.org/pdf/1905.04769.pdf">Shelukhin</a></td>
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+    <td>28</td>      
+    <td>Friday 4/29/22 at 10:40am in KAP 245</td>
+    <td><em>Boxi Hao</em>: "The Hofer-Zehnder capacity"</td>
+    <td>§12.4 of <a href="#MS17">[MS17]</a> </td>
+  </tr>
+
+
+
+         <tr>
+    <td>29</td>    
+    <td>Wednesday 5/4/22 at 10:40am in KAP 245</td>
+    <td><em>Jishnu Bose</em>: "Barcodes and topological entropy of Hamiltonian diffeomorphisms"</td>
+    <td> <a href="https://arxiv.org/abs/2111.03983">Cineli-Ginzburg-Gurel</a></td>
+  </tr>
+   
+     <tr style="border-bottom:2px solid black">
+    <td>30</td>      
+    <td>Friday 5/6/22 at 10:40am in KAP 245</td>
+    <td> Detecting non-autonomous Hamiltonian diffeomorphisms</td>
+    <td>  <a href="#PS15">[PS15]</a></td>
+  </tr>
+
+
+<div style="font-size:80%">
+Image sources: <a href="635_spring_2022/image_sources.txt">here</a>.
+</div>
+
+
+
+  </body>
+
+  </html>

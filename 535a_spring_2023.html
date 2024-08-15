@@ -1,0 +1,672 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 535a: Differential Geometry</title>
+
+  	<style type="text/css">
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </head>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+
+
+  	<h1> Math 535a: Differential Geometry <br>
+    USC Spring 2023  <br>
+
+</h1>
+
+
+<h2> Instructors. </h2>
+<ul>
+ <li> Primary: Kyler Siegel (kyler.siegel@usc.edu) </li>
+<li> Teaching assistant: Sanat Mulay</li>
+</ul>
+
+          <img src="535a_spring_2023/image1.jpg" width="750"/><br>
+
+<h2> Time and location. </h2>
+<p> We will typically meet on Mondays, Wednesdays, and Fridays, 11:00-11:50am, in <a href="https://maps.usc.edu/?id=1928&reference=KAP#!m/552410?s/">KAP 134</a> (see the schedule below for academic holidays and other modifications). 
+We may occasionally meet via Zoom.</p>
+
+  	<h2> About.	</h2> 
+  	<p>
+    This course is an introduction to smooth manifolds. Roughly speaking, these are spaces which look locally like Euclidean space, but may have nontrivial global structure. The smooth structure allows us make sense of notions such as derivatives of maps, tangent vectors, embeddings, etc in this abstract setting. Although the basic definitions will appear at first glance somewhat abstruse, once set up properly the theory of smooth manifolds is remarkably rich, and plays a fundamental role in modern geometry.
+  	</p>
+
+  	<h2> Prerequisites. </h2>
+  	<p>
+     We will assume familiarity with
+     <ul>
+     <li> <em>basic point set topology</em>: topological spaces, subspaces, quotient spaces, compactness, Hausdorffness, first and second countability, etc
+     <li><em>basic linear algebra</em>:determinants, dual spaces, etc
+     <li><em>basic multivariable calculus and real analysis</em>: partial and total derivatives, multivariable chain rule, multiple integrals, etc.
+     </ul>
+  	</p>
+    If you are feeling a bit rusty on some of these, I recommend reading the appendix of Lee. You can also check out appendices A and D in Tu. Some knowledge of basic algebraic topology (especially homology and cohomology) will be also helpful, but we will not assume any prior exposure.
+
+          <img src="535a_spring_2023/image2.jpg" width="750"/><br>
+
+
+<h2> Topics.</h2>
+<p>
+  Some of the topics we may cover over the course of the semester (time permitting) include:
+  <ul>
+<li> topological manifolds, maximal atlases, smooth manifolds
+  <li> examples of smooth manifolds
+  <li> smooth maps between smooth manifolds
+      <li> tangent vectors and the tangent bundle
+        <li> vector fields and the Lie bracket
+    <li> Lie groups and Lie algebras
+    <li> vector bundles
+    <li> covectors and the cotangent bundle, differentials of functions
+      <li> submersions, immersions, embeddings
+<li> inverse function theorem and implicit function theorem
+  <li> Lie group actions and quotient manifolds
+    <li> Whitney's embedding and approximation theorems
+      <li> tensors and multilinear algebra, differential forms 
+          <li> orientations, integration of differential forms
+            <li> Stokes' theorem
+              <li> de Rham cohomology and the re Rham theorem
+                <li>integral curves and flows of vector fields
+                <li> foliations and the Frobenius theorem
+                  <li> degree theory.
+</ul>
+  </p>
+
+  	<h2> Textbook. </h2>
+  	<p>
+      <ul>
+  <li>Primary: <em> Introduction to Smooth Manifolds </em> (<b>2nd edition</b>) - John M. Lee </li>
+
+  <li>Secondary: <em> An Introduction to Manifolds </em> - Loring W. Tu </li>
+ </ul>
+<p>
+ We will be primarily following Lee's book. This text is rather lengthy compared to others, but it is very well-organized and comprehensive. I suggest reading the relevant sections early (ideally in advance of the lectures) and often. You should think of the lectures as a guide to help develop your intuition about key concepts, with the primary textbook providing much fuller details and further elaborations. For an alternative perspective I recommend the secondary textbook by Tu, which provides a well-written and concise approach and covers similar material. Note that there are also numerous other popular introductory texts on smooth manifolds, and I encourage you to further utilize any references you find beneficial.
+
+</p>
+
+
+  	
+  	</p>
+      <img src="535a_spring_2023/image3.jpg" width="700"/><br>
+
+
+
+
+
+
+<h2> Problem sets.</h2>
+
+      <p> In addition to the lectures, there will be weekly problem sets. These will be listed on this website (see the schedule below) and will be handed in via Gradescope. Late homeworks will not be accepted without prior approval from the instructor or TA.
+
+    <p>
+      Much of the course material will be developed in the problem sets. It is very important to do all of the problem sets to the best of your ability and to challenge yourself to solve the problems on your own, as this is the most effective way to absorb the material. We expect students to devote a significant amount of time to the problem sets. 
+    </p>
+
+    <p>
+      While working on the problem sets, you are allowed to consult or collaborate with your peers, as well as textbooks and the internet (apart from cheating websites such as Chegg or Cramster). However, you must write down attributions for any peer, textbook, website etc from which you took any significant ideas. Moreover, <i> you must attempt all problems on your own and your submitted solutions must be written out originally and individually.</i> Submissions which are copied or suspiciously similar are subject to being rejected and potential disciplinary action.
+  	 </p>
+
+
+     <h2> Exams</h2>
+  	<p> There will be one midterm exam and one final exam. The midterm will occur in early March (precise date TBA).
+  	</p> 
+
+
+
+  	<h2> Grading scheme. </h2>
+  	<p>  Homeworks: 40%, midterm exam: 25%, final exam: 35%.
+  	</p> 
+
+
+
+  	<h2> Office hours.</h2>
+  	<p>
+      <ul>
+        <li> Kyler: Wednesdays 9am-11am (i.e. before class) in 400C.
+          <li> Sanat: see the <a href="https://dornsife.usc.edu/assets/sites/372/docs/consulting_hours/TAschedulespring2023.pdf">Math Center schedule</a>
+      </ul>
+</p>
+
+
+
+
+  <h2> Tentative schedule </h2>
+
+<i> Note: this schedule is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+<table>
+ <tr style="border-bottom:2px solid black">
+    <th>$\#$</th>
+    <th>Date</th>    
+    <th>Material</th>
+    <th>References</th>    
+    <th>Problem set</th>
+  </tr>
+
+  <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>1</td>    
+    <td>Monday 1/9/23</td>
+    <td>Topological manifolds and examples. Local coordinate charts and atlases. </td>
+    <td>Lee &#167;1, Tu &#167;1,&#167;5. I also suggest reading the appendix of Lee and/or appendices A,D of Tu if you need a refresher.</td>
+    <td><a href="535a_spring_2023/pset1.pdf">Problem set 1</a> (due Wednesday 1/18/23 by 11:59pm LA time).</td>    
+  </tr>
+
+  <tr>
+    <td>2</td>    
+    <td>Wednesday 1/11/23</td>
+    <td>Atlases on spheres and real projective sphere. Smooth compatibility of local coordinate charts. </td>
+    <td>Lee &#167;1,&#167;2</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td></td>    
+    <td>Friday 1/13/23</td>
+    <td> The definition of a smooth manifold and various examples. Smooth maps between smooth manifolds. Diffeomorphisms.</td>
+    <td>Lee &#167;1</td>
+    <td></td>    
+  </tr>
+
+   <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 1/16/23: MLK day - no class</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>3</td>    
+    <td>Wednesday 1/18/23</td>
+    <td>Smooth maps between smooth manifolds. Composition of smooth maps is smooth. Checking smoothness in some explicit examples. Distinct smooth structures on $\mathbb{R}$ which are diffeomorphic. Definition of Lie groups. </td>
+    <td>Lee &#167;2</td>
+    <td><a href="535a_spring_2023/pset2.pdf">Problem set 2</a> (due Wednesday 1/25/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>4</td>    
+    <td>Friday 1/20/23</td>
+    <td>First examples of Lie groups. Bump functions and partitions of unity. Sample applications. Paracompactness.</td>
+    <td>Lee &#167;2</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>5</td>    
+    <td>Monday 1/23/23</td>
+    <td>Proof of the existence of partitions of unity. Introducion to tangent spaces.</td>
+    <td>Lee &#167;2,&#167;3</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>6</td>    
+    <td>Wednesday 1/25/23</td>
+    <td>Tangent vectors and tangent spaces. Definition in terms of derivations and description of tangent spaces to $\mathbb{R}^n$.</td>
+    <td>Lee &#167;3</td>
+    <td><a href="535a_spring_2023/pset3.pdf">Problem set 3</a> (due Wednesday 2/3/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>7</td>    
+    <td>Friday 1/27/23</td>
+    <td>More on tangent spaces. Pushforwards of tangent vectors. The basis of coordinate tangent vectors.</td>
+    <td>Lee &#167;3</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>8</td>    
+    <td>Monday 1/30/23</td>
+    <td> The chain rule in terms of compositions of pushforwards. Change of basis for tangent vectors.</td>
+    <td>Lee &#167;3</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>9</td>    
+    <td>Wednesday 2/1/23</td>
+    <td> Tangent vectors to smooth curves. The tangent bundle as a smooth manifold. Maps of constant rank, submersions, and immersions. </td>
+    <td>Lee &#167;3,&#167;4</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>10</td>    
+    <td>Friday 2/3/23</td>
+    <td>More on maps of constant rank. Topological and smooth embeddings. Local diffeomorphisms. The constant rank theorem and inverse function theorem.</td>
+    <td>&#167;4</td>
+    <td><a href="535a_spring_2023/pset4.pdf">Problem set 4</a> (due Friday 2/10/23 by 11:59pm LA time).</td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>11</td>    
+    <td>Monday 2/6/23</td>
+    <td> Proof of the inverse function theorem.</td>
+    <td>&#167;4</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>12</td>    
+    <td>Wednesday 2/8/23</td>
+    <td>Proof of the constant rank theorem. The implicit function theorem. </td>
+    <td>&#167;4</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>13</td>    
+    <td>Friday 2/10/23</td>
+    <td>Proof of the implicit function theorem. The Baire category theorem. The global rank theorem. Smoothly embedded submanifolds</td>
+    <td>&#167;4,&#167;5</td>
+    <td><a href="535a_spring_2023/pset5.pdf">Problem set 5</a> (due Monday 2/20/23 by 11:59pm LA time).</td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>14</td>    
+    <td>Monday 2/13/23</td>
+    <td>Review of the global rank theorem. Smoothly embedded submanifolds. Characterization in terms of local $k$-slices. Uniqueness of the smooth structure on an embedded submanifold. </td>
+    <td>&#167;5</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>15</td>    
+    <td>Wednesday 2/15/23</td>
+    <td> Regular points, singular points, regular values, singular values. Constant rank level set theorem. Regular level set theorem. Various characterizations of the tangent space to a submanifold as a subspace of the tangent space of the ambient manifold.</td>
+    <td>&#167;5</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>16</td>    
+    <td>Friday 2/17/23</td>
+    <td>Immersed submanifolds and examples. Null subsets of manifolds and their basic properties. Statement of Sard's theorem.</td>
+    <td>&#167;5,&#167;6</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 2/20/23: President's day - no class</td>
+    <td></td>
+    <td></td>
+    <td><a href="535a_spring_2023/pset6.pdf">Problem set 6</a> (due Monday 2/27/23 by 11:59pm LA time).</td>    
+  </tr>
+
+  <tr>
+    <td>17</td>    
+    <td>Wednesday 2/22/23</td>
+    <td> Sard's theorem and its proof.</td>
+    <td>&#167;6</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>18</td>    
+    <td>Friday 2/24/23</td>
+    <td> Completion of the proof of Sard's theorem. The (strong and weak) Whitney embedding and immersion theorems.</td>
+    <td>&#167;6</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>19</td>    
+    <td> Monday 2/27/23</td>
+    <td>Proof of the weak Whitney immersion theorem. Introduction to vector fields. </td>
+    <td>&#167;6,8</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>20</td>    
+    <td>Wednesday 3/1/23</td>
+    <td> Vector fields and derivations. Local and global frames. Parallelizable manifolds.</td>
+    <td>&#167;8</td>
+    <td><a href="535a_spring_2023/pset7.pdf">Problem set 7</a> (due Wednesday 3/8/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>21</td>    
+    <td>Friday 3/3/23</td>
+    <td> Pushing forward vector fields along diffeomorphisms. Lie bracket of vector fields and basic properties.  </td>
+    <td>&#167;7,8</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>22</td>    
+    <td>Monday 3/6/23</td>
+    <td> The Lie algebra of vector fields on a smooth manifold. The Lie algebra of left invariant vector fields on a Lie group. </td>
+    <td>&#167;7,8</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>23</td>    
+    <td>Wednesday 3/8/23</td>
+    <td> The Lie algebra of the general linear group. The orthogonal group as a smooth manifold. </td>
+    <td>&#167;7</td>
+    <td><a href="535a_spring_2023/pset8.pdf">Problem set 8</a> (due Wednesday 3/22/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>24</td>    
+    <td>Friday 3/10/23</td>
+    <td> The Lie algebra of the orthogonal group. Ordinary differential equations and integral curves of vector fields.</td>
+    <td>&#167;7,9</td>
+    <td><a href="535a_spring_2023/midterm.pdf">Midterm.</a> <a href="535a_spring_2023/midterm_with_solutions.pdf">Sample solutions.</a></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 3/13/23: Spring recess - no class</td>
+    <td> </td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td></td>    
+    <td style="color:blue;">Wednesday 3/15/23: Spring recess - no class</td>
+    <td> </td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td></td>    
+    <td style="color:blue">Friday 3/17/23: Spring recess - no class</td>
+    <td> </td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>25</td>    
+    <td>Monday 3/20/23</td>
+    <td>More on ordinary differential equations. Reduction to first order and reducing time-dependent ODEs to autonomous ones. The fundamental theorem and proof sketch of existence. Integral curves of vector fields. </td>
+    <td>&#167;9</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>26</td>    
+    <td>Wednesday 3/22/23</td>
+    <td> Flows of vector fields and examples. Normal form near a regular point of a vector field. Flowout theorem. </td>
+    <td>&#167;9</td>
+    <td><a href="535a_spring_2023/pset9.pdf">Problem set 9</a> (due Monday 4/3/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>27</td>    
+    <td>Friday 3/24/23</td>
+    <td> More on flowout theorem. Proof of normal form near regular points of vector fields. Motivation for and definition of Lie derivatives. Fundamental theorem of Lie derivatives and its proof. </td>
+    <td>&#167;9</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>28</td>    
+    <td>Monday 3/27/23</td>
+    <td> Finish proof of fundamental theorem of Lie derivatives. Commuting flows and Lie derivatives. </td>
+    <td>&#167;9</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>29</td>    
+    <td>Wednesday 3/29/23</td>
+    <td> From local frames to local coordinates. Introduction to vector bundles. Trivial bundles and vector bundle isomorphisms. The Möbius bundle. </td>
+    <td>&#167;10</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>30</td>    
+    <td>Friday 3/31/23</td>
+    <td>Recap of vector bundles. Sections of a vector bundle form a vector space. Dual vector spaces and dual bases. The canonical map from $V$ to $V^{**}$. Introduction to the cotangent bundle.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>31</td>    
+    <td>Monday 4/3/23</td>
+    <td>The smooth structure and local coordinates on cotangent bundles. Covector fields. Differentials of functions.</td>
+    <td>&#167;11</td>
+    <td><a href="535a_spring_2023/pset10.pdf">Problem set 10</a> (due Monday 4/10/23 by 11:59pm LA time).</td>    
+  </tr>
+
+  <tr>
+    <td>32</td>    
+    <td>Wednesday 4/5/23</td>
+    <td> More on covector fields and differentials of functions. Naturality under pullback. Definition of line integrals and coordinate independence.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>33</td>    
+    <td>Friday 4/7/23</td>
+    <td> Exact and closed differential one-forms. Line integrals of exact one-forms are path independent and vanish on loops. A differential one-form which is closed but not exact. The Poincaré lemma.</td>
+    <td>&#167;11</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>34</td>    
+    <td>Monday 4/10/23</td>
+    <td>Multilinear algebra. Symmetric and alternating tensors.</td>
+    <td>&#167;12</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>35</td>    
+    <td>Wednesday 4/12/23</td>
+    <td>Smooth group actions and the quotient manifold theorem.</td>
+    <td>&#167;21</td>
+    <td><a href="535a_spring_2023/pset11.pdf">Problem set 11</a> (due Wednesday 4/19/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>36</td>    
+    <td>Friday 4/14/23</td>
+    <td>Review of closed and exact differential one-forms. Definition of the first de Rham cohomology group and simple examples. More on multilinear algebra. Symmetric product and wedge product of tensors.</td>
+    <td>&#167;12</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>37</td>    
+    <td>Monday 4/17/23</td>
+    <td>More on multilinear algebra and tensors. Characterization of tensor fields as operations on vector fields.</td>
+    <td>&#167;14</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>38</td>    
+    <td>Wednesday 4/19/23</td>
+    <td>Differential $k$-forms. The exterior derivative and its properties.</td>
+    <td>&#167;14</td>
+    <td><a href="535a_spring_2023/pset12.pdf">Problem set 12</a> (due Sunday 4/30/23 by 11:59pm LA time).</td>    
+  </tr>
+
+    <tr>
+    <td>39</td>    
+    <td>Friday 4/21/23</td>
+    <td> Intrinsic definition of the exterior derivative. Orientations on vector spaces and manifolds.</td>
+    <td>&#167;14,15,16</td>
+    <td></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>40</td>    
+    <td>Monday 4/24/23</td>
+    <td>More on orientations on manifolds. Orienting boundaries of manifolds-with-boundary. The oriented double cover.</td>
+    <td>&#167;15,16</td>
+    <td></td>    
+  </tr>
+
+  <tr>
+    <td>41</td>    
+    <td>Wednesday 4/26/23</td>
+    <td>More on orientations. Integrating differential forms on manifolds. </td>
+    <td>&#167;15,16</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>42</td>    
+    <td>Friday 4/28/23</td>
+    <td> More on integrating differential forms. Independence of the definition on choice of partition of unity. Integrations over parametrizations. Stokes' theorem. Brief introduction to degree theory.</td>
+    <td>&#167;16,17</td>
+    <td><a href="535a_spring_2023/535a_spring_2021_final.pdf">Final exam from Spring 2021.</a> <a href="535a_spring_2023/535a_spring_2021_final_with_solutions.pdf">Sample solutions.</a></td>    
+  </tr>
+
+     <tr style="border-bottom:2px solid black">
+  <tr>
+    <td></td>    
+    <td style="color:red">Wednesday 5/3/23: 11am-1pm</td>
+    <td style="color:red">final exam</td>
+    <td></td>
+    <td></td>    
+  </tr>
+
+ 
+</table>
+
+ 
+
+&nbsp;
+
+<div style="font-size:80%">
+Image sources: <a href="535a_spring_2023/image_sources.txt">here</a>.
+</div>
+
+
+  </body>
+
+  </html>
