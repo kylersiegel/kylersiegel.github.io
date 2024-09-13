@@ -1,0 +1,270 @@
+
+<meta charset="UTF-8">
+<html>
+  <head>
+    <title>Symplectothon 2024</title>
+  </head>
+  <style type="text/css">
+    body {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        overflow: hidden;
+        /*background-image: url("arrowhead.webp");*/
+        background-image: url("bigbear.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+    }
+    .left-banner {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        align-self: flex-start;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        font-size: 6.5vh;
+        font-weight: bold;
+        font-family: sans-serif;
+        color: white;
+        text-shadow: 3px 3px red;;
+    }
+    .right-banner {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        align-self: flex-end;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        font-size: 6.5vh;
+        font-weight: bold;
+        font-family: sans-serif;
+        color: white;
+        text-shadow: 3px 3px red;
+    }
+    .middle-part {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #mainbox {
+        color: white;
+        font-size: 25pt;
+        font-family: sans-serif;
+        text-align: center;
+        text-shadow: 2px 2px #833, 0px 0px 30px black;
+    }
+    #mainbox a {
+        color: white;
+    }
+    .biggertext {
+        font-size: 30pt;
+    }
+    #moreinfo {
+        background: none;
+        border: none;
+        padding: 0;
+        text-decoration: underline;
+        cursor: pointer;
+        color: white;
+        text-shadow: 2px 2px #833, 0px 0px 30px black;
+    }
+    #apply {
+        background: none;
+        border: none;
+        padding: 0;
+        text-decoration: underline;
+        cursor: pointer;
+        color: white;
+        text-shadow: 2px 2px #833, 0px 0px 30px black;
+    }
+    #popup {
+        display: none; /* (flex) */
+        height: 90%;
+        width: 80%;
+        overflow: auto;
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 20pt;
+        z-index: 2;
+        justify-content: center;
+        color: white;
+        font-size: 20pt;
+        font-family: sans-serif;
+    }
+    #popup a {
+        color: white;
+    }
+    #popup h1 {
+        margin-bottom: 0pt;
+    }
+    #popup h4 {
+        margin-top: 0pt;
+        margin-bottom: 0pt;
+    }
+    #popup h3 {
+        margin-bottom: 5pt;
+    }
+    #popup p {
+        margin-top: 5pt;
+        opacity: 1;
+    }
+    #popup-bg {
+        display: none;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 1;
+    }
+    .column {
+        width: 80%;
+    }
+    #popup::-webkit-scrollbar {
+        width: 20px;
+    }
+    #popup::-webkit-scrollbar-button:single-button:vertical:increment {
+        border-radius: 0pt 0pt 20pt 0pt;
+        height: 25px;
+    }
+    #popup::-webkit-scrollbar-button:single-button:vertical:decrement {
+        border-radius: 20pt 0pt 0pt 0pt;
+        height: 25px;
+    }
+    #popup::-webkit-scrollbar-thumb {
+        background-color: #ddd8;
+    }
+    #popup::-webkit-scrollbar-thumb:hover {
+        background-color: #aaa8;
+    }
+    #popup::-webkit-scrollbar-thumb:active {
+        background-color: #5558;
+    }
+  </style>
+  <body>
+    <div class="left-banner">
+      SYMPLECTOTHON
+    </div>
+    <div class="middle-part">
+      <div id="mainbox">
+        2024 Southern California Symplectothon<br>
+        Global Kuranishi charts<br>
+        November 8-11, 2024<br>
+        Big Bear Lake, California<br>
+        <!-- Apply by 9/22/24<br> -->
+        <!-- <a class='biggertext' href="https://forms.gle/CFbvoXGpjCAXQg2eA" target="_blank">Sign up</a><br> -->
+        
+        <!-- (Application deadline was October 4) -->
+        <br><br>
+        <button id="moreinfo" class="biggertext">More info.</button> <button id="apply" class="biggertext"><a href="https://docs.google.com/forms/d/e/1FAIpQLSez3Swl_NH7tgtQXr5C-SNy8cMkfwLtZpH4E1tAMfWZb62lrA/viewform?usp=sf_link">Apply.</a></button> <br><br>
+      </div>
+      <div id="popup">
+        <div class="column">
+          <h1>2024 Southern California Symplectothon</h1>
+          <h4>Global Kuranishi charts</h4>
+          <h4>November 8th - 11th (Veteran's day weekend)</h4>
+          <h4>Invited experts: Amanda Hirschi and Mohan Swaminathan</h4>
+        <h4>Organizers: Sheel Ganatra, Kyler Siegel, and Morgan Weiler</h4>
+
+
+          <h3>What is this?</h3>
+          <p>
+            This is a weekend-long geometry workshop for researchers of all levels based in the greater Southern California area.
+            Participants will stay in a large house together near
+            <a href="https://www.google.com/maps/place/Big+Bear+Lake,+CA">Big Bear lake</a>.<br>
+            There will be a schedule of talks for which participants can sign up, as well as talks from our invited experts on the topic.
+            </p>
+
+        <h3>What is the purpose of the Symplectothon? </h3>
+<p>
+    This is a great opportunity for researchers to learn about an exciting emerging topic in an environment that engaging and  intensive but also low-stakes and fun. It is also a nice chance to connect geometers at different universities greater in Southern California area, and to explore new potential research directions and tools.
+</p>
+
+          <h3>What is the topic?</h3>
+          <p>
+            Our chosen topic this year is Global Kuranishi Charts, and we are pleased to have Amanda Hirschi and Mohan Swaminathan participating as invited experts. Check back soon for more details!
+          <p>
+   
+          <h3>Have there been any previous Symplectothons?</h3>
+          <p>
+            Yes! <a href="https://www.jojhelfer.com/symplectothon/">Symplectothon 2022</a>. 
+          </p>
+
+
+    <h3>Do I need to already know about this topic? How much prior background is required?</h3>
+<p>
+You certainly do not need to be an expert on this topic, as it's meant to be a learning workshop! We will however assume familiarity with the basics of symplectic geometry. We will provide background reading materials and other resources beforehand to help all participants get maximum benefit out of the workshop.
+</p>
+
+<h3>Do I need to give a talk? </h3>
+<p>
+Many but not all participants will give talks. Everyone is encouraged to volunteer! We will assign talks taking into account each individual speaker's prior background.
+</p>
+
+
+
+           <h3> Who can apply?</h3> 
+           <p>
+            Anyone is welcome to apply.  
+            The organizers are committed to creating an inclusive and respectful environment, and encourage applicants of all backgrounds, especially from underrepresented groups.
+          </p>
+
+          <h3> Do I need to apply?</h3>
+            <p>
+                Yes, please apply if you are interested! Due to space limitations in the house we can only accomodate a certain number of participants.
+        </p>
+
+        <h3> How do I apply?</h3>
+        <p>
+            The short application form is available <a href="https://docs.google.com/forms/d/e/1FAIpQLSez3Swl_NH7tgtQXr5C-SNy8cMkfwLtZpH4E1tAMfWZb62lrA/viewform?usp=sf_link">here</a>. Please be sure to apply by September 22nd, 2024 (Sunday) for full consideration. 
+        </p>
+
+        <h3>How will I get there?</h3>
+        <p>
+            Most likely we will rent a few large cars and drive together on Friday evening. Stay tuned.
+        </p>
+
+
+          <h3>How can I learn more?</h3>
+          <p>
+            <!-- To begin with, you should -->
+            <!-- <a href="https://forms.gle/CFbvoXGpjCAXQg2eA" target="_blank">apply here</a> (by October 4), -->
+            <!-- whereupon you will become privy to all further developments. -->
+            <!-- You can also contact the organizers at “sheel.ganatra AT usc DOT edu”, “jhelfer AT usc DOT edu”, and “kyler.siegel AT usc DOT edu”. -->
+            If you have any inquiries, please feel free to send us an email at “kyler.siegel AT usc DOT edu”.
+          </p>
+        </div>
+      </div>
+      <div id="popup-bg">
+      </div>
+    </div>
+    <div class="right-banner">
+      2 0 2 4
+    </div>
+    <script type="text/javascript">
+      document.getElementById('moreinfo').addEventListener("click", () => {
+          document.getElementById('popup').style.display = 'flex';
+          document.getElementById('popup-bg').style.display = 'block';
+          document.getElementById('mainbox').style.display = 'none';
+      });
+      function exit_popup() {
+          document.getElementById('popup').style.display = "none";
+          document.getElementById('popup-bg').style.display = "none";
+          document.getElementById('mainbox').style.display = "block";
+      }
+      window.addEventListener("click", function(event) {
+          if (event.target == document.getElementById('popup-bg')) {
+              exit_popup();
+          }
+      });
+      window.addEventListener("keydown", function(event) {
+          if (event.key == "Escape") {
+              exit_popup();
+          }
+      });
+    </script>
+  </body>
+</html>
