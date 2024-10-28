@@ -104,20 +104,34 @@ p {
   <div class="column left">
 
 
-	<a href="https://www.flickr.com/photos/manduitalia/"><img src="portrait2.jpg" style="width:200px;height:242px;"></a>
+<!-- 	<a href="https://www.flickr.com/photos/manduitalia/"><img src="portrait2.jpg" style="width:200px;height:242px;"></a>
 	<a href="https://www.flickr.com/photos/manduitalia/"><img src="selfportrait.png" style="width:200px;height:242px;"></a>
+ -->
+<div id="imageContainer"></div>
+
+<script>
+    // List of image options
+    const images = ["selfportrait.png", "portrait2.jpg"];
+
+    // Select a random image
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+
+    // Insert the image into the HTML
+    document.getElementById("imageContainer").innerHTML = `<img src="${randomImage}" style="width:200px;height:242px;">`;
+</script>
+
 
 	<h2> About me.	</h2> 
 	<p>
 		I'm an assistant professor in the mathematics department at the University of Southern California. Previously, I was a Ritt Assisant Professor in the mathematics department at Columbia University, and an NSF postdoctoral research fellow and pure mathematics instructor at Columbia during 2017-2019 and at MIT during 2016-2017. During Fall 2021 I was a member at the Institute for Advanced Study. My work is partially supported by NSF grant DMS-2105578.
 	</p>
-
+<!-- 
 	<h2> Research interests.	</h2> 
 	<p>
 		I work in symplectic geometry, a branch of mathematics lying somewhere at the intersection of smooth topology, differential geometry, algebraic geometry, and mathematical physics.
 		I like to study the complicated algebraic gadgets arising in Floer theory and symplectic field theory and apply them to classification problems in symplectic geometry or try to say new things about Hamiltonian dynamical systems.
 		These invariants also have some rather intruiging connections to things like string theory and algebraic geometry, which means there are lots of surprises in store. 
-	</p>
+	</p> -->
 
 	<h2> Contact. </h2>
 	<ul>	
@@ -308,8 +322,8 @@ As sample applications, we produce new previously inaccessible obstructions for 
 
 		<h4><li><em>Rationally convex domains and singular Lagrangian surfaces in $\mathbb{C}^2$</em>, with Stefan Nemirovski, <a href="https://link.springer.com/article/10.1007%2Fs00222-015-0598-4"> Inventiones mathematicae (2016)</a></em> (or <a href="https://arxiv.org/abs/1410.4652">arxiv:1410.4652</a>).
 		<div class="row">
-		<a href="#hide3" class="hide" id="hide3">Abstract.</a>
-		<a href="#show3" class="show" id="show3">Abstract:</a>
+		<a href="#hidesft" class="hide" id="hidesft">Abstract.</a>
+		<a href="#showsft" class="show" id="showsft">Abstract:</a>
 		<div class="list">
 		We give a complete characterization of those disk bundles over surfaces which embed as rationally convex strictly pseudoconvex domains in C^2. We recall some classical obstructions and prove some deeper ones related to symplectic and contact topology. We explain the close connection to Lagrangian surfaces with isolated singularities and develop techniques for constructing such surfaces. Our proof also gives a complete characterization of Lagrangian surfaces with open Whitney umbrellas, answering a question first posed by Givental in 1986.
 		</div>
@@ -318,7 +332,21 @@ As sample applications, we produce new previously inaccessible obstructions for 
 	</h4>
 	</ul>
 
-	
+	<h2> Survey articles. </h2>
+
+	<ul>
+		<h4><li>
+			<em>Symplectic field theory: an overview</em>, with Richard Hind, <a href="https://celebratio.org/">Celebratio Mathematica</a>, to appear (available <a href="SFT.pdf">here</a>).
+					<div class="row">
+		<a href="#hidesftcel" class="hide" id="hidesftcel">Abstract.</a>
+		<a href="#showsftcel" class="show" id="showsftcel">Abstract:</a>
+		<div class="list">
+		We summarize some of the main ideas and results around symplectic field theory, from its early inception up to recent and ongoing developments.
+		</div>
+		</div>
+		</li>
+	</h4>
+	</ul>
 
 	<h2> Some older papers. </h2>
 
@@ -421,7 +449,7 @@ Your browser does not support the video tag.
 	</h4>
 			
 		<h4><li><em>A Novel Unsupervised Clustering Algorithm for Binning DNA Fragments in Metagenomics</em>, with Kristen Altenburger, Yusing Hon, Jessey Lin, and Chenglong Yu, <a href="http://www.ingentaconnect.com/content/ben/cbio/2015/00000010/00000002/art00012"> Current Bioinformatics, Vol. 10, No. 2 (2015)</a>. 
-			<!-- Code available <a href="https://github.com/kylersiegel/PuzzleCluster">here</a> -->.
+			<!-- Code available <a href="https://github.com/kylersiegel/PuzzleCluster">here</a> -->
 		<div class="row">
 		<a href="#hidepc" class="hide" id="hidepc">Abstract.</a>
 		<a href="#showpc" class="show" id="showpc">Abstract:</a>
@@ -477,6 +505,7 @@ Your browser does not support the video tag.
 
   </div>
   <div class="column right">
+<img src="curves.png" style="width:110%;height:730%;">
 <img src="curves.png" style="width:110%;height:730%;">
   </div>
 </div>
