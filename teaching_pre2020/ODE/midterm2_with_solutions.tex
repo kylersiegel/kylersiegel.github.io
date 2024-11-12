@@ -1,0 +1,610 @@
+\documentclass[addpoints]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{mwe}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{subfig} % not subfigure!!!
+%\usepackage[demo]{graphicx}
+
+
+
+\renewcommand{\thepartno}{\Roman{partno}}
+
+
+
+\renewcommand{\questionshook}{%
+    \setlength{\leftmargin}{0pt}%
+    \setlength{\labelwidth}{-\labelsep}%
+    \setlength{\itemsep}{0.9cm}}  
+\renewcommand{\partshook}{\setlength{\topsep}{0.2cm}\setlength{\itemsep}{2cm}}
+\renewcommand{\subpartshook}{\setlength{\topsep}{0.5cm}\setlength{\itemsep}{2cm}}
+
+\newcommand{\partitions}{\op{Part}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Ee}{\mathcal{E}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\reversecomm}[1]{\reversemarginpar\marginpar{\tiny #1}}
+\newcommand{\Ynonver}{\Y^{\op{nonver}}}
+\newcommand{\Ynonhor}{\Y^{\op{nonhor}}}
+
+
+\newenvironment{itemlist}
+   { \begin{list} {$\bullet$}
+         { \setlength{\topsep}{.5ex}  \setlength{\itemsep}{.5ex} \setlength{\leftmargin}{2.5ex} } }
+   { \end{list} }
+   
+   \newcommand{\s}{{\mathfrak s}}
+     \renewcommand{\wr}{{{\rm w}}}
+      \newcommand{\pbar}{{\p_J}}
+      \newcommand{\Bl}{{\rm Bl}}
+   \newcommand{\PSL}{{\rm PSL}}
+   \newcommand{\TJ}{{\widetilde J}}
+   \newcommand{\TC}{{\widetilde C}}
+%      \newcommand{\TJ}{{\widetilde J}}
+   \newcommand{\TA}{{\widetilde A}}
+      \newcommand{\Tz}{{\widetilde z}}
+      \newcommand{\TD}{{\widetilde D}}
+\newcommand{\bp}{{\bf p}}
+\newcommand{\bc}{{\bf c}}
+   \newcommand{\bz}{{\bf z}}
+\newcommand{\nbhd}{{\rm nbhd}}
+\newcommand{\intt}{{\rm int\,}}
+\newcommand{\NI}{{\noindent}}
+\newcommand{\Pp}{{\mathcal P}}
+\newcommand{\Ii}{{\mathcal I}}
+\newcommand{\Qq}{{\mathcal Q}}
+\newcommand{\Oo}{{\mathcal O}}
+\newcommand{\Cc}{{\mathcal C}}
+\newcommand{\Nn}{{\mathcal N}}
+\newcommand{\Mm}{{\mathcal M}}
+\newcommand{\oMm}{{\ov{\mathcal M}}}
+\newcommand{\Jj}{{\mathcal J}}
+\newcommand{\im}{{\rm im\,}}
+\newcommand{\CZ}{{\rm CZ}}
+\newcommand{\ov}{\overline}
+\newcommand{\ou}{\ov{u}}
+\newcommand{\al}{{\alpha}}
+\newcommand{\Al}{{\Alpha}}
+\newcommand{\be}{{\beta}}
+\newcommand{\Be}{{\Beta}}
+\newcommand{\Om}{{\Omega}}
+\newcommand{\om}{{\omega}}
+%\newcommand{\eps}{{\varepsilon}}
+\newcommand{\de}{{\delta}}
+\newcommand{\De}{{\Delta}}
+\newcommand{\ga}{{\gamma}}
+\newcommand{\Ga}{{\Gamma}}
+\newcommand{\io}{{\iota}}
+\newcommand{\ka}{{\kappa}}
+\newcommand{\la}{{\lambda}}
+\newcommand{\La}{{\Lambda}}
+\newcommand{\si}{{\sigma}}
+\newcommand{\Si}{{\Sigma}}
+\newcommand{\less} {{\smallsetminus}}
+\newcommand{\p}{{\partial}}
+\newcommand{\MS}{{\medskip}}
+\newcommand{\ord}{{\rm ord}}
+\newcommand{\er}{{\Diamond}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\H}{\mathbb{H}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CP}{\mathbb{CP}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\lam}{\lambda}
+\renewcommand{\sc}{\op{SC}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\calF}{\mathcal{F}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calL}{\mathcal{L}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calQ}{\mathcal{Q}}
+\renewcommand{\bar}{\mathcal{B}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bdy}{\partial}
+\newcommand{\blue}[1]{{\color{blue}#1}}
+\newcommand{\red}[1]{{\color{red}#1}}
+\newcommand{\orange}[1]{{\color{orange}#1}}
+\newcommand{\Ci}{\mathcal{C}_\infty}
+\newcommand{\Ai}{\mathcal{A}_\infty}
+\newcommand{\Li}{\mathcal{L}_\infty}
+\newcommand{\IBLi}{\mathcal{IBL}_\infty}
+\newcommand{\BVi}{\mathcal{BV}_\infty}
+\newcommand{\calM}{\mathcal{M}}
+\newcommand{\dcalM}{\dashover{\mathcal{M}}}
+\newcommand{\calMdisc}{\mathcal{M}^{\op{disc}}}
+\newcommand{\ovlcalMdisc}{\ovl{\mathcal{M}}^{\op{disc}}}
+\newcommand{\wh}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\frakg}{\mathfrak{g}}
+\newcommand{\frakh}{\mathfrak{h}}
+\newcommand{\ovl}{\overline}
+\newcommand{\op}[1]{{\operatorname{#1}}}
+\newcommand{\e}{\eps}
+\newcommand{\Sh}{{\op{Sh}}}
+\newcommand{\des}{{\op{des}}}
+\newcommand{\std}{{\op{std}}}
+\newcommand{\Eval}{{\op{Eval}}}
+\newcommand{\can}{{\op{can}}}
+\newcommand{\sh}{\op{SH}}
+\newcommand{\Lam}{\Lambda}
+\newcommand{\Lamo}{\Lambda_{\geq 0}}
+\newcommand{\chlin}{\op{CH}_{\op{lin}}}
+\newcommand{\chlinn}{\sc_{S^1,+}}
+\newcommand{\ch}{\op{CH}}
+\newcommand{\lin}{{\op{lin}}}
+\newcommand{\ip}{\, \lrcorner \,}
+\newcommand{\cz}{{\op{CZ}}}
+\newcommand{\ind}{\op{ind}}
+\newcommand{\lleq}{\ll}
+\newcommand{\rreq}{\rr}
+\newcommand{\sft}{{\op{SFT}}}
+\newcommand{\cha}{{\op{CHA}}}
+\newcommand{\ev}{{\op{ev}}}
+\newcommand{\Op}{\mathcal{O}p}
+\newcommand{\nil}{\varnothing}
+\newcommand{\comm}[1]{\marginpar{\tiny #1}}
+%\newcommand{\comm}{\phantom}
+%\newcommand{\comm}[1]{\marginpar{\tiny #1}[3cm]}
+\newcommand{\sss}{\vspace{2.5 mm}}
+%\renewcommand{\leqq}{\preceq}
+%\renewcommand{\geqq}{\succeq}
+\newcommand{\orbset}{\mathfrak{S}}
+\newcommand{\sign}{\diamondsuit}
+\newcommand{\aug}{\e}
+\newcommand{\auglin}{\e_\lin}
+\newcommand{\fv}{\mathfrak{h}}
+\newcommand{\capac}{\mathfrak{c}}
+\newcommand{\dapac}{\mathfrak{d}}
+\newcommand{\gapac}{\mathfrak{g}}
+\newcommand{\rapac}{\mathfrak{r}}
+\newcommand{\bb}{\frak{b}}
+\renewcommand{\Im}{\op{Im}}
+\newcommand{\sm}{\op{Sm}}
+\newcommand{\fix}{{\op{fix}}}
+\newcommand{\triv}{\Xi}
+\newcommand{\m}{\mathfrak{m}}
+\newcommand{\cl}{\mathfrak{cl}}
+\newcommand{\cllin}{{\mathfrak{cl}_\lin}}
+\newcommand{\gw}{\op{GW}}
+%\renewcommand{\lll}{\Langle}
+%\newcommand{\rrr}{\Rangle}
+\newcommand{\daug}{\delta}
+\newcommand{\dcap}{d}
+\newcommand{\ellipse}{\tikz \draw (0,0) ellipse (.1cm and .03cm);}
+\newcommand{\Xring}{\oset{\circ}{X}}
+\newcommand{\Xellipse}{\oset[-.2ex]{\ellipse}{X}}
+\newcommand{\smx}{\oset[-.5ex]{\frown}{\times}}
+\newcommand{\ovo}{\oset[-.3ex]{\frown}}
+\newcommand{\anch}{\op{anch}}
+\newcommand{\sk}{{\op{sk}}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\TT}{\T^{\bullet}}
+\newcommand{\fib}{g}
+\newcommand{\val}{\op{val}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\bl}{\op{Bl}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\pd}{\op{PD}}
+\newcommand{\pt}{pt}
+\newcommand{\Aut}{\op{Aut}}
+\newcommand{\simp}{s}
+\newcommand{\wind}{\op{wind}}
+\renewcommand{\sp}{\op{sp}}
+\newcommand{\ex}{\op{ex}}
+\newcommand{\bull}{\textbullet\hspace{0.25cm}}
+\renewcommand{\bar}{\mathcal{B}}
+\newcommand{\id}{\op{id}}
+\newcommand{\bv}{\mathcal{BV}}
+\newcommand{\ii}{\mathfrak{i}}
+\newcommand{\jj}{\mathfrak{j}}
+\newcommand{\mom}{\op{mom}}
+\newcommand{\tri}{\triangle}
+\newcommand{\sht}{\op{short}}
+\newcommand{\lng}{\op{long}}
+\newcommand{\wc}{\widehat}
+\newcommand{\leftgen}{\xi}
+\newcommand{\rightgen}{\zeta}
+\newcommand{\lonegen}{\tau}
+\newcommand{\frakl}{\mathfrak{l}}
+\newcommand{\frakr}{\mathfrak{r}}
+\newcommand{\frakp}{\mathfrak{p}}
+\newcommand{\shookrightarrow}{\overset{s}\hookrightarrow}
+
+\begin{document}
+
+\begin{center} 
+\Large\textbf{Midterm 2}\\
+\large\textbf{Ordinary differential equations}\\
+\large\textbf{Columbia University Spring 2020}\\
+\large\textbf{Instructor: Kyler Siegel}
+\end{center}
+
+ \newcommand*{\TrueFalse}[1]{%
+\ifprintanswers
+    \ifthenelse{\equal{#1}{T}}{%
+        \textbf{TRUE}\hspace*{14pt}False
+    }{
+        True\hspace*{14pt}\textbf{FALSE}
+    }
+\else
+    {True}\hspace*{20pt}False
+\fi
+} 
+
+\newlength\TFlengthA
+\newlength\TFlengthB
+\settowidth\TFlengthA{\hspace*{1.16in}}
+\newcommand\TFQuestion[2]{%
+    \setlength\TFlengthB{\linewidth}
+    \addtolength\TFlengthB{-\TFlengthA}
+    \parbox[t]{\TFlengthA}{\TrueFalse{#1}}\parbox[t]{\TFlengthB}{#2}}
+ 
+\begin{center}
+\fbox{\fbox{\parbox{5.5in}{\centering
+\textbf{Instructions:} 
+\begin{itemize}
+\item Please write your answers on {\em blank} (unruled) paper, and make them as legible as possible. You do {\em not} need to print out the exam. You must make your work and solutions clear for full credit. Please include all scratch work. 
+
+\item Upload your solution to each problem separately, preferably as a PDF of sufficiently high resolution. You may use a scanner or a camera / smartphone. If you use a smartphone, we recommend using a scanner app. If your writing is not legible we may not be able to give credit (even if it is due only to poor scanning). If you absolutely cannot manage a PDF, please use JPG or other standard image format. Please try to avoid formats such as docx. 
+
+\item Solve as many problems of the following problems as you can in the allotted time, which is {\em one hour and fifteen minutes}. Note that you are given a total of 100 minutes to allow for extra time to upload your solutions. You may use more than 75 minutes to work on the exam but it is your responsibility to submit your solutions within the 100 minute time window.
+
+
+\item I recommend first solving the problems you are most comfortable with before moving on to the more challenging ones. 
+Note that the problems are not ordered by level of difficulty or topic.
+
+\item Please do not under any circumstances share information about this exam with other students, even after the exam window has ended (in case there are makeup exams). Inquiring about the exam with other students or giving information about the exam to other students is considered a breach of the honor code. Note that this includes even information about the difficulty level of the exam or broad information about what topics are covered.
+Suspected cases of copying or otherwise cheating will be taken very seriously. 
+
+\item You may {\em not} use any electronic devices to complete the exam. You are {\em not} allowed to use any textbook, calculator, pre-written notes, the internet, etc, to aid your solutions. You also may {\em not} consult with anyone (whether or not they are a student in this course) during the exam. You are expected to follow the honor code.
+
+\item The exams will be graded on a curve. Therefore the raw score is not important, and you do not necessarily need to solve every problem to achieve a good grade. Just do your best!
+
+
+
+\item You may freely use the restroom during the exam.
+
+\item At the top of your exam, please write your name, uni, the following sentence: ``I have adhered to all of the above rules.'', and write your signature.
+
+
+%\item At the end of the exam you will find {\em bonus problems}. These problems are more challenging and worth proportionally fewer points, so you should only attempt them after you are confident with your answers to the main problems. You can safely skip them if you're out of steam by then. 
+\item Good luck!!
+\end{itemize}
+}}}
+\end{center}
+ 
+  \begin{center}
+%\combinedgradetable[h][questions]
+\gradetable[h][questions]
+\end{center}
+ 
+% \vspace{2cm}
+ 
+% \makebox[\textwidth]{Name:\enspace\hrulefill}
+% 
+% \vspace{1cm}
+% 
+%  \makebox[\textwidth]{Uni:\enspace\hrulefill}
+% 
+% \vspace{2cm}
+ 
+
+% 
+ 
+ 
+%\vspace{5mm}
+% 
+%\makebox[\textwidth]{Name and section:\enspace\hrulefill}
+% 
+%\vspace{5mm}
+% 
+%\makebox[\textwidth]{Instructor?s name:\enspace\hrulefill}
+
+
+\break
+
+\printanswers
+
+
+\begin{questions}
+
+\begin{question}[25]
+
+Consider the ODE $t^2y''(t) + 2ty'(t) + ay(t) = 0$, where $a$ is a real-valued constant. Find the general solution, valid for both $t > 0$ and $t < 0$. {\em Note: your answer should depend on $a$, and there could be several cases to consider.}
+
+\end{question}
+
+\begin{solution}
+This is an Euler equation. The indicial equation is $r(r-1) + 2r + a = r^2 +r +a$, which has roots
+$\frac{-1 \pm \sqrt{1-4a}}{2}$.
+
+Firstly, suppose that we have $1-4a > 0$, i.e. $a < 1/4$.
+In this case we have two distinct real roots
+$r_1 = \frac{-1 + \sqrt{1-4a}}{2}$ and $r_2 = \frac{-1 - \sqrt{1-4a}}{2}$,
+and the general solution is
+$$y(t) = C_1|t|^{\tfrac{-1 + \sqrt{1-4a}}{2}} + C_2|t|^{\tfrac{-1 - \sqrt{1-4a}}{2}}.$$
+
+Now suppose that we have $1-4a = 0$, i.e. $a = 1/4$.
+In this case we have a single real repeated root
+$r_1 = r_2 = -1/2$.
+The general solution is then
+$$y(t) = C_1|t|^{-1/2} + C_2|t|^{-1/2}\ln(|t|).$$
+
+Finally, suppose that we have $1-4a < 0$, i.e. $a > 1/4$.
+In this case we have two complex roots which are complex conjugates,
+$r_1 = \frac{-1 + i\sqrt{4a-1}}{2}$ and $r_2 = \frac{-1 - i\sqrt{4a-1}}{2}$.
+We can write these as $\alpha \pm i \beta$ with $\alpha = -1/2$ and $\beta = \sqrt{4a-1}/2$.
+The corresponding real-valued general solution is therefore
+$$y(t) = C_1|t|^{-1/2}\cos\left(\tfrac{\sqrt{4a-1}}{2}\ln(|t|)\right) + C_2|t|^{-1/2}\sin\left(\tfrac{\sqrt{4a-1}}{2}\ln(|t|)\right).$$
+
+\end{solution}
+
+\break
+
+\begin{question}
+
+\begin{parts}
+
+\part[10] Find two linearly independent solutions to the ODE $$y^{(5)}(t) - 32y(t) = 0.$$
+
+\begin{solution}
+
+This is a constant coefficient ODE, so we make the ansatz $y(t) = e^{rt}$, and we arrive at the characteristic equation 
+$$r^5 - 32 = 0.$$
+This equation has five roots, each given by $2$ times a fifth root of unity.
+Namely, we have
+$r_k = 2e^{2\pi i k /5}$ for $k = 1,2,3,4,5$.
+For $k = 5$, we get simply $2$, and the corresponding solution $$f(t) = e^{2t}.$$
+For $k=1$, we get
+$$2 e^{2\pi i/5} = 2\left( \cos(2\pi /5) + i\sin(2\pi/5)\right) = \alpha + i\beta$$
+for $\alpha = 2\cos(2\pi /5)$ and $\beta = 2\sin(2\pi /5)$.
+
+Recall that a complex valued solution $e^{(\alpha + i\beta)t}$ can be written as
+$e^{\alpha t}\left( \cos(\beta t) + i \sin(\beta t)\right)$. Taking its real and imaginary parts, we get real-valued solutions $e^{\alpha t}\cos(\beta t)$ and $e^{\alpha t}\sin(\beta t)$.
+Taking just the cosine solution and applying this to our $\alpha$ and $\beta$ above, we get a solution 
+$$g(t) = e^{ 2\cos(2\pi /5) t}\cos(2\sin(2\pi /5) t).$$
+It is easy to see that $f(t)$ and $g(t)$ are linearly independent.
+Note: there are many other possible answers to this problem, and it's even possible to find {\em five} linearly independent solutions, although the problem only asks for two.
+\end{solution}
+
+\vspace{4cm}
+
+\part[10] Find the general solution to the ODE 
+$$y^{(7)}(t) - 8y^{(6)}(t) + 20y^{(5)}(t) - 16y^{(4)}(t) = 0.$$
+
+\begin{solution}
+
+In this case the characteristic equation is 
+$$r^7 - 8r^6 + 20r^5 - 16r^4 = 0,$$
+i.e. $$r^4(r^3 - 8r^2 + 20r - 16) = 0.$$
+The first four roots are $r_1 = r_2 = r_3 = r_4 = 0$.
+To find another root, we can seek rational roots using the rational roots theorem (note: this method requires some luck, since a typical polynomial might not have any rational roots, but at any rate this is one of the main methods we covered in class).
+By a little trial and error, one finds that $r=2$ is another root.
+We then factor
+$$r^3 - 8r^2 + 20r - 16 = (r-2)(r^2-6r+8) = (r-2)(r-2)(r-4).$$
+So we have the roots $r_5 = r_6 = 2$ and $r_7 = 4$,
+and this gives the general solution
+$$y(t) = C_1 + C_2t + C_3t^2 + C_4t^3 + C_5e^{2t} + C_6te^{2t} + C_7e^{4t}.$$
+
+\end{solution}
+
+\vspace{4cm}
+
+\part[10] Find the general solution to the ODE $$y''(t) - 2y'(t) = t + te^t + te^{2t} + (t^2+3)\sin(3t).$$
+{\em You may leave your answer in terms of a finite number of undetermined coefficients, e.g. $y(t) = A\sin(t) + Be^t$.}
+
+\begin{solution}
+The homogenous equation has characteristic polynomial $r^2 - 2r$, which has roots $r_1 = 0$ and $r_2 = 2$, corresponding to general solution $C_1 + C_2e^{2t}$.
+We concoct an ansatz for each summand of the inhomogeneity.
+
+Firstly $t$ is a polynomial of degree $1$. Since $0$ is a root of the characteristic polynomial, we also need to add an extra $t$, giving $t(At + B)$ as the corresponding ansatz.
+
+Next, $te^t$ is a polynomial of degree $1$ times $e^t$. Since $1$ is not a root of the characteristic polynomial, the corresponding ansatz is 
+$(Ct+D)e^t$.
+
+We handle $te^{2t}$ similarly, except that $2$ {\em is} a root of the characteristic polynomial, so we need to add an extra $t$, giving $t(Et+F)e^{2t}$.
+
+Finally, $(t^2+3)\sin(3t)$ is a degree two polynomial times $\sin(3t)$. Since $3i$ is not a root of the characteristic polynomial, we don't need to add any extra factor of $t$, so the corresponding ansatz is 
+$(Gt^2+Ht+I)\sin(3t) + (Jt^2+Kt+L)\cos(3t)$.
+
+Overall, the general solution is therefore
+$$y(t) = C_1 + C_2e^{2t} + t(At+B) + (Ct + D)e^t + t(Et+F)e^{2t} + (Gt^2 + Ht + I)\sin(3t) + (Jt^2 + Kt + L)\cos(3t).$$
+Of course it would be extremely tediously to have to solve for all of these coefficients by hand, but luckily the problem does not require that.
+
+\end{solution}
+
+\end{parts}
+
+\end{question}
+
+\break
+
+\begin{question}[10]
+Consider the ODE $$ y^{(4)}(t) + \cos(t)y''(t) + \sin(4t)y'(t) + 17y(t) = 0.$$
+Suppose $y_1(t),y_2(t),y_3(t),y_4(t)$ are solutions, defined for all $t \in \R$, and suppose that we have the initial conditions
+\begin{align*}
+y_1(4) = 3,\;\; y_1'(4) = 0,\;\; y_1''(4) = 0,\;\; y_1^{(3)}(4) = 0\\
+y_2(4) = 0,\;\; y_2'(4) = a,\;\; y_2''(4) = 0,\;\; y_2^{(3)}(4) = 2\\
+y_3(4) = 0,\;\; y_3'(4) = 1,\;\; y_3''(4) = 1,\;\; y_3^{(3)}(4) = 0\\
+y_4(4) = 0,\;\; y_4'(4) = a,\;\; y_4''(4) = 0,\;\; y_4^{(3)}(4) = a,
+\end{align*}
+where $a$ is a real constant. 
+Do $y_1(t),y_2(t),y_3(t),y_4(t)$ together form a fundamental set of solutions? {\em Note: your answer should depend on $a$.}
+
+\end{question}
+
+\begin{solution}
+
+Notice that the ODE is linear and the functions $\cos(t)$, $\sin(4t)$, and $17$ are continuous for all $t$. 
+Therefore $y_1,y_2,y_3,y_4$ form a fundamental set of solutions if and only if their Wronskian is nonzero for all $t$.
+The Wronskian at $t=4$ is given by the determinant
+\begin{align*}
+\begin{vmatrix} 3 & 0 &0 &0\\ 0 & a & 0 & 2 \\ 0 & 1 & 1& 0\\ 0 & a & 0 & a \end{vmatrix} = 3(a^2 - 2a).
+\end{align*}
+So they form a fundamental set unless $a = 0$ or $a = 2$.
+
+\end{solution}
+
+\break
+
+\begin{question}
+
+Consider the ODE $$y''(t) - 2ty'(t) - 2y(t) = 0.$$
+
+\begin{parts}
+
+\part[10] Let $y(t)$ be a power series solution of the form $y(t) = \sum\limits_{n=0}^\infty a_n t^n$ such that $y(0) = \pi$ and $y'(0) = \pi$. Find $a_0,a_1,a_2,a_3,a_4$.
+
+
+\begin{solution}
+From the ansatz $y(t) = \sum\limits_{n=0}^\infty a_n t^n$ we have $y'(t) = \sum\limits_{n=1}^\infty a_n n t^{n-1}$ and $y''(t) = \sum\limits_{n=2}^\infty a_n n(n-1)t^{n-2}$,
+and the ODE becomes
+$$  \sum\limits_{n=2}^\infty a_n n(n-1)t^{n-2} - 2t \sum\limits_{n=1}^\infty a_n n t^{n-1} - 2 \sum\limits_{n=0}^\infty a_n t^n = 0.$$
+Letting $j = n-2$, we can rewrite the first summand as
+$$\sum\limits_{j=0}^\infty a_{j+2} (j+2)(j+1)t^{j},$$
+and hence the the full expression can be written as 
+$$ \sum\limits_{n=0}^\infty a_{n+2} (n+2)(n+1)t^{n} - 2\sum\limits_{n=1}^\infty a_n n t^{n} - 2 \sum\limits_{n=0}^\infty a_n t^n = 0,$$
+i.e.
+$$ \sum\limits_{n=0}^{\infty} \left( a_{n+2}(n+2)(n+1) - 2a_n n - 2a_n\right) t^n = 0.$$
+For this to hold we must have
+$a_{n+2} = \frac{2n+2}{(n+2)(n+1)}a_n$ for all $n \geq 0$.
+The first few equations read:
+\begin{align*}
+&a_2 = \tfrac{2}{2*1}a_0\\
+&a_3 = \tfrac{4}{3*2}a_1\\
+&a_4 = \tfrac{6}{4*3}a_2,
+\end{align*}
+and so on.
+The initial conditions say that we must have $a_0 = a_1 = \pi$.
+Then the above equations give
+\begin{align*}
+&a_2 = \pi\\
+&a_3 = 2\pi/3\\
+&a_4 = a_2/2 = \pi/2.
+\end{align*}
+
+
+
+\end{solution}
+
+\vspace{3cm}
+
+\part[10] Now let $y(t)$ be a power series solution of the form $y(t) = \sum_{n=0}^\infty a_n t^n$ such that $y(0) = 1$ and $y'(0) = 0$. Find $a_{100}$ and $a_{101}$.
+
+\begin{solution}
+
+This initial condition corresponds to having $a_0 = 1$ and $a_1 = 0$.
+Let's write out the first few recursion equations in more detail:
+\begin{align*}
+&a_2 = \tfrac{2}{2*1}a_0\\
+&a_3 = \tfrac{4}{3*2}a_1\\
+&a_4 = \tfrac{6}{4*3}a_2 = \tfrac{6*2}{4!}a_0\\
+&a_5 = \tfrac{8}{5*4}a_3 = \tfrac{8*4}{5!}a_1\\
+&a_6 = \tfrac{10}{6*5}a_4 = \tfrac{10*6*2}{6!}a_0.
+\end{align*}
+
+Note that $a_3 = 2a_1/3 = 0$, and $a_5 = \tfrac{8*4}{5!}a_1 = 0$, and in general all of the odd index terms will be zero.
+This shows that $a_{101} = 0$.
+
+As for the even index terms, the pattern is
+$$a_{2k} = \tfrac{2*6*10*\dots*(4k-2)}{(2k)!}.$$
+This is the same as
+$$  \tfrac{2^{2k} 1*3*5*\dots*(2k-1)}{(2k)!} = \tfrac{2^{2k}}{2*4*6*\dots*(2k)} = \tfrac{2^{2k}}{2^{2k} 1*2*3*\dots * k} = \tfrac{1}{k!}.$$
+Therefore we have $a_{100} = \tfrac{1}{50!}$.
+
+
+\end{solution}
+
+\vspace{3cm}
+
+\part[5] In the context of (II), show that $y(t) = e^{t^2}$. {\em Note: you do not need to give a rigorous proof but you should be as convincing as possible.}
+
+\begin{solution}
+
+From the above, we have $$y(t) = 1 + \tfrac{1}{1!}t^2 + \tfrac{1}{2!}t^4 + \tfrac{1}{3!}t^6 + \dots + \tfrac{1}{k!}t^{2k} + \dots.$$
+Recall that the Taylor series for $e^t$ is
+$$e^t = 1 + \tfrac{1}{1!}t + \tfrac{1}{2!}t^2 + \tfrac{1}{3!}t^3 + \dots + \tfrac{1}{k!}t^{k} + \dots.$$
+Substituting $t^2$ for $t$, we get
+$$e^{t^2} = 1 + \tfrac{1}{1!}t^2 + \tfrac{1}{2!}t^4 + \tfrac{1}{3!}t^6 + \dots + \tfrac{1}{k!}t^{2k} + \dots,$$
+which is precisely what we found for $y(t)$.
+
+\end{solution}
+
+\vspace{3cm}
+
+\part[10] Now use the method of reduction of order to find the general solution to the ODE. You may leave your answer in terms of one or more definite integrals, e.g. $\int_0^t e^{\sin(s)}ds$. {\em Note: you may take for granted the answer to (III) even if you did not solve it.}
+
+\begin{solution}
+
+Denoting our first solution by $y_1(t) = e^{t^2}$, we seek a solution of the form
+$y(t) = u(t)y_1(t)$. 
+%Let us denote our ODE by $y''(t) + p(t)y'(t) + q(t)y(t) = 0$ for $p(t) := -2t$ and $q(t) := -2$.
+We have $y' = u'y_1 + uy_1'$ and $y'' = u''y_1 + 2u'y_1' + uy_1''$, and hence we need
+$$ (u''y_1 + 2u'y_1' + uy_1'') -2t(u'y_1 + uy_1') - 2 (uy_1) = 0.$$
+We get some cancellations since we already know that $y_1$ solves the ODE, we this reduces to
+$$ u''y_1 + 2u'y_1' - 2tu'y_1 = 0.$$
+Since $y_1'(t) = 2te^{t^2}$, we can write this as
+$$u'' e^{t^2} + 2u' 2te^{t^2} - 2te^{t^2}u' = 0,$$
+or equivalently 
+$$ u'' + 4tu' - 2tu' = 0,$$
+i.e.
+$$u'' + 2tu' = 0.$$
+Putting $v(t) := u'(t)$, this becomes $v'(t) + 2tv(t) = 0$.
+This is an easy first order ODE, with solution $v(t) = e^{-t^2}$.
+Now we integrate to get $u(t) = \int_0^{t} e^{-s^2}ds$. Recall from class that this antiderivative cannot be evaluated explicitly (in fact, it's the so-called ``error function $\op{erf}(t)$ up to a factor of $2/\sqrt{\pi}$).
+At any rate, going back to our initial ansatz, this gives the solution $e^{t^2}\int_0^{t} e^{-s^2}ds$.
+Combining this with our first solution $y_1(t)$, we get the general solution as
+$$y(t) = C_1 e^{t^2} + C_2e^{t^2}\int_0^{t} e^{-s^2}ds.$$
+
+
+
+\end{solution}
+
+
+\end{parts}
+
+
+\end{question}
+
+%\break
+
+
+
+%\begin{question}[20]
+%
+%Fake question. 
+%\end{question}
+%
+%\break
+
+
+
+
+
+
+
+
+
+
+\end{questions}
+
+
+
+
+\vspace{6cm}
+
+
+
+\end{document}
