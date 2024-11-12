@@ -13,7 +13,7 @@
         justify-content: space-between;
         overflow: hidden;
         /*background-image: url("arrowhead.webp");*/
-        background-image: url("bigbear.jpg");
+        background-image: url("symplectothon2024/bigbear.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: fixed;
@@ -143,8 +143,47 @@
     #popup::-webkit-scrollbar-thumb:active {
         background-color: #5558;
     }
+
+
+
+
+#top-message {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    background-color: lightblue;
+
+    padding: 10px;
+
+    text-align: center;
+
+    z-index: 100; /* Ensure it stays on top of other elements */
+
+}
+
+
+
   </style>
   <body>
+
+
+
+
+<div id="top-message" style="font-size: 30px;">
+    Symplectothon 2024 took place on November 8-11. Please see <a href="http://kylersiegel.xyz/symplectothon2024/notes.html">here</a> for notes, and stayed tuned for the next iteration. 
+
+
+
+
+</div>
+
+
     <div class="left-banner">
       SYMPLECTOTHON
     </div>
@@ -244,6 +283,8 @@ Many but not all participants will give talks. Everyone is encouraged to volunte
     <div class="right-banner">
       2 0 2 4
     </div>
+
+
     <script type="text/javascript">
       document.getElementById('moreinfo').addEventListener("click", () => {
           document.getElementById('popup').style.display = 'flex';
@@ -266,5 +307,8 @@ Many but not all participants will give talks. Everyone is encouraged to volunte
           }
       });
     </script>
+
+
+
   </body>
 </html>
