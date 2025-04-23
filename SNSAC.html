@@ -1,0 +1,732 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reveal.js Slideshow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css" id="theme">
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/math/math.js"></script>
+
+<style>
+@import url('https://cdn.jsdelivr.net/npm/cmu-serif@0.7.0/css/cmu-serif.css');
+@import url('https://cdn.jsdelivr.net/npm/cmu-sans-serif@0.7.0/css/cmu-sans-serif.css');
+@import url('https://cdn.jsdelivr.net/npm/cmu-typewriter-text@0.7.0/css/cmu-typewriter-text.css');
+</style>
+
+<style>
+/* Use Computer Modern Serif as the default */
+.reveal {
+  font-family: 'Computer Modern Serif', serif;
+}
+
+/* Optional: match monospace and code font */
+.reveal code {
+  font-family: 'Computer Modern Typewriter Text', monospace;
+}
+</style>
+
+<style>
+.theorem, .question {
+  border-left: 3px solid;
+  padding: 0.5em 1em;
+  margin: 0.5em 0;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-style: normal;
+  border-radius: 6px;
+  display: inline-block;
+  width: auto;
+  text-align: left;
+  max-width: 90%;
+}
+
+/* Theorem styling */
+.theorem {
+  border-color: #00bfff;
+  font-style: italic;
+    margin-right: 1em;
+}
+.theorem-title {
+  display: inline;
+  font-weight: bold;
+  font-style: normal;
+  color: #00bfff;
+  margin-right: 0.5em;
+  width: 100%;
+}
+
+/* Question styling */
+.question {
+  border-color: #ffaa00;
+  background: rgba(255, 255, 255, 0.03);
+  width: 100%;
+  margin-right: 1em;
+}
+.question-title {
+  display: inline;
+  font-weight: bold;
+  color: #ffaa00;
+  margin-right: 0.5em;
+}
+</style>
+
+
+<style>
+  h1, h2, h3, h4, h5, h6 {
+    text-transform: none !important;
+  }
+</style>
+
+
+<style>
+  .title-slide {
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 1.5em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.5s ease-out forwards;
+  }
+
+  .author-slide {
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 1em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.5s ease-out forwards;
+    animation-delay: 1s;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+
+<style>
+  .slide-header {
+    background-color: rgba(144, 238, 144, 0.5);
+    color: white;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border-bottom: 2px solid #333;
+  }
+
+
+  .slide-content {
+    padding: 20px;
+  }
+</style>
+
+
+
+  </head>
+
+
+
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+
+<section>
+  <h2 class="title-slide">Symplectic Nonsqueezing and Singular Algebraic Curves</h2>
+  <h4 class="author-slide">Kyler Siegel</h4>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+        <section>
+          Imagine a gas in a two-dimensional beaker
+ <embed src="2d_gas.jpg" style="width:80%;" />
+        </section>
+
+
+
+
+
+<section>
+We will model our gas by a large number of small balls.
+  <embed src="2d_gas_balls.jpg" style="width:80%;" />
+</section>
+
+<section>
+We will model our gas by a large number of small balls.
+ <video autoplay muted loop playsinline controls style="max-width: 80%; display: block; margin: 0.5em auto; ">
+        <source src="balls_in_beaker.mp4" type="video/mp4">
+      </video>
+</section>
+
+
+<section>
+If we remove the beaker, the gas particles will spread out according to their momenta.
+ <video autoplay muted loop playsinline controls style="max-width: 80%; display: block; margin: 0.5em auto; ">
+        <source src="beaker_release_pos.mp4" type="video/mp4">
+      </video>
+</section>
+
+
+<section>
+  <div>
+  <div class="r-fit-text"> 
+  <ul>
+ <li>Now suppose that after releasing the beaker we try to localize the gas using a force field
+<li class="fragment"> We will assume that the force is conservative: 
+    $$F = -\nabla V(q_1,q_2),$$ where $V(q_1,q_2)$ is a potential function and $(q_1,q_2)$ are the position coordinates. 
+<li class="fragment"> For example, $$V(q_1,q_2) = C(q_1^2 + q_2^2)$$ is the “harmonic oscillator” potential.
+<!-- <embed src="HO1_vector_field.jpg"/> -->
+<embed class="r-stretch" src="HO1_vector_field.jpg" style="width:40%; display: block; margin: 0.5em auto;"/>
+  </ul>
+</div>
+</section>
+
+
+<section>
+$V(q_1,q_2) = 3(q_1^2 + q_2^2)$
+ <video autoplay muted loop playsinline controls style="max-width: 80%; display: block; margin: 0.5em auto; ">
+        <source src="HO1_pos.mp4" type="video/mp4">
+      </video>
+</section>
+
+<section>
+    <div class="r-fit-text">
+Observe that as the position coordinates $(q_1,q_2)$ localize, the momentum coordinates $(p_1,p_2)$ spread out.  
+ <video autoplay muted loop playsinline controls style="max-width: 80%; display: block; margin: 0.5em auto; ">
+        <source src="HO1_pos_and_mom.mp4" type="video/mp4">
+      </video>
+    </div>
+</section>
+
+
+
+<section>
+<div class="theorem">
+<div class="theorem-title">Theorem (Liouville, cerca 1838)</div>
+The volume in phase space $\mathbb{R}^4_{q_1,q_2,p_1,p_2}$ is preserved by any Hamiltonian transformation.
+</div>
+
+<ul>
+<li class="fragment"> In particular, we cannot simultaneously squeeze all four coordinates $q_1,q_2,p_1,p_2$.
+</ul>
+<div class="question fragment">
+ <div class="question-title">Question</div> 
+Could we squeeze our gas in the $q_1,p_1$ coordinates, at the cost of spreading out $q_2,p_2$?
+</div>
+</section>
+
+
+
+<section>
+    <div class="r-fit-text"> 
+  $V(q_1,q_2) = 4q_1^2$
+ <video autoplay muted loop playsinline controls style="max-width: 80%; display: block; margin: 0.5em auto; ">
+        <source src="HO2_pos_and_mom.mp4" type="video/mp4">
+      </video>
+
+
+<ul>
+<li class="fragment"> In this naive example, squeezing $q_1$ comes at the cost of spreading out $p_1$.
+</ul>      
+</div>
+</section>
+
+
+<section>
+<div class="r-fit-text">
+
+<div class="theorem">
+<div class="theorem-title">Theorem (Gromov 1985)</div>
+The area of the projection to $\mathbb{R}^2_{q_1,p_1}$ cannot be squeezed below a constant $\mathcal{G}$.
+</div>
+
+<ul>
+<li class="fragment"> In our example $\mathcal{G} = 4$, assuming positions are drawn uniformly over the unit disk, and similarly for momenta.
+  <li class="fragment"> Remarkably, this theorem was not anticipated before the 1980's
+    <li class="fragment"> Gromov's proof introduced the method of pseudoholomorphic curves, which now form the basis of Gromov--Witten theory, Floer homology, quantum cohomology, Fukaya categories, embedded contact homology, symplectic field theory, ...
+     <li class="fragment"> Reminiscent of Heisenberg's uncertainy principle.
+</ul>
+</div>
+</section>
+
+
+
+<section> 
+<div class="r-fit-text">
+<ul>
+
+<h2 style="color:lightgreen;"> Hamiltonian dynamics</h2>
+
+<li>Phase space $\mathbb{R}_{q,p}^{2n}$ with position coordinates $q_1,\dots,q_n$ and momentum coordinates $p_1,\dots,p_n$
+
+
+<li class="fragment"> A <em>Hamiltonian</em> is a smooth function $H: \mathbb{R}^{2n} \rightarrow \mathbb{R}$ representing total energy
+<li class="fragment"> <em>symplectic gradient</em>: $\nabla_\omega H := J \nabla H$, where $J =
+     \begin{pmatrix}
+         0 & -\mathbb{1} \\ \mathbb{1} & 0
+     \end{pmatrix}$ 
+<li class="fragment"> <em>Hamiltonian flow</em> $\fl_H: \mathbb{R}^{2n} \times \mathbb{R}_t \rightarrow \mathbb{R}^{2n}$ given by integrating $\nabla_\omega H$. 
+
+<li class="fragment"> For example, $H(q,p) = V(q) + K(p)$, with $K(p) = \tfrac{1}{2}p^2$ kinetic energy. The corresponding Hamiltonian flow is equivalent to Newton's second law $-\nabla V(q) = \ddot{q}$.
+
+</ul>
+</div>
+</section>
+
+
+<section>
+  <div class="r-fit-text">
+<ul>
+<h2 style="color:lightgreen;"> Symplectic geometry</h2>
+
+<li> Hamiltonian flows preserve the standard symplectic two-form $\om = \sum_{i=1}^n dq_i \wedge dp_i$. 
+  <li class="fragment"> A <em>symplectomorphism</em> of $\mathbb{R}^{2n}$ is a diffeomorphism $\Phi: \mathbb{R}^{2n} \rightarrow \mathbb{R}^{2n}$ which preserves $\om$.
+</ul>
+
+<div class="question fragment">
+ <div class="question-title">Question</div> 
+What is the border between flexibility and rigidity for symplectomorphisms of $\mathbb{R}^{2n}$?
+</div>
+
+   
+
+</div>
+</section>
+
+
+
+
+
+<section>
+  <div class="r-fit-text">
+<ul>
+<h2 style="color:lightgreen;"> Symplectic ellipsoid embeddings</h2>
+
+<li> Given $\veca = (a_1,\dots,a_n) \in \mathbb{R}_{>0}^n$, put $$E(\veca) := \{(q,p) \in \mathbb{R}^{2n} \;|\; \sum_{i=1}^n\tfrac{\pi}{a_i}(q_i^2+p_i^2) \leq 1\}.$$
+  <li class="fragment"> Put $E(\veca) \hooksymp E(\vecb)$ if there exists a symplectomorphism $\Phi: \mathbb{R}^{2n} \rightarrow \mathbb{R}^{2n}$ satisfying $\Phi(E(\veca)) \subset E(\vecb)$.
+</ul>
+
+<div class="question fragment">
+ <div class="question-title">Question</div> 
+When do we have $E(\veca) \hooksymp E(\vecb)$?
+</div>
+</div>
+</section>
+
+
+
+
+<section>
+  <div class="r-fit-text">
+<ul>
+
+<h2 style="color:lightgreen;"> First observations about ellipsoid embeddings</h2>
+
+<li> By Liouville's theorem: $$E(\veca) \hooksymp E(\vecb) \Longrightarrow a_1\cdots a_n \leq b_1\cdots b_n.$$
+  <li class="fragment"> For $n=1$, we have $E(a_1) \hooksymp E(b_1)$ if and only if $a_1 \leq b_1$.
+    <li class="fragment"> Gromov's nonsqueezing theorem:  $$E(\veca) \hooksymp E(\vecb) \Longrightarrow \min \{a_1,\dots,a_n\} \leq \min \{b_1,\dots,b_n\}.$$ 
+<li class="fragment"> The case $n=2$ was completely worked out around 2010, or at least reduced to (nontrivial) combinatorics. Involves work by McDuff, Polterovich, Biran, Schlenk, Lalonde, Hutchings, Taubes, Hofer, and many others. Relies on special tools in dimension four, notably Seiberg--Witten theory.
+<li class="fragment"> Ex: $E(1,5) \hooksymp E(2.51,2.51)$, but $E(1,5) \not\hooksymp E(2.49,2.49)$. 
+<li class="fragment">The case $n \geq 3$ is largely open.
+
+</ul>
+
+</div>
+</section>
+
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<ul>
+<h2 style="color:lightgreen;"> Stabilized ellipsoid embeddings</h2>
+
+<div class="question" data-fragment-index="1">
+ <div class="question-title">Question</div> 
+When do we have $E(a_1,a_2,\infty,\dots,\infty) \hooksymp E(b_1,b_2,\infty,\dots,\infty)$?   
+</div>
+</ul>
+</div>
+</section>
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<ul>
+<h2 style="color:lightgreen;"> Stabilized ellipsoid embeddings</h2>
+
+<div class="question" data-fragment-index="1">
+ <div class="question-title">Question</div> 
+When do we have $E(a_1,a_2,\underbrace{\infty,\dots,\infty}_N) \hooksymp E(b_1,b_2,\underbrace{\infty,\dots,\infty}_N)$?      
+</div>
+
+
+<li class="fragment"> Note that $E(a_1,a_2,\infty,\dots,\infty) = E(a_1,a_2) \times \mathbb{R}^{2N}$. 
+
+<li class="fragment">In the special case $b_1 = b_2$, $E(b_1,b_2)$ is a round ball, and the answer is encoded by a single function
+     \begin{align*}
+     c_{B^4 \times \mathbb{R}^{2N}}(a) := \inf \{b\;|\; E(1,a) \times \mathbb{R}^{2N} \hooksymp E(b,b) \times \mathbb{R}^{2N}\}.
+     \end{align*}
+</ul>
+</div>
+</section>
+
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<h2 style="color:lightgreen;"> Theorem A</h2>
+
+<div class="theorem">
+<div class="theorem-title">Theorem (joint with D. McDuff)</div>
+The function $c_{B^4 \times \mathbb{R}^{2N}}(a)$ is given as follows:
+ <embed class="fragment" src="stab_fib_mod_v4.svg.jpg" style="width:90%; display: block; margin: 0 auto;"/>
+</div>
+
+
+ </div>
+</section>
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<h2 style="color:lightgreen;"> Theorem A</h2>
+
+<div class="theorem">
+<div class="theorem-title r-stretch">Theorem (joint with D. McDuff, <span style="color:darkolivegreen;">2024</span>)</div>
+The function $c_{B^4 \times \mathbb{R}^{2N}}(a)$ is given <span style="color:darkolivegreen;">for any $N \in \Z_{\geq 1}$</span> as follows:
+ <embed class="r-stretch" src="stab_fib_mod_v4.svg.jpg" style="width:60%; display: block; margin: 0 auto;"/>
+</div>
+
+<ul>
+  <li class="fragment">Phase transition at $a = \tau^4 = \tfrac{7+3\sqrt{5}}{2}\approx 6.85$, from an “infinite staircase” to a rational function.
+    <li class="fragment">Steps in first phase are described by ratios of Fibonacci numbers.
+    <li class="fragment">Second phase is purely high dimensional. 
+
+</ul>
+ </div>
+</section>
+
+
+
+<section>
+ <div class="r-fit-text">
+<h2 style="color:lightgreen;"> Singular algebraic curves</h2>
+
+
+<ul>
+
+  <li> A polynomial $P(x,y) \in \C[x,y]$ gives an algebraic curve $V(P) := \{P(x,y) = 0\} \subset \C^2$.
+
+<li class="fragment"> A homogenous polynomial $P(x,y,z) \in \C[x,y,z]$ gives an <em>plane curve</em> $V(P) := \{P(x,y,z) = 0\} \subset \CP^2$.
+
+  <li class="fragment">A point $\pp = [x_0:y_0:z_0] \in V(P)$ is singular if $\bdy_x P(\pp) = \bdy_y P(\pp) = \bdy_z P(\pp) = 0$.
+
+  <li class="fragment"> For coprime integers $p > q \geq 2$, the <em>$(p,q)$ cusp singularity</em> $\mathcal{C}_{p,q}$ is modeled on $\{x^p = y^q\}$, and the <em>ordinary double point</em> $A_1$ is modeled on $\{x^2 = y^2\}$
+
+<li class="fragment"> $V(P)$ is <em>rational</em> if it has genus zero, i.e. can be parametrized by $\CP^1$
+
+</ul>
+</div>
+</section>
+
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<h3 style="color:lightgreen;"> Example of a singular plane curve</h3>
+
+<embed src="plane_curve.svg.jpg" style="width:75%; display: block; margin: 0 auto;"/>
+
+</div>
+</section>
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<h3 style="color:lightgreen;"> Example of a singular plane curve</h3>
+
+<embed src="plane_curve_annotated1.svg.jpg" style="width:75%; display: block; margin: 0 auto;"/>
+
+</div>
+</section>
+
+
+<section data-auto-animate>
+ <div class="r-fit-text">
+<h3 style="color:lightgreen;"> Example of a singular plane curve</h3>
+
+<embed src="plane_curve_annotated2.svg.jpg" style="width:75%; display: block; margin: 0 auto;"/>
+
+</div>
+</section>
+
+
+
+<section>
+   <div class="r-fit-text">
+  <h2 style="color:lightgreen;"> Classification problem for singular plane curves</h2>
+
+
+<div class="question">
+ <div class="question-title">Questions</div> 
+<ul>
+
+  <li> What are the possible combinations of singularities for a plane curve of degree $d$ and genus $g$?
+    <li class="fragment"> For given coprime $p,q$, what is the minimal degree of a plane curve with a $(p,q)$ cusp singularity?
+    </ul>
+</div>
+
+<ul>
+  <li class="fragment"> Adjunction formula: $\tfrac{1}{2}(d-1)(d-2) = \operatorname{gen}(C) + \sum\limits_{\pp \in C} \delta(\pp)$, where $\delta(\mathcal{C}_{p,q}) = \tfrac{1}{2}(p-1)(q-1)$ and $\delta(A_1) = 1$.
+
+
+  </ul>
+
+
+
+</div>
+</section>
+
+
+
+<section data-auto-animate>
+     <div class="r-fit-text">
+  <h2 style="color:lightgreen;"> Sample classification result</h2>
+
+<div class="theorem">
+<div class="theorem-title">Theorem (Bobadilla et al)</div>
+ There exists a rational plane curve of degree $d$ with a $(p,q)$ cusp singularity and no other singularities if and only if $(d,p,q)$ is one of the following:  
+
+  <ul style="list-style-type: none; padding-left: 0;">
+   <li>(a) $(p,q) = (d,d-1)$ for $d \geq 3$
+   <li class="fragment">(b) $(p,q) = (2d-1,d/2)$ for $d \geq 4$ even
+   <li class="fragment">(c) $(p,q) = (\fib_{k+2}^2,\fib_{k}^2)$ and $d = \fib_{k+2}\fib_k$ for $k \geq 3$ odd
+   <li class="fragment">(d) $(p,q) = (\fib_{k+4},\fib_{k})$ for $d = \fib_{k+2}$ for $k \geq 3$ odd
+   <li class="fragment">(e) $(p,q) = (22,3)$ and $d = 8$
+   <li class="fragment">(f) $(p,q) = (43,6)$ for $d = 16$.
+
+  </ul>
+</div>
+</div>
+</section>
+
+
+
+
+
+
+<section data-auto-animate>
+     <div class="r-fit-text">
+  <h2 style="color:lightgreen;"> Sample classification result</h2>
+
+<div class="theorem">
+<div class="theorem-title">Theorem (Bobadilla et al)</div>
+ There exists a rational plane curve of degree $d$ with a $(p,q)$ cusp singularity and no other singularities if and only if $(d,p,q)$ is one of the following:  
+
+  <ul style="list-style-type: none; padding-left: 0;">
+   <li style="color:magenta;">(a) $(p,q) = (d,d-1)$ for $d \geq 3$ </li>
+   <li style="color:magenta;">(b) $(p,q) = (2d-1,d/2)$ for $d \geq 4$ even </li>
+   <li style="color:teal;">(c) $(p,q) = (\fib_{k+2}^2,\fib_{k}^2)$ and $d = \fib_{k+2}\fib_k$ for $k \geq 3$ odd </li>
+   <li style="color:teal;">(d) $(p,q) = (\fib_{k+4},\fib_{k})$ for $d = \fib_{k+2}$ for $k \geq 3$ odd </li>
+   <li style="color:orange;">(e) $(p,q) = (22,3)$ and $d = 8$ </li>
+   <li style="color:orange;">(f) $(p,q) = (43,6)$ for $d = 16$. </li>
+
+  </ul>
+</div>
+</div>
+</section>
+
+<section data-auto-animate>
+     <div class="r-fit-text">
+  <h2 style="color:lightgreen;"> Sample classification result</h2>
+
+<div class="theorem">
+<div class="theorem-title">Theorem (Bobadilla et al)</div>
+ There exists a rational plane curve of degree $d$ with a $(p,q)$ cusp singularity and no other singularities if and only if $(d,p,q)$ is one of the following:  
+
+  <ul style="list-style-type: none; padding-left: 0;">
+   <li>(a) $(p,q) = (d,d-1)$ for $d \geq 3$ </li>
+   <li>(b) $(p,q) = (2d-1,d/2)$ for $d \geq 4$ even </li>
+   <li>(c) $(p,q) = (\fib_{k+2}^2,\fib_{k}^2)$ and $d = \fib_{k+2}\fib_k$ for $k \geq 3$ odd </li>
+   <li style="color:red">(d) $(p,q) = (\fib_{k+4},\fib_{k})$ for $d = \fib_{k+2}$ for $k \geq 3$ odd </li>
+   <li>(e) $(p,q) = (22,3)$ and $d = 8$ </li>
+   <li>(f) $(p,q) = (43,6)$ for $d = 16$. </li>
+
+  </ul>
+</div>
+</div>
+</section>
+
+
+
+
+<section data-auto-animate>
+     <div class="r-fit-text">
+  <h2 style="color:lightgreen;"> Sample classification result <span style="color:darkolivegreen;">(simplified version)</span></h2>
+
+<div class="theorem">
+<div class="theorem-title">Theorem (Kashiwara, Orevkov, folklore?)</div>
+There exists a rational plane curve of degree $d$ with a $(p,q)$ cusp singularity and no other singularities, with $p+q = 3d$, if and only if $(p,q) = (\fib_{k+4},\fib_{k})$ and $d = \fib_{k+2}$ for some $k \geq 3$ odd.
+</div> 
+
+<ul>
+<li class="fragment"> Condition $p+q = 3d$ equivalent to curve being “rigid” after specifying the location and (jet) direction of the cusp.
+</ul>
+
+</div>
+</section>
+
+
+
+<section>
+<div class="r-fit-text">  
+<h2 style="color:lightgreen;">Theorem B</h2>
+<div class="theorem">
+<div class="theorem-title">Theorem (joint with D. McDuff, 2024)</div>
+There exists a rational plane curve of degree $d$ with a $(p,q)$ cusp singularity and possibly other singularities, with $p+q = 3d$, if and only if one of the following holds:
+  <ol>
+<li class="fragment">   $(p,q) = (\fib_{k+4},\fib_{k})$ for some $k \in \Z_{\geq 3}$ odd
+  <li class="fragment">   $p/q > \tau^4$.
+  </ol>
+</div>
+
+
+
+<ul>
+<li class="fragment"> Phase transition at $p/q = \tau^4$.
+
+<li class="fragment"> This solves the minimal degree problem for a $(p,q)$ cusp for “most” $(p,q)$ with $p+q \equiv 0 \;\text{mod}\; 3$.
+</ul>
+
+
+</div>
+</section>
+
+
+
+
+
+
+
+<section>
+<div class="r-fit-text">  
+<h2 style="color:lightgreen;">From Theorem B to Theorem A</h2>
+
+<ul>
+<li> We deduce Theorem A from Theorem B using techniques from <em>symplectic field theory</em>.
+
+<li class="fragment"> Symplectic field theory is a rich framework for defining algebraic invariants of symplectic manifolds using moduli spaces of punctured pseudoholomorphic curves in symplectic manifolds.
+
+<li class="fragment">Important classes of symplectic manifolds include: 
+
+<ul>
+ <li class="fragment"> domains in $\mathbb{R}^{2n}$ (Hamiltonian dynamics)
+
+  <li class="fragment"> smooth complex affine algebraic varieties (algebraic geometry)
+
+<li class="fragment"> cotangent bundles of smooth manifolds (smooth topology)
+</ul>
+
+</ul>
+
+</div>
+</section>
+
+
+
+
+
+<section>
+<div class="r-fit-text">  
+<h2 style="color:lightgreen;">Proving Theorem B</h2>
+
+<ul>
+<li> The proof of Theorem B relies on techniques from <em>mirror symmetry</em> for log Calabi--Yau surfaces.
+
+<li class="fragment"> Using work of Gross--Pandharipande--Siebert, we show that the existence of the relevant curves is encoded by combinatorial objects called <em>scattering diagrams</em>
+
+<li class="fragment"> Remarkably, these scattering diagrams can be analyzed using connections with quiver representation theory and cluster algebras.
+
+</ul>
+
+</div>
+</section>
+
+
+
+
+<!--
+
+
+
+
+
+
+% \begin{frame}{Proving Theorem B}
+
+% \begin{itemize}
+%     \item The proof of Theorem B relies on techniques from {\em mirror symmetry} for log Calabi--Yau surfaces. \pause
+
+%     \item Using work of Gross--Pandharipande--Siebert, we show that the existence of the relevant curves is encoded by combinatorial objects called {\em scattering diagrams} \pause
+
+%     \item Remarkably, these scattering diagrams can be analyzed using connections with quiver representation theory and cluster algebras.
+% \end{itemize}
+    
+% \end{frame}
+
+ -->
+
+
+
+
+      </div>
+    </div>
+
+    <!-- Initialize Reveal.js -->
+    <script>
+      // Reveal.initialize()
+Reveal.initialize({
+  mathjax3: {
+    mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+    tex: {
+      inlineMath: [
+        ['$', '$'],
+        ['\\(', '\\)'],
+      ],
+      macros: {R: '\\mathbb{R}', fl: '\\operatorname{Fl}', om: '\\omega', veca: '\\vec{a}', vecb: '\\vec{b}', hooksymp: '\\overset{s}\\hookrightarrow', Z: '\\mathbb{Z}', C:'\\mathbb{C}', CP:'\\mathbb{CP}', pp:'\\mathfrak{p}', bdy:'\\partial', fib:'\\operatorname{Fib}'}
+
+
+
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    },
+  },
+  plugins: [RevealMath.MathJax3],
+});
+
+    </script>
+
+
+
+  </body>
+</html>
