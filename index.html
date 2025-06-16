@@ -82,6 +82,51 @@ p {
 	 @media print { .hide, .show { display: none; } }
 	 </style>
 
+<style>
+  .footnote {
+    position: relative;
+    cursor: pointer;
+    font-size: 0.6em; /* Smaller footnote number */
+    vertical-align: super;
+  }
+
+  .footnote:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 200px;
+    transition: opacity 0.2s;
+    font-size: 0.9em;
+    white-space: normal;
+  }
+
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+  }
+</style>
+
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 </script>
@@ -139,7 +184,9 @@ p {
 
 	</ul>
 
-	<h2>  Mathematics papers. </h2>
+	<h2>  Mathematics papers.<sup class="footnote">1
+    <span class="tooltip">Note: there may sometimes be minor differences between the published and arXiv versions, with the former usually slightly more up to date.</span>
+  </sup> </h2>
 	<ul>
 
 
@@ -351,7 +398,7 @@ As sample applications, we produce new previously inaccessible obstructions for 
 
 	<ul>
 		<h4><li>
-			<em>Symplectic field theory: an overview</em>, with Richard Hind, <a href="https://celebratio.org/">Celebratio Mathematica</a>, to appear (or <a href="https://arxiv.org/abs/2410.19936">arXiv:2410.19936</a>).
+			<em>Symplectic field theory: an overview</em>, with Richard Hind, <a href="https://celebratio.org/Eliashberg_Y/article/1200/">Celebratio Mathematica</a>, to appear (or <a href="https://arxiv.org/abs/2410.19936">arXiv:2410.19936</a>).
 					<div class="row">
 		<a href="#hidesftcel" class="hide" id="hidesftcel">Abstract.</a>
 		<a href="#showsftcel" class="show" id="showsftcel">Abstract:</a>
