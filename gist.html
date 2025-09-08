@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Singular algebraic curves and quantitative symplectic embeddings</title>
+  <meta name="description" content="Geneva workshop on singular algebraic curves and quantitative symplectic embeddings, Sept 22–26, 2025 at Villa Boninchi (Université de Genève)." />
+  <style>
+    :root{
+      --bg-image: url('https://www.ernestboninchi.ch/data/gallery/gallery1/img/dscf49942.jpg');
+      --overlay: rgba(0,0,0,.45);
+      --panel: rgba(0,0,0,.5);
+      --accent: #ffd166; /* warm accent for links/buttons */
+      --text: #ffffff;
+      --muted: #cfd8dc;
+      --radius: 18px;
+      --shadow: 0 8px 30px rgba(0,0,0,.35);
+    }
+
+    html, body { height: 100%; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--overlay);
+    }
+
+    /* Full-screen background image with subtle dark overlay */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(var(--overlay), var(--overlay)), var(--bg-image) center / cover no-repeat fixed;
+      z-index: -2;
+    }
+
+    /* Centering wrapper */
+    .wrap {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 40px 20px;
+    }
+
+    /* Glassy content panel */
+    .panel {
+      width: min(100%, 960px);
+      background: color-mix(in oklab, var(--panel) 85%, transparent);
+      backdrop-filter: blur(6px) saturate(1.1);
+      -webkit-backdrop-filter: blur(6px) saturate(1.1);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(20px, 3.5vw, 40px);
+    }
+
+    h1{
+      margin: 0 0 .3rem 0;
+      font-size: clamp(1.7rem, 3.1vw + .3rem, 3.1rem);
+      line-height: 1.1;
+      letter-spacing: .5px;
+      text-wrap: balance;
+    }
+    .subtitle{
+      margin: .25rem 0 1.5rem 0;
+      font-size: clamp(1rem, 1.1vw + .6rem, 1.25rem);
+      color: var(--muted);
+    }
+
+    /* Quick section layout */
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(14px, 2vw, 22px);
+    }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 12; }
+    @media (min-width: 900px){ .col-6 { grid-column: span 6; } }
+
+    section{ padding-block: .25rem; }
+    h2{
+      margin: 0 0 .5rem 0;
+      font-size: clamp(1.1rem, 1.2vw + .8rem, 1.7rem);
+      border-left: 4px solid var(--accent);
+      padding-left: .6rem;
+    }
+    p, li { line-height: 1.6; }
+    ul { margin: .3rem 0 0 1.1rem; padding: 0; }
+
+    /* Link + button styling */
+    a{ color: var(--accent); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+    .btn{
+      display: inline-block;
+      padding: .7rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.35);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,.25);
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.5); border-color: rgba(255,255,255,.45); }
+    .btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    /* Tiny footer */
+    .footer{
+      margin-top: 1.25rem;
+      font-size: .9rem;
+      color: #e0e0e0;
+      opacity: .85;
+    }
+
+    /* Simple in-panel nav */
+    .top-actions{
+      display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem;
+    }
+
+    /* Make long URLs break nicely */
+    .break { overflow-wrap: anywhere; }
+    /* Collapsible participants list */
+    details.collapsible summary{ cursor: pointer; }
+    details.collapsible[open] .participants-list{ column-gap: 1.2rem; }
+    @media (min-width: 900px){
+      details.collapsible[open] .participants-list{ columns: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true"></div>
+  <main class="wrap">
+    <article class="panel" role="region" aria-label="Workshop information">
+      <header>
+        <div class="top-actions" aria-label="Quick links">
+          <a class="btn" href="#venue">Venue</a>
+          <a class="btn" href="#practical">Practical Info</a>
+          <a class="btn" href="#participants">Participants</a>
+          <a class="btn" href="#topics">Topics</a>
+          <a class="btn" href="#program">Program</a>
+          <a class="btn" href="#organizers">Organizers</a>
+        </div>
+        <h1>Singular algebraic curves and quantitative symplectic embeddings</h1>
+        <p class="subtitle">September 22nd - 26th, 2025 · Villa Boninchi · Geneva, Switzerland</p>
+      </header>
+
+      <div class="grid">
+        <section class="col-12" id="overview">
+          <h2>Overview</h2>
+          <p>
+            This workshop aims to bridge connections between two specific areas of mathematics: (i) singular algebraic
+            curve theory, and (ii) the study of quantitative symplectic embeddings. Although relations between these
+            areas have been observed going back to Gromov’s foundational pseudoholomorphic curves paper, the
+            relevant groups of researchers are still largely isolated from one another, partly due to a lack of widespread
+            familiarity with each other’s terminology, literature, and motivating questions. Thanks to many important
+            developments in the last two decades, and especially in the last few years, this is an opportune time to
+            bring researchers from these areas together, in order to discuss how recent techniques might shed light
+            on major questions in both fields. We expect that a small amount of overhead in conveying background
+            results and terminology could open up significant new opportunities for interdisciplinary collaborations,
+            with the potential for fruitful flow of information in multiple directions.
+          </p>
+        </section>
+
+
+        <section class="col-6" id="venue">
+          <h2>Venue</h2>
+          <p>
+          <a href="https://www.unige.ch/math/GIST/about">G·(IST) - Institut de Sciences Théoriques de Genève</a>
+          </p>
+          <p>
+            Villa du Nant d’Aisy (“Villa Boninchi”)<br/>
+            Chemin du Nant-d’Aisy 11<br/>
+            1246 Corsier (Genève), Switzerland
+          </p>
+          <p>
+            <a href="https://www.ernestboninchi.ch/la-villa-boninchi-1" target="_blank" rel="noopener">Official venue page</a><br>
+            <a href="https://www.openstreetmap.org/search?query=Chemin%20du%20Nant-d%E2%80%99Aisy%2011%2C%20Corsier%2C%20Gen%C3%A8ve%201246%2C%20Suisse" target="_blank" rel="noopener">View on OpenStreetMap</a> <br>
+            <a href="https://www.google.com/maps/search/?api=1&query=Chemin+du+Nant-d%E2%80%99Aisy+11,+Corsier,+Gen%C3%A8ve+1246,+Suisse" target="_blank" rel="noopener">View on Google Maps</a> 
+
+          </p>
+
+
+        </section>
+
+        <section class="col-6" id="practical">
+          <h2>Practical Information</h2>
+          <ul>
+            <li> For questions about hotel reservations and travel reimbursements please contact Charlotte Guarino at <a href="mailto:Charlotte.Guarino@unige.ch">Charlotte.Guarino@unige.ch</a></li>
+          </ul>
+        </section>
+
+
+
+        <section class="col-6" id="participants">
+          <h2>Participants</h2>
+          <details class="collapsible">
+            <summary style="color: greenyellow;">Show participant list</summary>
+            <ul class="participants-list">
+              <li>Thomas Blomme (Université de Genève)</li>
+              <li>Aloïs Demory (Université de Genève)</li>
+              <li>Ilia Itenberg (IMJ-PRG, Sorbonne Université)</li>
+              <li>Gurvan Mével (Université de Genève)</li>
+              <li>Stepan Orevkov (Université Toulouse III – Paul Sabatier)</li>
+              <li>Felix Schlenk (Université de Neuchâtel)</li>
+              <li>Antoine Toussaint (Université de Genève)</li>
+              <li>Georgios Rizell (Uppsala University)</li>
+              <li>Rick Miranda (Colorado State University)</li>
+              <li>Leonid Polterovich (Tel Aviv University)</li>
+              <li>Halszka Tutaj-Gasińska (Jagiellonian University)</li>
+              <li>Ciro Ciliberto (University of Rome "Tor Vergata")</li>
+              <li>Dusa McDuff (Barnard College, Columbia University)</li>
+              <li>Dan Cristofaro-Gardiner (University of Maryland)</li>
+              <li>Jonny Evans (Lancaster University)</li>
+              <li>Richard Hind (University of Notre Dame)</li>
+              <li>Viatcheslav Kharlamov (Université de Strasbourg / IRMA)</li>
+              <li>Grigory Mikhalkin (Université de Genève)</li>
+              <li>Joaquim Roé (Universitat Autònoma de Barcelona)</li>
+              <li>Kyler Siegel (University of Southern California)</li>
+            </ul>
+          </details>
+        </section>
+
+        <section class="col-6" id="topics">
+          <h2>Topics</h2>
+          <ul>
+            <li>TBA</li>
+          </ul>
+        </section>
+
+        <section class="col-6" id="program">
+          <h2>Program</h2>
+          <ul>
+            <li>TBA</li>
+   <!--          <li><strong>Mon</strong>: Tutorials · Opening reception</li>
+            <li><strong>Tue–Thu</strong>: Keynotes &amp; Sessions</li>
+            <li><strong>Fri</strong>: Workshops · Closing remarks</li> -->
+          </ul>
+        </section>
+
+        <section class="col-12" id="organizers">
+          <h2>Organizers</h2>
+          <p>
+            Grigory Mikhalkin (Université de Genève): <a href="mailto:grigory.mikhalkin@unige.ch">grigory.mikhalkin@unige.ch</a><br>
+            Joaquim Roé (Universitat Autònoma de Barcelona): <a href="mailto:joaquim.roe@uab.cat">joaquim.roe@uab.cat</a><br>
+            Kyler Siegel (University of Southern California): <a href="mailto:kyler.siegel@usc.edu">kyler.siegel@usc.edu</a>
+        </section>
+      </div>
+
+    </article>
+  </main>
+</body>
+</html>
