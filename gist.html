@@ -126,7 +126,24 @@
     @media (min-width: 900px){
       details.collapsible[open] .participants-list{ columns: 2; }
     }
+    /* Collapsible topics list (mirror participants) */
+    details.collapsible[open] .topics-list{ column-gap: 1.2rem; column-fill: balance; }
+    details.collapsible[open] .topics-list li{ -webkit-column-break-inside: avoid; break-inside: avoid; page-break-inside: avoid; }
+    @media (min-width: 900px){
+      details.collapsible[open] .topics-list{ columns: 2; }
+    }
+    /* Small note under topics summary */
+    .topics-note{ margin: .35rem 0 .2rem 0; color: #8ecae6; }
   </style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
 <body>
   <div class="page-bg" aria-hidden="true"></div>
@@ -224,9 +241,26 @@
 
         <section class="col-6" id="topics">
           <h2>Topics</h2>
-          <ul>
-            <li>TBA</li>
-          </ul>
+          <details class="collapsible">
+            <summary style="color: greenyellow;">Show topic list</summary>
+            <p class="topics-note">Note: this list is highly tentative and by no means exhaustive!</p>
+            <ul class="topics-list">
+              <li>Nagata's conjecture and its many generalizations and variations</li>
+              <li>existence and classification problems for singular (algebraic, symplectic, topological) curves with prescribed singularities</li>
+              <li>the role of tropical geometry in constructing and obstructing singular algebraic curves</li>
+              <li>positivity phenomena in enumerative geometry</li>
+              <li>the bounded negativity conjecture</li>
+              <li>obstructions for singular algebraic and symplectic curves beyond adjunction</li>
+              <li>infinite staircase functions in symplectic and algebraic geometry</li>
+              <li>symplectic and Kähler ball packings and packing stability</li>
+              <li>almost toric fibrations, $\mathbb{Q}$-Gorenstein deformations, and Newton–Okounkov bodies in dimensions four and higher</li>
+              <li>the classification of unicuspidal and sesquicuspidal curves in smooth projective surfaces</li>
+              <li>generalized ellipsoid embeddings, Markov triples, and singular algebraic curves</li>
+              <li>connections between ellipsoid embeddings, singular algebraic curves, symplectic field theory in higher dimensions</li>
+              <li>singular algebraic curves from the perspectives of mirror symmetry and cluster algebras</li>
+              <li>construction of real algebraic plane curves with prescribed cusp singularities and the minimal degree problem</li>
+            </ul>
+          </details>
         </section>
 
         <section class="col-6" id="program">
