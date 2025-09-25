@@ -14,6 +14,7 @@
       --accent: #ffd166; /* warm accent for links/buttons */
       --text: #ffffff;
       --muted: #cfd8dc;
+      --notes-link: #4fc3f7; /* light blue for notes links */
       --radius: 18px;
       --shadow: 0 8px 30px rgba(0,0,0,.35);
     }
@@ -91,6 +92,8 @@
     /* Link + button styling */
     a{ color: var(--accent); text-decoration: none; }
     a:hover{ text-decoration: underline; }
+    .notes-links a{ color: var(--notes-link); }
+    .notes-links a:hover{ text-decoration: underline; }
     .btn{
       display: inline-block;
       padding: .7rem 1rem;
@@ -157,6 +160,7 @@
           <a class="btn" href="#participants">Participants</a>
           <a class="btn" href="#topics">Topics</a>
           <a class="btn" href="#program">Program</a>
+          <a class="btn" href="#notes">Notes</a>
           <a class="btn" href="#organizers">Organizers</a>
         </div>
         <h1>Singular algebraic curves and quantitative symplectic embeddings</h1>
@@ -319,6 +323,17 @@
               </li>
             </ul>
           </details>
+        </section>
+
+        <section class="col-6" id="notes">
+          <h2>Notes</h2>
+          <p>
+           <ul class="notes-links">
+             <li> <a href="Rick.pdf">Slides for Rick's talk</a>
+             <li> <a href="Ciro.pdf">Slides for Ciro's talk</a>
+           </ul>
+
+          </p>
         </section>
 
         <section class="col-12" id="organizers">
