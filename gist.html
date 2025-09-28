@@ -8,7 +8,8 @@
   <style>
     :root{
       /*--bg-image: url('https://www.ernestboninchi.ch/data/gallery/gallery1/img/dscf49942.jpg');*/
-      --bg-image: url('boninchi.jpg');      
+      /*--bg-image: url('boninchi.jpg');*/ /* Now set dynamically by JavaScript */
+      --bg-image: url('gist_photos/gist1.jpg'); /* Default fallback */
       --overlay: rgba(0,0,0,.45);
       --panel: rgba(0,0,0,.5);
       --accent: #ffd166; /* warm accent for links/buttons */
@@ -148,6 +149,29 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <script>
+    // Array of background photos from gist_photos folder
+    const backgroundPhotos = [
+      'gist_photos/gist1.jpg',
+      'gist_photos/gist2.jpg', 
+      'gist_photos/gist3.jpg',
+      'gist_photos/gist4.jpg',
+      'gist_photos/gist5.jpg',
+      'gist_photos/gist6.jpg'      
+    ];
+    
+    // Function to randomly select a background photo
+    function setRandomBackground() {
+      const randomIndex = Math.floor(Math.random() * backgroundPhotos.length);
+      const selectedPhoto = backgroundPhotos[randomIndex];
+      
+      // Update the CSS custom property
+      document.documentElement.style.setProperty('--bg-image', `url('${selectedPhoto}')`);
+    }
+    
+    // Set random background when page loads
+    document.addEventListener('DOMContentLoaded', setRandomBackground);
+  </script>
 </head>
 <body>
   <div class="page-bg" aria-hidden="true"></div>
