@@ -38,7 +38,10 @@
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 48px 16px 24px 16px;
+      padding: 48px 12px 24px 12px;
+    }
+    @media (max-width: 768px) {
+      header.site{ padding: 32px 8px 20px 8px; }
     }
     .brand{
       width: min(100%, 1200px);
@@ -56,7 +59,6 @@
       letter-spacing: .2px;
       font-size: clamp(1.8rem, 4.2vw, 3.2rem);
       line-height: 1.1;
-      white-space: nowrap;
       text-align: center;
     }
     .subtitle{ color: var(--muted); margin: .4rem 0 1.2rem 0; font-size: clamp(1rem, 1.2vw + .6rem, 1.25rem); text-align: center;}    
@@ -69,7 +71,7 @@
     .btn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.5); border-color: rgba(255,255,255,.45); }
     .btn.accent{ border-color: rgba(152,226,255,.7); background: rgba(152,226,255,.1); }
 
-    main{ padding: 14px 16px 64px; }
+    main{ padding: 14px 8px 64px; }
     .section{
       width: min(100%, var(--maxw));
       margin: 18px auto 0;
@@ -89,8 +91,19 @@
     .col-12{ grid-column: span 12; } .col-6{ grid-column: span 12; }
     @media (min-width: 880px){ .col-6{ grid-column: span 6; } }
 
+    /* Mobile improvements */
+    @media (max-width: 768px) {
+      main{ padding: 10px 6px 64px; }
+      .section{ margin: 12px auto 0; }
+      .subtitle{ white-space: normal; }
+      h1{ font-size: clamp(1.5rem, 6vw, 2.5rem); }
+    }
+
     /* Speakers grid */
     .speakers{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 14px; }
+    @media (max-width: 768px) {
+      .speakers{ grid-template-columns: 1fr; }
+    }
     .card{
       border: 1px solid rgba(255,255,255,.14); border-radius: 16px; padding: 14px; background: rgba(0,0,0,.28);
       display: flex;
@@ -112,6 +125,39 @@
     table{ width:100%; border-collapse: collapse; }
     th, td{ text-align:left; padding:.55rem .6rem; border-top: 1px dashed rgba(255,255,255,.18); }
     th{ font-weight: 600; }
+    @media (max-width: 768px) {
+      th, td{ padding:.45rem .4rem; font-size: .95rem; }
+      td[style*="width:20%"]{ width: auto !important; }
+    }
+
+    /* Organizers table */
+    .organizers-table{ max-width: 900px; margin: 0 auto; }
+    .organizers-table td{ padding: .8rem .8rem; vertical-align: top; }
+    .organizers-table td:first-child{ width: 60%; }
+    .organizers-table td:last-child{ width: 40%; word-break: break-word; }
+    @media (max-width: 768px) {
+      .organizers-table td{ display: block; width: 100% !important; padding: .5rem 0; border-top: none !important; }
+      .organizers-table td:first-child{ padding-top: 1rem; border-top: 1px dashed rgba(255,255,255,.18) !important; }
+      .organizers-table tr:first-child td:first-child{ border-top: none !important; padding-top: 0; }
+      .organizers-table td:last-child{ padding-top: .3rem; padding-bottom: 1.2rem; }
+    }
+
+    /* Program schedule centering */
+    #program table{ margin: 1.5rem auto 0; width: 95%; }
+    #program > p{ text-align: center; }
+    #program table td:first-child{ width: 180px; min-width: 160px; padding-right: 1.5rem; }
+    #program table td:last-child{ padding-left: 1rem; }
+    @media (min-width: 769px) {
+      #program table{ width: 92%; max-width: 900px; }
+      #program table td:last-child{ padding-left: 3rem; padding-right: 2rem; }
+    }
+    @media (max-width: 768px) {
+      #program table{ width: 100%; }
+      #program table tr{ display: block; margin-bottom: 2rem; }
+      #program table td{ display: block; width: 100% !important; padding: 0 !important; }
+      #program table td:first-child{ text-align: center; font-size: 1.05rem; padding-bottom: .8rem !important; border-top: none !important; }
+      #program table td:last-child{ padding-top: .5rem !important; }
+    }
 
     /* Footer */
     footer{ color:#e0e0e0; opacity:.85; width:min(100%, var(--maxw)); margin: 22px auto 80px; font-size:.95rem; padding: 0 4px; }
@@ -205,7 +251,7 @@
       <table aria-label="Program schedule">
         <tbody>
           <tr>
-            <td style="width:20%; white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Tuesday, Nov 25</strong></td>
+            <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Tuesday, Nov 25</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
                 <strong>09:00–09:30</strong> Registration & Coffee<br>
@@ -242,7 +288,7 @@
             </td>
           </tr>
           <tr>
-            <td style="vertical-align: top; padding-top: 1rem;"><strong>Wednesday, Nov 26</strong></td>
+            <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Wednesday, Nov 26</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 5: [speaker name] – <em>[talk title]</em>
@@ -270,7 +316,7 @@
             </td>
           </tr>
           <tr>
-            <td style="vertical-align: top; padding-top: 1rem;"><strong>Thursday, Nov 27</strong></td>
+            <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Thursday, Nov 27</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 8: [speaker name] – <em>[talk title]</em>
@@ -298,7 +344,7 @@
             </td>
           </tr>
           <tr>
-            <td style="vertical-align: top; padding-top: 1rem;"><strong>Friday, Nov 28</strong></td>
+            <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Friday, Nov 28</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 11: [speaker name] – <em>[talk title]</em>
@@ -357,12 +403,26 @@
 
     <section id="organizers" class="section">
       <h2>Organizers</h2>
-      <ul>
-        <li>Cheol-Hyun Cho (SNU) — <a href="mailto:chocheol@snu.ac.kr">chocheol@snu.ac.kr</a></li>
-        <li>Jungsoo Kang (SNU) — <a href="mailto:jungsoo.kang@snu.ac.kr">jungsoo.kang@snu.ac.kr</a></li>
-        <li>Kyler Siegel (USC) — <a href="mailto:kyler.siegel@usc.edu">kyler.siegel@usc.edu</a></li>
-        <li>Otto Van Koert (SNU) — <a href="mailto:okoert@snu.ac.kr">okoert@snu.ac.kr</a></li>
-      </ul>
+      <table class="organizers-table">
+        <tbody>
+          <tr>
+            <td><strong>Cheol-Hyun Cho</strong><br><span class="muted">Pohang University of Science and Technology</span></td>
+            <td><a href="mailto:chocheol@postech.ac.kr">chocheol@postech.ac.kr</a></td>
+          </tr>
+          <tr>
+            <td><strong>Jungsoo Kang</strong><br><span class="muted">Seoul National University</span></td>
+            <td><a href="mailto:jungsoo.kang@snu.ac.kr">jungsoo.kang@snu.ac.kr</a></td>
+          </tr>
+          <tr>
+            <td><strong>Kyler Siegel</strong><br><span class="muted">University of Southern California</span></td>
+            <td><a href="mailto:kyler.siegel@usc.edu">kyler.siegel@usc.edu</a></td>
+          </tr>
+          <tr>
+            <td><strong>Otto Van Koert</strong><br><span class="muted">Seoul National University</span></td>
+            <td><a href="mailto:okoert@snu.ac.kr">okoert@snu.ac.kr</a></td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
