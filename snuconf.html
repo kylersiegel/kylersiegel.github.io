@@ -17,6 +17,12 @@
       --muted: #cfd8dc;
       --accent: #98e2ff; /* soft cyan */
       --accent-2: #ffd166; /* warm secondary */
+      --link-primary: #98e2ff; /* main links */
+      --link-secondary: #ffd166; /* abstract links */
+      --link-tertiary: #ff9a9e; /* external links */
+      --link-quaternary: #a8e6cf; /* map links */
+      --link-otto: #16a34a; /* otto recommendations */
+      --link-email: #98e2ff; /* email addresses */
       --radius: 18px;
       --shadow: 0 10px 45px rgba(0,0,0,.35);
       --maxw: 1040px;
@@ -85,8 +91,15 @@
     h2{ margin: 0 0 .6rem 0; font-size: clamp(1.1rem, 1.2vw + .8rem, 1.7rem); border-left: 4px solid var(--accent); padding-left: .6rem; }
     p, li { line-height: 1.7; }
     ul{ margin: .3rem 0 0 1.1rem; padding: 0; }
-    a{ color: var(--accent); text-decoration: none; }
+    a{ color: var(--link-primary); text-decoration: none; }
     a:hover{ text-decoration: underline; }
+    
+    /* Link color variations */
+    .abstract-link{ color: var(--link-secondary); }
+    .external-link{ color: var(--link-tertiary); }
+    .map-link{ color: var(--link-quaternary); }
+    .email-link{ color: var(--link-email); }
+    .otto-link{ color: var(--link-otto); }
     .grid{ display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 22px); }
     .col-12{ grid-column: span 12; } .col-6{ grid-column: span 12; }
     @media (min-width: 880px){ .col-6{ grid-column: span 6; } }
@@ -246,7 +259,7 @@
     <section id="program" class="section">
       <h2>Program</h2>
       <p>Sessions will run Tuesday–Friday (Nov 25–28).</p>
-      <p class="note" style="font-style: italic;">Note: This schedule is tentative and may be adjusted closer to the conference date.</p>
+      <p class="note" style="font-style: italic;">Note: This schedule is tentative and is likely to change closer to the conference date.</p>
       
       <table aria-label="Program schedule">
         <tbody>
@@ -257,7 +270,7 @@
                 <strong>09:00–09:30</strong> Registration & Coffee<br>
                 <strong>09:30–10:30</strong> Talk 1: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -265,7 +278,7 @@
                 <strong>10:30–11:00</strong> Coffee Break<br>
                 <strong>11:00–12:00</strong> Talk 2: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -273,7 +286,7 @@
                 <strong>12:00–14:00</strong> Lunch<br>
                 <strong>14:00–15:00</strong> Talk 3: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -281,7 +294,7 @@
                 <strong>15:00–15:30</strong> Coffee Break<br>
                 <strong>15:30–16:30</strong> Talk 4: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -293,7 +306,7 @@
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 5: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -301,7 +314,7 @@
                 <strong>10:30–11:00</strong> Coffee Break<br>
                 <strong>11:00–12:00</strong> Talk 6: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -309,7 +322,7 @@
                 <strong>12:00–14:00</strong> Lunch<br>
                 <strong>14:00–15:00</strong> Talk 7: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -321,7 +334,7 @@
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 8: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -329,7 +342,7 @@
                 <strong>10:30–11:00</strong> Coffee Break<br>
                 <strong>11:00–12:00</strong> Talk 9: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -337,7 +350,7 @@
                 <strong>12:00–14:00</strong> Lunch<br>
                 <strong>14:00–15:00</strong> Talk 10: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -349,7 +362,7 @@
               <div style="margin-bottom: 1rem;">
                 <strong>09:30–10:30</strong> Talk 11: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -357,7 +370,7 @@
                 <strong>10:30–11:00</strong> Coffee Break<br>
                 <strong>11:00–12:00</strong> Talk 12: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -365,7 +378,7 @@
                 <strong>12:00–14:00</strong> Lunch<br>
                 <strong>14:00–15:00</strong> Talk 13: [speaker name] – <em>[talk title]</em>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
-                  <summary style="cursor: pointer; color: var(--accent); font-size: 0.9rem;">Abstract</summary>
+                  <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
                 </details>
               </div>
@@ -384,9 +397,9 @@
           <p><strong>Seoul National University</strong><br/>
           Seoul, South Korea</p>
         </div>
-        <div class="col-6">
-          <p><strong>Dates</strong>: Tuesday–Friday, <em>November 25–28, 2025</em></p>
-        </div>
+        <!-- <div class="col-6"> -->
+          <!-- <p><strong>Dates</strong>: Tuesday–Friday, <em>November 25–28, 2025</em></p> -->
+        <!-- </div> -->
       </div>
       <p class="muted" style="margin-top: 1rem;">More details building and room information will be announced soon.</p>
     </section>
@@ -394,12 +407,12 @@
     <section id="practical" class="section">
       <h2>Practical Information</h2>
       <ul>
-        <li><strong>Registration</strong>: Please register <a href="https://forms.gle/QDrXGq5SjEBoZx4r9">here</a> (especially if you wish to receive any relevant email announcements).</li>
+        <li><strong>Registration</strong>: Please register <a href="https://forms.gle/QDrXGq5SjEBoZx4r9" class="external-link">here</a> (especially if you wish to receive any relevant email announcements).</li>
         <li><strong>Support</strong>: We may some limited support for travel and lodging to help interested participants (especially junior ones) without other funding sources. To request support please use the above registration link.</li>
-        <li><strong>Accommodation</strong>: <a href="https://hoam.snu.ac.kr/">Hoam faculty house</a></li>
+        <li><strong>Accommodation</strong>: <a href="https://hoam.snu.ac.kr/" class="external-link">Hoam faculty house</a></li>
         <li><strong>Travel</strong>: 
           <details style="display: inline;">
-            <summary style="cursor: pointer; color: var(--accent); display: inline; list-style: none;">directions to Hoam</summary>
+            <summary style="cursor: pointer; color: var(--link-tertiary); display: inline; list-style: none;">directions to Hoam</summary>
             <div style="margin-top: 1rem; color: var(--muted);">
               <h3 style="color: var(--accent); margin: 1rem 0 0.5rem 0; font-size: 1.1rem;">Directions</h3>
               <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2); margin: 0.5rem 0;">
@@ -419,7 +432,7 @@
               <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2); margin: 0.5rem 0;">
               
               <h3 style="color: var(--accent); margin: 1rem 0 0.5rem 0; font-size: 1.1rem;">From the Hoam Faculty House to the lecture hall</h3>
-              <p style="margin: 0.5rem 0;">Go to the main road in front of the Hoam faculty House, turn left, and walk uphill. At the peak take the stairs down. The buildings are not ordered in any simple way, so take a look at the <a href="http://www.useoul.edu/campus/maps">campus map</a>. You need to go to building 129, next to building 27.</p>
+              <p style="margin: 0.5rem 0;">Go to the main road in front of the Hoam faculty House, turn left, and walk uphill. At the peak take the stairs down. The buildings are not ordered in any simple way, so take a look at the <a href="http://www.useoul.edu/campus/maps" class="map-link">campus map</a>. You need to go to building 129, next to building 27.</p>
               <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2); margin: 0.5rem 0;">
               
               <h3 style="color: var(--accent); margin: 1rem 0 0.5rem 0; font-size: 1.1rem;">Going back</h3>
@@ -430,7 +443,7 @@
           </details>
         </li>
         <li>
-          <div><strong>Otto's recommendations</strong>: <span id="hiking-trigger" style="cursor: pointer; color: var(--accent);">hiking</span>, <span id="transportation-trigger" style="cursor: pointer; color: var(--accent);">transportation</span>, <span id="sightseeing-trigger" style="cursor: pointer; color: var(--accent);">sightseeing</span>, <span id="food-trigger" style="cursor: pointer; color: var(--accent);">food</span>.</div>
+          <div><strong>Otto's recommendations</strong>: <span id="hiking-trigger" style="cursor: pointer; color: var(--link-otto);">hiking</span>, <span id="transportation-trigger" style="cursor: pointer; color: var(--link-otto);">transportation</span>, <span id="sightseeing-trigger" style="cursor: pointer; color: var(--link-otto);">sightseeing</span>, <span id="food-trigger" style="cursor: pointer; color: var(--link-otto);">food</span>.</div>
           <div id="otto-grid" style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem;">
             <div id="hiking-content" style="display: none;">
               <strong style="color: var(--accent);">Hiking</strong>
@@ -455,8 +468,8 @@ Here is a <a href="https://english.visitkorea.or.kr/enu/TRP/TP_ENG_6.jsp">map of
                 <li style="word-wrap: break-word; overflow-wrap: break-word;">
                   <strong>South (Gangnam)</strong>
                   <ul style="margin-top: 0.3rem;">
-                    <li style="word-wrap: break-word; overflow-wrap: break-word;">There are not so many interesting places in Seoul that are south of the river, but all of them are easily reached by line 2. The simplest place of interest to visitors who have never been to East-Asia is probably the local market. It is very close to the subway station of Nakseongdae, so you can simply walk there. The park and shrine is also nice. See <a href="https://www.google.co.kr/maps/place/%EC%9D%B8%ED%97%8C%EC%8B%9C%EC%9E%A5/@37.4748148,126.9634355,17z/data=!4m5!3m4!1s0x357ca03b45ded363:0x7e96527033182bd!8m2!3d37.4748148!4d126.9656295">google maps</a>.</li>
-                    <li style="word-wrap: break-word; overflow-wrap: break-word;">You will find the <a href="https://www.google.co.kr/maps/search/seolleung+tombs/@37.5071402,127.0473245,17z/data=!3m1!4b1?dcr=0">Seolleung tombs</a> (Seolleung station) and <a href="https://www.google.co.kr/maps/place/Bongeunsa/@37.514852,127.0551826,17z/data=!3m1!4b1!4m5!3m4!1s0x357ca46941fa9981:0x45689c57c2e44d69!8m2!3d37.514852!4d127.0573766?dcr=0">Bongeunsa</a> (Samseong station). Gangnam is only interesting (I think) for its name, reputation and highrise glass buildings. The latter can also be found at Samseong.</li>
+                    <li style="word-wrap: break-word; overflow-wrap: break-word;">There are not so many interesting places in Seoul that are south of the river, but all of them are easily reached by line 2. The simplest place of interest to visitors who have never been to East-Asia is probably the local market. It is very close to the subway station of Nakseongdae, so you can simply walk there. The park and shrine is also nice. See <a href="https://www.google.co.kr/maps/place/%EC%9D%B8%ED%97%8C%EC%8B%9C%EC%9E%A5/@37.4748148,126.9634355,17z/data=!4m5!3m4!1s0x357ca03b45ded363:0x7e96527033182bd!8m2!3d37.4748148!4d126.9656295" class="map-link">google maps</a>.</li>
+                    <li style="word-wrap: break-word; overflow-wrap: break-word;">You will find the <a href="https://www.google.co.kr/maps/search/seolleung+tombs/@37.5071402,127.0473245,17z/data=!3m1!4b1?dcr=0" class="map-link">Seolleung tombs</a> (Seolleung station) and <a href="https://www.google.co.kr/maps/place/Bongeunsa/@37.514852,127.0551826,17z/data=!3m1!4b1!4m5!3m4!1s0x357ca46941fa9981:0x45689c57c2e44d69!8m2!3d37.514852!4d127.0573766?dcr=0" class="map-link">Bongeunsa</a> (Samseong station). Gangnam is only interesting (I think) for its name, reputation and highrise glass buildings. The latter can also be found at Samseong.</li>
                   </ul>
                 </li>
                 <li style="word-wrap: break-word; overflow-wrap: break-word;">
@@ -554,19 +567,19 @@ Here is a <a href="https://english.visitkorea.or.kr/enu/TRP/TP_ENG_6.jsp">map of
         <tbody>
           <tr>
             <td><strong>Cheol-Hyun Cho</strong><br><span class="muted">Pohang University of Science and Technology</span></td>
-            <td><a href="mailto:chocheol@postech.ac.kr">chocheol@postech.ac.kr</a></td>
+            <td><a href="mailto:chocheol@postech.ac.kr" class="email-link">chocheol@postech.ac.kr</a></td>
           </tr>
           <tr>
             <td><strong>Jungsoo Kang</strong><br><span class="muted">Seoul National University</span></td>
-            <td><a href="mailto:jungsoo.kang@snu.ac.kr">jungsoo.kang@snu.ac.kr</a></td>
+            <td><a href="mailto:jungsoo.kang@snu.ac.kr" class="email-link">jungsoo.kang@snu.ac.kr</a></td>
           </tr>
           <tr>
             <td><strong>Kyler Siegel</strong><br><span class="muted">University of Southern California</span></td>
-            <td><a href="mailto:kyler.siegel@usc.edu">kyler.siegel@usc.edu</a></td>
+            <td><a href="mailto:kyler.siegel@usc.edu" class="email-link">kyler.siegel@usc.edu</a></td>
           </tr>
           <tr>
             <td><strong>Otto Van Koert</strong><br><span class="muted">Seoul National University</span></td>
-            <td><a href="mailto:okoert@snu.ac.kr">okoert@snu.ac.kr</a></td>
+            <td><a href="mailto:okoert@snu.ac.kr" class="email-link">okoert@snu.ac.kr</a></td>
           </tr>
         </tbody>
       </table>
