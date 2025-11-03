@@ -23,6 +23,8 @@
       --link-quaternary: #a8e6cf; /* map links */
       --link-otto: #16a34a; /* otto recommendations */
       --link-email: #98e2ff; /* email addresses */
+      --speaker-name: #ffa07a; /* speaker names in program */
+      --talk-title: #d4a5ff; /* talk titles in program */
       --radius: 18px;
       --shadow: 0 10px 45px rgba(0,0,0,.35);
       --maxw: 1040px;
@@ -100,6 +102,8 @@
     .map-link{ color: var(--link-quaternary); }
     .email-link{ color: var(--link-email); }
     .otto-link{ color: var(--link-otto); }
+    .speaker-name{ color: var(--speaker-name); }
+    .talk-title{ color: var(--talk-title); }
     .grid{ display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 22px); }
     .col-12{ grid-column: span 12; } .col-6{ grid-column: span 12; }
     @media (min-width: 880px){ .col-6{ grid-column: span 6; } }
@@ -276,7 +280,7 @@
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
                 <strong>09:00–09:30</strong> Registration & Coffee<br>
-                <strong>09:30–10:30</strong> Talk 1: Kaoru Ono – <em>[talk title]</em>
+                <strong>09:30–10:30</strong> Talk 1: <span class="speaker-name">Kaoru Ono</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -284,7 +288,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>10:30–11:00</strong> Coffee Break<br>
-                <strong>11:00–12:00</strong> Talk 2: Grigory Mikhalkin – <em>[talk title]</em>
+                <strong>11:00–12:00</strong> Talk 2: <span class="speaker-name">Grigory Mikhalkin</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -292,7 +296,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>12:00–14:00</strong> Lunch<br>
-                <strong>14:00–15:00</strong> Talk 3: Yoel Groman – <em>[talk title]</em>
+                <strong>14:00–15:00</strong> Talk 3: <span class="speaker-name">Yoel Groman</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -300,10 +304,10 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>15:00–15:30</strong> Coffee Break<br>
-                <strong>15:30–16:30</strong> Talk 4: Yoosik Kim – <em>[talk title]</em>
+                <strong>15:30–16:30</strong> Talk 4: <span class="speaker-name">Yoosik Kim</span> – <span class="talk-title"><em>Cluster algebras and monotone Lagrangian tori</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
-                  <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
+                  <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">In this talk, I will discuss one application of cluster algebras to symplectic geometry. Using the cluster algebra structure on unipotent cell and the existence of nice basis of the homogeneous coordinate ring of partial flag varieties, we construct monotone Lagrangian tori in partial flag varieties. We also present a convenient criterion, derived from properties of the dual canonical basis, for proving the existence of infinitely many distinct monotone Lagrangian tori. As an application, we show that whenever the corresponding cluster algebra is of infinite type, the associated family of monotone Lagrangian tori contains infinitely many distinct objects. This talk is based on joint work with Yunhyung Cho, Myungho Kim, and Euiyong Park.</p>
                 </details>
               </div>
             </td>
@@ -312,7 +316,7 @@
             <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Wednesday, Nov 26</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
-                <strong>09:30–10:30</strong> Talk 5: Kazushi Ueda – <em>[talk title]</em>
+                <strong>09:30–10:30</strong> Talk 5: <span class="speaker-name">Kazushi Ueda</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -320,7 +324,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>10:30–11:00</strong> Coffee Break<br>
-                <strong>11:00–12:00</strong> Talk 6: Jun Zhang – <em>[talk title]</em>
+                <strong>11:00–12:00</strong> Talk 6: <span class="speaker-name">Jun Zhang</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -335,7 +339,7 @@
             <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Thursday, Nov 27</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
-                <strong>09:30–10:30</strong> Talk 7: Alex Oancea – <em>[talk title]</em>
+                <strong>09:30–10:30</strong> Talk 7: <span class="speaker-name">Alex Oancea</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -343,7 +347,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>10:30–11:00</strong> Coffee Break<br>
-                <strong>11:00–12:00</strong> Talk 8: Mohammed Abouzaid – <em>[talk title]</em>
+                <strong>11:00–12:00</strong> Talk 8: <span class="speaker-name">Mohammed Abouzaid</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -351,7 +355,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>12:00–14:00</strong> Lunch<br>
-                <strong>14:00–15:00</strong> Talk 9: Yusuf Barış Kartal – <em>[talk title]</em>
+                <strong>14:00–15:00</strong> Talk 9: <span class="speaker-name">Yusuf Barış Kartal</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -359,7 +363,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>15:00–15:30</strong> Coffee Break<br>
-                <strong>15:30–16:30</strong> Talk 10: Aleksander Doan – <em>[talk title]</em>
+                <strong>15:30–16:30</strong> Talk 10: <span class="speaker-name">Aleksander Doan</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -367,7 +371,7 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>16:30–17:00</strong> Coffee Break<br>
-                <strong>17:00–18:00</strong> Talk 11: Yong-Geun Oh – <em>[talk title]</em>
+                <strong>17:00–18:00</strong> Talk 11: <span class="speaker-name">Yong-Geun Oh</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -379,7 +383,7 @@
             <td style="white-space: nowrap; vertical-align: top; padding-top: 1rem;"><strong>Friday, Nov 28</strong></td>
             <td style="padding-top: 1rem;">
               <div style="margin-bottom: 1rem;">
-                <strong>09:30–10:30</strong> Talk 12: Cengiz Aydin – <em>[talk title]</em>
+                <strong>09:30–10:30</strong> Talk 12: <span class="speaker-name">Cengiz Aydin</span> – <span class="talk-title"><em>[talk title]</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
                   <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
@@ -387,10 +391,10 @@
               </div>
               <div style="margin-bottom: 1rem;">
                 <strong>10:30–11:00</strong> Coffee Break<br>
-                <strong>11:00–12:00</strong> Talk 13: Pedro Salomão – <em>[talk title]</em>
+                <strong>11:00–12:00</strong> Talk 13: <span class="speaker-name">Pedro Salomão</span> – <span class="talk-title"><em>Finite energy foliations in the restricted three-body problem</em></span>
                 <details style="margin-top: 0.3rem; margin-left: 1rem;">
                   <summary style="cursor: pointer; color: var(--link-secondary); font-size: 0.9rem;">Abstract</summary>
-                  <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">Abstract will appear here.</p>
+                  <p style="margin: 0.3rem 0; padding-left: 1rem; color: var(--muted); font-size: 0.9rem;">In this talk I will explain the use of pseudo-holomorphic curves to study the circular planar restricted three-body problem. For mass ratios sufficiently close to 1/2 and energies slightly above the first Lagrange value, we show the existence of finite energy foliations whose binding orbits are two retrograde orbits around the primaries and the Lyapunov near the first Lagrange point. These foliations explain the existence of homoclinic orbits to the Lyapunov orbits. This is joint work with L. Liu.</p>
                 </details>
               </div>
               <div style="margin-bottom: 1rem;">
