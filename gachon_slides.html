@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>On mathematical superintelligence</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+
+    <!-- Computer Modern Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
+
+    <style>
+        :root {
+            --epoch-i: #22b14c;
+            --epoch-ii: #ff8c00;
+            --epoch-iii: #b22222;
+            --accent-cyan: #00bfff;
+            --accent-purple: #9370db;
+            --bg-dark: #1a1a2e;
+        }
+
+        .reveal {
+            font-family: "Computer Modern Serif", serif;
+            font-size: 32px;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: "Computer Modern Serif", serif;
+            text-transform: none;
+            font-weight: normal;
+        }
+
+        .reveal code {
+            font-family: "Computer Modern Typewriter Text", monospace;
+        }
+
+        /* Title slide styling */
+        .title-slide h1 {
+            font-size: 2.2em;
+            margin-bottom: 0.3em;
+            color: var(--accent-purple);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.1em;
+            color: #ddd;
+            margin-bottom: 1.5em;
+        }
+
+        .title-slide .author {
+            font-size: 1em;
+            color: var(--accent-cyan);
+        }
+
+        .title-slide .institution {
+            font-size: 0.8em;
+            color: #aaa;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section title slides */
+        .section-slide {
+            text-align: center;
+        }
+
+        .section-slide h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            color: var(--accent-purple);
+        }
+
+        .section-slide .section-subtitle {
+            font-size: 1.2em;
+            color: #20b2aa;
+            font-style: italic;
+        }
+
+        .epoch-i { color: var(--epoch-i); }
+        .epoch-ii { color: var(--epoch-ii); }
+        .epoch-iii { color: var(--epoch-iii); }
+
+        .epoch-i-bg { background: rgba(34, 177, 76, 0.15); }
+        .epoch-ii-bg { background: rgba(255, 140, 0, 0.15); }
+        .epoch-iii-bg { background: rgba(178, 34, 34, 0.15); }
+
+        /* Slide header */
+        .slide-header {
+            text-align: left;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.8em;
+            border-bottom: 2px solid rgba(144, 238, 144, 0.5);
+        }
+
+        .slide-header h3 {
+            font-size: 1.4em;
+            margin: 0;
+            color: var(--accent-purple);
+        }
+
+        /* Content styling */
+        .slide-content {
+            text-align: left;
+            font-size: 0.85em;
+        }
+
+        .slide-content ul {
+            margin-left: 0;
+        }
+
+        .slide-content li {
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        .slide-content li li {
+            margin-bottom: 0.3em;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        /* Quote box */
+        .quote-box {
+            background: rgba(0, 191, 255, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 0.8em 1.2em;
+            margin: 1em 0;
+            font-style: italic;
+        }
+
+        /* Conversation styling */
+        .conversation {
+            text-align: left;
+            font-size: 0.8em;
+        }
+
+        .conversation p {
+            margin: 0.5em 0;
+        }
+
+        /* Speaker colors - brightened versions of LaTeX colors for dark background */
+        .speaker-milner, .speaker-milner strong { color: #7ab2f8; }
+        .speaker-tao, .speaker-tao strong { color: #e06070; }
+        .speaker-kontsevich, .speaker-kontsevich strong { color: #50c850; }
+        .speaker-taylor, .speaker-taylor strong { color: #ffb040; }
+        .speaker-lurie, .speaker-lurie strong { color: #b83d72; }
+
+        /* Panel images */
+        .panel-images {
+            display: flex;
+            justify-content: center;
+            gap: 0.8em;
+            margin: 1em 0;
+        }
+
+        .panel-images img {
+            height: 140px;
+            width: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .panel-slide h3 {
+            margin-bottom: 0.3em;
+            color: var(--accent-purple);
+        }
+
+        .panel-slide .video-link {
+            font-size: 0.6em;
+            margin-bottom: 0.5em;
+        }
+
+        .panel-slide .video-link a {
+            color: var(--epoch-ii);
+        }
+
+        .panel-conversation {
+            text-align: left;
+            font-size: 0.55em;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .panel-conversation ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .panel-conversation li {
+            margin-bottom: 0.35em;
+            line-height: 1.3;
+        }
+
+        .panel-conversation-two-col {
+            display: flex;
+            gap: 2em;
+            justify-content: center;
+            text-align: left;
+            font-size: 0.55em;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .panel-conversation-two-col ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        .panel-conversation-two-col li {
+            margin-bottom: 0.35em;
+            line-height: 1.3;
+        }
+
+        /* Smaller images on the conversation slide */
+        .panel-slide-conversation .panel-images {
+            margin: 0.5em 0;
+            gap: 0.5em;
+        }
+
+        .panel-slide-conversation .panel-images img {
+            height: 70px;
+        }
+
+        /* Three epochs diagram */
+        .epochs-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
+            margin: 1.5em 0;
+        }
+
+        .epoch-box {
+            padding: 1em 1.5em;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .epoch-box h4 {
+            margin: 0 0 0.5em 0;
+            font-size: 1.1em;
+        }
+
+        .epoch-box p {
+            margin: 0;
+            font-size: 0.75em;
+            color: #fff;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: var(--accent-cyan);
+        }
+
+        /* Description list */
+        .desc-list {
+            text-align: left;
+        }
+
+        .desc-list dt {
+            color: var(--accent-purple);
+            margin-top: 0.8em;
+            font-size: 0.9em;
+        }
+
+        .desc-list dd {
+            margin-left: 1em;
+            margin-top: 0.2em;
+        }
+
+        /* Numbered list with emphasis */
+        .numbered-points {
+            counter-reset: point;
+            list-style-type: none !important;
+            list-style: none !important;
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        .numbered-points li {
+            counter-increment: point;
+            position: relative;
+            padding-left: 2em;
+            list-style-type: none !important;
+        }
+
+        .numbered-points li::before {
+            content: counter(point) ".";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        /* Two column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2em;
+            text-align: left;
+        }
+
+        .two-col h4 {
+            margin-top: 0;
+            font-size: 1em;
+        }
+
+        /* Thank you slide */
+        .thank-you h2 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            color: #20b2aa;
+        }
+
+        .thank-you .contact {
+            margin-top: 2em;
+            font-size: 0.8em;
+            color: #e9967a;
+        }
+
+        .thank-you .contact a {
+            color: #ff8c00;
+        }
+
+        /* Emphasis */
+        .highlight {
+            color: var(--accent-purple);
+        }
+
+        strong {
+            color: #fff;
+        }
+
+        /* Small text */
+        .small {
+            font-size: 0.75em;
+            color: #999;
+        }
+
+        .caveat {
+            font-size: 0.8em;
+            color: var(--accent-purple);
+            font-style: italic;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Title Slide -->
+    <!--         <section class="title-slide">
+                <h1>On Mathematical Superintelligence</h1>
+                <div class="subtitle">and the evolving relationship between mathematics and artificial intelligence</div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 2em; margin-top: 1em;">
+                    <div>
+                        <div class="author">Kyler Siegel</div>
+                        <div class="institution">University of Southern California<br>Department of Mathematics</div>
+                    </div>
+                </div>
+            </section> -->
+
+            <section class="title-slide">
+                <h1>On mathematical superintelligence</h1>
+                <div class="subtitle">and the evolving relationship between mathematics and artificial intelligence</div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 2em; margin-top: 1em;">
+                    <img src="gachon/titlepic1.png" style="width: 200px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" alt="Happy AI collaboration">
+                    
+                    <div>
+                        <div class="author">Kyler Siegel</div>
+                        <div class="institution">University of Southern California<br>Department of Mathematics</div>
+                    </div>
+
+                    <img src="gachon/titlepic2.png" style="width: 200px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" alt="Worried about AI dominance">
+                </div>
+            </section>
+
+
+            <section class="panel-slide" data-auto-animate>
+                <h3>Prelude: 2015 Breakthrough Prize Panel at Stanford</h3>
+                <div class="panel-images">
+                    <img src="https://kylersiegel.xyz/AI_and_math/terry_tao_close.jpg" alt="Terry Tao">
+                    <img src="https://kylersiegel.xyz/AI_and_math/kontsevich.jpg" alt="Maxim Kontsevich">
+                    <img src="https://kylersiegel.xyz/AI_and_math/taylor.jpg" alt="Richard Taylor">
+                    <img src="https://kylersiegel.xyz/AI_and_math/lurie.jpg" alt="Jacob Lurie">
+                </div>
+            </section>
+
+            <section class="panel-slide" data-auto-animate>
+                <h3>2015 Breakthrough Prize Panel at Stanford</h3>
+                <div class="panel-images">
+                    <img src="https://kylersiegel.xyz/AI_and_math/milnor.jpg" alt="Yuri Milner">
+                    <img src="https://kylersiegel.xyz/AI_and_math/terry_tao_close.jpg" alt="Terry Tao">
+                    <img src="https://kylersiegel.xyz/AI_and_math/kontsevich.jpg" alt="Maxim Kontsevich">
+                    <img src="https://kylersiegel.xyz/AI_and_math/taylor.jpg" alt="Richard Taylor">
+                    <img src="https://kylersiegel.xyz/AI_and_math/lurie.jpg" alt="Jacob Lurie">
+                </div>
+            </section>
+
+            <section class="panel-slide" data-auto-animate>
+                <h3>2015 Breakthrough Prize Panel at Stanford</h3>
+                <p class="video-link"><a href="https://www.youtube.com/watch?v=eNgUQlpc1m0">https://www.youtube.com/watch?v=eNgUQlpc1m0</a></p>
+                <div class="panel-images">
+                    <img src="https://kylersiegel.xyz/AI_and_math/milnor.jpg" alt="Yuri Milner">
+                    <img src="https://kylersiegel.xyz/AI_and_math/terry_tao_close.jpg" alt="Terry Tao">
+                    <img src="https://kylersiegel.xyz/AI_and_math/kontsevich.jpg" alt="Maxim Kontsevich">
+                    <img src="https://kylersiegel.xyz/AI_and_math/taylor.jpg" alt="Richard Taylor">
+                    <img src="https://kylersiegel.xyz/AI_and_math/lurie.jpg" alt="Jacob Lurie">
+                </div>
+            </section>
+
+            <section class="panel-slide panel-slide-conversation" data-auto-animate>
+                <h3 style="font-size: 0.9em; margin-bottom: 0.2em;">2015 Breakthrough Prize Panel at Stanford (paraphrased)</h3>
+                <div class="panel-images">
+                    <img src="https://kylersiegel.xyz/AI_and_math/milnor.jpg" alt="Yuri Milner">
+                    <img src="https://kylersiegel.xyz/AI_and_math/terry_tao_close.jpg" alt="Terry Tao">
+                    <img src="https://kylersiegel.xyz/AI_and_math/kontsevich.jpg" alt="Maxim Kontsevich">
+                    <img src="https://kylersiegel.xyz/AI_and_math/taylor.jpg" alt="Richard Taylor">
+                    <img src="https://kylersiegel.xyz/AI_and_math/lurie.jpg" alt="Jacob Lurie">
+                </div>
+                    <div class="panel-conversation-two-col">
+                    <ul>
+                        <li class="fragment"><span class="speaker-milner"><strong>Yuri Milner:</strong></span> &ldquo;Could any of you imagine computers surpassing humans in mathematics like they did for chess, in a hundred or maybe a thousand years?&rdquo;</li>
+                        <li class="fragment"><span class="speaker-tao"><strong>Terry Tao:</strong></span> &ldquo;Well computers could act like a really powerful search engine, but it will still be humans driving the show, I'm pretty sure.&rdquo;</li>
+                        <li class="fragment"><span class="speaker-kontsevich"><strong>Maxim Kontsevich:</strong></span> &ldquo;Actually, I don't think creating artificial intelligence is that hard. I think we'll have it pretty soon.&rdquo;</li>
+                        <li class="fragment"><span class="speaker-milner"><strong>Yuri Milner:</strong></span> &ldquo;You are sort of a contrarian here saying it will happen so quickly. What makes you so optimistic?&rdquo;</li>
+                        <li class="fragment"><span class="speaker-kontsevich"><strong>Maxim Kontsevich:</strong></span> &ldquo;Actually it's pessimistic. I thought a little about it myself and I don't see any fundamental difficulty.&rdquo;</li>
+                    </ul>
+                    <ul>
+                        <li class="fragment"><span class="speaker-milner"><strong>Yuri Milner:</strong></span> &ldquo;Then why don't you just work on that?&rdquo;</li>
+                        <li class="fragment"><span class="speaker-kontsevich"><strong>Maxim Kontsevich:</strong></span> &ldquo;I think it would be immoral.&rdquo;</li>
+                        <li class="fragment"><span class="speaker-taylor"><strong>Richard Taylor:</strong></span> &ldquo;But isn't the way a computer plays chess just a big combinatorial check? I would be very surprised to see a computer win a Fields medal in our lifetime.&rdquo;</li>
+                        <li class="fragment"><span class="speaker-tao"><strong>Terry Tao:</strong></span> &ldquo;Well I think a computer could discover just by brute force a connection between two fields of mathematics, and then the person using the computer could actually flesh it out and maybe collect the medal.&rdquo;</li>
+                        <li class="fragment"><span class="speaker-milner"><strong>Yuri Milner:</strong></span> &ldquo;So Jacob, are you terrified at all by what Maxim is saying?&rdquo;</li>
+                        <li class="fragment"><span class="speaker-lurie"><strong>Jacob Lurie:</strong></span> &ldquo;I'm not too worried...&rdquo;</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="slide-header"><h3>About me</h3></div>
+                <div class="slide-content" style="display: flex; gap: 2em; align-items: flex-start;">
+                    <ul style="flex: 1;">
+                        <li class="fragment">assistant Professor of Mathematics at USC</li>
+                        <li class="fragment">my research focus is symplectic geometry<br><span style="font-size: 0.8em; color: #aaa;">(intersection of topology, differential geometry, algebraic geometry, dynamical systems, and theoretical physics)</span></li>
+                        <li class="fragment">in a nutshell, I try to compute pseudoholomorphic curves, which are solutions to a partial differential equation inspired by string theory, and use these to probe the geometry of high-dimensional spaces (e.g. 6d Calabi-Yau manifolds) </li>
+
+                        <li class="fragment">like many others, simultaneously <strong>excited</strong> and <strong>concerned</strong> about transformations AI may bring</li>
+                    </ul>
+                    <img src="gachon/selfportrait.png" alt="Self portrait" style="height: 130px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                </div>
+            </section>
+
+
+            <!-- <section>
+                <div class="slide-header"><h3>What is Mathematics Research?</h3></div>
+                <div class="slide-content">
+                    <p>Activities typically performed by research mathematicians:</p>
+                    <ul>
+                        <li class="fragment"><strong style="color: var(--accent-purple);">Proving theorems:</strong> Establishing new truths or shedding light on old ones</li>
+                        <li class="fragment"><strong style="color: var(--epoch-i);">Discovery:</strong> Finding compelling new mathematical objects (definitions, formulas, algorithms)</li>
+                        <li class="fragment"><strong style="color: var(--epoch-ii);">Problem solving:</strong> Making progress on important open problems</li>
+                        <li class="fragment"><strong style="color: var(--epoch-iii);">Dissemination:</strong> Papers, talks, textbooks, mentoring</li>
+                    </ul>
+                </div>
+            </section> -->
+
+        
+
+            
+            <section>
+                <div class="slide-header"><h3>What is this talk about?</h3></div>
+                <div class="slide-content">
+                  <ul>
+                    <li class="fragment">discuss a few recent developments in math + AI</li>
+                    <li class="fragment">make some broad predictions for how things could unfold in coming years</li>
+                    <li class="fragment">based on an essay in progress (introduction available on my website)</li>
+                    <li class="fragment">although we focus on mathematics, similar issues likely arise across many other disciplines</li>
+                    <li class="fragment">given the pace of recent developments and hype, hard to know whether to be excited, concerned, indifferent, or all of the above</li>
+                
+
+                  </ul>
+                </div>
+            </section>
+
+
+            <section>
+                <div class="slide-header"><h3>Some recent developments in math + AI</h3></div>
+                <div class="slide-content">
+                    <ul>
+                        <li class="fragment"><strong style="color: #22b14c;">reasoning models:</strong> OAI o1, o3, DeepSeek R1, GDM Deep Think, etc</li>
+                        <li class="fragment"><strong style="color: #ff8c00;">mathematics competitions:</strong> Google DeepMind and OpenAI both claim 5/6 problems on 2025 IMO, outscoring all but 26 human participants)</li>
+                        <li class="fragment"><strong style="color: #ffd700;">advanced benchmarks:</strong> for instance FrontierMath Tier IV (9/48 problems solved as of October 2025)</li>
+                        <li class="fragment"><strong style="color: #b22222;">AI collaborations:</strong> trickling emergence of preprints whose authors attribute a key idea to an LLM</li>
+                        <li class="fragment"><strong style="color: #ff69b4;">mathematics startups:</strong> well-funded and claiming to build "mathematical superintelligence" (e.g. Harmonic, Axiom, Math Inc., Logical Intelligence, etc)</li>
+                        <li class="fragment"><strong style="color: #3297cd;">ML for pure mathematics:</strong> growing list of papers and community (c.f. recent KIAS conference)</li>
+                        <li class="fragment"><strong style="color: #e06070;">formalization:</strong> growing popularity of Lean/mathlib + auto-formalization efforts</li>
+                    </ul>
+                </div>
+            </section>
+
+
+
+
+            <!-- Example: The Nearby Lagrangian Conjecture -->
+            <!-- Arnold's Conjecture -->
+            <section>
+                <div class="slide-header"><h3>Example: The Nearby Lagrangian Conjecture</h3></div>
+                <div class="slide-content" style="display: grid; grid-template-columns: 1fr auto; column-gap: 2em; row-gap: 0.2em; align-items: center;">
+                    <div>
+                        <ul style="margin: 0;">
+                            <li><strong>The Conjecture:</strong> every closed exact Lagrangian submanifold in the cotangent bundle of a closed manifold $M$ is Hamiltonian isotopic to the zero section.</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center;" class="fragment">
+                        <img src="gachon/cylinder.png" alt="Cylinder example" style="height: 150px; background: white; padding: 5px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    </div>
+
+                    <div>
+                        <ul style="margin: 0;">
+                            
+                            <li class="fragment">usually attributed to Vladimir Arnold (circa 1986)</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: center;" class="fragment"> 
+                        <img src="gachon/arnold.jpg" alt="Vladimir Arnold" style="height: 150px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    </div>
+                    <ul>
+                        <li class="fragment">interpretation in terms of classical physics</li>
+                        <li class="fragment"> considered far out of reach by current techniques </li>
+                        <li class="fragment"> has motivated many partial results and papers </li>
+                        <li class="fragment"> clean, unambiguous, elementary statement, but proof probably requires many advanced ideas </li>
+                    </ul>
+
+                </div>
+            </section>
+
+            <!-- What is special (or not)? -->
+            <section>
+                <div class="slide-header"><h3>What is special (or not) about math research?</h3></div>
+                <div class="slide-content">
+                    <dl class="desc-list">
+                        <dt class="fragment" style="color: #0097c9;">rigor</dt>
+                        <dd class="fragment">the potential for very high levels of rigor, both in the traditional mathematical sense and also in a more modern sense of formal verification</dd>
+                        
+                        <dt class="fragment" style="color: #ffd700;">entry</dt>
+                        <dd class="fragment">the lack of necessity (at least in principle) for any strong physical, financial, or social resources (e.g. hardware or lab equipment, proprietary data sets, etc)</dd>
+                        
+                        <dt class="fragment" style="color: #ff8c00;">safety</dt>
+                        <dd class="fragment">the lack of any obvious direct safety concerns (e.g. injurious accidents, lab leaks, environmental destruction, etc)</dd>
+                        
+                        <dt class="fragment" style="color: #22b14c;">purity</dt>
+                        <dd class="fragment">takes place in an intellectually clean environment sheltered from messy real-world complications (e.g. social dynamics, human psychology, unpredictable politics, weather patterns, etc)</dd>
+                    </dl>
+<!--                     <dl class="desc-list">
+                        <dt class="fragment" style="color: #00bfff;">Rigor</dt>
+                        <dd class="fragment">Potential for absolute certainty; amenable to formal verification</dd>
+                        
+                        <dt class="fragment" style="color: #ffd700;">Entry</dt>
+                        <dd class="fragment">Low barrier (in principle); no lab equipment or physical resources needed</dd>
+                        
+                        <dt class="fragment" style="color: #ff8c00;">Safety</dt>
+                        <dd class="fragment">No direct safety risks (accidents, biohazards)</dd>
+                        
+                        <dt class="fragment" style="color: #22b14c;">Purity</dt>
+                        <dd class="fragment">Sheltered from messy real-world complications; "clean" training data</dd>
+                    </dl> -->
+                </div>
+            </section>
+
+            <!-- Why mathematicians believe(d) we are safe -->
+            <section>
+                <div class="slide-header"><h3>Why mathematicians believe(d) we are "safe" from AI</h3></div>
+                <div class="slide-content">
+                    <dl class="desc-list">
+                        <dt class="fragment" style="color: #ff8c00;">too mechanical</dt>
+                        <dd class="fragment">the perception of AI as fundamentally just a brute force machine which follows algorithms devised by humans and may excel at computations or structured pattern matching but cannot exhibit true creativity or understanding</dd>
+
+                        <dt class="fragment" style="color: #22b14c;">too esoteric</dt>
+                        <dd class="fragment">the (somewhat cynical) sense that mathematics research is too esoteric for artificial intelligence developers to bother working on</dd>
+
+                        <dt class="fragment" style="color: #e06070;">too unreliable</dt>
+                        <dd class="fragment">pointing out examples of AI models performing poorly or unreliably and taking these as evidence that the whole premise is fundamentally misguided</dd>
+
+                        <dt class="fragment" style="color: #ffd700;">general intelligence</dt>
+                        <dd class="fragment">the presumption that AI which excels at advanced mathematics must necessarily exhibit broad general intelligence, the existence of which would cause such profound changes in society that it seems silly to contemplate the fate of something so niche as mathematics research</dd>
+                    </dl>
+                </div>
+            </section>
+
+            <!-- Recent Developments -->
+            <!-- <section>
+                <div class="slide-header"><h3>Some Recent Developments</h3></div>
+                <div class="slide-content">
+                    <ul style="font-size: 0.9em;">
+                        <li class="fragment"><strong style="color: var(--accent-purple);">Reasoning Models:</strong> OpenAI o1/o3, DeepSeek R1 designed for multistep reasoning</li>
+                        <li class="fragment"><strong style="color: var(--epoch-i);">Olympiad Success:</strong> Gold medal performance at IMO 2025 (Google DeepMind, OpenAI)</li>
+                        <li class="fragment"><strong style="color: var(--epoch-ii);">Advanced Benchmarks:</strong> FrontierMath (research-level problems) and others</li>
+                        <li class="fragment"><strong style="color: var(--epoch-iii);">Formalization:</strong> Growing adoption of Lean/Mathlib + auto-formalization efforts</li>
+                        <li class="fragment"><strong style="color: #ffd700;">AI-Assisted Discovery:</strong> AlphaEvolve (algorithm optimization), preprints attributing ideas to AI</li>
+                        <li class="fragment"><strong style="color: #ff69b4;">Major Investments:</strong> DeepMind partnership with top math institutes</li>
+                        <li class="fragment"><strong style="color: #d87f13;">Dedicated Startups:</strong> Harmonic, Axiom (focusing on "Mathematical Superintelligence")</li>
+                    </ul>
+                </div>
+            </section> -->
+
+<!-- 
+            <section>
+                <div class="slide-header"><h3>A range of stances</h3></div>
+                <div class="slide-content">
+                    <p style="margin-bottom: 1em;">Four caricatures of current attitudes:</p>
+                    <dl class="desc-list">
+                        <dt class="fragment" style="color: #d87f13;">The Unengaged</dt>
+                        <dd class="fragment">Has not been paying much attention to developments in mathematical AI</dd>
+                        
+                        <dt class="fragment" style="color: #ffd700;">The Skeptic</dt>
+                        <dd class="fragment">Believes aggressive claims are hype; AI will not have a dramatic effect</dd>
+                        
+                        <dt class="fragment epoch-i" style="color: var(--epoch-i);">The Techno-Optimist</dt>
+                        <dd class="fragment">Excited to supercharge research; keen on integrating tools into workflow</dd>
+                        
+                        <dt class="fragment epoch-iii" style="color: var(--epoch-iii);">The Doomsayer</dt>
+                        <dd class="fragment">Expects superintelligence is near; human mathematicians likely to become obsolete</dd>
+                    </dl>
+                    <p class="caveat fragment">These categories are not mutually exclusive...</p>
+                </div>
+            </section>
+
+            <section>
+                <div class="slide-header"><h3>Common Dismissive Attitudes</h3></div>
+                <div class="slide-content">
+                    <p style="margin-bottom: 0.8em;">Why have mathematicians underestimated AI progress?</p>
+                    <ol class="numbered-points">
+                        <li class="fragment"><strong style="color: var(--epoch-i);">&ldquo;Too mechanical&rdquo;</strong>: AI is just brute force, cannot exhibit true creativity</li>
+                        <li class="fragment"><strong style="color: var(--epoch-ii);">&ldquo;Too esoteric&rdquo;</strong>: Math is too niche for AI developers to bother</li>
+                        <li class="fragment"><strong style="color: var(--epoch-iii);">&ldquo;Too unreliable&rdquo;</strong>: Current failures indicate fundamental limitations</li>
+                        <li class="fragment"><strong style="color: #ffd700;">&ldquo;Requires AGI&rdquo;</strong>: Advanced math &rArr; general intelligence &rArr; bigger problems</li>
+                    </ol>
+                    <p class="caveat fragment">Each of these appears at least partially short-sighted from our current vantage point.</p>
+                </div>
+            </section>
+
+    
+            <section>
+                <div class="slide-header"><h3>Why These Arguments May Fall Short</h3></div>
+                <div class="slide-content">
+                    <ul>
+                        <li class="fragment"><strong style="color: var(--epoch-i);">&ldquo;Too mechanical&rdquo;</strong>: LLMs are stochastic, unpredictable, surprising even to their creators</li>
+                        <li class="fragment"><strong style="color: var(--epoch-ii);">&ldquo;Too esoteric&rdquo;</strong>: AI labs are <em>actively</em> pursuing mathematical benchmarks (bragging rights, metrics, investment)</li>
+                        <li class="fragment"><strong style="color: var(--epoch-iii);">&ldquo;Too unreliable&rdquo;</strong>: Creative ideas can be more valuable than precision; failure modes don't negate success modes</li>
+                        <li class="fragment"><strong style="color: #ffd700;">&ldquo;Requires AGI&rdquo;</strong>: Math may face <em>fewer</em> barriers than other fields (no labs, regulations, licensing, unions...)</li>
+                    </ul>
+                </div>
+            </section> -->
+
+            <!-- Goals of This Talk (Hidden) -->
+            <!--
+            <section>
+                <div class="slide-header"><h3>Goals of This Talk</h3></div>
+                <div class="slide-content two-col">
+                    <div>
+                        <h4 style="color: var(--epoch-i);">What this talk does:</h4>
+                        <ul>
+                            <li>Provoke serious discussion about the future</li>
+                            <li>Offer a framework for opportunities and risks</li>
+                            <li>Focus on practical issues</li>
+                            <li>Raise more questions than answers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--epoch-iii);">What this talk does NOT do:</h4>
+                        <ul>
+                            <li>Make precise timeline predictions</li>
+                            <li>Address the "big questions" (singularity, alignment...)</li>
+                            <li>Discuss mathematics education in depth</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            -->
+
+            <!-- What is MASI? -->
+            <section>
+                <div class="slide-header"><h3 style="font-size: 1.2em">What is mathematical (artificial) superintelligence?</h3></div>
+                <div class="slide-content">
+                    <ul>
+                        <li class="fragment">roughly: any machine which can perform essentially any aspect of mathematics (including research) substantively better than any human</li>
+                        <li class="fragment">of course, it can be very difficult to assess the abilities of a machine and/or compare them against humans, even in an "objective" field like mathematics</li>
+                        <li class="fragment"> there are also many different modes of thinking, and AI may naturally be better at some than others</li>
+                        <!-- <li class="fragment">for example, naturally machines are better at low level reasoning (e.g. arithmetic, or formal logic) but have a much harder time at formulating and executing grand long term visions</li> -->
+                    </ul>
+                    <div class="fragment" style="text-align: center; margin-top: 0.5em;">
+                        <img src="gachon/atoms.png" alt="Quanta article" style="max-height: 30vh; width: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    </div>
+                </div>
+            </section>
+
+
+
+
+            <section>
+                <div class="slide-header"><h3 style="font-size: 1.2em">What is mathematical (artificial) superintelligence?</h3></div>
+                <div class="slide-content">
+                    <div style="text-align: center; margin-top: 0.5em;">
+                        <img src="gachon/atoms.png" alt="Quanta article" style="max-height: 60vh; width: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    </div>
+                </div>
+            </section>
+
+
+
+
+            <section>
+                <div class="slide-header"><h3 style="font-size: 1.2em">Two types of mathematical superintelligence</h3></div>
+                <div class="slide-content">
+
+                    
+                    <div class="fragment" style="background: rgba(255, 255, 255, 0.05); padding: 1em; border-radius: 10px; margin-bottom: 1em;">
+                        <h4 class="epoch-ii" style="margin: 0 0 0.5em 0; color: var(--epoch-ii);">Type (i) mathematical superintelligence</h4>
+                        <p style="margin: 0; font-family: 'Computer Modern Serif', serif; font-size: 1.2em;">
+                            $\text{humans} < \text{AI} < \text{humans} + \text{AI}$
+                        </p>
+                        <p style="margin: 0.5em 0 0 0; font-size: 0.8em; color: #ccc;">
+                            AI outperforms humans alone, but humans still add nontrivial value to the system
+                        </p>
+                    </div>
+
+                    <div class="fragment" style="background: rgba(255, 255, 255, 0.05); padding: 1em; border-radius: 10px;">
+                        <h4 style="margin: 0 0 0.5em 0; color: #20b2aa;">Type (ii) mathematical superintelligence</h4>
+                        <p style="margin: 0; font-family: 'Computer Modern Serif', serif; font-size: 1.2em;">
+                            $\text{humans} < \text{AI} = \text{humans} + \text{AI}$
+                        </p>
+                        <p style="margin: 0.5em 0 0 0; font-size: 0.8em; color: #ccc;">
+                            AI meets the level of human mathematicians even when aided by AI
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The Three Epochs Framework -->
+            <section>
+                <div class="slide-header"><h3>Three epochs<h3></div>
+                <div class="epochs-diagram">
+                    <div class="epoch-box epoch-i-bg fragment">
+                        <h4 class="epoch-i">Epoch I</h4>
+                        <p style="color: #e99700;">AI boosts<br>productivity</p>
+                    </div>
+                    <span class="arrow fragment">&rarr;</span>
+                    <div class="epoch-box epoch-ii-bg fragment">
+                        <h4 class="epoch-ii">Epoch II</h4>
+                        <p style="color: #e99700;">type (i) mathematical<br>superintelligence</p>
+                    </div>
+                    <span class="arrow fragment">&rarr;</span>
+                    <div class="epoch-box epoch-iii-bg fragment">
+                        <h4 class="epoch-iii">Epoch III</h4>
+                        <p style="color: #e99700;">type (ii) mathematical<br>superintelligence</p>
+                    </div>
+                </div>
+                <div class="slide-content" style="margin-top: 1.5em;">
+                    <!-- <ul>
+                        <li class="fragment">Boundaries will be blurred in reality</li>
+                        <li class="fragment">Different areas of math may progress at different rates</li>
+                        <li class="fragment">Issues from earlier epochs persist (often amplified) in later ones</li>
+                    </ul> -->
+                </div>
+            </section>
+
+            <!-- Section: Epoch I -->
+            <section class="section-slide">
+                <h2 class="epoch-i">Epoch I</h2>
+                <div class="section-subtitle">AI boosts productivity</div>
+                <p class="small" style="margin-top: 1em;">(arguably already in progress)</p>
+                <img src="gachon/epoch1.png" style="height: 280px; margin-top: 1em; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" alt="Epoch I">
+            </section>
+
+            <section>
+                <div class="slide-header"><h3>Epoch I</h3></div>
+                <div class="slide-content">
+                    <!-- <p><strong>Defining characteristics:</strong></p> -->
+                    <ul>
+                        <li class="fragment">new AI tools provide a significant productivity boost</li>
+                        <li class="fragment">potential new golden era of mathematical discovery and productivity</li>
+                        <li class="fragment">also many pitfalls which must be carefully navigated</li>
+
+                        
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Epoch I: Opportunities and Risks Summary -->
+            <section>
+                <div class="slide-header"><h3>Opportunities and risks</h3></div>
+                <div class="slide-content two-col">
+                    <div>
+                        <h4 class="epoch-i" style="color: var(--epoch-i);">opportunities</h4>
+                        <ul style="font-size: 0.9em;">
+                            <li class="fragment">lemma machine </li>
+                            <li class="fragment">team of coders</li>                          
+                            <li class="fragment">rapid literature search</li>                                                    
+                            <li class="fragment">infiniely patient tutor</li>                                                                                    
+                            <li class="fragment">new standards of rigor</li>                                                                                                                                            <li class="fragment">uncovering hidden connections</li>                                                                                                                
+
+                        <!--     <li class="fragment"><strong style="color: #ff69b4;">lemma machine:</strong> proving technical results</li>
+                            <li class="fragment"><strong style="color: var(--epoch-ii);">team of coders for every mathematician:</strong> computation without coding skills</li>
+                            <li class="fragment"><strong style="color: var(--accent-cyan);">patient tutor:</strong> rapid learning & literature search</li>
+                            <li class="fragment"><strong style="color: var(--accent-purple);">new rigor:</strong> formal verification assistance</li>
+                            <li class="fragment"><strong style="color: #ffd700;">uncovering hidden connections:</strong> bridging subfields</li>
+                            <li class="fragment"><strong style="color: #32cd32;">rapid prototyping:</strong> testing ideas quickly</li> -->
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="epoch-iii" style="color: var(--epoch-iii);">risks</h4>
+                        <ul style="font-size: 0.9em;">
+<li class="fragment"> content overload </li>
+<li class="fragment"> overreliance and brain atrophy </li>
+<li class="fragment"> plagiarism and attribution errors </li>
+<li class="fragment"> distortion of tastes </li>
+<li class="fragment"> success = compute? </li>
+<li class="fragment"> olympiadification of mathematics </li>
+</ul>
+</div>
+</div>
+</section>    
+
+
+
+
+            <!-- Section: Epoch II -->
+            <section class="section-slide">
+                <h2 class="epoch-ii">Epoch II</h2>
+                <div class="section-subtitle">type (i) mathematical superintelligence</div>
+                <!-- <p class="small" style="margin-top: 1em;">Type (i) Mathematical Superintelligence</p> -->
+                <img src="gachon/epoch2.png" style="height: 280px; margin-top: 1em; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" alt="Epoch II">
+            </section>
+
+
+            <section>
+                <div class="slide-header"><h3>Epoch II</h3></div>
+                <div class="slide-content">
+                    <!-- <p><strong>Defining characteristics:</strong></p> -->
+                    <ul>
+                        <li class="fragment">prompt engineering and vibe mathing</li>
+                        <li class="fragment">mathematicians as project managers</li>
+                        <li class="fragment">continuously recalibrating values and expectations</li>                        
+                        <li class="fragment">papers become obsolete?</li>  
+                        <li class="fragment">what is the role of "drive"?</li>                                                                                               
+                    </ul>
+                </div>
+            </section>
+
+<!-- Section: Epoch III -->
+            <section class="section-slide">
+                <h2 class="epoch-iii">Epoch III</h2>
+                <div class="section-subtitle">type (ii) mathematical superintelligence</div>
+                <img src="gachon/epoch3.png" style="height: 280px; margin-top: 1em; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);" alt="Epoch III">
+            </section>
+
+
+            <section>
+                <div class="slide-header"><h3>Epoch III</h3></div>
+                <div class="slide-content">
+                    <!-- <p><strong>Defining characteristics:</strong></p> -->
+                    <ul>
+                        <li class="fragment">will all major conjectures get solved?</li>                        
+                        <li class="fragment">will humans still play any role in mathematical discovery?</li>
+                        <li class="fragment">mathematics as humanities?</li>                                                <li class="fragment">mathematics for personal enrichment?</li>                        
+                                                                                         
+                    </ul>
+                </div>
+            </section>       
+
+
+            <section>
+                <div class="slide-header"><h3>Summary and outlook</h3></div>
+                <div class="slide-content">
+                    <ul>
+                        <li class="fragment">many reasons to be both excited and cautious</li>                                                
+                        <li class="fragment">in short term (Epoch I), may see a new golden era of advances in mathematics research</li>                                         
+                        <li class="fragment">in medium term (Epoch II), mathematics research will likely become more high level, with machines covering more low level technical details</li>                                         
+
+                        <li class="fragment">in long term (Epoch III), mathematics research may shift from discovery to appreciation, critique, self-enrichment, etc</li>                                                                 
+                        <li class="fragment">it is unclear if and when these epochs will occur, but it seems likely that mathematics research will fundamentally transform in the coming years</li>                                                                                         
+
+                    </ul>
+                </div>
+            </section>  
+
+            <!-- Thank You -->
+            <section class="thank-you">
+                <h2>Thank You</h2>
+                <!-- <p style="font-size: 1.5em;">Questions?</p> -->
+                <div class="contact">
+                    <a href="mailto:kyler.siegel@usc.edu">kyler.siegel@usc.edu</a><br>
+                    <a href="https://kylersiegel.xyz">kylersiegel.xyz</a>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'fade',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
+            center: true,
+            width: 1280,
+            height: 720,
+            margin: 0.1,
+            autoAnimate: true,
+            autoAnimateDuration: 0.8,
+            plugins: [ RevealMath.MathJax3 ],
+            mathjax3: {
+                mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                }
+            }
+        });
+    </script>
+</body>
+</html>
