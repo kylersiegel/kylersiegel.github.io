@@ -1,0 +1,521 @@
+  <!DOCTYPE html>
+
+  <html>
+
+  <head>
+  	<title>Math 635</title>
+
+  	<style type="text/css">
+  	 .row { vertical-align: top; height:auto !important; }
+  	 .list {display:none; }
+  	 .show {display: none; }
+  	 .hide:target + .show {display: inline; }
+  	 .hide:target {display: none; }
+  	 .hide:target ~ .list {display:inline; }
+  	 @media print { .hide, .show { display: none; } }
+  	 </style>
+
+  <style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+
+  </style>
+
+   <style>
+    .container {
+     margin-top:5px;
+     margin-left:5px;
+    }
+
+    .container ul {
+     color: #E59934;
+    }
+
+    .container ul li {
+     margin:5px;
+     padding:5px;
+     width: 100px;
+     height:70px;
+     float: left; 
+     border: 1px solid lightgray;
+     list-style:none;
+     
+    }
+
+    .container ul li:hover {
+     border: 1px solid orange;
+    }
+   </style>
+
+
+    <style type="text/css">
+     .row { vertical-align: top; height:auto !important; }
+     .list {display:none; }
+     .show {display: none; }
+     .hide:target + .show {display: inline; }
+     .hide:target {display: none; }
+     .hide:target ~ .list {display:inline; }
+     @media print { .hide, .show { display: none; } }
+     </style>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+
+<style>
+p.mar {
+  margin-right: 25%;
+}
+</style>
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+  </head>
+
+    <style>
+        iframe {
+            display: block; /* Removes inline space */
+            margin: 0;      /* Removes default margins */
+            width: 100%;    /* Adjust the size as needed */
+            height: auto;
+            border: none;   /* Remove default border */
+        }
+    </style>
+
+<body style="font-size:125%; margin-right:10%; margin-left:.75%">
+
+
+
+  	<h1> Almost toric methods in symplectic and algebraic geometry <br>
+    Math 635, USC Fall 2024  <br>
+
+</h1>
+
+
+<h2> Instructors. </h2>
+<ul>
+ <li> Kyler Siegel (kyler.siegel@usc.edu) </li>
+<!-- <li> Teaching assistant: TBA</li> -->
+</ul>
+
+<img src="635_fall_2024/ATF.jpg" width=50% height=350px>
+
+<h2> Time and location. </h2>
+<p> 10:35am - 11:50am on Mondays and Wednesday in 427 Kaprielian Hall (KAP). Note: the meeting time and location are subject to change depending on room availability. </p>
+
+  	<h2> About.	</h2> 
+  	<p>
+      Toric geometry roughly studies spaces equipped with torus actions, with parallel frameworks in both algebraic and symplectic geometry. The torus symmetry allows us to reduce essentially any geometric problem to combinatorics, and this gives a potent laboratory for computing examples and generating and testing conjectures. Almost toric geometry generalizes toric geometry by studying systems with certain extra singularities which arise frequently in nature and which vastly extend the range of applicability.
+      These spaces are also largely combinatorial in nature, but they require additional input from integral affine geometry. 
+      In this course, we will introduce almost toric geometry from the perspectives of both algebraic and symplectic geometry, discuss many examples and tools, and finally explore various recent breakthroughs which rely on insights from almost toric geometry.
+
+  	</p>
+
+  	<h2> Prerequisites. </h2>
+  	<p>
+    I will assume familiarity with smooth manifolds, Lie groups, and basic commutative algebra. Some familiarity with the basics of symplectic geometry and complex algebraic geometry will be helpful but not required.
+  	</p>
+
+
+<h2> Topics.</h2>
+The first part of the course will cover the basics of toric algebraic geometry (lattice, cones, fans, toric varieties, toric divisors, toric morphisms, etc) and toric symplectic geometry (Hamiltonian group actions, Lagrangian toric fibrations, Delzant polytopes, etc). 
+After introducing the basics of integral affine geometry, we will then discuss symplectic almost toric fibrations and their connections with algebraic $\mathbb{Q}$-Gorenstein deformations, along with various geometric constructions (blowing up, rational blowdowns, visible Lagrangian and symplectic curves, etc).
+In the last part of the course we will explore various advanced topics, depending on time and audience interest, including possibly things like:
+<ul>
+  <li> tropical geometry </li>
+  <li> exotic Lagrangians and Markov triples</li>
+  <li> deformations of the projective plane </li>
+  <li> classification of Fano varieties</li>
+  <li> Newton-Okounkov bodies</li>
+  <li> cusp singularities of surfaces and Looijenga's conjecture</li>
+  <li>mirror symmetry for log Calabi-Yau surfaces</li>
+  <li> toric degenerations.</li>
+</ul>
+
+
+
+
+  	<h2> Textbooks and references. </h2>
+  Toric algebraic geometry:
+  <ul>
+    <li id="CLS"> <em><a href="https://dacox.people.amherst.edu/toric.html">Toric varieties</a></em> - Cox, Little, and Schenk </li>
+    <li id="Fulton"> <em><a href="https://web.ma.utexas.edu/users/ikmartin/pages/blog/toric-page/documents/Introduction-to-Toric-Varieties_Fulton.pdf">Introduction to toric varieties</a></em> - Fulton </li>
+    <li id="Cox"> <em><a href="https://dacox.people.amherst.edu/lectures/coxcimpa.pdf">Lectures on toric varieties</a></em> - Cox</li>
+    <li id="Brasselet"> <em><a href="https://www2.math.ethz.ch/education/bachelor/lectures/fs2015/math/alg_geom/brasselet">Introduction to toric varieties</a></em> - Brasselet</li>
+  </ul>
+
+  Toric symplectic geometry:
+  <ul>
+    <li id="da Silva"> <em><a href="https://people.math.ethz.ch/~acannas/Papers/toric.pdf">Symplectic toric manifolds</a></em> - da Silva</li>
+  </ul>
+
+  Lagrangian torus fibrations:
+  <ul>
+    <li id="Evans"><em><a href="https://arxiv.org/abs/2110.08643">Lectures on Lagrangian torus fibrations</a></em> - Evans</li>
+    <li id="Symington"><em><a href="https://arxiv.org/abs/math/0210033">Four dimensions from two in symplectic topology</a></em> - Symington</li>
+  </ul>
+
+
+Advanced topics:
+<ul>
+  <li> TBD. </li>
+</ul>
+
+
+
+
+<h2> Problem sets.</h2>
+
+    There will be weekly problem sets for the first roughly half of the course.
+
+<h2> Student presentations and writeups.</h2>
+
+  Each student will give a short presentation on a relevant chosen topic (in consultation with Kyler), towards the end of the semester.
+  In addition, each presenter will be expected to submit a typed up writeup to accompany their presentation.
+
+
+  	<h2> Grading scheme. </h2>
+  	The grade will be based on problem sets (primarily checked for completeness) and final presentations plus writeups.
+
+
+  	<h2> Office hours.</h2>
+    <ul>
+ <li> Location: KAP 400C</li>
+ <li> Time: at the moment by appointment (talk to Kyler after class or send an email to pick a time) </li>
+</ul>
+
+
+
+  <h2> Tentative schedule </h2>
+
+<i> Note: this schedule (along with the above information) is tentative and will be continuously updated to adapt to the pace of the course. Please check back regularly for updates and problem set assignments.</i>
+
+
+
+<table>
+ <tr style="border-bottom:2px solid black">
+    <th>$\#$</th>
+    <th>Date</th>    
+    <th>Material</th>
+    <th>References</th>    
+    <th>Problem set</th>
+  </tr>
+
+
+
+  <tr style="border-bottom:2px solid black">
+  <tr>
+    <td>1</td>    
+    <td>Monday 8/26/24</td>
+    <td>Impressionistic introduct to toric and almost toric geometry. Exotic Lagrangian tori in $\mathbb{CP}^2$ and the Markov equation. </td>
+    <td><a href="#Fulton">Fulton</a> §1.1 (for a first taste of toric algebraic geometry)</td>
+    <td></td>    
+  </tr>
+
+ <tr>
+    <td>2</td>    
+    <td>Wednesday 8/28/24</td>
+    <td>Crash course in algebraic geometry I: affine varieties, coordinate rings, Hilbert basis theorem, Hilbert Nullstellensatz, Zariski topology, irreducibility, localization, normality.</td>
+    <td><a href="#Cox">Cox</a> §0</td>
+    <td></td>    
+  </tr> 
+<!-- <tr style="border-bottom:2px solid black"> -->
+
+    <tr>
+    <td></td>    
+    <td style="color:blue;">Monday 9/2/24: Labor day - no class</td>
+    <td></td>
+    <td></td>
+    <td></td>    
+  </tr>
+ 
+
+  <tr>
+    <td>3</td>    
+    <td>Wednesday 9/4/24</td>
+    <td>Crash course in algebraic geometry II: projective varieties, homogeneous ideals, projective Nullstellensatz, rational functions, weighted projective spaces, valuations, Weil and Cartier divisors, Chow and Picard groups.</td>
+    <td><a href="#Cox">Cox</a> §0</td>
+    <td></td>    
+  </tr>
+<!-- <tr style="border-bottom:2px solid black"> -->
+
+  <tr>
+    <td>4</td>    
+    <td>Monday 9/9/24</td>
+    <td>Lattices, characters and cocharacters, examples of toric varieties, convex polyhedral cones, dual cones. </td>
+    <td><a href="#Cox">Cox</a> §1</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+    <td>5</td>    
+    <td>Wednesday 9/11/24</td>
+    <td> More on cones and dual cones. Faces, facets, and rays. Characterization of strong convexity. Rational polyhedral cones.  Monoids of lattice points and Gordan's lemma. Regular and simplicial cones.</td>
+    <td><a href="#Cox">Cox</a> §1</td>
+    <td></td>    
+  </tr>
+
+  <!-- <tr style="border-bottom:2px solid black"> -->
+
+    <tr>
+      <td>6</td>
+      <td>Monday 9/16/24</td>
+      <td> The affine toric variety associated to a cone. First examples.</td>
+    <td><a href="#Cox">Cox</a> §1</td>
+    <td> <a href="635_fall_2024/pset1.pdf">Pset 1</a> (due Wednesday 9/25/24 at 11:59pm).</td>    
+  </tr>
+
+
+    <tr>
+      <td>7</td>
+      <td>Wednesday 9/18/24</td>
+      <td> Fans and their associated toric varieties. First examples.</td>
+    <td><a href="#Cox">Cox</a> §2</td>
+    <td></td>    
+  </tr>
+
+    <tr>
+      <td>8</td>
+      <td>Monday 9/23/24</td>
+      <td> More examples of fans and their associated toric varieties. Complete, regular, simplicial, and polytopal fans and the corresponding properties for the toric variety. </td>
+    <td><a href="#Cox">Cox</a> §2</td>
+    <td></td>    
+  </tr>
+
+      <tr>
+      <td>9</td>
+      <td>Wednesday 9/25/24</td>
+      <td> More on face fans and normal fans. Polar dual polytopes. The bijection between cones and orbits and the distinguished point associated to each cone.</td>
+    <td><a href="#Cox">Cox</a> §2 and parts of §4, <a href="#Brasselet">Brasselet</a> §4.</td>
+    <td></td>    
+  </tr>
+
+      <tr>
+      <td>10</td>
+      <td>Monday 9/30/24</td>
+      <td> More on distinguished points and orbits associated to cones. Orbit closures and the associated abstract fan.</td>
+    <td><a href="#Fulton">Fulton</a> §3.1.</td>
+    <td></td>    
+  </tr>
+
+      <tr>
+      <td>11</td>
+      <td>Wednesday 10/2/24</td>
+      <td> The divisor associated to a polytope. Proof that it is Cartier and ample. The associated embedding into projective space. Characters as rational functions and their associated divisors. The Chow group of a toric variety and its relation with ordinary homology. </td>
+    <td><a href="#Cox">Cox</a> §3.1,§4.1,§4.2,§4.3, <a href="#Fulton">Fulton</a> §1.5. </td>
+    <td></td>    
+  </tr>
+  
+      <tr>
+      <td>12</td>
+      <td>Monday 10/7/24</td>
+      <td> Actions by finite groups and rings of invariant polynomials. The general two-dimensional affine toric variety as a quotient $\mathbb{C}^2/G$. Quotient map induced by a changed of lattice. Simplicial cones give orbifold singularities. Wieghted projective space as a global question of standard projective space. </td>
+    <td><a href="#Cox">Cox</a> §2.6,§2.7, <a href="#Fulton">Fulton</a> §2.2.</td>
+    <td></td>    
+  </tr>
+  
+
+        <tr>
+      <td>13</td>
+      <td>Wednesday 10/9/24</td>
+      <td> Toric morphisms and their criterion for properness. Refinements of fans. Cocharacters and their limit points as distinguished points. Proof that compact toric varieties have complete fans. Brief crash course in vector bundles. The tautological bundle over $\mathbb{P}^1$ as a toric refinement of $\mathbb{C}^2$.</td> 
+    <td><a href="#Fulton">Fulton</a> §1.1,§2.3,§2.4.</td>
+    <td><a href="635_fall_2024/pset2.pdf">Pset 2</a> (due Friday 10/18/24 at 11:59pm).</td>    
+  </tr>
+  
+
+        <tr>
+      <td>14</td>
+      <td>Monday 10/14/24</td>
+      <td>More on $\mathcal{O}(-1)$ as a toric variety. Toric blowups. More on toric morphisms. Hirzebruch surfaces. Classification of minimal nonsingular compact toric surfaces. Birational maps and rational varieties. Classification of minimal nonsingular rational surfaces. </td>
+    <td><a href="#Fulton">Fulton</a> §1.1,§1.2,§2.5.</td>    
+        <td> </td>
+  </tr>
+  
+
+        <tr>
+      <td>15</td>
+      <td>Wednesday 10/16/24</td>
+      <td> Resolution of singularities for toric surfaces. The basic refinement step, and negative continued fraction expansions. Multiplicities of cones, refinements, and resolution of singularities for higher dimensional toric varieties.
+
+        </td> 
+    <td><a href="#Fulton">Fulton</a> §2.6.</td>
+    <td></td>    
+  </tr>
+  
+          <tr>
+      <td>16</td>
+      <td>Monday 10/21/24</td>
+      <td> More on resolution of singularities in higher dimensions. The example of the Atiyah flop. 
+        First steps in symplectic geometry: symplectic forms, Darboux's theorem, symplectic and Hamiltonian vector fields, conservation of energy, the Poisson bracket.
+        </td> 
+    <td><a href="#Fulton">Fulton</a> §2.6, <a href="#da Silva">da Silva</a> §1.1,§1.2,§1.3.</td>
+    <td></td>    
+  </tr>
+
+
+          <tr>
+      <td>17</td>
+      <td>Wednesday 10/23/24</td>
+      <td> Integrable Hamiltonian systems and their basic properties. Little Arnold-Liouville theorem. </td> 
+    <td><a href="#da Silva">da Silva</a> §1.3,§1.4,§1.5,§1.6, <a href="#Evans">Evans</a> §1.3.</td>
+    <td></td>    
+  </tr>
+
+
+
+          <tr>
+      <td>18</td>
+      <td>Monday 10/28/24</td>
+      <td> More on integrable systems and various examples. Hamiltonian group actions. The Atiyah-Guillemin-Sternberg convexity theorem. Examples of moment maps and moment polytopes.</td> 
+    <td><a href="#da Silva">da Silva</a> §1.3,§1.4,§1.5,§1.6, <a href="#Evans">Evans</a> §1.3.</td>
+    <td></td>    
+  </tr>
+
+          <tr>
+      <td>19</td>
+      <td>Wednesday 10/30/24</td>
+      <td> Delzant polytopes and Delzant's theorem. Symplectic reduction and examples. </td> 
+    <td><a href="#da Silva">da Silva</a> §2.1,§2.2,§2.3.</td>
+    <td></td>    
+  </tr>
+
+          <tr>
+      <td>20</td>
+      <td>Monday 11/4/24</td>
+      <td> Construction of a toric symplectic manifold from a Delzant polytope. Morse theory using moment polytopes. </td> 
+    <td><a href="#da Silva">da Silva</a> §2.5,§2.6,§3.1,§3.2,§3.3.</td>
+    <td></td>    
+  </tr>
+
+
+          <tr>
+      <td>21</td>
+      <td>Wednesday 11/6/24</td>
+      <td> Examples of Delzant's theorem giving toric symplectic manifolds from Delzant polytopes. Linear toric actions, weight space decompositions, and their moment maps. The equivariant Darboux theorem and computation of the Morse index for a moment map Morse function. </td> 
+    <td><a href="#da Silva">da Silva</a> §2.5,§2.6,§3.1,§3.2,§3.3.</td>
+    <td></td>    
+  </tr>
+
+
+          <tr>
+      <td></td>
+      <td style="color:blue;">Monday 11/11/24: Veteran's day - no class</td>
+      <td>  </td> 
+    <td></td>    
+        <td></td>    
+  </tr>
+
+      <tr>
+      <td>22</td>
+      <td>Wednesday 11/13/24</td>
+      <td> More on integrable systems. Local sections and period lattices. The existence of Liouville coordinates. Lagrangian sections of the standard projection $T^*\mathbb{T}^n \rightarrow \mathbb{R}^n$.</td> 
+      <td><a href="#Evans">Evans</a> §1.3,§1.4,§1.5,§1.6.</td>    
+      <td> </td>
+      </tr>
+
+      <tr>
+      <td>23</td>
+      <td>Monday 11/18/24</td>
+      <td> Existence of action angle coordinates and the big Arnold-Liouville theorem. </td> 
+      <td><a href="#Evans">Evans</a> §1.5,§1.6.</td>    
+      <td></td>    
+      </tr>
+
+      <tr>
+      <td>24</td>
+      <td>Wednesday 11/20/24</td>
+      <td> Stratified topological spaces and Lagrangian fibrations (possibly singular). Basic properties of regular Lagrangian fibrations and the integral integral affine structure on the base. Integral affine geometry. Recovering a Lagrangian fibration from its integral affine base. </td> 
+      <td><a href="#Evans">Evans</a> §2.1,§2.2,§2.3.</td>    
+          <td></td>    
+      </tr>
+
+      <tr>
+      <td>25</td>
+      <td>Monday 11/25/24</td>
+      <td> The Auroux system and focus-focus singularities. Almost toric fibrations and nodal integral affine structures. Nodal trades, nodal slides, and mutations. </td> 
+      <td><a href="#Evans">Evans</a> §7.1,§7.2,§8.</td>    
+          <td></td>    
+      </tr>
+
+      <tr>
+      <td></td>
+      <td style="color:blue">Wednesday 11/27/24: Thanksgiving break - no class</td>
+      <td>  </td> 
+          <td></td>    
+      <td></td>    
+      </tr>
+
+      <tr>
+      <td>26</td>
+      <td>Monday 12/2/24</td>
+      <td> <span style="color:lightcoral;">Haosen Wu:</span> <a href="635_fall_2024/final_presentation_notes/Haosen_Wu.pdf">Lagrangian pinwheels and the Markov equation</a> <br>
+          <span style="color:lightcoral;">Baran Cetin:</span> <a href="635_fall_2024/final_presentation_notes/Baran_Cetin.pdf">The Kempf--Ness theorem</a>  </td> 
+      <td></td>    
+          <td></td>    
+      </tr>
+
+      <tr>
+      <td>27</td>
+      <td>Wednesday 12/4/24</td>
+      <td> <span style="color:lightcoral;">Yijie Pan:</span> <a href="635_fall_2024/final_presentation_notes/Yijie_Pan.pdf">Surgery constructions using almost toric fibrations</a><br>
+          <span style="color:lightcoral;">Jishnu Bose:</span> <a href="635_fall_2024/final_presentation_notes/Jishnu_Bose.pdf">Generalized coordinates for toric varieties</a> 
+        </td> 
+      <td></td>    
+          <td></td>    
+      </tr>
+
+      <tr>
+      <td>28</td>
+      <td>Monday 12/9/24</td>
+      <td>  <span style="color:lightcoral;">Wes Wise:</span> <a href="635_fall_2024/final_presentation_notes/Wes_Wise.pdf">Markov triples and Vianna triangles</a><br>
+          <span style="color:lightcoral;">Mohammad Tinati:</span> <a href="635_fall_2024/final_presentation_notes/Mohammed_Tinati.pdf">Riemannian manifolds with integrable geodesic flows</a> <br>
+        <span style="color:lightcoral;">Boxi Hao:</span> <a href="635_fall_2024/final_presentation_notes/Boxi_Hao.pdf">Tropical Lagrangians</a> 
+
+       </td> 
+      <td></td>    
+          <td></td>    
+      </tr>
+
+</table>
+
+
+&nbsp;
+
+  </body>
+
+  </html>
