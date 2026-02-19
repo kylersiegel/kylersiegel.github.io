@@ -201,6 +201,25 @@
         .rotate-control .angle-label {
             font-size: 11px; color: #7f8c8d; min-width: 28px;
         }
+        .toggle-control {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 13px; color: #34495e;
+        }
+        .toggle-switch {
+            position: relative; width: 34px; height: 18px; cursor: pointer;
+        }
+        .toggle-switch input { display: none; }
+        .toggle-switch .slider {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: #ccc; border-radius: 9px; transition: 0.2s;
+        }
+        .toggle-switch .slider::before {
+            content: ''; position: absolute; width: 14px; height: 14px;
+            left: 2px; bottom: 2px; background: #fff; border-radius: 50%;
+            transition: 0.2s;
+        }
+        .toggle-switch input:checked + .slider { background: #3498db; }
+        .toggle-switch input:checked + .slider::before { transform: translateX(16px); }
         .mg-canvas-wrap {
             flex: 1;
             overflow: hidden;
@@ -245,6 +264,34 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block;
         }
         #egCanvas:active { cursor: grabbing; }
+        #egTooltip {
+            display: none; position: fixed; z-index: 100;
+            background: #fff; border: 1px solid #bbb; border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 10px 14px; pointer-events: none;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 13px; color: #333; max-width: 500px;
+        }
+        #egTooltip.pinned {
+            pointer-events: auto; cursor: auto;
+            border-color: #3498db;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.25);
+        }
+        #egTooltip .tt-hint {
+            font-size: 10px; color: #aaa; margin-top: 6px; font-style: italic;
+        }
+        #egTooltip.pinned .tt-hint { display: none; }
+        #egTooltip .tt-var {
+            margin: 4px 0; display: flex; align-items: baseline; gap: 6px;
+        }
+        #egTooltip .tt-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block; flex-shrink: 0;
+        }
+        #egTooltip .tt-expr {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            word-break: break-all; user-select: text;
+        }
 
         /* -- about tab -- */
         #tabAbout {
@@ -394,6 +441,7 @@
         <div class="eg-canvas-wrap" id="egWrap">
             <canvas id="egCanvas"></canvas>
         </div>
+        <div id="egTooltip"></div>
     </div>
 
     <!-- about tab -->
@@ -1501,17 +1549,31 @@
         egCtx.strokeStyle = '#e0e0e0'; egCtx.lineWidth = 0.5; egCtx.stroke();
 
         // Cluster variables
-        egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
         egCtx.textAlign = 'left'; egCtx.textBaseline = 'middle';
         const startY = sepY + 11;
         const lineH = 13;
+        const textW = EG_NODE_W - 22; // available width for text
         for (let i = 0; i < 3; i++) {
             const cy = startY + i * lineH;
             egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
             egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
             let expr = lpToString(data.cluster[i]);
-            const maxChars = 22;
-            if (expr.length > maxChars) expr = expr.substring(0, maxChars-1) + '\u2026';
+            // auto-size font to fit, with a floor
+            let fontSize = 7;
+            egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+            let measured = egCtx.measureText(expr).width;
+            if (measured > textW) {
+                fontSize = Math.max(4, Math.floor(fontSize * textW / measured));
+                egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+                measured = egCtx.measureText(expr).width;
+            }
+            if (measured > textW) {
+                // still too long after shrinking — truncate
+                while (expr.length > 1 && egCtx.measureText(expr + '\u2026').width > textW) {
+                    expr = expr.slice(0, -1);
+                }
+                expr += '\u2026';
+            }
             egCtx.fillStyle = '#333';
             egCtx.fillText(expr, x-w2+16, cy);
         }
@@ -1587,6 +1649,97 @@
         drawExchangeGraph();
     });
     window.addEventListener('mouseup', function() { egDragging = false; });
+
+    // -- exchange graph tooltip --
+    const egTooltip = document.getElementById('egTooltip');
+    let egTooltipKey = null;
+    let egTooltipPinned = false;
+
+    function egScreenToWorld(sx, sy) {
+        const rect = egCanvas.getBoundingClientRect();
+        const cw = parseFloat(egCanvas.style.width), ch = parseFloat(egCanvas.style.height);
+        let x = (sx - rect.left) - cw/2 - egPanX;
+        let y = (sy - rect.top) - ch/2 - egPanY;
+        const c = Math.cos(-egRotation), s = Math.sin(-egRotation);
+        const rx = x*c - y*s, ry = x*s + y*c;
+        return { x: rx/egScale, y: ry/egScale };
+    }
+
+    function egHitTest(sx, sy) {
+        if (!currentEGGraph || !currentEGLayout) return null;
+        const w = egScreenToWorld(sx, sy);
+        const hw = EG_NODE_W/2, hh = EG_NODE_H/2;
+        for (const [key, data] of currentEGGraph.nodes) {
+            const p = currentEGLayout.get(key);
+            if (!p) continue;
+            if (w.x >= p.x-hw && w.x <= p.x+hw && w.y >= p.y-hh && w.y <= p.y+hh) {
+                return { key, data };
+            }
+        }
+        return null;
+    }
+
+    function egBuildTooltipHTML(data) {
+        const colors = ['#3498db','#e74c3c','#27ae60'];
+        let html = '';
+        for (let i = 0; i < 3; i++) {
+            const expr = lpToString(data.cluster[i]);
+            html += '<div class="tt-var">'
+                  + '<span class="tt-dot" style="background:'+colors[i]+'"></span>'
+                  + '<span class="tt-expr">x' + SUB[i] + ' = ' + expr + '</span></div>';
+        }
+        html += '<div class="tt-hint">click to pin &amp; copy</div>';
+        return html;
+    }
+
+    function egDismissTooltip() {
+        egTooltip.style.display = 'none';
+        egTooltip.classList.remove('pinned');
+        egTooltipKey = null;
+        egTooltipPinned = false;
+    }
+
+    egCanvas.addEventListener('mousemove', function(ev) {
+        if (egDragging || egTooltipPinned) return;
+        const hit = egHitTest(ev.clientX, ev.clientY);
+        if (!hit) {
+            if (egTooltipKey) egDismissTooltip();
+            return;
+        }
+        if (hit.key !== egTooltipKey) {
+            egTooltipKey = hit.key;
+            egTooltip.innerHTML = egBuildTooltipHTML(hit.data);
+            egTooltip.style.display = 'block';
+        }
+        egTooltip.style.left = (ev.clientX + 14) + 'px';
+        egTooltip.style.top = (ev.clientY + 14) + 'px';
+    });
+
+    egCanvas.addEventListener('click', function(ev) {
+        if (egTooltipPinned) { egDismissTooltip(); return; }
+        const hit = egHitTest(ev.clientX, ev.clientY);
+        if (!hit) return;
+        egTooltipKey = hit.key;
+        egTooltipPinned = true;
+        egTooltip.innerHTML = egBuildTooltipHTML(hit.data);
+        egTooltip.classList.add('pinned');
+        egTooltip.style.display = 'block';
+        egTooltip.style.left = (ev.clientX + 14) + 'px';
+        egTooltip.style.top = (ev.clientY + 14) + 'px';
+    });
+
+    egCanvas.addEventListener('mouseleave', function() {
+        if (!egTooltipPinned) egDismissTooltip();
+    });
+
+    document.addEventListener('keydown', function(ev) {
+        if (ev.key === 'Escape' && egTooltipPinned) egDismissTooltip();
+    });
+    document.addEventListener('mousedown', function(ev) {
+        if (egTooltipPinned && !egTooltip.contains(ev.target) && ev.target !== egCanvas) {
+            egDismissTooltip();
+        }
+    });
 
     // ===========================================================
     //  INIT
