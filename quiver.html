@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiver Mutation Visualizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* ---- header bar ---- */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 12px 24px;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+        .header h1 { font-size: 20px; color: #2c3e50; white-space: nowrap; }
+        .header select {
+            padding: 6px 10px;
+            font-size: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .header label { font-size: 14px; color: #34495e; }
+        .quiver-picker { display: flex; gap: 0; }
+        .quiver-picker input[type="radio"] { display: none; }
+        .quiver-picker label {
+            padding: 5px 14px;
+            font-size: 13px;
+            color: #555;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .quiver-picker label:first-of-type { border-radius: 5px 0 0 5px; }
+        .quiver-picker label:last-of-type { border-radius: 0 5px 5px 0; }
+        .quiver-picker label:not(:first-of-type) { border-left: none; }
+        .quiver-picker input[type="radio"]:checked + label,
+        .quiver-picker label.active {
+            background: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+        .quiver-picker label sub { font-size: 0.75em; }
+        .header .sep { width: 1px; height: 24px; background: #ddd; }
+        .quiver-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .random-extras {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header button {
+            padding: 6px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
+        }
+        .header button:hover { background: #2980b9; }
+        .header button:active { transform: scale(0.97); }
+
+        /* ---- tabs ---- */
+        .tab-bar {
+            display: flex;
+            gap: 0;
+            padding: 0 24px;
+            background: #fff;
+            border-bottom: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+        .tab-btn {
+            padding: 10px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            background: none;
+            color: #7f8c8d;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            border-radius: 0;
+        }
+        .tab-btn:hover { color: #2c3e50; background: none; }
+        .tab-btn.active {
+            color: #2c3e50;
+            border-bottom-color: #3498db;
+            background: none;
+        }
+
+        /* ---- tab content ---- */
+        .tab-content { flex: 1; overflow: hidden; display: none; }
+        .tab-content.active { display: flex; }
+
+        /* -- quiver tab -- */
+        #tabQuiver {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px;
+        }
+        #tabQuiver canvas {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .matrix-display {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: #34495e;
+            background: #fff;
+            padding: 14px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .matrix-display .label {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+        }
+        .matrix-row { line-height: 1.6; }
+        .matrix-row span { display: inline-block; width: 36px; text-align: right; }
+
+        /* -- mutation graph tab -- */
+        #tabMG {
+            flex-direction: column;
+        }
+        .mg-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 8px 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .depth-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #34495e;
+        }
+        .depth-control select {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+            cursor: pointer;
+        }
+        .mg-info { font-size: 13px; color: #7f8c8d; }
+        .mg-info .warn { color: #e67e22; font-weight: 500; }
+        .mg-legend {
+            display: flex;
+            gap: 14px;
+            font-size: 12px;
+            color: #555;
+            margin-left: auto;
+        }
+        .mg-legend-item { display: flex; align-items: center; gap: 4px; }
+        .mg-legend-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .mg-hint { font-size: 11px; color: #aaa; }
+        .rotate-control {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 13px; color: #34495e;
+        }
+        .rotate-control input[type="range"] {
+            width: 80px; cursor: pointer;
+        }
+        .rotate-control .angle-label {
+            font-size: 11px; color: #7f8c8d; min-width: 28px;
+        }
+        .mg-canvas-wrap {
+            flex: 1;
+            overflow: hidden;
+            padding: 0 12px 10px 12px;
+            position: relative;
+        }
+        #exportPdfBtn {
+            position: absolute;
+            bottom: 20px;
+            right: 22px;
+            padding: 5px 14px;
+            font-size: 12px;
+            background: rgba(127,140,141,0.85);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.15s;
+        }
+        #exportPdfBtn:hover { background: rgba(90,100,100,0.95); }
+        #mgCanvas {
+            cursor: grab;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: block;
+        }
+        #mgCanvas:active { cursor: grabbing; }
+
+        /* -- exchange graph tab -- */
+        #tabEG { flex-direction: column; }
+        .eg-toolbar {
+            display: flex; align-items: center; gap: 18px;
+            padding: 8px 20px; flex-shrink: 0; flex-wrap: wrap;
+        }
+        .eg-canvas-wrap {
+            flex: 1; overflow: hidden;
+            padding: 0 12px 10px 12px; position: relative;
+        }
+        #egCanvas {
+            cursor: grab; border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block;
+        }
+        #egCanvas:active { cursor: grabbing; }
+
+        /* -- about tab -- */
+        #tabAbout {
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 30px 40px 60px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        #tabAbout h2 {
+            font-size: 18px; color: #2c3e50;
+            margin: 24px 0 10px 0; border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+        #tabAbout h2:first-child { margin-top: 0; }
+        #tabAbout p, #tabAbout li {
+            font-size: 14px; line-height: 1.7; color: #444;
+        }
+        #tabAbout p { margin: 8px 0; }
+        #tabAbout ul, #tabAbout ol { margin: 8px 0 8px 24px; }
+        #tabAbout li { margin: 4px 0; }
+        #tabAbout code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px; background: #f5f5f5;
+            padding: 1px 5px; border-radius: 3px; color: #c0392b;
+        }
+        #tabAbout .formula {
+            display: block; text-align: center;
+            margin: 12px 0; font-size: 15px; color: #2c3e50;
+            font-style: italic;
+        }
+        #tabAbout .section-note {
+            font-size: 12px; color: #999; font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <!-- header -->
+    <div class="header">
+        <h1>Quiver Mutation Visualizer</h1>
+        <div class="sep"></div>
+        <div class="quiver-controls">
+            <label>Quiver:</label>
+            <div class="quiver-picker" id="quiverPicker">
+                <input type="radio" name="quiverType" id="qt_scatter" value="scatter" checked>
+                <label for="qt_scatter">F<sub>1</sub></label>
+                <input type="radio" name="quiverType" id="qt_markov" value="markov">
+                <label for="qt_markov">Markov</label>
+                <input type="radio" name="quiverType" id="qt_random" value="random">
+                <label for="qt_random">Random</label>
+            </div>
+            <div class="random-extras" id="randomExtras" style="display:none">
+                <label for="maxArrows">up to</label>
+                <select id="maxArrows">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7" selected>7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <label>arrows</label>
+                <button id="randomizeBtn">Randomize</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- tab bar -->
+    <div class="tab-bar">
+        <button class="tab-btn active" data-tab="tabQuiver">Quiver</button>
+        <button class="tab-btn" data-tab="tabMG">Mutation Graph</button>
+        <button class="tab-btn" data-tab="tabEG">Exchange Graph</button>
+        <button class="tab-btn" data-tab="tabAbout">About</button>
+    </div>
+
+    <!-- quiver tab -->
+    <div id="tabQuiver" class="tab-content active">
+        <canvas id="canvas" width="600" height="480"></canvas>
+        <div class="matrix-display" id="matrixDisplay"></div>
+    </div>
+
+    <!-- mutation graph tab -->
+    <div id="tabMG" class="tab-content">
+        <div class="mg-toolbar">
+            <div class="depth-control">
+                <label for="depthSelect">Depth:</label>
+                <select id="depthSelect">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="mg-info" id="mgInfo"></div>
+            <div class="rotate-control">
+                <label>Rotate:</label>
+                <input type="range" id="mgRotate" min="0" max="360" value="0">
+                <span class="angle-label" id="mgAngleLabel">0&deg;</span>
+            </div>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <div class="mg-legend">
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#27ae60"></span>&mu;&#x2083;</div>
+                <div class="mg-legend-item"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2.5px solid #f39c12"></span>initial</div>
+            </div>
+        </div>
+        <div class="mg-canvas-wrap" id="mgWrap">
+            <canvas id="mgCanvas"></canvas>
+            <button id="exportPdfBtn" title="Export as PDF">Export PDF</button>
+        </div>
+    </div>
+
+    <!-- exchange graph tab -->
+    <div id="tabEG" class="tab-content">
+        <div class="eg-toolbar">
+            <div class="depth-control">
+                <label for="egDepthSelect">Depth:</label>
+                <select id="egDepthSelect">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="mg-info" id="egInfo"></div>
+            <div class="rotate-control">
+                <label>Rotate:</label>
+                <input type="range" id="egRotate" min="0" max="360" value="0">
+                <span class="angle-label" id="egAngleLabel">0&deg;</span>
+            </div>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <div class="mg-legend">
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#27ae60"></span>&mu;&#x2083;</div>
+                <div class="mg-legend-item"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2.5px solid #f39c12"></span>initial</div>
+            </div>
+        </div>
+        <div class="eg-canvas-wrap" id="egWrap">
+            <canvas id="egCanvas"></canvas>
+        </div>
+    </div>
+
+    <!-- about tab -->
+    <div id="tabAbout" class="tab-content">
+        <h2>Overview</h2>
+        <p>
+            This is an interactive visualizer for <b>quiver mutations</b> and <b>cluster algebras</b>,
+            two closely related structures introduced by Fomin and Zelevinsky in the early 2000s.
+            Cluster algebras arise in diverse areas of mathematics, including representation theory,
+            Teichm&uuml;ller theory, tropical geometry, and the study of scattering diagrams.
+        </p>
+        <p>
+            The app runs entirely in the browser with no server or external dependencies&mdash;everything
+            is implemented from scratch in a single HTML file using JavaScript and the Canvas API.
+        </p>
+
+        <h2>Quivers</h2>
+        <p>
+            A <b>quiver</b> is a directed graph, possibly with multiple edges between vertices but
+            no loops (edges from a vertex to itself) and no 2-cycles (a pair of edges going in
+            opposite directions between two vertices). In this visualizer we work with quivers on
+            3 vertices, labeled 1, 2, 3.
+        </p>
+        <p>
+            A quiver is equivalently described by its <b>exchange matrix</b> <i>B</i>, a
+            skew-symmetric integer matrix where <i>B</i>[<i>i</i>][<i>j</i>] records the
+            number of arrows from <i>i</i> to <i>j</i> (positive) or from <i>j</i> to <i>i</i>
+            (negative). In rank 3, <i>B</i> is determined by its three upper-triangular
+            entries <i>B</i><sub>12</sub>, <i>B</i><sub>13</sub>, <i>B</i><sub>23</sub>.
+        </p>
+
+        <h2>Quiver mutation</h2>
+        <p>
+            <b>Mutation</b> at vertex <i>k</i> transforms the exchange matrix <i>B</i> into a
+            new matrix <i>B</i>&prime; by the Fomin&ndash;Zelevinsky rule:
+        </p>
+        <span class="formula">
+            B&prime;<sub>ij</sub> =
+            &minus;B<sub>ij</sub> &nbsp;if <i>i</i> = <i>k</i> or <i>j</i> = <i>k</i>,
+            &nbsp;&nbsp;otherwise&nbsp;&nbsp;
+            B<sub>ij</sub> + (|B<sub>ik</sub>| B<sub>kj</sub> + B<sub>ik</sub> |B<sub>kj</sub>|) / 2
+        </span>
+        <p>
+            Mutation is an <b>involution</b>: mutating twice at the same vertex returns the original quiver.
+            Note also that mutation preserves skew-symmetry.
+        </p>
+
+        <h2>Mutation graph</h2>
+        <p>
+            The <b>mutation graph</b> shows all quivers reachable from the initial quiver by iterated
+            mutations, up to a chosen depth. Vertices of this graph are quivers (identified by their
+            exchange matrix), and edges correspond to single mutations, colored by which vertex was
+            mutated:
+            <span style="color:#3498db">&mu;<sub>1</sub></span>,
+            <span style="color:#e74c3c">&mu;<sub>2</sub></span>,
+            <span style="color:#27ae60">&mu;<sub>3</sub></span>.
+            Each node displays a miniature picture of the corresponding quiver.
+        </p>
+        <p>
+            Two quivers occupy the same node if and only if their exchange matrices are identical.
+            Dashed lines at the boundary indicate mutations that would lead to quivers not yet explored
+            at the current depth.
+        </p>
+
+        <h2>Exchange graph &amp; cluster variables</h2>
+        <p>
+            A <b>cluster</b> is a triple of <b>cluster variables</b> (<i>x</i><sub>1</sub>,
+            <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>) together with an exchange matrix.
+            The initial cluster simply has formal variables <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
+            <i>x</i><sub>3</sub>.
+        </p>
+        <p>
+            When we mutate at vertex <i>k</i>, the exchange matrix transforms as above, and the
+            cluster variable <i>x<sub>k</sub></i> is replaced by a new variable
+            <i>x</i>&prime;<sub><i>k</i></sub> defined by the <b>exchange relation</b>:
+        </p>
+        <span class="formula">
+            x<sub>k</sub> &middot; x&prime;<sub>k</sub>
+            &nbsp;=&nbsp;
+            &prod;<sub>B<sub>ik</sub>&gt;0</sub>
+            x<sub>i</sub><sup>B<sub>ik</sub></sup>
+            &nbsp;+&nbsp;
+            &prod;<sub>B<sub>ik</sub>&lt;0</sub>
+            x<sub>i</sub><sup>&minus;B<sub>ik</sub></sup>
+        </span>
+        <p>
+            The other two variables remain unchanged. The <b>exchange graph</b> records all
+            (quiver, cluster) pairs reachable by iterated mutations. Unlike the mutation graph,
+            two nodes are identified only when <em>both</em> the exchange matrix and the cluster
+            variables agree. This means the exchange graph may have more nodes than the mutation graph.
+        </p>
+        <p>
+            A foundational result in the theory of cluster algebras is the <b>Laurent phenomenon</b>
+            (Fomin&ndash;Zelevinsky, 2002): every cluster variable can be expressed as a
+            Laurent polynomial in the initial variables <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
+            <i>x</i><sub>3</sub>&mdash;that is, a polynomial with integer coefficients divided by a
+            monomial. This is nontrivial because the exchange relation involves division, and it is
+            not obvious a priori that repeated application always produces Laurent polynomials.
+        </p>
+
+        <h2>Preset quivers</h2>
+        <ul>
+            <li>
+                <b>F<sub>1</sub></b> &mdash; The quiver associated with the scattering diagram for the
+                Hirzebruch surface F<sub>1</sub>, with rays
+                <b>v</b><sub>1</sub> = (1, 0),
+                <b>v</b><sub>2</sub> = (0, &minus;1),
+                <b>v</b><sub>3</sub> = (&minus;1, &minus;2).
+                The exchange matrix entry <i>B</i>[<i>i</i>][<i>j</i>] is the determinant
+                det(<b>v</b><sub><i>i</i></sub>, <b>v</b><sub><i>j</i></sub>).
+            </li>
+            <li>
+                <b>Markov</b> &mdash; A 3-cycle with 2 arrows on each edge, related to the Markov equation
+                <i>x</i>&sup2; + <i>y</i>&sup2; + <i>z</i>&sup2; = 3<i>xyz</i>.
+            </li>
+            <li>
+                <b>Random</b> &mdash; A randomly generated quiver (no loops or 2-cycles) with a configurable
+                maximum number of arrows.
+            </li>
+        </ul>
+
+        <h2>Implementation details</h2>
+        <p>
+            The entire application is self-contained in a single HTML file with inline CSS and JavaScript.
+            No external libraries are used for the core functionality (jsPDF is loaded on demand from a CDN
+            only when PDF export is requested).
+        </p>
+        <p><b>Laurent polynomial arithmetic.</b>
+            Cluster variables are represented as Laurent polynomials in <i>x</i><sub>1</sub>,
+            <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>. Internally, each Laurent polynomial is stored
+            as a JavaScript <code>Map</code> from exponent triples (e.g. <code>"2,-1,0"</code> for
+            <i>x</i><sub>1</sub>&sup2;<i>x</i><sub>2</sub><sup>&minus;1</sup>) to integer coefficients.
+            No external computer algebra system is used&mdash;addition, multiplication, exponentiation,
+            and exact polynomial division are all implemented from scratch.
+        </p>
+        <p>
+            The division step deserves special mention: when computing the exchange relation,
+            we must divide a polynomial by a (potentially complex) Laurent polynomial. This is done via
+            multivariate polynomial long division with lexicographic monomial ordering. The Laurent
+            phenomenon guarantees that this division is always exact (zero remainder), so the algorithm
+            is correct for our use case. Coefficients are rounded to integers after each operation to
+            avoid floating-point drift.
+        </p>
+        <p><b>Graph layout.</b>
+            Both the mutation graph and exchange graph use a custom <b>force-directed layout</b> algorithm.
+            Nodes are initialized on concentric rings (by BFS depth from the initial quiver), then
+            iteratively adjusted: a repulsive Coulomb-like force pushes all node pairs apart, an
+            attractive spring force pulls connected nodes together, and a mild gravitational pull toward
+            the center prevents drift. The number of iterations adapts to graph size.
+        </p>
+        <p><b>Rendering.</b>
+            All graphics are drawn on HTML5 Canvas elements, scaled by <code>devicePixelRatio</code> for
+            crisp rendering on high-DPI displays. Zoom uses <code>Math.exp(-deltaY * 0.002)</code> for
+            smooth, proportional scrolling on trackpads. Mutation graph nodes are circles containing mini
+            quiver drawings; exchange graph nodes are rounded rectangles showing both the quiver and the
+            three cluster variable expressions.
+        </p>
+        <p><b>Graph construction.</b>
+            Both graphs are built by breadth-first search from the initial (quiver, cluster) pair.
+            At each depth level, all three possible mutations are applied to each frontier node.
+            For the mutation graph, nodes are identified by exchange matrix alone; for the exchange graph,
+            nodes are identified by the pair (exchange matrix, cluster variables). A cap of 500 nodes
+            prevents the browser from hanging on deeply explored graphs. Dashed &ldquo;stub&rdquo; edges
+            at the frontier indicate mutations that would produce new nodes beyond the current depth.
+        </p>
+
+        <p class="section-note">Last updated: February 2026.</p>
+    </div>
+
+    <script>
+    // ===========================================================
+    //  CONSTANTS
+    // ===========================================================
+    const VERTEX_COLORS = ['#3498db', '#e74c3c', '#27ae60'];
+    const ARROW_COLOR = '#4a4a4a';
+    const VERTEX_RADIUS = 30;
+    const MG_NODE_R = 42;
+    const EG_NODE_W = 160, EG_NODE_H = 100, EG_NODE_R = 95;
+    const MAX_GRAPH_NODES = 500;
+
+    // ===========================================================
+    //  STATE
+    // ===========================================================
+    let quiver = [[0,0,0],[0,0,0],[0,0,0]];
+    let currentGraph = null;
+    let currentLayout = null;
+    let mgScale = 1, mgPanX = 0, mgPanY = 0;
+    let mgDragging = false, mgDragX = 0, mgDragY = 0, mgDragPanX = 0, mgDragPanY = 0;
+    let mgRotation = 0; // radians
+    let mgNeedsRebuild = true;  // deferred build when switching to tab
+
+    let currentEGGraph = null, currentEGLayout = null;
+    let egScale = 1, egPanX = 0, egPanY = 0;
+    let egDragging = false, egDragX = 0, egDragY = 0, egDragPanX = 0, egDragPanY = 0;
+    let egRotation = 0; // radians
+    let egNeedsRebuild = true;
+
+    // ===========================================================
+    //  CANVASES
+    // ===========================================================
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const mgCanvas = document.getElementById('mgCanvas');
+    const mgCtx = mgCanvas.getContext('2d');
+    const egCanvas = document.getElementById('egCanvas');
+    const egCtx = egCanvas.getContext('2d');
+
+    // Vertex positions for main quiver display
+    const qCenterX = canvas.width / 2, qCenterY = canvas.height / 2 + 10, triR = 155;
+    const qVerts = [];
+    for (let i = 0; i < 3; i++) {
+        const a = -Math.PI / 2 + i * 2 * Math.PI / 3;
+        qVerts.push({ x: qCenterX + triR * Math.cos(a), y: qCenterY + triR * Math.sin(a) });
+    }
+
+    // ===========================================================
+    //  TABS
+    // ===========================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+            if (btn.dataset.tab === 'tabMG') {
+                sizeMGCanvas();
+                if (mgNeedsRebuild) { updateMutationGraph(); mgNeedsRebuild = false; }
+                else drawMutationGraph();
+            } else if (btn.dataset.tab === 'tabEG') {
+                sizeEGCanvas();
+                if (egNeedsRebuild) { updateExchangeGraph(); egNeedsRebuild = false; }
+                else drawExchangeGraph();
+            }
+        });
+    });
+
+    // ===========================================================
+    //  DYNAMIC CANVAS SIZING
+    // ===========================================================
+    function sizeMGCanvas() {
+        const wrap = document.getElementById('mgWrap');
+        const dpr = window.devicePixelRatio || 1;
+        const w = wrap.clientWidth;
+        const h = wrap.clientHeight;
+        mgCanvas.style.width = w + 'px';
+        mgCanvas.style.height = h + 'px';
+        mgCanvas.width = Math.round(w * dpr);
+        mgCanvas.height = Math.round(h * dpr);
+        mgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function sizeEGCanvas() {
+        const wrap = document.getElementById('egWrap');
+        const dpr = window.devicePixelRatio || 1;
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        egCanvas.style.width = w + 'px'; egCanvas.style.height = h + 'px';
+        egCanvas.width = Math.round(w * dpr); egCanvas.height = Math.round(h * dpr);
+        egCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', () => {
+        if (document.getElementById('tabMG').classList.contains('active')) {
+            sizeMGCanvas(); drawMutationGraph();
+        }
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            sizeEGCanvas(); drawExchangeGraph();
+        }
+    });
+
+    // ===========================================================
+    //  PRESET QUIVERS
+    // ===========================================================
+    // Q_{F_1}: rays v1=(1,0), v2=(0,-1), v3=(-1,-2)
+    // B[i][j] = det(vi, vj) => B = [[0,-1,-2],[1,0,-1],[2,1,0]]
+    const PRESET_SCATTER = [[0,0,0],[1,0,0],[2,1,0]];
+
+    // Markov quiver: 3-cycle, 2 arrows on each edge
+    const PRESET_MARKOV = [[0,2,0],[0,0,2],[2,0,0]];
+
+    // ===========================================================
+    //  QUIVER SELECTION
+    // ===========================================================
+    function setQuiver(Q) {
+        quiver = Q.map(r => [...r]);
+        drawQuiver();
+        displayMatrix();
+        if (document.getElementById('tabMG').classList.contains('active')) {
+            updateMutationGraph(); mgNeedsRebuild = false;
+        } else { mgNeedsRebuild = true; }
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph(); egNeedsRebuild = false;
+        } else { egNeedsRebuild = true; }
+    }
+
+    function generateRandomQuiver() {
+        const maxA = parseInt(document.getElementById('maxArrows').value);
+        const Q = [[0,0,0],[0,0,0],[0,0,0]];
+        const total = Math.floor(Math.random() * maxA) + 1;
+        const pairs = [[0,1],[0,2],[1,2]];
+        const dist = [0,0,0];
+        for (let e = 0; e < total; e++) dist[Math.floor(Math.random() * 3)]++;
+        for (let p = 0; p < 3; p++) {
+            if (dist[p] > 0) {
+                const [i, j] = pairs[p];
+                if (Math.random() < 0.5) Q[i][j] = dist[p];
+                else Q[j][i] = dist[p];
+            }
+        }
+        setQuiver(Q);
+    }
+
+    function getQuiverType() {
+        return document.querySelector('input[name="quiverType"]:checked').value;
+    }
+    function applyQuiverSelection() {
+        const type = getQuiverType();
+        document.getElementById('randomExtras').style.display = type === 'random' ? 'flex' : 'none';
+        if (type === 'scatter') setQuiver(PRESET_SCATTER);
+        else if (type === 'markov') setQuiver(PRESET_MARKOV);
+        else generateRandomQuiver();
+    }
+
+    // ===========================================================
+    //  MAIN QUIVER DRAWING
+    // ===========================================================
+    function drawQuiver() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (i !== j && quiver[i][j] > 0) drawMainEdges(i, j, quiver[i][j]);
+        for (let i = 0; i < 3; i++) drawMainVertex(i);
+    }
+
+    function drawMainEdges(from, to, count) {
+        drawMainArrow(from, to, count);
+    }
+
+    function drawMainArrow(fi, ti, count) {
+        const f = qVerts[fi], t = qVerts[ti];
+        const dx = t.x-f.x, dy = t.y-f.y, len = Math.sqrt(dx*dx+dy*dy);
+        const ux = dx/len, uy = dy/len, px = -uy, py = ux;
+        const cpX = (f.x+t.x)/2, cpY = (f.y+t.y)/2;
+        const sd = norm(cpX-f.x, cpY-f.y), ed = norm(t.x-cpX, t.y-cpY);
+        const gap = VERTEX_RADIUS + 5;
+        const sx = f.x+(cpX-f.x)/sd*gap, sy = f.y+(cpY-f.y)/sd*gap;
+        const ex = t.x-(t.x-cpX)/ed*gap, ey = t.y-(t.y-cpY)/ed*gap;
+        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
+        ctx.strokeStyle = ARROW_COLOR; ctx.lineWidth = 2; ctx.stroke();
+        arrowhead(ctx, ex, ey, ux, uy, 13, ARROW_COLOR);
+        if (count > 1) {
+            const mx = (sx+ex)/2 + px*16, my = (sy+ey)/2 + py*16;
+            ctx.font = 'bold 16px "Segoe UI",sans-serif';
+            ctx.fillStyle = ARROW_COLOR;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(''+count, mx, my);
+        }
+    }
+
+    function drawMainVertex(i) {
+        const v = qVerts[i];
+        ctx.beginPath(); ctx.arc(v.x,v.y+3,VERTEX_RADIUS,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,0,0,0.10)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(v.x,v.y,VERTEX_RADIUS,0,Math.PI*2);
+        ctx.fillStyle=VERTEX_COLORS[i]; ctx.fill();
+        ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=2; ctx.stroke();
+        ctx.fillStyle='#fff'; ctx.font='bold 22px "Segoe UI",sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(''+(i+1), v.x, v.y+1);
+    }
+
+    function displayMatrix() {
+        const B = quiverToMatrix(quiver);
+        let html = '<div class="label">Exchange matrix B</div>';
+        for (let i = 0; i < 3; i++) {
+            const L = i===0?'⎡':i===1?'⎢':'⎣', R = i===0?'⎤':i===1?'⎥':'⎦';
+            const vals = B[i].map(v => `<span>${v>=0?'\u2007'+v:''+v}</span>`).join('');
+            html += `<div class="matrix-row">${L}${vals}\u2007${R}</div>`;
+        }
+        document.getElementById('matrixDisplay').innerHTML = html;
+    }
+
+    // ===========================================================
+    //  HELPERS
+    // ===========================================================
+    function norm(x,y) { return Math.sqrt(x*x+y*y); }
+
+    function arrowhead(c, x, y, tx, ty, size, color) {
+        const a = Math.PI/6, ca = Math.cos(a), sa = Math.sin(a);
+        c.beginPath(); c.moveTo(x, y);
+        c.lineTo(x - size*(tx*ca - ty*sa), y - size*(tx*sa + ty*ca));
+        c.lineTo(x - size*(tx*ca + ty*sa), y - size*(ty*ca - tx*sa));
+        c.closePath(); c.fillStyle = color; c.fill();
+    }
+
+    // ===========================================================
+    //  MUTATION ALGEBRA
+    // ===========================================================
+    function quiverToMatrix(Q) {
+        const B = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                B[i][j] = Q[i][j] - Q[j][i];
+        return B;
+    }
+
+    function matrixToQuiver(B) {
+        const Q = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                Q[i][j] = Math.max(0, B[i][j]);
+        return Q;
+    }
+
+    function mutateMatrix(B, k) {
+        const B2 = B.map(r => [...r]);
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (i === k || j === k) {
+                    B2[i][j] = -B[i][j];
+                } else {
+                    B2[i][j] = B[i][j] + (Math.abs(B[i][k]) * B[k][j] + B[i][k] * Math.abs(B[k][j])) / 2;
+                }
+            }
+        }
+        return B2;
+    }
+
+    function matrixKey(B) {
+        return B[0][1] + ',' + B[0][2] + ',' + B[1][2];
+    }
+
+    // ===========================================================
+    //  LAURENT POLYNOMIAL ARITHMETIC
+    // ===========================================================
+    // Represented as Map: "e1,e2,e3" -> integer coefficient
+    function lpOne() { const m = new Map(); m.set('0,0,0', 1); return m; }
+    function lpVar(i) { const e = [0,0,0]; e[i] = 1; const m = new Map(); m.set(e.join(','), 1); return m; }
+    function lpClone(p) { return new Map(p); }
+
+    function lpAdd(a, b) {
+        const r = new Map(a);
+        for (const [k, v] of b) {
+            const s = (r.get(k) || 0) + v;
+            if (Math.abs(s) < 0.5) r.delete(k); else r.set(k, Math.round(s));
+        }
+        return r;
+    }
+
+    function lpMul(a, b) {
+        const r = new Map();
+        for (const [ka, va] of a) {
+            const ea = ka.split(',').map(Number);
+            for (const [kb, vb] of b) {
+                const eb = kb.split(',').map(Number);
+                const key = ea.map((e, i) => e + eb[i]).join(',');
+                const s = (r.get(key) || 0) + va * vb;
+                if (Math.abs(s) < 0.5) r.delete(key); else r.set(key, Math.round(s));
+            }
+        }
+        return r;
+    }
+
+    function lpPow(p, n) {
+        if (n === 0) return lpOne();
+        let r = lpOne();
+        for (let i = 0; i < n; i++) r = lpMul(r, p);
+        return r;
+    }
+
+    // Exact division f/g (guaranteed by Laurent phenomenon)
+    function lpDiv(f, g) {
+        const q = new Map();
+        const rem = new Map(f);
+        // leading term of g (lex order)
+        let ltgKey = null, ltgExp = null;
+        for (const key of g.keys()) {
+            const e = key.split(',').map(Number);
+            if (!ltgExp || expGt(e, ltgExp)) { ltgKey = key; ltgExp = e; }
+        }
+        const ltgCoeff = g.get(ltgKey);
+        let safety = 50000;
+        while (rem.size > 0 && safety-- > 0) {
+            let bestKey = null, bestExp = null;
+            for (const key of rem.keys()) {
+                const e = key.split(',').map(Number);
+                if (!bestExp || expGt(e, bestExp)) { bestKey = key; bestExp = e; }
+            }
+            const ltrCoeff = rem.get(bestKey);
+            const qExp = bestExp.map((e, i) => e - ltgExp[i]);
+            const qCoeff = Math.round(ltrCoeff / ltgCoeff);
+            const qKey = qExp.join(',');
+            q.set(qKey, (q.get(qKey) || 0) + qCoeff);
+            for (const [gk, gv] of g) {
+                const ge = gk.split(',').map(Number);
+                const sk = ge.map((e, i) => e + qExp[i]).join(',');
+                const sv = (rem.get(sk) || 0) - qCoeff * gv;
+                if (Math.abs(sv) < 0.5) rem.delete(sk); else rem.set(sk, Math.round(sv));
+            }
+        }
+        return q;
+    }
+
+    function expGt(a, b) {
+        for (let i = 0; i < 3; i++) { if (a[i] !== b[i]) return a[i] > b[i]; }
+        return false;
+    }
+
+    function lpEqual(a, b) {
+        if (a.size !== b.size) return false;
+        for (const [k, v] of a) { if ((b.get(k) || 0) !== v) return false; }
+        return true;
+    }
+
+    function lpKey(p) {
+        if (p.size === 0) return '0';
+        const entries = [...p.entries()].sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
+        return entries.map(([k, v]) => v + ':' + k).join('|');
+    }
+
+    function clusterKey(cluster) { return cluster.map(lpKey).join('##'); }
+
+    // Format Laurent polynomial for display
+    const SUP = '\u2070\u00B9\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079';
+    const SUB = ['\u2081', '\u2082', '\u2083'];
+
+    function lpToString(lp) {
+        if (lp.size === 0) return '0';
+        let minE = [Infinity, Infinity, Infinity];
+        for (const key of lp.keys()) {
+            const e = key.split(',').map(Number);
+            for (let i = 0; i < 3; i++) minE[i] = Math.min(minE[i], e[i]);
+        }
+        // only shift negative exponents to zero (for denominator)
+        const shift = minE.map(v => v < 0 ? -v : 0);
+        const terms = [];
+        for (const [key, coeff] of lp) {
+            const e = key.split(',').map(Number);
+            terms.push({ coeff: Math.round(coeff), exp: e.map((v, i) => v + shift[i]) });
+        }
+        terms.sort((a, b) => {
+            const da = a.exp[0]+a.exp[1]+a.exp[2], db = b.exp[0]+b.exp[1]+b.exp[2];
+            if (da !== db) return db - da;
+            for (let i = 0; i < 3; i++) if (a.exp[i] !== b.exp[i]) return b.exp[i] - a.exp[i];
+            return 0;
+        });
+
+        function fmtSup(n) { return String(n).split('').map(d => SUP[parseInt(d)]).join(''); }
+        function fmtMono(exp) {
+            let s = '';
+            for (let i = 0; i < 3; i++) {
+                if (exp[i] === 0) continue;
+                s += 'x' + SUB[i];
+                if (exp[i] > 1) s += fmtSup(exp[i]);
+            }
+            return s || null;
+        }
+
+        let num = '';
+        for (let i = 0; i < terms.length; i++) {
+            const t = terms[i], mono = fmtMono(t.exp), c = t.coeff, first = i === 0;
+            if (mono) {
+                if (c === 1) num += first ? mono : '+' + mono;
+                else if (c === -1) num += '-' + mono;
+                else num += (first ? '' : c > 0 ? '+' : '') + c + mono;
+            } else {
+                num += (first ? '' : c > 0 ? '+' : '') + c;
+            }
+        }
+
+        const den = fmtMono(shift);
+        if (!den) return num;
+        if (terms.length === 1) return num + '/' + den;
+        return '(' + num + ')/' + den;
+    }
+
+    // ===========================================================
+    //  EXCHANGE MUTATION (CLUSTER ALGEBRA)
+    // ===========================================================
+    function mutateCluster(B, cluster, k) {
+        // x'_k = (prod_+ + prod_-) / x_k
+        let prodPos = lpOne(), prodNeg = lpOne();
+        for (let i = 0; i < 3; i++) {
+            if (i === k) continue;
+            if (B[i][k] > 0) prodPos = lpMul(prodPos, lpPow(cluster[i], B[i][k]));
+            if (B[i][k] < 0) prodNeg = lpMul(prodNeg, lpPow(cluster[i], -B[i][k]));
+        }
+        const numerator = lpAdd(prodPos, prodNeg);
+        const newVar = lpDiv(numerator, cluster[k]);
+        return cluster.map((v, i) => i === k ? newVar : lpClone(v));
+    }
+
+    // ===========================================================
+    //  EXCHANGE GRAPH CONSTRUCTION (BFS)
+    // ===========================================================
+    function buildExchangeGraph(initialB, maxDepth) {
+        const nodes = new Map();
+        const edgeSet = new Set();
+        const edges = [];
+
+        const initialCluster = [lpVar(0), lpVar(1), lpVar(2)];
+        const ik = matrixKey(initialB) + '###' + clusterKey(initialCluster);
+        nodes.set(ik, { matrix: initialB, cluster: initialCluster, depth: 0 });
+        let frontier = [ik];
+        let capped = false;
+
+        for (let d = 0; d < maxDepth; d++) {
+            const next = [];
+            for (const key of frontier) {
+                const nd = nodes.get(key);
+                for (let k = 0; k < 3; k++) {
+                    const B2 = mutateMatrix(nd.matrix, k);
+                    const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
+                    const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
+                    if (k2 === key) continue;
+                    if (!nodes.has(k2)) {
+                        if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
+                        nodes.set(k2, { matrix: B2, cluster: cl2, depth: d + 1 });
+                        next.push(k2);
+                    }
+                    const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
+                    if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                }
+            }
+            frontier = next;
+        }
+        // boundary edges
+        for (const key of frontier) {
+            const nd = nodes.get(key);
+            for (let k = 0; k < 3; k++) {
+                const B2 = mutateMatrix(nd.matrix, k);
+                const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
+                const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
+                if (k2 === key || !nodes.has(k2)) continue;
+                const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
+                if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+            }
+        }
+        // frontier stubs
+        const stubs = [];
+        for (const key of frontier) {
+            const nd = nodes.get(key);
+            for (let k = 0; k < 3; k++) {
+                const B2 = mutateMatrix(nd.matrix, k);
+                const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
+                const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
+                if (k2 === key || nodes.has(k2)) continue;
+                stubs.push({ from: key, label: k });
+            }
+        }
+        // edge groups
+        const groups = new Map();
+        for (let i = 0; i < edges.length; i++) {
+            const e = edges[i];
+            const pk = e.from < e.to ? e.from+'||'+e.to : e.to+'||'+e.from;
+            if (!groups.has(pk)) groups.set(pk, []);
+            groups.get(pk).push(i);
+        }
+        for (const idxs of groups.values()) {
+            for (let j = 0; j < idxs.length; j++) {
+                edges[idxs[j]]._gi = j; edges[idxs[j]]._gs = idxs.length;
+            }
+        }
+        return { nodes, edges, stubs, initialKey: ik, capped };
+    }
+
+    // ===========================================================
+    //  MUTATION GRAPH CONSTRUCTION (BFS)
+    // ===========================================================
+    function buildMutationGraph(initialB, maxDepth) {
+        const nodes = new Map();
+        const edgeSet = new Set();
+        const edges = [];
+
+        const ik = matrixKey(initialB);
+        nodes.set(ik, { matrix: initialB, depth: 0 });
+        let frontier = [ik];
+        let capped = false;
+
+        for (let d = 0; d < maxDepth; d++) {
+            const next = [];
+            for (const key of frontier) {
+                const B = nodes.get(key).matrix;
+                for (let k = 0; k < 3; k++) {
+                    const B2 = mutateMatrix(B, k);
+                    const k2 = matrixKey(B2);
+                    if (k2 === key) continue;
+                    if (!nodes.has(k2)) {
+                        if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
+                        nodes.set(k2, { matrix: B2, depth: d + 1 });
+                        next.push(k2);
+                    }
+                    const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
+                    if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                }
+            }
+            frontier = next;
+        }
+        for (const key of frontier) {
+            const B = nodes.get(key).matrix;
+            for (let k = 0; k < 3; k++) {
+                const B2 = mutateMatrix(B, k);
+                const k2 = matrixKey(B2);
+                if (k2 === key || !nodes.has(k2)) continue;
+                const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
+                if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+            }
+        }
+
+        // frontier stubs: dashed edges suggesting further mutations
+        const stubs = [];
+        for (const key of frontier) {
+            const B = nodes.get(key).matrix;
+            for (let k = 0; k < 3; k++) {
+                const B2 = mutateMatrix(B, k);
+                const k2 = matrixKey(B2);
+                if (k2 === key || nodes.has(k2)) continue;
+                stubs.push({ from: key, label: k });
+            }
+        }
+
+        const groups = new Map();
+        for (let i = 0; i < edges.length; i++) {
+            const e = edges[i];
+            const pk = e.from < e.to ? e.from+'||'+e.to : e.to+'||'+e.from;
+            if (!groups.has(pk)) groups.set(pk, []);
+            groups.get(pk).push(i);
+        }
+        for (const idxs of groups.values()) {
+            for (let j = 0; j < idxs.length; j++) {
+                edges[idxs[j]]._gi = j;
+                edges[idxs[j]]._gs = idxs.length;
+            }
+        }
+
+        return { nodes, edges, stubs, initialKey: ik, capped };
+    }
+
+    // ===========================================================
+    //  FORCE-DIRECTED LAYOUT
+    // ===========================================================
+    function layoutGraph(graph, nodeR) {
+        const { nodes, edges } = graph;
+        const keys = Array.from(nodes.keys());
+        const n = keys.length;
+        if (n === 0) return new Map();
+        if (n === 1) return new Map([[keys[0], { x: 0, y: 0 }]]);
+
+        const idx = new Map(); keys.forEach((k,i) => idx.set(k,i));
+        const px = new Float64Array(n), py = new Float64Array(n);
+        const vx = new Float64Array(n), vy = new Float64Array(n);
+
+        const byDepth = new Map();
+        for (const [k, d] of nodes) {
+            if (!byDepth.has(d.depth)) byDepth.set(d.depth, []);
+            byDepth.get(d.depth).push(k);
+        }
+        const ringR = nodeR * 4;
+        for (const [depth, ks] of byDepth) {
+            for (let j = 0; j < ks.length; j++) {
+                const i = idx.get(ks[j]);
+                if (depth === 0) { px[i] = 0; py[i] = 0; continue; }
+                const a = (j / ks.length) * 2 * Math.PI + (Math.random()-0.5)*0.4;
+                const r = depth * ringR + (Math.random()-0.5)*30;
+                px[i] = r * Math.cos(a); py[i] = r * Math.sin(a);
+            }
+        }
+
+        const idealDist = nodeR * 3 + 10 * Math.sqrt(n);
+        const repK = idealDist * idealDist * 1.5;
+        const attK = 0.25;
+        const iters = n <= 20 ? 500 : n <= 60 ? 350 : n <= 150 ? 200 : 100;
+
+        for (let iter = 0; iter < iters; iter++) {
+            const temp = Math.max(0.01, 1 - iter / iters);
+            const maxD = Math.max(1, 60 * temp);
+            for (let i = 0; i < n; i++) {
+                for (let j = i+1; j < n; j++) {
+                    const dx = px[j]-px[i], dy = py[j]-py[i];
+                    const d2 = dx*dx+dy*dy+1, d = Math.sqrt(d2);
+                    const f = repK/d2, fx = dx/d*f, fy = dy/d*f;
+                    vx[i] -= fx; vy[i] -= fy; vx[j] += fx; vy[j] += fy;
+                }
+            }
+            for (const e of edges) {
+                const a = idx.get(e.from), b = idx.get(e.to);
+                if (a === undefined || b === undefined) continue;
+                const dx = px[b]-px[a], dy = py[b]-py[a];
+                const d = Math.sqrt(dx*dx+dy*dy)+1;
+                const f = attK*(d-idealDist), fx = dx/d*f, fy = dy/d*f;
+                vx[a] += fx; vy[a] += fy; vx[b] -= fx; vy[b] -= fy;
+            }
+            for (let i = 0; i < n; i++) {
+                vx[i] -= px[i]*0.008*temp; vy[i] -= py[i]*0.008*temp;
+                vx[i] *= 0.85; vy[i] *= 0.85;
+                const sp = Math.sqrt(vx[i]*vx[i]+vy[i]*vy[i]);
+                if (sp > maxD) { vx[i] = vx[i]/sp*maxD; vy[i] = vy[i]/sp*maxD; }
+                px[i] += vx[i]; py[i] += vy[i];
+            }
+        }
+
+        const pos = new Map();
+        for (let i = 0; i < n; i++) pos.set(keys[i], { x: px[i], y: py[i] });
+        return pos;
+    }
+
+    function autoFitToCanvas(layout, nodeR, canvasEl) {
+        if (!layout || layout.size === 0) return [1, 0, 0];
+        let x0=Infinity, x1=-Infinity, y0=Infinity, y1=-Infinity;
+        for (const p of layout.values()) {
+            x0 = Math.min(x0, p.x-nodeR); x1 = Math.max(x1, p.x+nodeR);
+            y0 = Math.min(y0, p.y-nodeR); y1 = Math.max(y1, p.y+nodeR);
+        }
+        const cw = parseFloat(canvasEl.style.width), ch = parseFloat(canvasEl.style.height);
+        const w = x1-x0+80, h = y1-y0+80;
+        const scale = Math.min(cw/w, ch/h, 2.5);
+        const panX = -((x0+x1)/2)*scale;
+        const panY = -((y0+y1)/2)*scale;
+        return [scale, panX, panY];
+    }
+
+    // ===========================================================
+    //  MUTATION GRAPH DRAWING
+    // ===========================================================
+    function drawMutationGraph() {
+        const cw = parseFloat(mgCanvas.style.width) || mgCanvas.width;
+        const ch = parseFloat(mgCanvas.style.height) || mgCanvas.height;
+        mgCtx.clearRect(0, 0, mgCanvas.width, mgCanvas.height);
+        if (!currentGraph || !currentLayout) return;
+
+        mgCtx.save();
+        mgCtx.translate(cw/2 + mgPanX, ch/2 + mgPanY);
+        mgCtx.rotate(mgRotation);
+        mgCtx.scale(mgScale, mgScale);
+
+        if (currentGraph.stubs) for (const s of currentGraph.stubs) drawMGStub(s);
+        for (const e of currentGraph.edges) drawMGEdge(e);
+        for (const [key, data] of currentGraph.nodes) {
+            const p = currentLayout.get(key);
+            if (p) drawMGNode(p.x, p.y, data.matrix, key === currentGraph.initialKey);
+        }
+
+        mgCtx.restore();
+    }
+
+    function drawMGEdge(e) {
+        const pA = currentLayout.get(e.from), pB = currentLayout.get(e.to);
+        if (!pA || !pB) return;
+
+        const dx = pB.x-pA.x, dy = pB.y-pA.y;
+        const len = norm(dx,dy)+0.01;
+        const ux = dx/len, uy = dy/len, px = -uy, py = ux;
+
+        let curv = 0;
+        if (e._gs > 1) curv = ((e._gi/(e._gs-1))*2-1)*35;
+
+        const gap = MG_NODE_R+2;
+        const cpX = (pA.x+pB.x)/2+px*curv, cpY = (pA.y+pB.y)/2+py*curv;
+        const sdx = cpX-pA.x, sdy = cpY-pA.y, sd = norm(sdx,sdy);
+        const edx = pB.x-cpX, edy = pB.y-cpY, ed = norm(edx,edy);
+        const sx = pA.x+sdx/sd*gap, sy = pA.y+sdy/sd*gap;
+        const ex = pB.x-edx/ed*gap, ey = pB.y-edy/ed*gap;
+        const col = VERTEX_COLORS[e.label];
+
+        mgCtx.beginPath(); mgCtx.moveTo(sx,sy);
+        if (Math.abs(curv)<1) mgCtx.lineTo(ex,ey);
+        else mgCtx.quadraticCurveTo(cpX,cpY,ex,ey);
+        mgCtx.strokeStyle = col; mgCtx.lineWidth = 2.5; mgCtx.stroke();
+
+        const lx = Math.abs(curv)<1 ? (sx+ex)/2 : (sx+2*cpX+ex)/4;
+        const ly = Math.abs(curv)<1 ? (sy+ey)/2 : (sy+2*cpY+ey)/4;
+
+        mgCtx.beginPath(); mgCtx.arc(lx,ly,12,0,Math.PI*2);
+        mgCtx.fillStyle='#fff'; mgCtx.fill();
+        mgCtx.strokeStyle=col; mgCtx.lineWidth=1.5; mgCtx.stroke();
+        mgCtx.fillStyle=col;
+        mgCtx.font='bold 14px "Segoe UI",sans-serif';
+        mgCtx.textAlign='center'; mgCtx.textBaseline='middle';
+        mgCtx.fillText(''+(e.label+1),lx,ly);
+    }
+
+    function drawMGStub(s) {
+        const p = currentLayout.get(s.from);
+        if (!p) return;
+        // find a direction away from connected neighbors
+        let ax = 0, ay = 0;
+        for (const e of currentGraph.edges) {
+            let nb = null;
+            if (e.from === s.from) nb = currentLayout.get(e.to);
+            else if (e.to === s.from) nb = currentLayout.get(e.from);
+            if (nb) { ax += p.x - nb.x; ay += p.y - nb.y; }
+        }
+        // also push away from center
+        ax += p.x * 0.3; ay += p.y * 0.3;
+        const al = norm(ax, ay) + 0.01;
+        // add some angular spread based on label
+        const baseAngle = Math.atan2(ay/al, ax/al);
+        const spread = (s.label - 1) * 0.45;
+        const angle = baseAngle + spread;
+        const ux = Math.cos(angle), uy = Math.sin(angle);
+
+        const stubLen = MG_NODE_R * 1.6;
+        const gap = MG_NODE_R + 2;
+        const sx = p.x + ux * gap, sy = p.y + uy * gap;
+        const ex = p.x + ux * (gap + stubLen), ey = p.y + uy * (gap + stubLen);
+        const col = VERTEX_COLORS[s.label];
+
+        mgCtx.save();
+        mgCtx.setLineDash([5, 4]);
+        mgCtx.beginPath(); mgCtx.moveTo(sx, sy); mgCtx.lineTo(ex, ey);
+        mgCtx.strokeStyle = col; mgCtx.lineWidth = 2; mgCtx.globalAlpha = 0.5;
+        mgCtx.stroke();
+        mgCtx.setLineDash([]);
+        mgCtx.restore();
+    }
+
+    function drawMGNode(x, y, B, isInitial) {
+        mgCtx.beginPath(); mgCtx.arc(x,y,MG_NODE_R,0,Math.PI*2);
+        mgCtx.fillStyle = isInitial ? '#fffde7' : '#ffffff'; mgCtx.fill();
+        mgCtx.strokeStyle = isInitial ? '#f39c12' : '#bdc3c7';
+        mgCtx.lineWidth = isInitial ? 3.5 : 1.8;
+        mgCtx.stroke();
+
+        const Q = matrixToQuiver(B);
+        const mr = MG_NODE_R*0.52, vr = 4.5;
+        const mv = [];
+        for (let i = 0; i < 3; i++) {
+            const a = -Math.PI/2+i*2*Math.PI/3;
+            mv.push({ x: x+mr*Math.cos(a), y: y+mr*Math.sin(a) });
+        }
+
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (i!==j && Q[i][j]>0) drawMiniArrowOn(mgCtx, mv[i],mv[j],Q[i][j]);
+
+        for (let i = 0; i < 3; i++) {
+            mgCtx.beginPath(); mgCtx.arc(mv[i].x,mv[i].y,vr,0,Math.PI*2);
+            mgCtx.fillStyle=VERTEX_COLORS[i]; mgCtx.fill();
+            mgCtx.fillStyle='#fff';
+            mgCtx.font='bold 6px "Segoe UI",sans-serif';
+            mgCtx.textAlign='center'; mgCtx.textBaseline='middle';
+            mgCtx.fillText(''+(i+1),mv[i].x,mv[i].y+0.3);
+        }
+    }
+
+    function drawMiniArrowOn(c, from, to, count) {
+        const dx = to.x-from.x, dy = to.y-from.y, len = norm(dx,dy);
+        const ux = dx/len, uy = dy/len, px = -uy, py = ux;
+        const gap = 5.5;
+        const sx = from.x+ux*gap, sy = from.y+uy*gap;
+        const ex = to.x-ux*gap, ey = to.y-uy*gap;
+
+        c.beginPath(); c.moveTo(sx,sy); c.lineTo(ex,ey);
+        c.strokeStyle='#555'; c.lineWidth=1; c.stroke();
+        arrowhead(c, ex, ey, ux, uy, 5, '#555');
+
+        if (count > 1) {
+            const mx = (sx+ex)/2+px*5, my = (sy+ey)/2+py*5;
+            c.font='bold 6px "Segoe UI",sans-serif';
+            c.fillStyle='#333';
+            c.textAlign='center'; c.textBaseline='middle';
+            c.fillText(''+count,mx,my);
+        }
+    }
+
+    // ===========================================================
+    //  MUTATION GRAPH UPDATE PIPELINE
+    // ===========================================================
+    function updateMutationGraph() {
+        sizeMGCanvas();
+        const B = quiverToMatrix(quiver);
+        const depth = parseInt(document.getElementById('depthSelect').value);
+        currentGraph = buildMutationGraph(B, depth);
+        currentLayout = layoutGraph(currentGraph, MG_NODE_R);
+        const fit = autoFitToCanvas(currentLayout, MG_NODE_R, mgCanvas);
+        mgScale = fit[0]; mgPanX = fit[1]; mgPanY = fit[2];
+        drawMutationGraph();
+
+        let txt = currentGraph.nodes.size + ' quiver' + (currentGraph.nodes.size!==1?'s':'') +
+                  ', ' + currentGraph.edges.length + ' edge' + (currentGraph.edges.length!==1?'s':'');
+        if (currentGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
+        document.getElementById('mgInfo').innerHTML = txt;
+    }
+
+    // ===========================================================
+    //  EXCHANGE GRAPH DRAWING
+    // ===========================================================
+    function drawExchangeGraph() {
+        const cw = parseFloat(egCanvas.style.width) || egCanvas.width;
+        const ch = parseFloat(egCanvas.style.height) || egCanvas.height;
+        egCtx.clearRect(0, 0, egCanvas.width, egCanvas.height);
+        if (!currentEGGraph || !currentEGLayout) return;
+        egCtx.save();
+        egCtx.translate(cw/2 + egPanX, ch/2 + egPanY);
+        egCtx.rotate(egRotation);
+        egCtx.scale(egScale, egScale);
+        if (currentEGGraph.stubs) for (const s of currentEGGraph.stubs) drawEGStub(s);
+        for (const e of currentEGGraph.edges) drawEGEdge(e);
+        for (const [key, data] of currentEGGraph.nodes) {
+            const p = currentEGLayout.get(key);
+            if (p) drawEGNode(p.x, p.y, data, key === currentEGGraph.initialKey);
+        }
+        egCtx.restore();
+    }
+
+    function drawEGEdge(e) {
+        const pA = currentEGLayout.get(e.from), pB = currentEGLayout.get(e.to);
+        if (!pA || !pB) return;
+        const dx = pB.x-pA.x, dy = pB.y-pA.y;
+        const len = norm(dx,dy)+0.01;
+        const ux = dx/len, uy = dy/len, px = -uy, py = ux;
+        let curv = 0;
+        if (e._gs > 1) curv = ((e._gi/(e._gs-1))*2-1)*35;
+        const gap = EG_NODE_R+2;
+        const cpX = (pA.x+pB.x)/2+px*curv, cpY = (pA.y+pB.y)/2+py*curv;
+        const sdx = cpX-pA.x, sdy = cpY-pA.y, sd = norm(sdx,sdy);
+        const edx = pB.x-cpX, edy = pB.y-cpY, ed = norm(edx,edy);
+        const sx = pA.x+sdx/sd*gap, sy = pA.y+sdy/sd*gap;
+        const ex = pB.x-edx/ed*gap, ey = pB.y-edy/ed*gap;
+        const col = VERTEX_COLORS[e.label];
+        egCtx.beginPath(); egCtx.moveTo(sx,sy);
+        if (Math.abs(curv)<1) egCtx.lineTo(ex,ey);
+        else egCtx.quadraticCurveTo(cpX,cpY,ex,ey);
+        egCtx.strokeStyle = col; egCtx.lineWidth = 2.5; egCtx.stroke();
+        const lx = Math.abs(curv)<1 ? (sx+ex)/2 : (sx+2*cpX+ex)/4;
+        const ly = Math.abs(curv)<1 ? (sy+ey)/2 : (sy+2*cpY+ey)/4;
+        egCtx.beginPath(); egCtx.arc(lx,ly,12,0,Math.PI*2);
+        egCtx.fillStyle='#fff'; egCtx.fill();
+        egCtx.strokeStyle=col; egCtx.lineWidth=1.5; egCtx.stroke();
+        egCtx.fillStyle=col;
+        egCtx.font='bold 14px "Segoe UI",sans-serif';
+        egCtx.textAlign='center'; egCtx.textBaseline='middle';
+        egCtx.fillText(''+(e.label+1),lx,ly);
+    }
+
+    function drawEGStub(s) {
+        const p = currentEGLayout.get(s.from);
+        if (!p) return;
+        let ax = 0, ay = 0;
+        for (const e of currentEGGraph.edges) {
+            let nb = null;
+            if (e.from === s.from) nb = currentEGLayout.get(e.to);
+            else if (e.to === s.from) nb = currentEGLayout.get(e.from);
+            if (nb) { ax += p.x - nb.x; ay += p.y - nb.y; }
+        }
+        ax += p.x * 0.3; ay += p.y * 0.3;
+        const al = norm(ax, ay) + 0.01;
+        const baseAngle = Math.atan2(ay/al, ax/al);
+        const spread = (s.label - 1) * 0.45;
+        const angle = baseAngle + spread;
+        const ux = Math.cos(angle), uy = Math.sin(angle);
+        const stubLen = EG_NODE_R * 1.2;
+        const gap = EG_NODE_R + 2;
+        const sx = p.x + ux * gap, sy = p.y + uy * gap;
+        const ex = p.x + ux * (gap + stubLen), ey = p.y + uy * (gap + stubLen);
+        const col = VERTEX_COLORS[s.label];
+        egCtx.save();
+        egCtx.setLineDash([5, 4]);
+        egCtx.beginPath(); egCtx.moveTo(sx, sy); egCtx.lineTo(ex, ey);
+        egCtx.strokeStyle = col; egCtx.lineWidth = 2; egCtx.globalAlpha = 0.5;
+        egCtx.stroke(); egCtx.setLineDash([]); egCtx.restore();
+    }
+
+    function roundedRect(c, x, y, w, h, r) {
+        c.beginPath();
+        c.moveTo(x+r, y); c.lineTo(x+w-r, y);
+        c.arcTo(x+w, y, x+w, y+r, r);
+        c.lineTo(x+w, y+h-r);
+        c.arcTo(x+w, y+h, x+w-r, y+h, r);
+        c.lineTo(x+r, y+h);
+        c.arcTo(x, y+h, x, y+h-r, r);
+        c.lineTo(x, y+r);
+        c.arcTo(x, y, x+r, y, r);
+        c.closePath();
+    }
+
+    function drawEGNode(x, y, data, isInitial) {
+        const w2 = EG_NODE_W/2, h2 = EG_NODE_H/2;
+        roundedRect(egCtx, x-w2, y-h2, EG_NODE_W, EG_NODE_H, 8);
+        egCtx.fillStyle = isInitial ? '#fffde7' : '#ffffff'; egCtx.fill();
+        egCtx.strokeStyle = isInitial ? '#f39c12' : '#bdc3c7';
+        egCtx.lineWidth = isInitial ? 3 : 1.5; egCtx.stroke();
+
+        // Mini quiver in upper portion
+        const Q = matrixToQuiver(data.matrix);
+        const qy = y - h2 + 28;
+        const mr = 16, vr = 3.5;
+        const mv = [];
+        for (let i = 0; i < 3; i++) {
+            const a = -Math.PI/2 + i*2*Math.PI/3;
+            mv.push({ x: x + mr*Math.cos(a), y: qy + mr*Math.sin(a) });
+        }
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (i!==j && Q[i][j]>0) drawMiniArrowOn(egCtx, mv[i], mv[j], Q[i][j]);
+        for (let i = 0; i < 3; i++) {
+            egCtx.beginPath(); egCtx.arc(mv[i].x, mv[i].y, vr, 0, Math.PI*2);
+            egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
+            egCtx.fillStyle = '#fff';
+            egCtx.font = 'bold 5px "Segoe UI",sans-serif';
+            egCtx.textAlign = 'center'; egCtx.textBaseline = 'middle';
+            egCtx.fillText(''+(i+1), mv[i].x, mv[i].y+0.3);
+        }
+
+        // Separator line
+        const sepY = y - h2 + 52;
+        egCtx.beginPath(); egCtx.moveTo(x-w2+6, sepY); egCtx.lineTo(x+w2-6, sepY);
+        egCtx.strokeStyle = '#e0e0e0'; egCtx.lineWidth = 0.5; egCtx.stroke();
+
+        // Cluster variables
+        egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
+        egCtx.textAlign = 'left'; egCtx.textBaseline = 'middle';
+        const startY = sepY + 11;
+        const lineH = 13;
+        for (let i = 0; i < 3; i++) {
+            const cy = startY + i * lineH;
+            egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
+            egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
+            let expr = lpToString(data.cluster[i]);
+            const maxChars = 22;
+            if (expr.length > maxChars) expr = expr.substring(0, maxChars-1) + '\u2026';
+            egCtx.fillStyle = '#333';
+            egCtx.fillText(expr, x-w2+16, cy);
+        }
+    }
+
+    // ===========================================================
+    //  EXCHANGE GRAPH UPDATE PIPELINE
+    // ===========================================================
+    function updateExchangeGraph() {
+        sizeEGCanvas();
+        const B = quiverToMatrix(quiver);
+        const depth = parseInt(document.getElementById('egDepthSelect').value);
+        currentEGGraph = buildExchangeGraph(B, depth);
+        currentEGLayout = layoutGraph(currentEGGraph, EG_NODE_R);
+        const fit = autoFitToCanvas(currentEGLayout, EG_NODE_R, egCanvas);
+        egScale = fit[0]; egPanX = fit[1]; egPanY = fit[2];
+        drawExchangeGraph();
+        let txt = currentEGGraph.nodes.size + ' seed' + (currentEGGraph.nodes.size!==1?'s':'') +
+                  ', ' + currentEGGraph.edges.length + ' edge' + (currentEGGraph.edges.length!==1?'s':'');
+        if (currentEGGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
+        document.getElementById('egInfo').innerHTML = txt;
+    }
+
+    // ===========================================================
+    //  ZOOM & PAN
+    // ===========================================================
+    mgCanvas.addEventListener('wheel', function(ev) {
+        ev.preventDefault();
+        const rect = mgCanvas.getBoundingClientRect();
+        const cw = parseFloat(mgCanvas.style.width), ch = parseFloat(mgCanvas.style.height);
+        const mx = ev.clientX-rect.left, my = ev.clientY-rect.top;
+        const wx = (mx-cw/2-mgPanX)/mgScale, wy = (my-ch/2-mgPanY)/mgScale;
+        const factor = Math.exp(-ev.deltaY*0.002);
+        mgScale = Math.max(0.03, Math.min(8, mgScale*factor));
+        mgPanX = mx-cw/2-wx*mgScale;
+        mgPanY = my-ch/2-wy*mgScale;
+        drawMutationGraph();
+    }, { passive: false });
+
+    mgCanvas.addEventListener('mousedown', function(ev) {
+        mgDragging = true;
+        mgDragX = ev.clientX; mgDragY = ev.clientY;
+        mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+    });
+    window.addEventListener('mousemove', function(ev) {
+        if (!mgDragging) return;
+        mgPanX = mgDragPanX+(ev.clientX-mgDragX);
+        mgPanY = mgDragPanY+(ev.clientY-mgDragY);
+        drawMutationGraph();
+    });
+    window.addEventListener('mouseup', function() { mgDragging = false; });
+
+    // -- exchange graph zoom & pan --
+    egCanvas.addEventListener('wheel', function(ev) {
+        ev.preventDefault();
+        const rect = egCanvas.getBoundingClientRect();
+        const cw = parseFloat(egCanvas.style.width), ch = parseFloat(egCanvas.style.height);
+        const mx = ev.clientX-rect.left, my = ev.clientY-rect.top;
+        const wx = (mx-cw/2-egPanX)/egScale, wy = (my-ch/2-egPanY)/egScale;
+        const factor = Math.exp(-ev.deltaY*0.002);
+        egScale = Math.max(0.03, Math.min(8, egScale*factor));
+        egPanX = mx-cw/2-wx*egScale; egPanY = my-ch/2-wy*egScale;
+        drawExchangeGraph();
+    }, { passive: false });
+    egCanvas.addEventListener('mousedown', function(ev) {
+        egDragging = true; egDragX = ev.clientX; egDragY = ev.clientY;
+        egDragPanX = egPanX; egDragPanY = egPanY;
+    });
+    window.addEventListener('mousemove', function(ev) {
+        if (!egDragging) return;
+        egPanX = egDragPanX+(ev.clientX-egDragX);
+        egPanY = egDragPanY+(ev.clientY-egDragY);
+        drawExchangeGraph();
+    });
+    window.addEventListener('mouseup', function() { egDragging = false; });
+
+    // ===========================================================
+    //  INIT
+    // ===========================================================
+    document.querySelectorAll('input[name="quiverType"]').forEach(r => r.addEventListener('change', applyQuiverSelection));
+    document.getElementById('randomizeBtn').addEventListener('click', generateRandomQuiver);
+    document.getElementById('depthSelect').addEventListener('change', () => {
+        if (document.getElementById('tabMG').classList.contains('active')) {
+            updateMutationGraph();
+        } else { mgNeedsRebuild = true; }
+    });
+    document.getElementById('egDepthSelect').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
+    document.getElementById('mgRotate').addEventListener('input', function() {
+        mgRotation = this.value * Math.PI / 180;
+        document.getElementById('mgAngleLabel').innerHTML = this.value + '&deg;';
+        drawMutationGraph();
+    });
+    document.getElementById('egRotate').addEventListener('input', function() {
+        egRotation = this.value * Math.PI / 180;
+        document.getElementById('egAngleLabel').innerHTML = this.value + '&deg;';
+        drawExchangeGraph();
+    });
+    function exportPdf() {
+        if (!currentGraph || !currentLayout) return;
+        const btn = document.getElementById('exportPdfBtn');
+        btn.textContent = 'Exporting...'; btn.disabled = true;
+
+        // render with white background
+        const srcW = mgCanvas.width, srcH = mgCanvas.height;
+        const offscreen = document.createElement('canvas');
+        offscreen.width = srcW; offscreen.height = srcH;
+        const oCtx = offscreen.getContext('2d');
+        oCtx.fillStyle = '#ffffff';
+        oCtx.fillRect(0, 0, srcW, srcH);
+        oCtx.drawImage(mgCanvas, 0, 0);
+
+        const cssW = parseFloat(mgCanvas.style.width) || srcW;
+        const cssH = parseFloat(mgCanvas.style.height) || srcH;
+
+        function done() { btn.textContent = 'Export PDF'; btn.disabled = false; }
+
+        // load jsPDF dynamically if not already loaded
+        function doExport() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const imgData = offscreen.toDataURL('image/jpeg', 0.95);
+                const landscape = cssW >= cssH;
+                const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [cssW, cssH] });
+                doc.addImage(imgData, 'JPEG', 0, 0, cssW, cssH);
+                doc.save('mutation_graph.pdf');
+            } catch(err) {
+                console.error('PDF export failed:', err);
+                alert('PDF export failed. Check console for details.');
+            }
+            done();
+        }
+
+        if (window.jspdf) { doExport(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = doExport;
+        s.onerror = function() {
+            console.error('Failed to load jsPDF library');
+            alert('Could not load PDF library. Check your internet connection.');
+            done();
+        };
+        document.head.appendChild(s);
+    }
+    document.getElementById('exportPdfBtn').addEventListener('click', exportPdf);
+
+    // Default: scattering diagram quiver
+    setQuiver(PRESET_SCATTER);
+    </script>
+</body>
+</html>
