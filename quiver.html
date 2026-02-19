@@ -241,6 +241,21 @@
             transition: background 0.15s;
         }
         #exportPdfBtn:hover { background: rgba(90,100,100,0.95); }
+        #egExportPdfBtn {
+            position: absolute;
+            bottom: 20px;
+            right: 22px;
+            padding: 5px 14px;
+            font-size: 12px;
+            background: rgba(127,140,141,0.85);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.15s;
+        }
+        #egExportPdfBtn:hover { background: rgba(90,100,100,0.95); }
         #mgCanvas {
             cursor: grab;
             border-radius: 10px;
@@ -328,6 +343,13 @@
             font-size: 12px; color: #999; font-style: italic;
         }
     </style>
+    <script>
+    window.MathJax = {
+        tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
     <!-- header -->
@@ -345,7 +367,6 @@
                 <label for="qt_random">Random</label>
             </div>
             <div class="random-extras" id="randomExtras" style="display:none">
-                <label for="maxArrows">up to</label>
                 <select id="maxArrows">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -391,6 +412,13 @@
                     <option value="5">5</option>
                 </select>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="mgPermToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="mgPermToggle">Up to permutation</label>
+            </div>
             <div class="mg-info" id="mgInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -424,6 +452,20 @@
                     <option value="5">5</option>
                 </select>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="egPermToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="egPermToggle">Up to permutation</label>
+            </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="egSpecToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="egSpecToggle">Specialize x=1</label>
+            </div>
             <div class="mg-info" id="egInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -440,12 +482,18 @@
         </div>
         <div class="eg-canvas-wrap" id="egWrap">
             <canvas id="egCanvas"></canvas>
+            <button id="egExportPdfBtn" title="Export as PDF">Export PDF</button>
         </div>
         <div id="egTooltip"></div>
     </div>
 
     <!-- about tab -->
     <div id="tabAbout" class="tab-content">
+        <h2>AI Assistance</h2>
+        <p>
+            This app was created by Kyler Siegel with heavy AI assistance. There may be errors.
+        </p>
+
         <h2>Overview</h2>
         <p>
             This is an interactive visualizer for <b>quiver mutations</b> and <b>cluster algebras</b>,
@@ -466,24 +514,19 @@
             3 vertices, labeled 1, 2, 3.
         </p>
         <p>
-            A quiver is equivalently described by its <b>exchange matrix</b> <i>B</i>, a
-            skew-symmetric integer matrix where <i>B</i>[<i>i</i>][<i>j</i>] records the
-            number of arrows from <i>i</i> to <i>j</i> (positive) or from <i>j</i> to <i>i</i>
-            (negative). In rank 3, <i>B</i> is determined by its three upper-triangular
-            entries <i>B</i><sub>12</sub>, <i>B</i><sub>13</sub>, <i>B</i><sub>23</sub>.
+            A quiver is equivalently described by its <b>exchange matrix</b> $B$, a
+            skew-symmetric integer matrix where $B_{ij}$ records the
+            number of arrows from $i$ to $j$ (positive) or from $j$ to $i$
+            (negative). In rank 3, $B$ is determined by its three upper-triangular
+            entries $B_{12}$, $B_{13}$, $B_{23}$.
         </p>
 
         <h2>Quiver mutation</h2>
         <p>
-            <b>Mutation</b> at vertex <i>k</i> transforms the exchange matrix <i>B</i> into a
-            new matrix <i>B</i>&prime; by the Fomin&ndash;Zelevinsky rule:
+            <b>Mutation</b> at vertex $k$ transforms the exchange matrix $B$ into a
+            new matrix $B'$ by the Fomin&ndash;Zelevinsky rule:
         </p>
-        <span class="formula">
-            B&prime;<sub>ij</sub> =
-            &minus;B<sub>ij</sub> &nbsp;if <i>i</i> = <i>k</i> or <i>j</i> = <i>k</i>,
-            &nbsp;&nbsp;otherwise&nbsp;&nbsp;
-            B<sub>ij</sub> + (|B<sub>ik</sub>| B<sub>kj</sub> + B<sub>ik</sub> |B<sub>kj</sub>|) / 2
-        </span>
+        <div class="formula">$$B'_{ij} = \begin{cases} -B_{ij} & \text{if } i = k \text{ or } j = k, \\ B_{ij} + \dfrac{|B_{ik}|\,B_{kj} + B_{ik}\,|B_{kj}|}{2} & \text{otherwise.} \end{cases}$$</div>
         <p>
             Mutation is an <b>involution</b>: mutating twice at the same vertex returns the original quiver.
             Note also that mutation preserves skew-symmetry.
@@ -495,9 +538,9 @@
             mutations, up to a chosen depth. Vertices of this graph are quivers (identified by their
             exchange matrix), and edges correspond to single mutations, colored by which vertex was
             mutated:
-            <span style="color:#3498db">&mu;<sub>1</sub></span>,
-            <span style="color:#e74c3c">&mu;<sub>2</sub></span>,
-            <span style="color:#27ae60">&mu;<sub>3</sub></span>.
+            <span style="color:#3498db">$\mu_1$</span>,
+            <span style="color:#e74c3c">$\mu_2$</span>,
+            <span style="color:#27ae60">$\mu_3$</span>.
             Each node displays a miniature picture of the corresponding quiver.
         </p>
         <p>
@@ -508,25 +551,16 @@
 
         <h2>Exchange graph &amp; cluster variables</h2>
         <p>
-            A <b>cluster</b> is a triple of <b>cluster variables</b> (<i>x</i><sub>1</sub>,
-            <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>) together with an exchange matrix.
-            The initial cluster simply has formal variables <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
-            <i>x</i><sub>3</sub>.
+            A <b>cluster</b> is a triple of <b>cluster variables</b> $(x_1, x_2, x_3)$
+            together with an exchange matrix.
+            The initial cluster simply has formal variables $x_1, x_2, x_3$.
         </p>
         <p>
-            When we mutate at vertex <i>k</i>, the exchange matrix transforms as above, and the
-            cluster variable <i>x<sub>k</sub></i> is replaced by a new variable
-            <i>x</i>&prime;<sub><i>k</i></sub> defined by the <b>exchange relation</b>:
+            When we mutate at vertex $k$, the exchange matrix transforms as above, and the
+            cluster variable $x_k$ is replaced by a new variable $x'_k$ defined by the
+            <b>exchange relation</b>:
         </p>
-        <span class="formula">
-            x<sub>k</sub> &middot; x&prime;<sub>k</sub>
-            &nbsp;=&nbsp;
-            &prod;<sub>B<sub>ik</sub>&gt;0</sub>
-            x<sub>i</sub><sup>B<sub>ik</sub></sup>
-            &nbsp;+&nbsp;
-            &prod;<sub>B<sub>ik</sub>&lt;0</sub>
-            x<sub>i</sub><sup>&minus;B<sub>ik</sub></sup>
-        </span>
+        <div class="formula">$$x_k \cdot x'_k = \prod_{B_{ik} > 0} x_i^{B_{ik}} + \prod_{B_{ik} < 0} x_i^{-B_{ik}}$$</div>
         <p>
             The other two variables remain unchanged. The <b>exchange graph</b> records all
             (quiver, cluster) pairs reachable by iterated mutations. Unlike the mutation graph,
@@ -536,30 +570,30 @@
         <p>
             A foundational result in the theory of cluster algebras is the <b>Laurent phenomenon</b>
             (Fomin&ndash;Zelevinsky, 2002): every cluster variable can be expressed as a
-            Laurent polynomial in the initial variables <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
-            <i>x</i><sub>3</sub>&mdash;that is, a polynomial with integer coefficients divided by a
-            monomial. This is nontrivial because the exchange relation involves division, and it is
-            not obvious a priori that repeated application always produces Laurent polynomials.
+            Laurent polynomial in the initial variables $x_1, x_2, x_3$&mdash;that is, a polynomial
+            with integer coefficients divided by a monomial. This is nontrivial because the exchange
+            relation involves division, and it is not obvious a priori that repeated application
+            always produces Laurent polynomials.
         </p>
 
         <h2>Preset quivers</h2>
         <ul>
             <li>
-                <b>F<sub>1</sub></b> &mdash; The quiver associated with the scattering diagram for the
-                Hirzebruch surface F<sub>1</sub>, with rays
-                <b>v</b><sub>1</sub> = (1, 0),
-                <b>v</b><sub>2</sub> = (0, &minus;1),
-                <b>v</b><sub>3</sub> = (&minus;1, &minus;2).
-                The exchange matrix entry <i>B</i>[<i>i</i>][<i>j</i>] is the determinant
-                det(<b>v</b><sub><i>i</i></sub>, <b>v</b><sub><i>j</i></sub>).
+                <b>$F_1$</b> &mdash; The quiver associated with the scattering diagram for the
+                Hirzebruch surface $F_1$, with rays
+                $\mathbf{v}_1 = (1, 0)$,
+                $\mathbf{v}_2 = (0, -1)$,
+                $\mathbf{v}_3 = (-1, -2)$.
+                The exchange matrix entry $B_{ij}$ is the determinant
+                $\det(\mathbf{v}_i, \mathbf{v}_j)$.
             </li>
             <li>
                 <b>Markov</b> &mdash; A 3-cycle with 2 arrows on each edge, related to the Markov equation
-                <i>x</i>&sup2; + <i>y</i>&sup2; + <i>z</i>&sup2; = 3<i>xyz</i>.
+                $x^2 + y^2 + z^2 = 3xyz$.
             </li>
             <li>
                 <b>Random</b> &mdash; A randomly generated quiver (no loops or 2-cycles) with a configurable
-                maximum number of arrows.
+                specified number of arrows.
             </li>
         </ul>
 
@@ -570,10 +604,10 @@
             only when PDF export is requested).
         </p>
         <p><b>Laurent polynomial arithmetic.</b>
-            Cluster variables are represented as Laurent polynomials in <i>x</i><sub>1</sub>,
-            <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>. Internally, each Laurent polynomial is stored
+            Cluster variables are represented as Laurent polynomials in $x_1, x_2, x_3$.
+            Internally, each Laurent polynomial is stored
             as a JavaScript <code>Map</code> from exponent triples (e.g. <code>"2,-1,0"</code> for
-            <i>x</i><sub>1</sub>&sup2;<i>x</i><sub>2</sub><sup>&minus;1</sup>) to integer coefficients.
+            $x_1^2 x_2^{-1}$) to integer coefficients.
             No external computer algebra system is used&mdash;addition, multiplication, exponentiation,
             and exact polynomial division are all implemented from scratch.
         </p>
@@ -608,7 +642,7 @@
             at the frontier indicate mutations that would produce new nodes beyond the current depth.
         </p>
 
-        <p class="section-note">Last updated: February 2026.</p>
+        <p class="section-note">Last updated: February 19, 2026.</p>
     </div>
 
     <script>
@@ -637,6 +671,7 @@
     let egScale = 1, egPanX = 0, egPanY = 0;
     let egDragging = false, egDragX = 0, egDragY = 0, egDragPanX = 0, egDragPanY = 0;
     let egRotation = 0; // radians
+    let egSpecialize = false;
     let egNeedsRebuild = true;
 
     // ===========================================================
@@ -674,6 +709,10 @@
                 sizeEGCanvas();
                 if (egNeedsRebuild) { updateExchangeGraph(); egNeedsRebuild = false; }
                 else drawExchangeGraph();
+            } else if (btn.dataset.tab === 'tabAbout') {
+                if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([document.getElementById('tabAbout')]);
+                }
             }
         });
     });
@@ -737,7 +776,7 @@
     function generateRandomQuiver() {
         const maxA = parseInt(document.getElementById('maxArrows').value);
         const Q = [[0,0,0],[0,0,0],[0,0,0]];
-        const total = Math.floor(Math.random() * maxA) + 1;
+        const total = maxA;
         const pairs = [[0,1],[0,2],[1,2]];
         const dist = [0,0,0];
         for (let e = 0; e < total; e++) dist[Math.floor(Math.random() * 3)]++;
@@ -869,6 +908,114 @@
 
     function matrixKey(B) {
         return B[0][1] + ',' + B[0][2] + ',' + B[1][2];
+    }
+
+    // ===========================================================
+    //  PERMUTATION EQUIVALENCE
+    // ===========================================================
+    const PERMS_3 = [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+
+    function permuteMatrix(B, p) {
+        const P = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                P[i][j] = B[p[i]][p[j]];
+        return P;
+    }
+
+    function canonicalMatrixKey(B) {
+        let best = matrixKey(B);
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const key = matrixKey(permuteMatrix(B, PERMS_3[pi]));
+            if (key < best) best = key;
+        }
+        return best;
+    }
+
+    function canonicalMatrix(B) {
+        let bestKey = matrixKey(B), bestB = B;
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const P = permuteMatrix(B, PERMS_3[pi]);
+            const key = matrixKey(P);
+            if (key < bestKey) { bestKey = key; bestB = P; }
+        }
+        return bestB;
+    }
+
+    // Permute variable indices inside a Laurent polynomial:
+    // x_i -> x_{p[i]}, so exponent e becomes newExp where newExp[p[i]] = e[i].
+    function permuteLPVars(lp, p) {
+        const result = new Map();
+        for (const [key, coeff] of lp) {
+            const e = key.split(',').map(Number);
+            const ne = [0, 0, 0];
+            for (let i = 0; i < 3; i++) ne[p[i]] = e[i];
+            const nk = ne.join(',');
+            result.set(nk, (result.get(nk) || 0) + coeff);
+        }
+        return result;
+    }
+
+    // Permute a cluster: reorder slots AND permute vars within each LP.
+    function permuteCluster(cluster, p) {
+        return [
+            permuteLPVars(cluster[p[0]], p),
+            permuteLPVars(cluster[p[1]], p),
+            permuteLPVars(cluster[p[2]], p)
+        ];
+    }
+
+    function egNodeKey(B, cluster) {
+        return matrixKey(B) + '###' + clusterKey(cluster);
+    }
+
+    function canonicalEGKey(B, cluster) {
+        let best = egNodeKey(B, cluster);
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const p = PERMS_3[pi];
+            const key = egNodeKey(permuteMatrix(B, p), permuteCluster(cluster, p));
+            if (key < best) best = key;
+        }
+        return best;
+    }
+
+    function canonicalEGData(B, cluster) {
+        let bestKey = egNodeKey(B, cluster), bestB = B, bestC = cluster;
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const p = PERMS_3[pi];
+            const pB = permuteMatrix(B, p);
+            const pC = permuteCluster(cluster, p);
+            const key = egNodeKey(pB, pC);
+            if (key < bestKey) { bestKey = key; bestB = pB; bestC = pC; }
+        }
+        return { matrix: bestB, cluster: bestC };
+    }
+
+    // Specialize-at-1 key: uses integer values instead of full LP strings
+    function egNodeKeySpec(B, cluster) {
+        return matrixKey(B) + '###' + clusterIntKey(cluster);
+    }
+
+    function canonicalEGKeySpec(B, cluster) {
+        let best = egNodeKeySpec(B, cluster);
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const p = PERMS_3[pi];
+            const key = egNodeKeySpec(permuteMatrix(B, p), permuteCluster(cluster, p));
+            if (key < best) best = key;
+        }
+        return best;
+    }
+
+    function canonicalEGDataSpec(B, cluster) {
+        let bestKey = egNodeKeySpec(B, cluster), bestB = B, bestC = cluster;
+        for (let pi = 1; pi < PERMS_3.length; pi++) {
+            const p = PERMS_3[pi];
+            const pB = permuteMatrix(B, p);
+            const pC = permuteCluster(cluster, p);
+            const key = egNodeKeySpec(pB, pC);
+            if (key < bestKey) { bestKey = key; bestB = pB; bestC = pC; }
+        }
+        return { matrix: bestB, cluster: bestC };
     }
 
     // ===========================================================
@@ -1015,6 +1162,17 @@
         return '(' + num + ')/' + den;
     }
 
+    // Evaluate LP at x₁=x₂=x₃=1 (sum of all coefficients)
+    function lpEvalAtOne(lp) {
+        let sum = 0;
+        for (const coeff of lp.values()) sum += coeff;
+        return sum;
+    }
+
+    function clusterIntKey(cluster) {
+        return cluster.map(lpEvalAtOne).join(',');
+    }
+
     // ===========================================================
     //  EXCHANGE MUTATION (CLUSTER ALGEBRA)
     // ===========================================================
@@ -1034,47 +1192,70 @@
     // ===========================================================
     //  EXCHANGE GRAPH CONSTRUCTION (BFS)
     // ===========================================================
-    function buildExchangeGraph(initialB, maxDepth) {
+    function buildExchangeGraph(initialB, maxDepth, upToPermutation, specializeAtOne) {
         const nodes = new Map();
         const edgeSet = new Set();
         const edges = [];
 
+        let keyFn, dataFn;
+        if (upToPermutation && specializeAtOne) {
+            keyFn = canonicalEGKeySpec;
+            dataFn = (B, cl) => canonicalEGDataSpec(B, cl);
+        } else if (upToPermutation) {
+            keyFn = canonicalEGKey;
+            dataFn = (B, cl) => canonicalEGData(B, cl);
+        } else if (specializeAtOne) {
+            keyFn = egNodeKeySpec;
+            dataFn = (B, cl) => ({ matrix: B, cluster: cl });
+        } else {
+            keyFn = egNodeKey;
+            dataFn = (B, cl) => ({ matrix: B, cluster: cl });
+        }
+
         const initialCluster = [lpVar(0), lpVar(1), lpVar(2)];
-        const ik = matrixKey(initialB) + '###' + clusterKey(initialCluster);
-        nodes.set(ik, { matrix: initialB, cluster: initialCluster, depth: 0 });
+        const initData = dataFn(initialB, initialCluster);
+        const ik = keyFn(initData.matrix, initData.cluster);
+        nodes.set(ik, { matrix: initData.matrix, cluster: initData.cluster, depth: 0 });
         let frontier = [ik];
         let capped = false;
+
+        function addEdge(from, to, label) {
+            const ek = from + '|' + label;
+            if (edgeSet.has(ek)) return;
+            edgeSet.add(ek);
+            edges.push({ from, to, label });
+        }
 
         for (let d = 0; d < maxDepth; d++) {
             const next = [];
             for (const key of frontier) {
                 const nd = nodes.get(key);
                 for (let k = 0; k < 3; k++) {
-                    const B2 = mutateMatrix(nd.matrix, k);
-                    const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
-                    const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
-                    if (k2 === key) continue;
+                    const B2raw = mutateMatrix(nd.matrix, k);
+                    const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
+                    const dat = dataFn(B2raw, cl2raw);
+                    const k2 = keyFn(dat.matrix, dat.cluster);
+                    if (k2 === key) { addEdge(key, key, k); continue; }
                     if (!nodes.has(k2)) {
                         if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
-                        nodes.set(k2, { matrix: B2, cluster: cl2, depth: d + 1 });
+                        nodes.set(k2, { matrix: dat.matrix, cluster: dat.cluster, depth: d + 1 });
                         next.push(k2);
                     }
-                    const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
-                    if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                    addEdge(key, k2, k);
                 }
             }
             frontier = next;
         }
-        // boundary edges
+        // boundary edges from frontier nodes to known nodes
         for (const key of frontier) {
             const nd = nodes.get(key);
             for (let k = 0; k < 3; k++) {
-                const B2 = mutateMatrix(nd.matrix, k);
-                const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
-                const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
-                if (k2 === key || !nodes.has(k2)) continue;
-                const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
-                if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                const B2raw = mutateMatrix(nd.matrix, k);
+                const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
+                const dat = dataFn(B2raw, cl2raw);
+                const k2 = keyFn(dat.matrix, dat.cluster);
+                if (!nodes.has(k2)) continue;
+                addEdge(key, k2, k);
             }
         }
         // frontier stubs
@@ -1082,104 +1263,176 @@
         for (const key of frontier) {
             const nd = nodes.get(key);
             for (let k = 0; k < 3; k++) {
-                const B2 = mutateMatrix(nd.matrix, k);
-                const cl2 = mutateCluster(nd.matrix, nd.cluster, k);
-                const k2 = matrixKey(B2) + '###' + clusterKey(cl2);
-                if (k2 === key || nodes.has(k2)) continue;
+                const B2raw = mutateMatrix(nd.matrix, k);
+                const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
+                const dat = dataFn(B2raw, cl2raw);
+                const k2 = keyFn(dat.matrix, dat.cluster);
+                if (nodes.has(k2)) continue;
                 stubs.push({ from: key, label: k });
             }
         }
-        // edge groups
-        const groups = new Map();
-        for (let i = 0; i < edges.length; i++) {
-            const e = edges[i];
-            const pk = e.from < e.to ? e.from+'||'+e.to : e.to+'||'+e.from;
-            if (!groups.has(pk)) groups.set(pk, []);
-            groups.get(pk).push(i);
-        }
-        for (const idxs of groups.values()) {
-            for (let j = 0; j < idxs.length; j++) {
-                edges[idxs[j]]._gi = j; edges[idxs[j]]._gs = idxs.length;
+        // Merge directed edges into visual edges (same approach as mutation graph)
+        const selfLoopMap = new Map();
+        const pairMap = new Map();
+        for (const e of edges) {
+            if (e.from === e.to) {
+                if (!selfLoopMap.has(e.from)) selfLoopMap.set(e.from, []);
+                selfLoopMap.get(e.from).push(e.label);
+                continue;
             }
+            const aKey = e.from < e.to ? e.from : e.to;
+            const bKey = e.from < e.to ? e.to : e.from;
+            const pk = aKey + '||' + bKey;
+            if (!pairMap.has(pk)) pairMap.set(pk, { a: aKey, b: bKey, labelsA: [], labelsB: [] });
+            const p = pairMap.get(pk);
+            if (e.from === p.a) p.labelsA.push(e.label); else p.labelsB.push(e.label);
         }
-        return { nodes, edges, stubs, initialKey: ik, capped };
+        const visualEdges = [];
+        for (const p of pairMap.values()) {
+            visualEdges.push({
+                from: p.a, to: p.b,
+                labelsA: p.labelsA.sort(),
+                labelsB: p.labelsB.sort(),
+            });
+        }
+        const selfLoops = [];
+        for (const [nodeKey, labels] of selfLoopMap) {
+            selfLoops.push({ from: nodeKey, labels: labels.sort() });
+        }
+        return { nodes, edges: visualEdges, selfLoops, stubs, initialKey: ik, capped };
     }
 
     // ===========================================================
     //  MUTATION GRAPH CONSTRUCTION (BFS)
     // ===========================================================
-    function buildMutationGraph(initialB, maxDepth) {
+    function buildMutationGraph(initialB, maxDepth, upToPermutation) {
         const nodes = new Map();
         const edgeSet = new Set();
         const edges = [];
+        const keyFn = upToPermutation ? canonicalMatrixKey : matrixKey;
+        const matFn = upToPermutation ? canonicalMatrix : (B => B);
 
-        const ik = matrixKey(initialB);
-        nodes.set(ik, { matrix: initialB, depth: 0 });
+        const initB = matFn(initialB);
+        const ik = keyFn(initB);
+        nodes.set(ik, { matrix: initB, depth: 0 });
         let frontier = [ik];
         let capped = false;
+
+        // Each edge is directed: (from, label) uniquely identifies it.
+        // This ensures each node has exactly 3 outgoing edges (k=0,1,2).
+        function addEdge(from, to, label) {
+            const ek = from + '|' + label;
+            if (edgeSet.has(ek)) return;
+            edgeSet.add(ek);
+            edges.push({ from, to, label });
+        }
 
         for (let d = 0; d < maxDepth; d++) {
             const next = [];
             for (const key of frontier) {
                 const B = nodes.get(key).matrix;
                 for (let k = 0; k < 3; k++) {
-                    const B2 = mutateMatrix(B, k);
-                    const k2 = matrixKey(B2);
-                    if (k2 === key) continue;
+                    const B2raw = mutateMatrix(B, k);
+                    const B2 = matFn(B2raw);
+                    const k2 = keyFn(B2);
+                    if (k2 === key) { addEdge(key, key, k); continue; }
                     if (!nodes.has(k2)) {
                         if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
                         nodes.set(k2, { matrix: B2, depth: d + 1 });
                         next.push(k2);
                     }
-                    const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
-                    if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                    addEdge(key, k2, k);
                 }
             }
             frontier = next;
         }
+        // Add edges from frontier nodes to already-known nodes
         for (const key of frontier) {
             const B = nodes.get(key).matrix;
             for (let k = 0; k < 3; k++) {
-                const B2 = mutateMatrix(B, k);
-                const k2 = matrixKey(B2);
-                if (k2 === key || !nodes.has(k2)) continue;
-                const ek = (key < k2 ? key+'|'+k2 : k2+'|'+key) + '|' + k;
-                if (!edgeSet.has(ek)) { edgeSet.add(ek); edges.push({ from: key, to: k2, label: k }); }
+                const B2raw = mutateMatrix(B, k);
+                const B2 = matFn(B2raw);
+                const k2 = keyFn(B2);
+                if (!nodes.has(k2)) continue;
+                addEdge(key, k2, k);
             }
         }
 
-        // frontier stubs: dashed edges suggesting further mutations
+        // Frontier stubs: mutations leading outside the explored graph
         const stubs = [];
         for (const key of frontier) {
             const B = nodes.get(key).matrix;
             for (let k = 0; k < 3; k++) {
-                const B2 = mutateMatrix(B, k);
-                const k2 = matrixKey(B2);
-                if (k2 === key || nodes.has(k2)) continue;
+                const B2raw = mutateMatrix(B, k);
+                const k2 = keyFn(matFn(B2raw));
+                if (nodes.has(k2)) continue;
                 stubs.push({ from: key, label: k });
             }
         }
 
-        const groups = new Map();
-        for (let i = 0; i < edges.length; i++) {
-            const e = edges[i];
-            const pk = e.from < e.to ? e.from+'||'+e.to : e.to+'||'+e.from;
-            if (!groups.has(pk)) groups.set(pk, []);
-            groups.get(pk).push(i);
-        }
-        for (const idxs of groups.values()) {
-            for (let j = 0; j < idxs.length; j++) {
-                edges[idxs[j]]._gi = j;
-                edges[idxs[j]]._gs = idxs.length;
+        // Merge directed edges into visual edges:
+        // - Self-loops grouped by node
+        // - All edges between the same pair of nodes collapse into ONE
+        //   visual edge carrying all labels from both directions
+        const selfLoopMap = new Map(); // nodeKey → [labels]
+        const pairMap = new Map();     // "A||B" → { a, b, labelsA:[], labelsB:[] }
+        for (const e of edges) {
+            if (e.from === e.to) {
+                if (!selfLoopMap.has(e.from)) selfLoopMap.set(e.from, []);
+                selfLoopMap.get(e.from).push(e.label);
+                continue;
             }
+            const aKey = e.from < e.to ? e.from : e.to;
+            const bKey = e.from < e.to ? e.to : e.from;
+            const pk = aKey + '||' + bKey;
+            if (!pairMap.has(pk)) pairMap.set(pk, { a: aKey, b: bKey, labelsA: [], labelsB: [] });
+            const p = pairMap.get(pk);
+            if (e.from === p.a) p.labelsA.push(e.label); else p.labelsB.push(e.label);
         }
 
-        return { nodes, edges, stubs, initialKey: ik, capped };
+        // One visual edge per unordered pair, carrying all labels
+        const visualEdges = [];
+        for (const p of pairMap.values()) {
+            visualEdges.push({
+                from: p.a, to: p.b,
+                labelsA: p.labelsA.sort(),  // mutations A→B (labels from A's perspective)
+                labelsB: p.labelsB.sort(),  // mutations B→A (labels from B's perspective)
+            });
+        }
+
+        // Self-loops: one entry per node, carrying all self-loop labels
+        const selfLoops = [];
+        for (const [nodeKey, labels] of selfLoopMap) {
+            selfLoops.push({ from: nodeKey, labels: labels.sort() });
+        }
+
+        return { nodes, edges: visualEdges, selfLoops, stubs, initialKey: ik, capped };
     }
 
     // ===========================================================
     //  FORCE-DIRECTED LAYOUT
     // ===========================================================
+    // Simple seeded PRNG (mulberry32) for deterministic layout
+    function seededRng(seed) {
+        let s = seed | 0;
+        return function() {
+            s = (s + 0x6D2B79F5) | 0;
+            let t = Math.imul(s ^ (s >>> 15), 1 | s);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    }
+
+    // Segment intersection test: do segments (p1,p2) and (p3,p4) cross?
+    function segmentsIntersect(x1,y1,x2,y2,x3,y3,x4,y4) {
+        const d1x = x2-x1, d1y = y2-y1, d2x = x4-x3, d2y = y4-y3;
+        const cross = d1x*d2y - d1y*d2x;
+        if (Math.abs(cross) < 1e-10) return false;
+        const t = ((x3-x1)*d2y - (y3-y1)*d2x) / cross;
+        const u = ((x3-x1)*d1y - (y3-y1)*d1x) / cross;
+        return t > 0.01 && t < 0.99 && u > 0.01 && u < 0.99;
+    }
+
     function layoutGraph(graph, nodeR) {
         const { nodes, edges } = graph;
         const keys = Array.from(nodes.keys());
@@ -1187,34 +1440,57 @@
         if (n === 0) return new Map();
         if (n === 1) return new Map([[keys[0], { x: 0, y: 0 }]]);
 
+        // Deterministic seed from graph structure
+        let seed = n * 73 + edges.length * 137;
+        for (let i = 0; i < Math.min(keys.length, 8); i++) seed += keys[i].charCodeAt(0) * (i+1);
+        const rng = seededRng(seed);
+
         const idx = new Map(); keys.forEach((k,i) => idx.set(k,i));
         const px = new Float64Array(n), py = new Float64Array(n);
         const vx = new Float64Array(n), vy = new Float64Array(n);
 
+        // Find root node (depth 0)
+        let rootIdx = 0;
         const byDepth = new Map();
         for (const [k, d] of nodes) {
             if (!byDepth.has(d.depth)) byDepth.set(d.depth, []);
             byDepth.get(d.depth).push(k);
+            if (d.depth === 0) rootIdx = idx.get(k);
         }
-        const ringR = nodeR * 4;
+
+        // Scale ring spacing with edge density for better spread
+        const density = n > 1 ? edges.length / n : 0;
+        const densityScale = 1 + Math.max(0, density - 1.5) * 0.6;
+        const ringR = nodeR * 5 * densityScale;
+
         for (const [depth, ks] of byDepth) {
             for (let j = 0; j < ks.length; j++) {
                 const i = idx.get(ks[j]);
                 if (depth === 0) { px[i] = 0; py[i] = 0; continue; }
-                const a = (j / ks.length) * 2 * Math.PI + (Math.random()-0.5)*0.4;
-                const r = depth * ringR + (Math.random()-0.5)*30;
+                const a = (j / ks.length) * 2 * Math.PI + (rng()-0.5)*0.4;
+                const r = depth * ringR + (rng()-0.5)*30;
                 px[i] = r * Math.cos(a); py[i] = r * Math.sin(a);
             }
         }
 
-        const idealDist = nodeR * 3 + 10 * Math.sqrt(n);
-        const repK = idealDist * idealDist * 1.5;
-        const attK = 0.25;
-        const iters = n <= 20 ? 500 : n <= 60 ? 350 : n <= 150 ? 200 : 100;
+        // Precompute edge index pairs for the force loop (skip self-loops)
+        const edgeIdx = [];
+        for (const e of edges) {
+            const a = idx.get(e.from), b = idx.get(e.to);
+            if (a !== undefined && b !== undefined && a !== b) edgeIdx.push([a, b]);
+        }
+
+        const idealDist = (nodeR * 4 + 12 * Math.sqrt(n)) * densityScale;
+        const repK = idealDist * idealDist * 2.0;
+        const attK = 0.2;
+        const crossK = idealDist * 0.8;   // edge-crossing repulsion strength
+        const iters = n <= 20 ? 600 : n <= 60 ? 450 : n <= 150 ? 300 : 150;
 
         for (let iter = 0; iter < iters; iter++) {
             const temp = Math.max(0.01, 1 - iter / iters);
-            const maxD = Math.max(1, 60 * temp);
+            const maxD = Math.max(1, 80 * temp);
+
+            // Node-node repulsion
             for (let i = 0; i < n; i++) {
                 for (let j = i+1; j < n; j++) {
                     const dx = px[j]-px[i], dy = py[j]-py[i];
@@ -1223,17 +1499,47 @@
                     vx[i] -= fx; vy[i] -= fy; vx[j] += fx; vy[j] += fy;
                 }
             }
-            for (const e of edges) {
-                const a = idx.get(e.from), b = idx.get(e.to);
-                if (a === undefined || b === undefined) continue;
+
+            // Edge attraction
+            for (const [a, b] of edgeIdx) {
                 const dx = px[b]-px[a], dy = py[b]-py[a];
                 const d = Math.sqrt(dx*dx+dy*dy)+1;
                 const f = attK*(d-idealDist), fx = dx/d*f, fy = dy/d*f;
                 vx[a] += fx; vy[a] += fy; vx[b] -= fx; vy[b] -= fy;
             }
+
+            // Edge-crossing repulsion: push apart nodes of crossing edges
+            if (edgeIdx.length <= 500) {  // skip for very large graphs
+                for (let ei = 0; ei < edgeIdx.length; ei++) {
+                    const [a, b] = edgeIdx[ei];
+                    for (let ej = ei+1; ej < edgeIdx.length; ej++) {
+                        const [c, d] = edgeIdx[ej];
+                        // Skip edges that share an endpoint
+                        if (a === c || a === d || b === c || b === d) continue;
+                        if (!segmentsIntersect(px[a],py[a],px[b],py[b],
+                                               px[c],py[c],px[d],py[d])) continue;
+                        // Push midpoints of the two edges apart
+                        const mx1 = (px[a]+px[b])*0.5, my1 = (py[a]+py[b])*0.5;
+                        const mx2 = (px[c]+px[d])*0.5, my2 = (py[c]+py[d])*0.5;
+                        let dx = mx1-mx2, dy = my1-my2;
+                        const dist = Math.sqrt(dx*dx+dy*dy)+1;
+                        const strength = crossK * temp / dist;
+                        dx *= strength; dy *= strength;
+                        // Apply to all four endpoints (half each)
+                        const h = 0.5;
+                        vx[a] += dx*h; vy[a] += dy*h;
+                        vx[b] += dx*h; vy[b] += dy*h;
+                        vx[c] -= dx*h; vy[c] -= dy*h;
+                        vx[d] -= dx*h; vy[d] -= dy*h;
+                    }
+                }
+            }
+
+            // Apply velocities with damping and gravity
             for (let i = 0; i < n; i++) {
-                vx[i] -= px[i]*0.008*temp; vy[i] -= py[i]*0.008*temp;
-                vx[i] *= 0.85; vy[i] *= 0.85;
+                const gravity = (i === rootIdx) ? 0.05 : 0.006;
+                vx[i] -= px[i]*gravity*temp; vy[i] -= py[i]*gravity*temp;
+                vx[i] *= 0.82; vy[i] *= 0.82;
                 const sp = Math.sqrt(vx[i]*vx[i]+vy[i]*vy[i]);
                 if (sp > maxD) { vx[i] = vx[i]/sp*maxD; vy[i] = vy[i]/sp*maxD; }
                 px[i] += vx[i]; py[i] += vy[i];
@@ -1276,6 +1582,7 @@
 
         if (currentGraph.stubs) for (const s of currentGraph.stubs) drawMGStub(s);
         for (const e of currentGraph.edges) drawMGEdge(e);
+        if (currentGraph.selfLoops) for (const e of currentGraph.selfLoops) drawMGSelfLoop(e);
         for (const [key, data] of currentGraph.nodes) {
             const p = currentLayout.get(key);
             if (p) drawMGNode(p.x, p.y, data.matrix, key === currentGraph.initialKey);
@@ -1284,40 +1591,110 @@
         mgCtx.restore();
     }
 
+    // Draw a multi-label badge: colored circles for each label, arranged in a row
+    function drawMGLabels(cx, cy, labels) {
+        if (labels.length === 0) return;
+        if (labels.length === 1) {
+            const col = VERTEX_COLORS[labels[0]];
+            mgCtx.beginPath(); mgCtx.arc(cx,cy,12,0,Math.PI*2);
+            mgCtx.fillStyle='#fff'; mgCtx.fill();
+            mgCtx.strokeStyle=col; mgCtx.lineWidth=1.5; mgCtx.stroke();
+            mgCtx.fillStyle=col;
+            mgCtx.font='bold 14px "Segoe UI",sans-serif';
+            mgCtx.textAlign='center'; mgCtx.textBaseline='middle';
+            mgCtx.fillText(''+(labels[0]+1),cx,cy);
+            return;
+        }
+        // Multiple labels: draw side by side in a rounded pill
+        const r = 10, gap = 20;
+        const totalW = (labels.length - 1) * gap;
+        const startX = cx - totalW / 2;
+        // White pill background
+        const pillR = 12;
+        const left = startX - pillR, right = startX + totalW + pillR;
+        const top = cy - pillR, bot = cy + pillR;
+        mgCtx.beginPath();
+        mgCtx.moveTo(left + pillR, top);
+        mgCtx.arcTo(right, top, right, bot, pillR);
+        mgCtx.arcTo(right, bot, left, bot, pillR);
+        mgCtx.arcTo(left, bot, left, top, pillR);
+        mgCtx.arcTo(left, top, right, top, pillR);
+        mgCtx.closePath();
+        mgCtx.fillStyle = '#fff'; mgCtx.fill();
+        mgCtx.strokeStyle = '#bbb'; mgCtx.lineWidth = 1.2; mgCtx.stroke();
+        // Draw each label number in its color
+        mgCtx.font = 'bold 14px "Segoe UI",sans-serif';
+        mgCtx.textAlign = 'center'; mgCtx.textBaseline = 'middle';
+        for (let i = 0; i < labels.length; i++) {
+            const lx = startX + i * gap;
+            mgCtx.fillStyle = VERTEX_COLORS[labels[i]];
+            mgCtx.fillText('' + (labels[i] + 1), lx, cy);
+        }
+    }
+
+    function drawMGSelfLoop(e) {
+        const pA = currentLayout.get(e.from);
+        if (!pA) return;
+        const loopR = MG_NODE_R * 0.6;
+        const angle = -Math.PI / 2;
+        const cx = pA.x + Math.cos(angle) * (MG_NODE_R + loopR);
+        const cy = pA.y + Math.sin(angle) * (MG_NODE_R + loopR);
+        // Draw loop arc in gray if multiple labels, else in the single label's color
+        const lineCol = e.labels.length === 1 ? VERTEX_COLORS[e.labels[0]] : '#aaa';
+        mgCtx.beginPath();
+        mgCtx.arc(cx, cy, loopR, 0, Math.PI * 2);
+        mgCtx.strokeStyle = lineCol; mgCtx.lineWidth = 2.5; mgCtx.stroke();
+        const lx = pA.x + Math.cos(angle) * (MG_NODE_R + loopR * 2 + 10);
+        const ly = pA.y + Math.sin(angle) * (MG_NODE_R + loopR * 2 + 10);
+        drawMGLabels(lx, ly, e.labels);
+    }
+
+    // Visual edge: labelsA = mutations from A side, labelsB = mutations from B side.
+    // Drawn as a single line with label badges.
     function drawMGEdge(e) {
         const pA = currentLayout.get(e.from), pB = currentLayout.get(e.to);
         if (!pA || !pB) return;
+        const hasA = e.labelsA.length > 0, hasB = e.labelsB.length > 0;
+        if (!hasA && !hasB) return;
 
         const dx = pB.x-pA.x, dy = pB.y-pA.y;
         const len = norm(dx,dy)+0.01;
         const ux = dx/len, uy = dy/len, px = -uy, py = ux;
 
-        let curv = 0;
-        if (e._gs > 1) curv = ((e._gi/(e._gs-1))*2-1)*35;
-
         const gap = MG_NODE_R+2;
-        const cpX = (pA.x+pB.x)/2+px*curv, cpY = (pA.y+pB.y)/2+py*curv;
+        const cpX = (pA.x+pB.x)/2, cpY = (pA.y+pB.y)/2;
         const sdx = cpX-pA.x, sdy = cpY-pA.y, sd = norm(sdx,sdy);
         const edx = pB.x-cpX, edy = pB.y-cpY, ed = norm(edx,edy);
         const sx = pA.x+sdx/sd*gap, sy = pA.y+sdy/sd*gap;
         const ex = pB.x-edx/ed*gap, ey = pB.y-edy/ed*gap;
-        const col = VERTEX_COLORS[e.label];
 
-        mgCtx.beginPath(); mgCtx.moveTo(sx,sy);
-        if (Math.abs(curv)<1) mgCtx.lineTo(ex,ey);
-        else mgCtx.quadraticCurveTo(cpX,cpY,ex,ey);
-        mgCtx.strokeStyle = col; mgCtx.lineWidth = 2.5; mgCtx.stroke();
+        // All unique labels on this edge
+        const allLabels = [...new Set([...e.labelsA, ...e.labelsB])].sort();
+        const lineCol = allLabels.length === 1 ? VERTEX_COLORS[allLabels[0]] : '#aaa';
 
-        const lx = Math.abs(curv)<1 ? (sx+ex)/2 : (sx+2*cpX+ex)/4;
-        const ly = Math.abs(curv)<1 ? (sy+ey)/2 : (sy+2*cpY+ey)/4;
+        mgCtx.beginPath(); mgCtx.moveTo(sx,sy); mgCtx.lineTo(ex,ey);
+        mgCtx.strokeStyle = lineCol; mgCtx.lineWidth = 2.5; mgCtx.stroke();
 
-        mgCtx.beginPath(); mgCtx.arc(lx,ly,12,0,Math.PI*2);
-        mgCtx.fillStyle='#fff'; mgCtx.fill();
-        mgCtx.strokeStyle=col; mgCtx.lineWidth=1.5; mgCtx.stroke();
-        mgCtx.fillStyle=col;
-        mgCtx.font='bold 14px "Segoe UI",sans-serif';
-        mgCtx.textAlign='center'; mgCtx.textBaseline='middle';
-        mgCtx.fillText(''+(e.label+1),lx,ly);
+        // Point along the edge at parameter t
+        function edgePt(t) {
+            return { x: sx + t*(ex-sx), y: sy + t*(ey-sy) };
+        }
+
+        // Check if both sides have the exact same set of labels
+        const sameLabels = hasA && hasB && e.labelsA.length === e.labelsB.length &&
+            e.labelsA.every((v,i) => v === e.labelsB[i]);
+
+        if (sameLabels || (!hasA || !hasB)) {
+            // Same labels both ways, or only one direction: single badge at midpoint
+            const m = edgePt(0.5);
+            drawMGLabels(m.x, m.y, hasA ? e.labelsA : e.labelsB);
+        } else {
+            // Different labels each way: badge near each endpoint
+            const nearA = edgePt(0.28);
+            const nearB = edgePt(0.72);
+            drawMGLabels(nearA.x, nearA.y, e.labelsA);
+            drawMGLabels(nearB.x, nearB.y, e.labelsB);
+        }
     }
 
     function drawMGStub(s) {
@@ -1411,14 +1788,16 @@
         sizeMGCanvas();
         const B = quiverToMatrix(quiver);
         const depth = parseInt(document.getElementById('depthSelect').value);
-        currentGraph = buildMutationGraph(B, depth);
+        const upToPerm = document.getElementById('mgPermToggle').checked;
+        currentGraph = buildMutationGraph(B, depth, upToPerm);
         currentLayout = layoutGraph(currentGraph, MG_NODE_R);
         const fit = autoFitToCanvas(currentLayout, MG_NODE_R, mgCanvas);
         mgScale = fit[0]; mgPanX = fit[1]; mgPanY = fit[2];
         drawMutationGraph();
 
+        const totalEdges = currentGraph.edges.length + (currentGraph.selfLoops ? currentGraph.selfLoops.length : 0);
         let txt = currentGraph.nodes.size + ' quiver' + (currentGraph.nodes.size!==1?'s':'') +
-                  ', ' + currentGraph.edges.length + ' edge' + (currentGraph.edges.length!==1?'s':'');
+                  ', ' + totalEdges + ' edge' + (totalEdges!==1?'s':'');
         if (currentGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
         document.getElementById('mgInfo').innerHTML = txt;
     }
@@ -1437,6 +1816,7 @@
         egCtx.scale(egScale, egScale);
         if (currentEGGraph.stubs) for (const s of currentEGGraph.stubs) drawEGStub(s);
         for (const e of currentEGGraph.edges) drawEGEdge(e);
+        if (currentEGGraph.selfLoops) for (const e of currentEGGraph.selfLoops) drawEGSelfLoop(e);
         for (const [key, data] of currentEGGraph.nodes) {
             const p = currentEGLayout.get(key);
             if (p) drawEGNode(p.x, p.y, data, key === currentEGGraph.initialKey);
@@ -1444,34 +1824,96 @@
         egCtx.restore();
     }
 
+    // Shared label-drawing for EG (mirrors MG version but uses egCtx)
+    function drawEGLabels(cx, cy, labels) {
+        if (labels.length === 0) return;
+        if (labels.length === 1) {
+            const col = VERTEX_COLORS[labels[0]];
+            egCtx.beginPath(); egCtx.arc(cx,cy,12,0,Math.PI*2);
+            egCtx.fillStyle='#fff'; egCtx.fill();
+            egCtx.strokeStyle=col; egCtx.lineWidth=1.5; egCtx.stroke();
+            egCtx.fillStyle=col;
+            egCtx.font='bold 14px "Segoe UI",sans-serif';
+            egCtx.textAlign='center'; egCtx.textBaseline='middle';
+            egCtx.fillText(''+(labels[0]+1),cx,cy);
+            return;
+        }
+        const gap = 20, pillR = 12;
+        const totalW = (labels.length - 1) * gap;
+        const startX = cx - totalW / 2;
+        const left = startX - pillR, right = startX + totalW + pillR;
+        const top = cy - pillR, bot = cy + pillR;
+        egCtx.beginPath();
+        egCtx.moveTo(left + pillR, top);
+        egCtx.arcTo(right, top, right, bot, pillR);
+        egCtx.arcTo(right, bot, left, bot, pillR);
+        egCtx.arcTo(left, bot, left, top, pillR);
+        egCtx.arcTo(left, top, right, top, pillR);
+        egCtx.closePath();
+        egCtx.fillStyle = '#fff'; egCtx.fill();
+        egCtx.strokeStyle = '#bbb'; egCtx.lineWidth = 1.2; egCtx.stroke();
+        egCtx.font = 'bold 14px "Segoe UI",sans-serif';
+        egCtx.textAlign = 'center'; egCtx.textBaseline = 'middle';
+        for (let i = 0; i < labels.length; i++) {
+            egCtx.fillStyle = VERTEX_COLORS[labels[i]];
+            egCtx.fillText('' + (labels[i] + 1), startX + i * gap, cy);
+        }
+    }
+
+    function drawEGSelfLoop(e) {
+        const pA = currentEGLayout.get(e.from);
+        if (!pA) return;
+        const loopR = EG_NODE_R * 0.45;
+        const angle = -Math.PI / 2;
+        const cx = pA.x + Math.cos(angle) * (EG_NODE_R + loopR);
+        const cy = pA.y + Math.sin(angle) * (EG_NODE_R + loopR);
+        const lineCol = e.labels.length === 1 ? VERTEX_COLORS[e.labels[0]] : '#aaa';
+        egCtx.beginPath();
+        egCtx.arc(cx, cy, loopR, 0, Math.PI * 2);
+        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 2.5; egCtx.stroke();
+        const lx = pA.x + Math.cos(angle) * (EG_NODE_R + loopR * 2 + 10);
+        const ly = pA.y + Math.sin(angle) * (EG_NODE_R + loopR * 2 + 10);
+        drawEGLabels(lx, ly, e.labels);
+    }
+
     function drawEGEdge(e) {
         const pA = currentEGLayout.get(e.from), pB = currentEGLayout.get(e.to);
         if (!pA || !pB) return;
+        const hasA = e.labelsA.length > 0, hasB = e.labelsB.length > 0;
+        if (!hasA && !hasB) return;
+
         const dx = pB.x-pA.x, dy = pB.y-pA.y;
         const len = norm(dx,dy)+0.01;
         const ux = dx/len, uy = dy/len, px = -uy, py = ux;
-        let curv = 0;
-        if (e._gs > 1) curv = ((e._gi/(e._gs-1))*2-1)*35;
         const gap = EG_NODE_R+2;
-        const cpX = (pA.x+pB.x)/2+px*curv, cpY = (pA.y+pB.y)/2+py*curv;
+        const cpX = (pA.x+pB.x)/2, cpY = (pA.y+pB.y)/2;
         const sdx = cpX-pA.x, sdy = cpY-pA.y, sd = norm(sdx,sdy);
         const edx = pB.x-cpX, edy = pB.y-cpY, ed = norm(edx,edy);
         const sx = pA.x+sdx/sd*gap, sy = pA.y+sdy/sd*gap;
         const ex = pB.x-edx/ed*gap, ey = pB.y-edy/ed*gap;
-        const col = VERTEX_COLORS[e.label];
-        egCtx.beginPath(); egCtx.moveTo(sx,sy);
-        if (Math.abs(curv)<1) egCtx.lineTo(ex,ey);
-        else egCtx.quadraticCurveTo(cpX,cpY,ex,ey);
-        egCtx.strokeStyle = col; egCtx.lineWidth = 2.5; egCtx.stroke();
-        const lx = Math.abs(curv)<1 ? (sx+ex)/2 : (sx+2*cpX+ex)/4;
-        const ly = Math.abs(curv)<1 ? (sy+ey)/2 : (sy+2*cpY+ey)/4;
-        egCtx.beginPath(); egCtx.arc(lx,ly,12,0,Math.PI*2);
-        egCtx.fillStyle='#fff'; egCtx.fill();
-        egCtx.strokeStyle=col; egCtx.lineWidth=1.5; egCtx.stroke();
-        egCtx.fillStyle=col;
-        egCtx.font='bold 14px "Segoe UI",sans-serif';
-        egCtx.textAlign='center'; egCtx.textBaseline='middle';
-        egCtx.fillText(''+(e.label+1),lx,ly);
+
+        const allLabels = [...new Set([...e.labelsA, ...e.labelsB])].sort();
+        const lineCol = allLabels.length === 1 ? VERTEX_COLORS[allLabels[0]] : '#aaa';
+
+        egCtx.beginPath(); egCtx.moveTo(sx,sy); egCtx.lineTo(ex,ey);
+        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 2.5; egCtx.stroke();
+
+        function edgePt(t) {
+            return { x: sx + t*(ex-sx), y: sy + t*(ey-sy) };
+        }
+
+        const sameLabels = hasA && hasB && e.labelsA.length === e.labelsB.length &&
+            e.labelsA.every((v,i) => v === e.labelsB[i]);
+
+        if (sameLabels || (!hasA || !hasB)) {
+            const m = edgePt(0.5);
+            drawEGLabels(m.x, m.y, hasA ? e.labelsA : e.labelsB);
+        } else {
+            const nearA = edgePt(0.28);
+            const nearB = edgePt(0.72);
+            drawEGLabels(nearA.x, nearA.y, e.labelsA);
+            drawEGLabels(nearB.x, nearB.y, e.labelsB);
+        }
     }
 
     function drawEGStub(s) {
@@ -1557,7 +1999,7 @@
             const cy = startY + i * lineH;
             egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
             egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
-            let expr = lpToString(data.cluster[i]);
+            let expr = egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]);
             // auto-size font to fit, with a floor
             let fontSize = 7;
             egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
@@ -1586,13 +2028,16 @@
         sizeEGCanvas();
         const B = quiverToMatrix(quiver);
         const depth = parseInt(document.getElementById('egDepthSelect').value);
-        currentEGGraph = buildExchangeGraph(B, depth);
+        const egUpToPerm = document.getElementById('egPermToggle').checked;
+        egSpecialize = document.getElementById('egSpecToggle').checked;
+        currentEGGraph = buildExchangeGraph(B, depth, egUpToPerm, egSpecialize);
         currentEGLayout = layoutGraph(currentEGGraph, EG_NODE_R);
         const fit = autoFitToCanvas(currentEGLayout, EG_NODE_R, egCanvas);
         egScale = fit[0]; egPanX = fit[1]; egPanY = fit[2];
         drawExchangeGraph();
+        const egTotalEdges = currentEGGraph.edges.length + (currentEGGraph.selfLoops ? currentEGGraph.selfLoops.length : 0);
         let txt = currentEGGraph.nodes.size + ' seed' + (currentEGGraph.nodes.size!==1?'s':'') +
-                  ', ' + currentEGGraph.edges.length + ' edge' + (currentEGGraph.edges.length!==1?'s':'');
+                  ', ' + egTotalEdges + ' edge' + (egTotalEdges!==1?'s':'');
         if (currentEGGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
         document.getElementById('egInfo').innerHTML = txt;
     }
@@ -1683,7 +2128,7 @@
         const colors = ['#3498db','#e74c3c','#27ae60'];
         let html = '';
         for (let i = 0; i < 3; i++) {
-            const expr = lpToString(data.cluster[i]);
+            const expr = egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]);
             html += '<div class="tt-var">'
                   + '<span class="tt-dot" style="background:'+colors[i]+'"></span>'
                   + '<span class="tt-expr">x' + SUB[i] + ' = ' + expr + '</span></div>';
@@ -1751,7 +2196,22 @@
             updateMutationGraph();
         } else { mgNeedsRebuild = true; }
     });
+    document.getElementById('mgPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabMG').classList.contains('active')) {
+            updateMutationGraph();
+        } else { mgNeedsRebuild = true; }
+    });
     document.getElementById('egDepthSelect').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
+    document.getElementById('egPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
+    document.getElementById('egSpecToggle').addEventListener('change', () => {
         if (document.getElementById('tabEG').classList.contains('active')) {
             updateExchangeGraph();
         } else { egNeedsRebuild = true; }
@@ -1813,6 +2273,52 @@
         document.head.appendChild(s);
     }
     document.getElementById('exportPdfBtn').addEventListener('click', exportPdf);
+
+    function exportEGPdf() {
+        if (!currentEGGraph || !currentEGLayout) return;
+        const btn = document.getElementById('egExportPdfBtn');
+        btn.textContent = 'Exporting...'; btn.disabled = true;
+
+        const srcW = egCanvas.width, srcH = egCanvas.height;
+        const offscreen = document.createElement('canvas');
+        offscreen.width = srcW; offscreen.height = srcH;
+        const oCtx = offscreen.getContext('2d');
+        oCtx.fillStyle = '#ffffff';
+        oCtx.fillRect(0, 0, srcW, srcH);
+        oCtx.drawImage(egCanvas, 0, 0);
+
+        const cssW = parseFloat(egCanvas.style.width) || srcW;
+        const cssH = parseFloat(egCanvas.style.height) || srcH;
+
+        function done() { btn.textContent = 'Export PDF'; btn.disabled = false; }
+
+        function doExport() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const imgData = offscreen.toDataURL('image/jpeg', 0.95);
+                const landscape = cssW >= cssH;
+                const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [cssW, cssH] });
+                doc.addImage(imgData, 'JPEG', 0, 0, cssW, cssH);
+                doc.save('exchange_graph.pdf');
+            } catch(err) {
+                console.error('PDF export failed:', err);
+                alert('PDF export failed. Check console for details.');
+            }
+            done();
+        }
+
+        if (window.jspdf) { doExport(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = doExport;
+        s.onerror = function() {
+            console.error('Failed to load jsPDF library');
+            alert('Could not load PDF library. Check your internet connection.');
+            done();
+        };
+        document.head.appendChild(s);
+    }
+    document.getElementById('egExportPdfBtn').addEventListener('click', exportEGPdf);
 
     // Default: scattering diagram quiver
     setQuiver(PRESET_SCATTER);
