@@ -2353,7 +2353,7 @@
     window.addEventListener('mouseup', function() { mgDragging = false; });
 
     // -- mutation graph touch (pan + pinch-zoom) --
-    let mgTouchId = null, mgPinchDist = 0, mgPinchScale = 1;
+    let mgPinchDist = 0;
     mgCanvas.addEventListener('touchstart', function(ev) {
         ev.preventDefault();
         if (ev.touches.length === 1) {
@@ -2361,13 +2361,11 @@
             mgDragging = true;
             mgDragX = t.clientX; mgDragY = t.clientY;
             mgDragPanX = mgPanX; mgDragPanY = mgPanY;
-            mgTouchId = t.identifier;
         } else if (ev.touches.length === 2) {
             mgDragging = false;
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             mgPinchDist = Math.sqrt(dx*dx + dy*dy);
-            mgPinchScale = mgScale;
         }
     }, { passive: false });
     mgCanvas.addEventListener('touchmove', function(ev) {
@@ -2377,23 +2375,22 @@
             mgPanX = mgDragPanX + (t.clientX - mgDragX);
             mgPanY = mgDragPanY + (t.clientY - mgDragY);
             drawMutationGraph();
-        } else if (ev.touches.length === 2) {
+        } else if (ev.touches.length === 2 && mgPinchDist > 0) {
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             const dist = Math.sqrt(dx*dx + dy*dy);
-            if (mgPinchDist > 0) {
-                const ratio = dist / mgPinchDist;
-                const rect = mgCanvas.getBoundingClientRect();
-                const cw = parseFloat(mgCanvas.style.width), ch = parseFloat(mgCanvas.style.height);
-                const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
-                const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
-                const wx = (cx - cw/2 - mgPanX) / mgPinchScale;
-                const wy = (cy - ch/2 - mgPanY) / mgPinchScale;
-                mgScale = Math.max(0.03, Math.min(8, mgPinchScale * ratio));
-                mgPanX = cx - cw/2 - wx * mgScale;
-                mgPanY = cy - ch/2 - wy * mgScale;
-                drawMutationGraph();
-            }
+            const ratio = dist / mgPinchDist;
+            const rect = mgCanvas.getBoundingClientRect();
+            const cw = parseFloat(mgCanvas.style.width), ch = parseFloat(mgCanvas.style.height);
+            const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
+            const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
+            const wx = (cx - cw/2 - mgPanX) / mgScale;
+            const wy = (cy - ch/2 - mgPanY) / mgScale;
+            mgScale = Math.max(0.03, Math.min(8, mgScale * ratio));
+            mgPanX = cx - cw/2 - wx * mgScale;
+            mgPanY = cy - ch/2 - wy * mgScale;
+            mgPinchDist = dist;
+            drawMutationGraph();
         }
     }, { passive: false });
     mgCanvas.addEventListener('touchend', function(ev) {
@@ -2427,7 +2424,7 @@
     window.addEventListener('mouseup', function() { egDragging = false; });
 
     // -- exchange graph touch (pan + pinch-zoom) --
-    let egTouchId = null, egPinchDist = 0, egPinchScale = 1;
+    let egPinchDist = 0;
     egCanvas.addEventListener('touchstart', function(ev) {
         ev.preventDefault();
         if (ev.touches.length === 1) {
@@ -2435,13 +2432,11 @@
             egDragging = true;
             egDragX = t.clientX; egDragY = t.clientY;
             egDragPanX = egPanX; egDragPanY = egPanY;
-            egTouchId = t.identifier;
         } else if (ev.touches.length === 2) {
             egDragging = false;
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             egPinchDist = Math.sqrt(dx*dx + dy*dy);
-            egPinchScale = egScale;
         }
     }, { passive: false });
     egCanvas.addEventListener('touchmove', function(ev) {
@@ -2451,23 +2446,22 @@
             egPanX = egDragPanX + (t.clientX - egDragX);
             egPanY = egDragPanY + (t.clientY - egDragY);
             drawExchangeGraph();
-        } else if (ev.touches.length === 2) {
+        } else if (ev.touches.length === 2 && egPinchDist > 0) {
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             const dist = Math.sqrt(dx*dx + dy*dy);
-            if (egPinchDist > 0) {
-                const ratio = dist / egPinchDist;
-                const rect = egCanvas.getBoundingClientRect();
-                const cw = parseFloat(egCanvas.style.width), ch = parseFloat(egCanvas.style.height);
-                const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
-                const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
-                const wx = (cx - cw/2 - egPanX) / egPinchScale;
-                const wy = (cy - ch/2 - egPanY) / egPinchScale;
-                egScale = Math.max(0.03, Math.min(8, egPinchScale * ratio));
-                egPanX = cx - cw/2 - wx * egScale;
-                egPanY = cy - ch/2 - wy * egScale;
-                drawExchangeGraph();
-            }
+            const ratio = dist / egPinchDist;
+            const rect = egCanvas.getBoundingClientRect();
+            const cw = parseFloat(egCanvas.style.width), ch = parseFloat(egCanvas.style.height);
+            const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
+            const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
+            const wx = (cx - cw/2 - egPanX) / egScale;
+            const wy = (cy - ch/2 - egPanY) / egScale;
+            egScale = Math.max(0.03, Math.min(8, egScale * ratio));
+            egPanX = cx - cw/2 - wx * egScale;
+            egPanY = cy - ch/2 - wy * egScale;
+            egPinchDist = dist;
+            drawExchangeGraph();
         }
     }, { passive: false });
     egCanvas.addEventListener('touchend', function(ev) {
