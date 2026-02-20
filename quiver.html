@@ -63,6 +63,23 @@
             align-items: center;
             gap: 10px;
         }
+        .vector-extras {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
+        .vec-input {
+            width: 36px;
+            padding: 3px 4px;
+            font-size: 13px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .vec-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .vec-input { -moz-appearance: textfield; }
+        .vec-label { font-weight: bold; margin-left: 6px; }
         .random-extras {
             display: flex;
             align-items: center;
@@ -393,6 +410,51 @@
             word-break: break-all; user-select: text;
         }
 
+        /* -- scattering graph tab -- */
+        #tabSG { flex-direction: column; }
+        .sg-toolbar {
+            display: flex; align-items: center; gap: 18px;
+            padding: 8px 20px; flex-shrink: 0; flex-wrap: wrap;
+        }
+        .sg-canvas-wrap {
+            flex: 1; overflow: hidden;
+            padding: 0 12px 10px 12px; position: relative;
+        }
+        #sgCanvas {
+            cursor: grab; border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block;
+            touch-action: none;
+        }
+        #sgCanvas:active { cursor: grabbing; }
+        #sgTooltip {
+            display: none; position: fixed; z-index: 100;
+            background: #fff; border: 1px solid #bbb; border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 10px 14px; pointer-events: none;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 13px; color: #333; max-width: 500px;
+        }
+        #sgTooltip.pinned {
+            pointer-events: auto; cursor: auto;
+            border-color: #3498db;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.25);
+        }
+        #sgTooltip .tt-hint {
+            font-size: 10px; color: #aaa; margin-top: 6px; font-style: italic;
+        }
+        #sgTooltip.pinned .tt-hint { display: none; }
+        #sgTooltip .tt-var {
+            margin: 4px 0; display: flex; align-items: baseline; gap: 6px;
+        }
+        #sgTooltip .tt-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block; flex-shrink: 0;
+        }
+        #sgTooltip .tt-expr {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            word-break: break-all; user-select: text;
+        }
+
         /* -- about tab -- */
         #tabAbout {
             flex-direction: column;
@@ -440,6 +502,9 @@
             .header button { padding: 5px 12px; font-size: 12px; }
             .quiver-picker label { padding: 4px 10px; font-size: 12px; }
             .quiver-controls { gap: 6px; }
+            .vector-extras { gap: 2px; font-size: 12px; flex-wrap: wrap; }
+            .vec-input { width: 30px; font-size: 11px; padding: 2px 3px; }
+            .vec-label { margin-left: 4px; }
             .random-extras { gap: 4px; }
             .random-extras select { font-size: 12px; padding: 4px 6px; }
             .random-extras label { font-size: 12px; }
@@ -451,7 +516,7 @@
             }
             .tab-btn { padding: 8px 14px; font-size: 13px; white-space: nowrap; }
 
-            .mg-toolbar, .eg-toolbar {
+            .mg-toolbar, .eg-toolbar, .sg-toolbar {
                 gap: 8px;
                 padding: 6px 10px;
                 font-size: 12px;
@@ -465,7 +530,7 @@
             .rotate-control input[type="range"] { width: 50px; }
             .mg-info { font-size: 11px; }
 
-            .mg-canvas-wrap, .eg-canvas-wrap { padding: 0 4px 4px 4px; }
+            .mg-canvas-wrap, .eg-canvas-wrap, .sg-canvas-wrap { padding: 0 4px 4px 4px; }
 
             #tabQuiver { padding: 10px 8px; gap: 10px; }
             #tabAbout { padding: 16px 14px 40px 14px; }
@@ -488,11 +553,17 @@
             <label>Quiver:</label>
             <div class="quiver-picker" id="quiverPicker">
                 <input type="radio" name="quiverType" id="qt_scatter" value="scatter" checked>
-                <label for="qt_scatter">F<sub>1</sub></label>
+                <label for="qt_scatter">Vector triple</label>
                 <input type="radio" name="quiverType" id="qt_markov" value="markov">
                 <label for="qt_markov">Markov</label>
                 <input type="radio" name="quiverType" id="qt_random" value="random">
                 <label for="qt_random">Random</label>
+            </div>
+            <div class="vector-extras" id="vectorExtras">
+                <label class="vec-label" style="color:#3498db">v<sub>1</sub>=</label>(<input type="number" id="v1x" value="1" class="vec-input">,<input type="number" id="v1y" value="0" class="vec-input">)
+                <label class="vec-label" style="color:#e74c3c">v<sub>2</sub>=</label>(<input type="number" id="v2x" value="0" class="vec-input">,<input type="number" id="v2y" value="-1" class="vec-input">)
+                <label class="vec-label" style="color:#27ae60">v<sub>3</sub>=</label>(<input type="number" id="v3x" value="-1" class="vec-input">,<input type="number" id="v3y" value="-2" class="vec-input">)
+                <button id="applyVectorsBtn">Apply</button>
             </div>
             <div class="random-extras" id="randomExtras" style="display:none">
                 <select id="maxArrows">
@@ -518,6 +589,7 @@
         <button class="tab-btn active" data-tab="tabQuiver">Quiver</button>
         <button class="tab-btn" data-tab="tabMG">Mutation Graph</button>
         <button class="tab-btn" data-tab="tabEG">Exchange Graph</button>
+        <button class="tab-btn" data-tab="tabSG">Scattering Graph</button>
         <button class="tab-btn" data-tab="tabAbout">About</button>
     </div>
 
@@ -667,6 +739,76 @@
         <div id="egTooltip"></div>
     </div>
 
+    <!-- scattering graph tab -->
+    <div id="tabSG" class="tab-content">
+        <div class="sg-toolbar">
+            <div class="depth-control">
+                <label for="sgDepthSelect">Depth:</label>
+                <select id="sgDepthSelect">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sgPermToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="sgPermToggle">Up to permutation</label>
+            </div>
+            <div class="mg-info" id="sgInfo"></div>
+            <div class="rotate-control">
+                <label>Rotate:</label>
+                <input type="range" id="sgRotate" min="0" max="360" value="0">
+                <span class="angle-label" id="sgAngleLabel">0&deg;</span>
+            </div>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <div class="mg-legend">
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
+                <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#27ae60"></span>&mu;&#x2083;</div>
+                <div class="mg-legend-item"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:2.5px solid #f39c12"></span>initial</div>
+            </div>
+        </div>
+        <div class="sg-canvas-wrap" id="sgWrap">
+            <canvas id="sgCanvas"></canvas>
+            <div class="export-container" id="sgExportContainer">
+                <button class="export-btn" id="sgExportBtn">Export</button>
+                <div class="export-popover" id="sgExportPopover" style="display:none">
+                    <div class="ep-row">
+                        <div class="ep-label">Format</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="sgFmt" value="pdf" checked><span>PDF</span></label>
+                            <label><input type="radio" name="sgFmt" value="png"><span>PNG</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <div class="ep-label">Resolution</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="sgRes" value="2"><span>2&times;</span></label>
+                            <label><input type="radio" name="sgRes" value="4" checked><span>4&times;</span></label>
+                            <label><input type="radio" name="sgRes" value="8"><span>8&times;</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <button class="ep-go" id="sgExportGo">Export</button>
+                    </div>
+                </div>
+            </div>
+            <div class="loading-overlay" id="sgLoading" style="display:none">
+                <div class="loading-text" id="sgLoadingText">Building graph...</div>
+                <div class="loading-bar-track"><div class="loading-bar-fill" id="sgLoadingBar"></div></div>
+            </div>
+        </div>
+        <div id="sgTooltip"></div>
+    </div>
+
     <!-- about tab -->
     <div id="tabAbout" class="tab-content">
         <h2>AI Assistance</h2>
@@ -759,13 +901,12 @@
         <h2>Preset quivers</h2>
         <ul>
             <li>
-                $\mathbf{F}_1$ &mdash; The quiver associated with the scattering diagram for the
-                Hirzebruch surface $F_1$, with rays
-                $\mathbf{v}_1 = (1, 0)$,
-                $\mathbf{v}_2 = (0, -1)$,
-                $\mathbf{v}_3 = (-1, -2)$.
+                <b>Vector triple</b> &mdash; A quiver defined by three user-specified vectors
+                $\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3 \in \mathbb{Z}^2$.
                 The exchange matrix entry $B_{ij}$ is the determinant
                 $\det(\mathbf{v}_i, \mathbf{v}_j)$.
+                The default vectors $(1, 0), (0, -1), (-1, -2)$ correspond
+                to the Hirzebruch surface $F_1$.
             </li>
             <li>
                 <b>Markov</b> &mdash; A 3-cycle with 2 arrows on each edge, related to the Markov equation
@@ -854,6 +995,13 @@
     let egSpecialize = false;
     let egNeedsRebuild = true;
 
+    let currentSGGraph = null, currentSGLayout = null;
+    let sgScale = 1, sgPanX = 0, sgPanY = 0;
+    let sgDragging = false, sgDragX = 0, sgDragY = 0, sgDragPanX = 0, sgDragPanY = 0;
+    let sgRotation = 0;
+    let sgNeedsRebuild = true;
+    const SG_NODE_W = 120, SG_NODE_H = 100, SG_NODE_R = 78;
+
     // ===========================================================
     //  CANVASES
     // ===========================================================
@@ -863,6 +1011,8 @@
     const mgCtx = mgCanvas.getContext('2d');
     const egCanvas = document.getElementById('egCanvas');
     const egCtx = egCanvas.getContext('2d');
+    const sgCanvas = document.getElementById('sgCanvas');
+    const sgCtx = sgCanvas.getContext('2d');
 
     // Vertex positions for main quiver display (recomputed on resize)
     let qCenterX, qCenterY, triR;
@@ -908,6 +1058,10 @@
                 sizeEGCanvas();
                 if (egNeedsRebuild) { updateExchangeGraph(); egNeedsRebuild = false; }
                 else drawExchangeGraph();
+            } else if (btn.dataset.tab === 'tabSG') {
+                sizeSGCanvas();
+                if (sgNeedsRebuild) { updateScatteringGraph(); sgNeedsRebuild = false; }
+                else drawScatteringGraph();
             } else if (btn.dataset.tab === 'tabAbout') {
                 if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                     MathJax.typesetPromise([document.getElementById('tabAbout')]);
@@ -938,6 +1092,14 @@
         egCanvas.width = Math.round(w * dpr); egCanvas.height = Math.round(h * dpr);
         egCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+    function sizeSGCanvas() {
+        const wrap = document.getElementById('sgWrap');
+        const dpr = window.devicePixelRatio || 1;
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        sgCanvas.style.width = w + 'px'; sgCanvas.style.height = h + 'px';
+        sgCanvas.width = Math.round(w * dpr); sgCanvas.height = Math.round(h * dpr);
+        sgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
     window.addEventListener('resize', () => {
         if (document.getElementById('tabQuiver').classList.contains('active')) {
             sizeQuiverCanvas(); drawQuiver();
@@ -948,17 +1110,44 @@
         if (document.getElementById('tabEG').classList.contains('active')) {
             sizeEGCanvas(); drawExchangeGraph();
         }
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            sizeSGCanvas(); drawScatteringGraph();
+        }
     });
 
     // ===========================================================
     //  PRESET QUIVERS
     // ===========================================================
-    // Q_{F_1}: rays v1=(1,0), v2=(0,-1), v3=(-1,-2)
-    // B[i][j] = det(vi, vj) => B = [[0,-1,-2],[1,0,-1],[2,1,0]]
-    const PRESET_SCATTER = [[0,0,0],[1,0,0],[2,1,0]];
-
     // Markov quiver: 3-cycle, 2 arrows on each edge
     const PRESET_MARKOV = [[0,2,0],[0,0,2],[2,0,0]];
+
+    // Current custom vectors for vector triple mode
+    let customVectors = [[1, 0], [0, -1], [-1, -2]];
+
+    function raysToQuiver(rays) {
+        // Build upper-triangular quiver from det(vi, vj)
+        const Q = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i = 0; i < 3; i++)
+            for (let j = i + 1; j < 3; j++) {
+                const d = rays[i][0] * rays[j][1] - rays[i][1] * rays[j][0];
+                if (d > 0) Q[i][j] = d;
+                else if (d < 0) Q[j][i] = -d;
+            }
+        return Q;
+    }
+
+    function readVectorInputs() {
+        return [
+            [parseInt(document.getElementById('v1x').value) || 0, parseInt(document.getElementById('v1y').value) || 0],
+            [parseInt(document.getElementById('v2x').value) || 0, parseInt(document.getElementById('v2y').value) || 0],
+            [parseInt(document.getElementById('v3x').value) || 0, parseInt(document.getElementById('v3y').value) || 0]
+        ];
+    }
+
+    function applyVectorTriple() {
+        customVectors = readVectorInputs();
+        setQuiver(raysToQuiver(customVectors));
+    }
 
     // ===========================================================
     //  QUIVER SELECTION
@@ -973,6 +1162,9 @@
         if (document.getElementById('tabEG').classList.contains('active')) {
             updateExchangeGraph(); egNeedsRebuild = false;
         } else { egNeedsRebuild = true; }
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            updateScatteringGraph(); sgNeedsRebuild = false;
+        } else { sgNeedsRebuild = true; }
     }
 
     function generateRandomQuiver() {
@@ -997,8 +1189,9 @@
     }
     function applyQuiverSelection() {
         const type = getQuiverType();
+        document.getElementById('vectorExtras').style.display = type === 'scatter' ? 'flex' : 'none';
         document.getElementById('randomExtras').style.display = type === 'random' ? 'flex' : 'none';
-        if (type === 'scatter') setQuiver(PRESET_SCATTER);
+        if (type === 'scatter') applyVectorTriple();
         else if (type === 'markov') setQuiver(PRESET_MARKOV);
         else generateRandomQuiver();
     }
@@ -1757,6 +1950,32 @@
                         vx[b] += dx*h; vy[b] += dy*h;
                         vx[c] -= dx*h; vy[c] -= dy*h;
                         vx[d] -= dx*h; vy[d] -= dy*h;
+                    }
+                }
+            }
+
+            // Node-edge repulsion: push nodes away from non-adjacent edges
+            if (n <= 200 && edgeIdx.length <= 500) {
+                for (const [a, b] of edgeIdx) {
+                    for (let c = 0; c < n; c++) {
+                        if (c === a || c === b) continue;
+                        // Closest point on segment ab to point c
+                        const abx = px[b] - px[a], aby = py[b] - py[a];
+                        const acx = px[c] - px[a], acy = py[c] - py[a];
+                        const ab2 = abx * abx + aby * aby + 1;
+                        const t = Math.max(0, Math.min(1, (acx * abx + acy * aby) / ab2));
+                        const cx2 = px[a] + t * abx, cy2 = py[a] + t * aby;
+                        let dx = px[c] - cx2, dy = py[c] - cy2;
+                        const dist = Math.sqrt(dx * dx + dy * dy) + 1;
+                        const minDist = nodeR * 1.8;
+                        if (dist < minDist) {
+                            const strength = (minDist - dist) * 0.3 * temp;
+                            dx = dx / dist * strength; dy = dy / dist * strength;
+                            vx[c] += dx; vy[c] += dy;
+                            // Push edge endpoints slightly in opposite direction
+                            vx[a] -= dx * 0.15; vy[a] -= dy * 0.15;
+                            vx[b] -= dx * 0.15; vy[b] -= dy * 0.15;
+                        }
                     }
                 }
             }
@@ -2562,9 +2781,627 @@
     });
 
     // ===========================================================
+    //  SCATTERING GRAPH — VECTOR MATH
+    // ===========================================================
+    function wedge(w, v) { return w[0] * v[1] - w[1] * v[0]; }
+
+    function muV(v, w) {
+        const d = Math.min(wedge(w, v), 0);
+        return [w[0] + d * v[0], w[1] + d * v[1]];
+    }
+
+    function muVInv(v, w) {
+        const d = Math.min(wedge(w, v), 0);
+        return [w[0] - d * v[0], w[1] - d * v[1]];
+    }
+
+    function scatterMutate(triple, k) {
+        const vk = triple[k];
+        return triple.map((v, i) => {
+            if (i === k) return [-v[0], -v[1]];
+            return muV(vk, v);
+        });
+    }
+
+    function computeBaseMap(triple, path) {
+        let T = triple.map(v => [v[0], v[1]]);
+        for (let s = path.length - 1; s >= 0; s--) {
+            const ik = path[s];
+            const neg_v = [-T[ik][0], -T[ik][1]];
+            T = T.map(w => muVInv(neg_v, w));
+        }
+        return T;
+    }
+
+    function sgTripleKey(T) {
+        return T.map(v => v[0] + ',' + v[1]).join('|');
+    }
+    function sgCanonicalTripleKey(T) {
+        const perms = [
+            [0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]
+        ];
+        let best = null;
+        for (const p of perms) {
+            const k = T[p[0]][0]+','+T[p[0]][1]+'|'+T[p[1]][0]+','+T[p[1]][1]+'|'+T[p[2]][0]+','+T[p[2]][1];
+            if (best === null || k < best) best = k;
+        }
+        return best;
+    }
+
+    function quiverToRays(B) {
+        // Derive Z² vectors v1,v2,v3 with det(vi,vj) = B[i][j]
+        if (B[0][1] !== 0) {
+            const v1 = [1, 0];
+            const v2 = [0, B[0][1]];
+            if (B[1][2] % B[0][1] === 0) {
+                const v3 = [-B[1][2] / B[0][1], B[0][2]];
+                return [v1, v2, v3];
+            }
+        }
+        if (B[0][2] !== 0) {
+            const v1 = [1, 0];
+            const v3 = [0, B[0][2]];
+            if (B[1][2] % B[0][2] === 0) {
+                const v2 = [B[1][2] / B[0][2], B[0][1]];
+                return [v1, v2, v3];
+            }
+        }
+        if (B[1][2] !== 0) {
+            const v2 = [1, 0];
+            const v3 = [0, B[1][2]];
+            const v1 = [0, 0]; // det(v1,v2)=B[0][1] → v1[1]=B[0][1]; det(v1,v3)=B[0][2] → v1[0]*B[1][2]=B[0][2]
+            v1[1] = B[0][1];
+            if (B[1][2] !== 0 && B[0][2] % B[1][2] === 0) {
+                v1[0] = B[0][2] / B[1][2];
+                return [v1, v2, v3];
+            }
+        }
+        // Fallback: zero quiver
+        return [[1, 0], [0, 1], [-1, -1]];
+    }
+
+    // ===========================================================
+    //  SCATTERING GRAPH — BFS CONSTRUCTION
+    // ===========================================================
+    function buildScatteringGraph(initialRays, maxDepth, upToPermutation) {
+        const keyFn = upToPermutation ? sgCanonicalTripleKey : sgTripleKey;
+        const nodes = new Map();
+        const edgeSet = new Set();
+        const rawEdges = [];
+        const rawSelfLoops = [];
+
+        const initBM = computeBaseMap(initialRays, []);
+        const ik = keyFn(initBM);
+        nodes.set(ik, { triple: initialRays.map(v => [v[0], v[1]]), path: [], baseMap: initBM, depth: 0 });
+        let frontier = [ik];
+        let capped = false;
+
+        for (let d = 0; d < maxDepth; d++) {
+            const next = [];
+            for (const key of frontier) {
+                const nd = nodes.get(key);
+                const lastMut = nd.path.length > 0 ? nd.path[nd.path.length - 1] : -1;
+                for (let k = 0; k < 3; k++) {
+                    if (k === lastMut) continue; // no consecutive repeats
+                    const newTriple = scatterMutate(nd.triple, k);
+                    const newPath = nd.path.concat(k);
+                    const newBM = computeBaseMap(newTriple, newPath);
+                    const nk = keyFn(newBM);
+
+                    if (nk === key) {
+                        rawSelfLoops.push({ node: key, label: k });
+                        continue;
+                    }
+
+                    const ek1 = key + '>' + nk + '|' + k;
+                    const ek2 = nk + '>' + key + '|' + k;
+                    if (!edgeSet.has(ek1)) {
+                        edgeSet.add(ek1); edgeSet.add(ek2);
+                    }
+                    rawEdges.push({ from: key, to: nk, label: k });
+
+                    if (!nodes.has(nk)) {
+                        if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
+                        nodes.set(nk, { triple: newTriple, path: newPath, baseMap: newBM, depth: d + 1 });
+                        next.push(nk);
+                    }
+                }
+            }
+            frontier = next;
+        }
+
+        // Boundary edges from frontier into known nodes
+        for (const key of frontier) {
+            const nd = nodes.get(key);
+            const lastMut = nd.path.length > 0 ? nd.path[nd.path.length - 1] : -1;
+            for (let k = 0; k < 3; k++) {
+                if (k === lastMut) continue;
+                const newTriple = scatterMutate(nd.triple, k);
+                const newPath = nd.path.concat(k);
+                const newBM = computeBaseMap(newTriple, newPath);
+                const nk = keyFn(newBM);
+                if (!nodes.has(nk)) continue;
+                rawEdges.push({ from: key, to: nk, label: k });
+            }
+        }
+
+        // Stubs for unexplored frontier edges
+        const stubs = [];
+        for (const key of frontier) {
+            const nd = nodes.get(key);
+            const lastMut = nd.path.length > 0 ? nd.path[nd.path.length - 1] : -1;
+            for (let k = 0; k < 3; k++) {
+                if (k === lastMut) continue;
+                const newTriple = scatterMutate(nd.triple, k);
+                const newPath = nd.path.concat(k);
+                const newBM = computeBaseMap(newTriple, newPath);
+                const nk = keyFn(newBM);
+                if (!nodes.has(nk)) {
+                    stubs.push({ from: key, label: k });
+                }
+            }
+        }
+
+        // Consolidate raw edges into visual edges with labelsA/labelsB
+        const pairMap = new Map();
+        const selfLoopMap = new Map();
+        for (const e of rawEdges) {
+            if (e.from === e.to) {
+                if (!selfLoopMap.has(e.from)) selfLoopMap.set(e.from, []);
+                selfLoopMap.get(e.from).push(e.label);
+                continue;
+            }
+            const aKey = e.from < e.to ? e.from : e.to;
+            const bKey = e.from < e.to ? e.to : e.from;
+            const pk = aKey + '||' + bKey;
+            if (!pairMap.has(pk)) pairMap.set(pk, { a: aKey, b: bKey, labelsA: [], labelsB: [] });
+            const p = pairMap.get(pk);
+            if (e.from === p.a) { if (!p.labelsA.includes(e.label)) p.labelsA.push(e.label); }
+            else { if (!p.labelsB.includes(e.label)) p.labelsB.push(e.label); }
+        }
+        for (const e of rawSelfLoops) {
+            if (!selfLoopMap.has(e.node)) selfLoopMap.set(e.node, []);
+            const arr = selfLoopMap.get(e.node);
+            if (!arr.includes(e.label)) arr.push(e.label);
+        }
+        const edges = [];
+        for (const p of pairMap.values()) {
+            edges.push({ from: p.a, to: p.b, labelsA: p.labelsA.sort(), labelsB: p.labelsB.sort() });
+        }
+        const selfLoops = [];
+        for (const [nodeKey, labels] of selfLoopMap) {
+            selfLoops.push({ from: nodeKey, labels: labels.sort() });
+        }
+
+        return { nodes, edges, selfLoops, stubs, initialKey: ik, capped };
+    }
+
+    // ===========================================================
+    //  SCATTERING GRAPH — DRAWING
+    // ===========================================================
+    const EDGE_COLORS_SG = ['#3498db', '#e74c3c', '#27ae60'];
+
+    function drawSGNode(x, y, data, isInitial) {
+        const w2 = SG_NODE_W / 2, h2 = SG_NODE_H / 2;
+        roundedRect(sgCtx, x - w2, y - h2, SG_NODE_W, SG_NODE_H, 8);
+        sgCtx.fillStyle = isInitial ? '#fffde7' : '#fff';
+        sgCtx.fill();
+        sgCtx.lineWidth = isInitial ? 3 : 1.5;
+        sgCtx.strokeStyle = isInitial ? '#f39c12' : '#bdc3c7';
+        sgCtx.stroke();
+
+        // Draw 3 base-mapped vectors as arrows in upper portion
+        const bm = data.baseMap;
+        const arrowCX = x, arrowCY = y - h2 + 28;
+        const arrowR = 22;
+        let maxComp = 1;
+        for (const v of bm) { maxComp = Math.max(maxComp, Math.abs(v[0]), Math.abs(v[1])); }
+        const scale = arrowR / maxComp;
+
+        for (let i = 0; i < 3; i++) {
+            const vx = bm[i][0] * scale, vy = -bm[i][1] * scale;
+            const len = Math.sqrt(vx * vx + vy * vy);
+            if (len < 1) continue;
+            sgCtx.beginPath();
+            sgCtx.moveTo(arrowCX, arrowCY);
+            sgCtx.lineTo(arrowCX + vx, arrowCY + vy);
+            sgCtx.strokeStyle = EDGE_COLORS_SG[i];
+            sgCtx.lineWidth = 2;
+            sgCtx.stroke();
+            if (len > 6) {
+                const ux = vx / len, uy = vy / len;
+                const ax = arrowCX + vx, ay = arrowCY + vy;
+                const ah = 4;
+                sgCtx.beginPath();
+                sgCtx.moveTo(ax, ay);
+                sgCtx.lineTo(ax - ux * ah + uy * ah * 0.5, ay - uy * ah - ux * ah * 0.5);
+                sgCtx.lineTo(ax - ux * ah - uy * ah * 0.5, ay - uy * ah + ux * ah * 0.5);
+                sgCtx.closePath();
+                sgCtx.fillStyle = EDGE_COLORS_SG[i];
+                sgCtx.fill();
+            }
+        }
+
+        // Separator line
+        const sepY = y - h2 + 52;
+        sgCtx.beginPath();
+        sgCtx.moveTo(x - w2 + 6, sepY);
+        sgCtx.lineTo(x + w2 - 6, sepY);
+        sgCtx.strokeStyle = '#e0e0e0';
+        sgCtx.lineWidth = 0.5;
+        sgCtx.stroke();
+
+        // Vector labels below separator
+        const labels = ['v\u2081', 'v\u2082', 'v\u2083'];
+        const startY = sepY + 11;
+        const lineH = 13;
+        const textW = SG_NODE_W - 22;
+        sgCtx.textAlign = 'left';
+        sgCtx.textBaseline = 'middle';
+        for (let i = 0; i < 3; i++) {
+            const cy = startY + i * lineH;
+            sgCtx.beginPath();
+            sgCtx.arc(x - w2 + 10, cy, 2.5, 0, Math.PI * 2);
+            sgCtx.fillStyle = EDGE_COLORS_SG[i];
+            sgCtx.fill();
+            const expr = labels[i] + ' = (' + bm[i][0] + ', ' + bm[i][1] + ')';
+            let fontSize = 7;
+            sgCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+            let measured = sgCtx.measureText(expr).width;
+            if (measured > textW) {
+                fontSize = Math.max(4, Math.floor(fontSize * textW / measured));
+                sgCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+            }
+            sgCtx.fillStyle = '#333';
+            sgCtx.fillText(expr, x - w2 + 16, cy);
+        }
+    }
+
+    function drawSGLabels(cx, cy, labels) {
+        if (labels.length === 0) return;
+        if (labels.length === 1) {
+            const col = EDGE_COLORS_SG[labels[0]];
+            sgCtx.beginPath(); sgCtx.arc(cx, cy, 12, 0, Math.PI * 2);
+            sgCtx.fillStyle = '#fff'; sgCtx.fill();
+            sgCtx.strokeStyle = col; sgCtx.lineWidth = 1.5; sgCtx.stroke();
+            sgCtx.fillStyle = col;
+            sgCtx.font = 'bold 14px "Segoe UI",sans-serif';
+            sgCtx.textAlign = 'center'; sgCtx.textBaseline = 'middle';
+            sgCtx.fillText('' + (labels[0] + 1), cx, cy);
+            return;
+        }
+        const gap = 20;
+        const totalW = (labels.length - 1) * gap;
+        const startX = cx - totalW / 2;
+        const pillR = 12;
+        const left = startX - pillR, right = startX + totalW + pillR;
+        const top = cy - pillR, bot = cy + pillR;
+        sgCtx.beginPath();
+        sgCtx.moveTo(left + pillR, top);
+        sgCtx.arcTo(right, top, right, bot, pillR);
+        sgCtx.arcTo(right, bot, left, bot, pillR);
+        sgCtx.arcTo(left, bot, left, top, pillR);
+        sgCtx.arcTo(left, top, right, top, pillR);
+        sgCtx.closePath();
+        sgCtx.fillStyle = '#fff'; sgCtx.fill();
+        sgCtx.strokeStyle = '#bbb'; sgCtx.lineWidth = 1.2; sgCtx.stroke();
+        sgCtx.font = 'bold 14px "Segoe UI",sans-serif';
+        sgCtx.textAlign = 'center'; sgCtx.textBaseline = 'middle';
+        for (let i = 0; i < labels.length; i++) {
+            sgCtx.fillStyle = EDGE_COLORS_SG[labels[i]];
+            sgCtx.fillText('' + (labels[i] + 1), startX + i * gap, cy);
+        }
+    }
+
+    function drawSGEdge(e) {
+        const pA = currentSGLayout.get(e.from), pB = currentSGLayout.get(e.to);
+        if (!pA || !pB) return;
+        const hasA = e.labelsA.length > 0, hasB = e.labelsB.length > 0;
+        if (!hasA && !hasB) return;
+
+        const dx = pB.x - pA.x, dy = pB.y - pA.y;
+        const len = norm(dx, dy) + 0.01;
+        const gap = SG_NODE_R + 2;
+        const cpX = (pA.x + pB.x) / 2, cpY = (pA.y + pB.y) / 2;
+        const sdx = cpX - pA.x, sdy = cpY - pA.y, sd = norm(sdx, sdy);
+        const edx = pB.x - cpX, edy = pB.y - cpY, ed = norm(edx, edy);
+        const sx = pA.x + sdx / sd * gap, sy = pA.y + sdy / sd * gap;
+        const ex = pB.x - edx / ed * gap, ey = pB.y - edy / ed * gap;
+
+        const allLabels = [...new Set([...e.labelsA, ...e.labelsB])].sort();
+        const lineCol = allLabels.length === 1 ? EDGE_COLORS_SG[allLabels[0]] : '#aaa';
+
+        sgCtx.beginPath(); sgCtx.moveTo(sx, sy); sgCtx.lineTo(ex, ey);
+        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 2.5; sgCtx.stroke();
+
+        function edgePt(t) { return { x: sx + t * (ex - sx), y: sy + t * (ey - sy) }; }
+
+        const sameLabels = hasA && hasB && e.labelsA.length === e.labelsB.length &&
+            e.labelsA.every((v, i) => v === e.labelsB[i]);
+
+        if (sameLabels || (!hasA || !hasB)) {
+            const m = edgePt(0.5);
+            drawSGLabels(m.x, m.y, hasA ? e.labelsA : e.labelsB);
+        } else {
+            const nearA = edgePt(0.28);
+            const nearB = edgePt(0.72);
+            drawSGLabels(nearA.x, nearA.y, e.labelsA);
+            drawSGLabels(nearB.x, nearB.y, e.labelsB);
+        }
+    }
+
+    function drawSGSelfLoop(e) {
+        const pA = currentSGLayout.get(e.from);
+        if (!pA) return;
+        const loopR = SG_NODE_R * 0.4;
+        const angle = -Math.PI / 2;
+        const cx = pA.x + Math.cos(angle) * (SG_NODE_R + loopR);
+        const cy = pA.y + Math.sin(angle) * (SG_NODE_R + loopR);
+        const lineCol = e.labels.length === 1 ? EDGE_COLORS_SG[e.labels[0]] : '#aaa';
+        sgCtx.beginPath();
+        sgCtx.arc(cx, cy, loopR, 0, Math.PI * 2);
+        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 2.5; sgCtx.stroke();
+        const lx = pA.x + Math.cos(angle) * (SG_NODE_R + loopR * 2 + 10);
+        const ly = pA.y + Math.sin(angle) * (SG_NODE_R + loopR * 2 + 10);
+        drawSGLabels(lx, ly, e.labels);
+    }
+
+    function drawSGStub(s) {
+        const p = currentSGLayout.get(s.from);
+        if (!p) return;
+        // Draw short stub outward
+        let angle = 0, count = 0;
+        for (const [key, data] of currentSGGraph.nodes) {
+            const pp = currentSGLayout.get(key);
+            if (pp && key !== s.from) { angle += Math.atan2(pp.y - p.y, pp.x - p.x); count++; }
+        }
+        const away = count > 0 ? (angle / count + Math.PI) : s.label * Math.PI * 2 / 3;
+        const stubLen = 20;
+        const sx = p.x + Math.cos(away) * SG_NODE_R;
+        const sy = p.y + Math.sin(away) * SG_NODE_R;
+        sgCtx.beginPath();
+        sgCtx.moveTo(sx, sy);
+        sgCtx.lineTo(sx + Math.cos(away) * stubLen, sy + Math.sin(away) * stubLen);
+        sgCtx.strokeStyle = EDGE_COLORS_SG[s.label];
+        sgCtx.lineWidth = 2;
+        sgCtx.setLineDash([4, 4]);
+        sgCtx.stroke();
+        sgCtx.setLineDash([]);
+    }
+
+    function drawScatteringGraph() {
+        const cw = parseFloat(sgCanvas.style.width) || sgCanvas.width;
+        const ch = parseFloat(sgCanvas.style.height) || sgCanvas.height;
+        sgCtx.clearRect(0, 0, sgCanvas.width, sgCanvas.height);
+        if (!currentSGGraph || !currentSGLayout) return;
+
+        sgCtx.save();
+        sgCtx.translate(cw / 2 + sgPanX, ch / 2 + sgPanY);
+        sgCtx.rotate(sgRotation);
+        sgCtx.scale(sgScale, sgScale);
+
+        if (currentSGGraph.stubs) for (const s of currentSGGraph.stubs) drawSGStub(s);
+        for (const e of currentSGGraph.edges) drawSGEdge(e);
+        if (currentSGGraph.selfLoops) for (const e of currentSGGraph.selfLoops) drawSGSelfLoop(e);
+        for (const [key, data] of currentSGGraph.nodes) {
+            const p = currentSGLayout.get(key);
+            if (p) drawSGNode(p.x, p.y, data, key === currentSGGraph.initialKey);
+        }
+
+        sgCtx.restore();
+    }
+
+    // ===========================================================
+    //  SCATTERING GRAPH — ASYNC UPDATE
+    // ===========================================================
+    let sgGeneration = 0;
+    async function updateScatteringGraph() {
+        const gen = ++sgGeneration;
+        sizeSGCanvas();
+        showLoading('sgLoading', 'Building graph\u2026', 5);
+        await sleep(0);
+        if (gen !== sgGeneration) return;
+
+        const rays = (getQuiverType() === 'scatter')
+            ? customVectors.map(v => [v[0], v[1]])
+            : quiverToRays(quiverToMatrix(quiver));
+        const depth = parseInt(document.getElementById('sgDepthSelect').value);
+        const sgUpToPerm = document.getElementById('sgPermToggle').checked;
+        currentSGGraph = buildScatteringGraph(rays, depth, sgUpToPerm);
+        if (gen !== sgGeneration) return;
+
+        updateLoading('sgLoading', 'Computing layout\u2026', 15);
+        await sleep(0);
+        if (gen !== sgGeneration) return;
+
+        currentSGLayout = await layoutGraph(currentSGGraph, SG_NODE_R, (p) => {
+            if (gen === sgGeneration) updateLoading('sgLoading', 'Computing layout\u2026', 15 + p * 83);
+        });
+        if (gen !== sgGeneration) return;
+
+        updateLoading('sgLoading', 'Drawing\u2026', 99);
+        await sleep(0);
+
+        const fit = autoFitToCanvas(currentSGLayout, SG_NODE_R, sgCanvas);
+        sgScale = fit[0]; sgPanX = fit[1]; sgPanY = fit[2];
+        drawScatteringGraph();
+
+        const totalEdges = currentSGGraph.edges.length + currentSGGraph.selfLoops.length;
+        let txt = currentSGGraph.nodes.size + ' node' + (currentSGGraph.nodes.size !== 1 ? 's' : '') +
+                  ', ' + totalEdges + ' edge' + (totalEdges !== 1 ? 's' : '');
+        if (currentSGGraph.capped) txt += ' <span class="warn">(truncated at ' + MAX_GRAPH_NODES + ' nodes)</span>';
+        document.getElementById('sgInfo').innerHTML = txt;
+        hideLoading('sgLoading');
+    }
+
+    // ===========================================================
+    //  SCATTERING GRAPH — ZOOM, PAN, TOUCH
+    // ===========================================================
+    sgCanvas.addEventListener('wheel', function(ev) {
+        ev.preventDefault();
+        const rect = sgCanvas.getBoundingClientRect();
+        const cw = parseFloat(sgCanvas.style.width), ch = parseFloat(sgCanvas.style.height);
+        const mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+        const wx = (mx - cw / 2 - sgPanX) / sgScale, wy = (my - ch / 2 - sgPanY) / sgScale;
+        const factor = Math.exp(-ev.deltaY * 0.002);
+        sgScale = Math.max(0.03, Math.min(8, sgScale * factor));
+        sgPanX = mx - cw / 2 - wx * sgScale;
+        sgPanY = my - ch / 2 - wy * sgScale;
+        drawScatteringGraph();
+    }, { passive: false });
+
+    sgCanvas.addEventListener('mousedown', function(ev) {
+        sgDragging = true;
+        sgDragX = ev.clientX; sgDragY = ev.clientY;
+        sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+    });
+    window.addEventListener('mousemove', function(ev) {
+        if (!sgDragging) return;
+        sgPanX = sgDragPanX + (ev.clientX - sgDragX);
+        sgPanY = sgDragPanY + (ev.clientY - sgDragY);
+        drawScatteringGraph();
+    });
+    window.addEventListener('mouseup', function() { sgDragging = false; });
+
+    let sgPinchDist = 0;
+    sgCanvas.addEventListener('touchstart', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1) {
+            const t = ev.touches[0];
+            sgDragging = true;
+            sgDragX = t.clientX; sgDragY = t.clientY;
+            sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+        } else if (ev.touches.length === 2) {
+            sgDragging = false;
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            sgPinchDist = Math.sqrt(dx * dx + dy * dy);
+        }
+    }, { passive: false });
+    sgCanvas.addEventListener('touchmove', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1 && sgDragging) {
+            const t = ev.touches[0];
+            sgPanX = sgDragPanX + (t.clientX - sgDragX);
+            sgPanY = sgDragPanY + (t.clientY - sgDragY);
+            drawScatteringGraph();
+        } else if (ev.touches.length === 2 && sgPinchDist > 0) {
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const ratio = dist / sgPinchDist;
+            const rect = sgCanvas.getBoundingClientRect();
+            const cw = parseFloat(sgCanvas.style.width), ch = parseFloat(sgCanvas.style.height);
+            const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
+            const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
+            const wx = (cx - cw / 2 - sgPanX) / sgScale;
+            const wy = (cy - ch / 2 - sgPanY) / sgScale;
+            sgScale = Math.max(0.03, Math.min(8, sgScale * ratio));
+            sgPanX = cx - cw / 2 - wx * sgScale;
+            sgPanY = cy - ch / 2 - wy * sgScale;
+            sgPinchDist = dist;
+            drawScatteringGraph();
+        }
+    }, { passive: false });
+    sgCanvas.addEventListener('touchend', function(ev) {
+        ev.preventDefault();
+        sgDragging = false;
+        sgPinchDist = 0;
+    }, { passive: false });
+
+    // ===========================================================
+    //  SCATTERING GRAPH — TOOLTIP
+    // ===========================================================
+    const sgTooltip = document.getElementById('sgTooltip');
+    let sgTooltipKey = null;
+    let sgTooltipPinned = false;
+
+    function sgScreenToWorld(sx, sy) {
+        const rect = sgCanvas.getBoundingClientRect();
+        const cw = parseFloat(sgCanvas.style.width), ch = parseFloat(sgCanvas.style.height);
+        let x = (sx - rect.left) - cw / 2 - sgPanX;
+        let y = (sy - rect.top) - ch / 2 - sgPanY;
+        const c = Math.cos(-sgRotation), s = Math.sin(-sgRotation);
+        const rx = x * c - y * s, ry = x * s + y * c;
+        return { x: rx / sgScale, y: ry / sgScale };
+    }
+
+    function sgHitTest(sx, sy) {
+        if (!currentSGGraph || !currentSGLayout) return null;
+        const w = sgScreenToWorld(sx, sy);
+        const hw = SG_NODE_W / 2, hh = SG_NODE_H / 2;
+        for (const [key, data] of currentSGGraph.nodes) {
+            const p = currentSGLayout.get(key);
+            if (!p) continue;
+            if (w.x >= p.x - hw && w.x <= p.x + hw && w.y >= p.y - hh && w.y <= p.y + hh) {
+                return { key, data };
+            }
+        }
+        return null;
+    }
+
+    function sgBuildTooltipHTML(data) {
+        const colors = ['#3498db', '#e74c3c', '#27ae60'];
+        const labels = ['v\u2081', 'v\u2082', 'v\u2083'];
+        let html = '';
+        for (let i = 0; i < 3; i++) {
+            const v = data.baseMap[i];
+            html += '<div class="tt-var">'
+                  + '<span class="tt-dot" style="background:' + colors[i] + '"></span>'
+                  + '<span class="tt-expr">' + labels[i] + ' = (' + v[0] + ', ' + v[1] + ')</span></div>';
+        }
+        html += '<div class="tt-hint">click to pin</div>';
+        return html;
+    }
+
+    function sgDismissTooltip() {
+        sgTooltip.style.display = 'none';
+        sgTooltip.classList.remove('pinned');
+        sgTooltipKey = null;
+        sgTooltipPinned = false;
+    }
+
+    sgCanvas.addEventListener('mousemove', function(ev) {
+        if (sgDragging || sgTooltipPinned) return;
+        const hit = sgHitTest(ev.clientX, ev.clientY);
+        if (!hit) { if (sgTooltipKey) sgDismissTooltip(); return; }
+        if (hit.key !== sgTooltipKey) {
+            sgTooltipKey = hit.key;
+            sgTooltip.innerHTML = sgBuildTooltipHTML(hit.data);
+            sgTooltip.style.display = 'block';
+        }
+        sgTooltip.style.left = (ev.clientX + 14) + 'px';
+        sgTooltip.style.top = (ev.clientY + 14) + 'px';
+    });
+    sgCanvas.addEventListener('click', function(ev) {
+        if (sgTooltipPinned) { sgDismissTooltip(); return; }
+        const hit = sgHitTest(ev.clientX, ev.clientY);
+        if (!hit) return;
+        sgTooltipKey = hit.key;
+        sgTooltipPinned = true;
+        sgTooltip.innerHTML = sgBuildTooltipHTML(hit.data);
+        sgTooltip.classList.add('pinned');
+        sgTooltip.style.display = 'block';
+        sgTooltip.style.left = (ev.clientX + 14) + 'px';
+        sgTooltip.style.top = (ev.clientY + 14) + 'px';
+    });
+    sgCanvas.addEventListener('mouseleave', function() {
+        if (!sgTooltipPinned) sgDismissTooltip();
+    });
+    document.addEventListener('keydown', function(ev) {
+        if (ev.key === 'Escape' && sgTooltipPinned) sgDismissTooltip();
+    });
+    document.addEventListener('mousedown', function(ev) {
+        if (sgTooltipPinned && !sgTooltip.contains(ev.target) && ev.target !== sgCanvas) {
+            sgDismissTooltip();
+        }
+    });
+
+    // ===========================================================
     //  INIT
     // ===========================================================
     document.querySelectorAll('input[name="quiverType"]').forEach(r => r.addEventListener('change', applyQuiverSelection));
+    document.getElementById('applyVectorsBtn').addEventListener('click', applyVectorTriple);
     document.getElementById('randomizeBtn').addEventListener('click', generateRandomQuiver);
     document.getElementById('depthSelect').addEventListener('change', () => {
         if (document.getElementById('tabMG').classList.contains('active')) {
@@ -2601,8 +3438,23 @@
         document.getElementById('egAngleLabel').innerHTML = this.value + '&deg;';
         drawExchangeGraph();
     });
+    document.getElementById('sgDepthSelect').addEventListener('change', () => {
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            updateScatteringGraph();
+        } else { sgNeedsRebuild = true; }
+    });
+    document.getElementById('sgPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            updateScatteringGraph();
+        } else { sgNeedsRebuild = true; }
+    });
+    document.getElementById('sgRotate').addEventListener('input', function() {
+        sgRotation = this.value * Math.PI / 180;
+        document.getElementById('sgAngleLabel').innerHTML = this.value + '&deg;';
+        drawScatteringGraph();
+    });
     // ===========================================================
-    //  EXPORT (shared for MG and EG)
+    //  EXPORT (shared for MG, EG, and SG)
     // ===========================================================
     function setupExportPopover(btnId, popoverId, containerId) {
         const btn = document.getElementById(btnId);
@@ -2621,6 +3473,7 @@
     }
     setupExportPopover('mgExportBtn', 'mgExportPopover', 'mgExportContainer');
     setupExportPopover('egExportBtn', 'egExportPopover', 'egExportContainer');
+    setupExportPopover('sgExportBtn', 'sgExportPopover', 'sgExportContainer');
 
     function renderHighRes(canvas, ctx, drawFn, scale) {
         const dpr = window.devicePixelRatio || 1;
@@ -2703,10 +3556,14 @@
         if (!currentEGGraph || !currentEGLayout) return;
         handleExport('eg', egCanvas, egCtx, drawExchangeGraph, 'exchange_graph');
     });
+    document.getElementById('sgExportGo').addEventListener('click', () => {
+        if (!currentSGGraph || !currentSGLayout) return;
+        handleExport('sg', sgCanvas, sgCtx, drawScatteringGraph, 'scattering_graph');
+    });
 
-    // Default: scattering diagram quiver
+    // Default: vector triple quiver
     sizeQuiverCanvas();
-    setQuiver(PRESET_SCATTER);
+    applyVectorTriple();
     </script>
 </body>
 </html>
