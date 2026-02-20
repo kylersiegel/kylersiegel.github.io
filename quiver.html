@@ -898,6 +898,35 @@
             always produces Laurent polynomials.
         </p>
 
+        <h2>Scattering graph</h2>
+        <p>
+            The <b>scattering graph</b> is based on a piecewise-linear mutation operation on triples
+            of integer vectors in $\mathbb{Z}^2$, motivated by the theory of scattering diagrams.
+            Given a triple of vectors $(\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3)$, we define
+            a <b>piecewise-linear shear</b> $\mu_{\mathbf{v}}$ for any vector $\mathbf{v}$ by:
+        </p>
+        <div class="formula">$$\mu_{\mathbf{v}}(\mathbf{w}) = \mathbf{w} + \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$$</div>
+        <p>
+            where $\mathbf{w} \wedge \mathbf{v} = \det(\mathbf{w}, \mathbf{v})$ is the $2 \times 2$ determinant.
+            Mutation $\operatorname{mut}_k$ negates the $k$-th vector and applies $\mu_{\mathbf{v}_k}$
+            to the other two. Unlike quiver mutation, these mutations are <em>not</em> involutions,
+            but we still require that mutation sequences have no consecutive repeats.
+        </p>
+        <p>
+            Each mutated triple carries not only the current vectors but also the mutation path
+            $i_1, \ldots, i_m$ used to reach it. The <b>base-mapped triple</b> is obtained by
+            recursively unwinding this path: at each step, the inverse shear
+            $\mu_{\mathbf{v}}^{-1}(\mathbf{w}) = \mathbf{w} - \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$
+            is applied (with respect to the negated mutated vector $-\mathbf{v}'_{i_m}$) to all three
+            components, peeling off the last mutation.
+        </p>
+        <p>
+            Two nodes in the scattering graph are identified if they have the same base-mapped triple.
+            When "Vector triple" is selected, the initial triple is taken directly from the user-specified
+            vectors. For other quiver presets, an initial triple is derived from the exchange matrix $B$ by
+            choosing vectors satisfying $\det(\mathbf{v}_i, \mathbf{v}_j) = B_{ij}$.
+        </p>
+
         <h2>Preset quivers</h2>
         <ul>
             <li>
@@ -941,24 +970,27 @@
             avoid floating-point drift.
         </p>
         <p><b>Graph layout.</b>
-            Both the mutation graph and exchange graph use a custom <b>force-directed layout</b> algorithm.
-            Nodes are initialized on concentric rings (by BFS depth from the initial quiver), then
+            All three graph tabs use a custom <b>force-directed layout</b> algorithm.
+            Nodes are initialized on concentric rings (by BFS depth from the initial node), then
             iteratively adjusted: a repulsive Coulomb-like force pushes all node pairs apart, an
-            attractive spring force pulls connected nodes together, and a mild gravitational pull toward
-            the center prevents drift. The number of iterations adapts to graph size.
+            attractive spring force pulls connected nodes together, a node-edge repulsion force prevents
+            nodes from overlapping non-adjacent edges, an edge-crossing repulsion reduces edge intersections,
+            and a mild gravitational pull toward the center prevents drift.
         </p>
         <p><b>Rendering.</b>
             All graphics are drawn on HTML5 Canvas elements, scaled by <code>devicePixelRatio</code> for
             crisp rendering on high-DPI displays. Zoom uses <code>Math.exp(-deltaY * 0.002)</code> for
             smooth, proportional scrolling on trackpads. Mutation graph nodes are circles containing mini
             quiver drawings; exchange graph nodes are rounded rectangles showing both the quiver and the
-            three cluster variable expressions.
+            three cluster variable expressions; scattering graph nodes are rounded rectangles showing
+            three color-coded vector arrows and the base-mapped triple coordinates.
         </p>
         <p><b>Graph construction.</b>
-            Both graphs are built by breadth-first search from the initial (quiver, cluster) pair.
+            All three graphs are built by breadth-first search from the initial node.
             At each depth level, all three possible mutations are applied to each frontier node.
             For the mutation graph, nodes are identified by exchange matrix alone; for the exchange graph,
-            nodes are identified by the pair (exchange matrix, cluster variables). A cap of 500 nodes
+            nodes are identified by the pair (exchange matrix, cluster variables); for the scattering graph,
+            nodes are identified by base-mapped triple. A cap of 500 nodes
             prevents the browser from hanging on deeply explored graphs. Dashed &ldquo;stub&rdquo; edges
             at the frontier indicate mutations that would produce new nodes beyond the current depth.
         </p>
