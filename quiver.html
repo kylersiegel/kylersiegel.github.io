@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quiver Mutation Visualizer</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -226,10 +226,13 @@
             padding: 0 12px 10px 12px;
             position: relative;
         }
-        #exportPdfBtn {
+        .export-container {
             position: absolute;
             bottom: 20px;
             right: 22px;
+            z-index: 10;
+        }
+        .export-btn {
             padding: 5px 14px;
             font-size: 12px;
             background: rgba(127,140,141,0.85);
@@ -237,30 +240,111 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            z-index: 10;
             transition: background 0.15s;
         }
-        #exportPdfBtn:hover { background: rgba(90,100,100,0.95); }
-        #egExportPdfBtn {
+        .export-btn:hover { background: rgba(90,100,100,0.95); }
+        .export-popover {
             position: absolute;
-            bottom: 20px;
-            right: 22px;
-            padding: 5px 14px;
+            bottom: calc(100% + 8px);
+            right: 0;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 12px 14px;
+            min-width: 180px;
+            font-size: 13px;
+            color: #333;
+        }
+        .export-popover .ep-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .export-popover .ep-row { margin-bottom: 10px; }
+        .export-popover .ep-row:last-child { margin-bottom: 0; }
+        .ep-options {
+            display: flex;
+            gap: 0;
+        }
+        .ep-options label {
+            flex: 1;
+            text-align: center;
+            padding: 4px 8px;
             font-size: 12px;
-            background: rgba(127,140,141,0.85);
+            cursor: pointer;
+            border: 1.5px solid #ddd;
+            background: #f8f8f8;
+            color: #555;
+            transition: all 0.1s;
+            user-select: none;
+        }
+        .ep-options label:first-child { border-radius: 4px 0 0 4px; }
+        .ep-options label:last-child { border-radius: 0 4px 4px 0; }
+        .ep-options label:not(:first-child) { border-left: none; }
+        .ep-options input { display: none; }
+        .ep-options input:checked + span {
+            color: #fff;
+        }
+        .ep-options label:has(input:checked) {
+            background: #3498db;
+            border-color: #3498db;
+            color: #fff;
+        }
+        .ep-options label:has(input:checked) + label { border-left-color: #3498db; }
+        .ep-go {
+            width: 100%;
+            padding: 6px 0;
+            font-size: 13px;
+            font-weight: 500;
+            background: #3498db;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            z-index: 10;
             transition: background 0.15s;
+            margin-top: 2px;
         }
-        #egExportPdfBtn:hover { background: rgba(90,100,100,0.95); }
+        .ep-go:hover { background: #2980b9; }
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.88);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            gap: 12px;
+            transition: opacity 0.15s;
+        }
+        .loading-overlay .loading-text {
+            font-size: 14px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        .loading-overlay .loading-bar-track {
+            width: 220px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .loading-overlay .loading-bar-fill {
+            height: 100%;
+            background: #3498db;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
         #mgCanvas {
             cursor: grab;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             display: block;
+            touch-action: none;
         }
         #mgCanvas:active { cursor: grabbing; }
 
@@ -277,6 +361,7 @@
         #egCanvas {
             cursor: grab; border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: block;
+            touch-action: none;
         }
         #egCanvas:active { cursor: grabbing; }
         #egTooltip {
@@ -342,6 +427,49 @@
         #tabAbout .section-note {
             font-size: 12px; color: #999; font-style: italic;
         }
+
+        /* ---- mobile responsive ---- */
+        @media (max-width: 600px) {
+            .header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 8px 12px;
+            }
+            .header h1 { font-size: 16px; }
+            .header .sep { display: none; }
+            .header button { padding: 5px 12px; font-size: 12px; }
+            .quiver-picker label { padding: 4px 10px; font-size: 12px; }
+            .quiver-controls { gap: 6px; }
+            .random-extras { gap: 4px; }
+            .random-extras select { font-size: 12px; padding: 4px 6px; }
+            .random-extras label { font-size: 12px; }
+
+            .tab-bar {
+                padding: 0 8px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tab-btn { padding: 8px 14px; font-size: 13px; white-space: nowrap; }
+
+            .mg-toolbar, .eg-toolbar {
+                gap: 8px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .mg-hint { display: none; }
+            .mg-legend { display: none; }
+            .depth-control { font-size: 12px; }
+            .depth-control select { font-size: 12px; padding: 3px 6px; }
+            .toggle-control { font-size: 11px; gap: 4px; }
+            .rotate-control { font-size: 11px; }
+            .rotate-control input[type="range"] { width: 50px; }
+            .mg-info { font-size: 11px; }
+
+            .mg-canvas-wrap, .eg-canvas-wrap { padding: 0 4px 4px 4px; }
+
+            #tabQuiver { padding: 10px 8px; gap: 10px; }
+            #tabAbout { padding: 16px 14px 40px 14px; }
+        }
     </style>
     <script>
     window.MathJax = {
@@ -395,7 +523,7 @@
 
     <!-- quiver tab -->
     <div id="tabQuiver" class="tab-content active">
-        <canvas id="canvas" width="600" height="480"></canvas>
+        <canvas id="canvas"></canvas>
         <div class="matrix-display" id="matrixDisplay"></div>
     </div>
 
@@ -435,7 +563,33 @@
         </div>
         <div class="mg-canvas-wrap" id="mgWrap">
             <canvas id="mgCanvas"></canvas>
-            <button id="exportPdfBtn" title="Export as PDF">Export PDF</button>
+            <div class="export-container" id="mgExportContainer">
+                <button class="export-btn" id="mgExportBtn">Export</button>
+                <div class="export-popover" id="mgExportPopover" style="display:none">
+                    <div class="ep-row">
+                        <div class="ep-label">Format</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="mgFmt" value="pdf" checked><span>PDF</span></label>
+                            <label><input type="radio" name="mgFmt" value="png"><span>PNG</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <div class="ep-label">Resolution</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="mgRes" value="2"><span>2&times;</span></label>
+                            <label><input type="radio" name="mgRes" value="4" checked><span>4&times;</span></label>
+                            <label><input type="radio" name="mgRes" value="8"><span>8&times;</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <button class="ep-go" id="mgExportGo">Export</button>
+                    </div>
+                </div>
+            </div>
+            <div class="loading-overlay" id="mgLoading" style="display:none">
+                <div class="loading-text" id="mgLoadingText">Building graph...</div>
+                <div class="loading-bar-track"><div class="loading-bar-fill" id="mgLoadingBar"></div></div>
+            </div>
         </div>
     </div>
 
@@ -482,7 +636,33 @@
         </div>
         <div class="eg-canvas-wrap" id="egWrap">
             <canvas id="egCanvas"></canvas>
-            <button id="egExportPdfBtn" title="Export as PDF">Export PDF</button>
+            <div class="export-container" id="egExportContainer">
+                <button class="export-btn" id="egExportBtn">Export</button>
+                <div class="export-popover" id="egExportPopover" style="display:none">
+                    <div class="ep-row">
+                        <div class="ep-label">Format</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="egFmt" value="pdf" checked><span>PDF</span></label>
+                            <label><input type="radio" name="egFmt" value="png"><span>PNG</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <div class="ep-label">Resolution</div>
+                        <div class="ep-options">
+                            <label><input type="radio" name="egRes" value="2"><span>2&times;</span></label>
+                            <label><input type="radio" name="egRes" value="4" checked><span>4&times;</span></label>
+                            <label><input type="radio" name="egRes" value="8"><span>8&times;</span></label>
+                        </div>
+                    </div>
+                    <div class="ep-row">
+                        <button class="ep-go" id="egExportGo">Export</button>
+                    </div>
+                </div>
+            </div>
+            <div class="loading-overlay" id="egLoading" style="display:none">
+                <div class="loading-text" id="egLoadingText">Building graph...</div>
+                <div class="loading-bar-track"><div class="loading-bar-fill" id="egLoadingBar"></div></div>
+            </div>
         </div>
         <div id="egTooltip"></div>
     </div>
@@ -579,7 +759,7 @@
         <h2>Preset quivers</h2>
         <ul>
             <li>
-                <b>$F_1$</b> &mdash; The quiver associated with the scattering diagram for the
+                $\mathbf{F}_1$ &mdash; The quiver associated with the scattering diagram for the
                 Hirzebruch surface $F_1$, with rays
                 $\mathbf{v}_1 = (1, 0)$,
                 $\mathbf{v}_2 = (0, -1)$,
@@ -651,7 +831,7 @@
     // ===========================================================
     const VERTEX_COLORS = ['#3498db', '#e74c3c', '#27ae60'];
     const ARROW_COLOR = '#4a4a4a';
-    const VERTEX_RADIUS = 30;
+    let VERTEX_RADIUS = 30;
     const MG_NODE_R = 42;
     const EG_NODE_W = 160, EG_NODE_H = 100, EG_NODE_R = 95;
     const MAX_GRAPH_NODES = 500;
@@ -684,12 +864,29 @@
     const egCanvas = document.getElementById('egCanvas');
     const egCtx = egCanvas.getContext('2d');
 
-    // Vertex positions for main quiver display
-    const qCenterX = canvas.width / 2, qCenterY = canvas.height / 2 + 10, triR = 155;
-    const qVerts = [];
-    for (let i = 0; i < 3; i++) {
-        const a = -Math.PI / 2 + i * 2 * Math.PI / 3;
-        qVerts.push({ x: qCenterX + triR * Math.cos(a), y: qCenterY + triR * Math.sin(a) });
+    // Vertex positions for main quiver display (recomputed on resize)
+    let qCenterX, qCenterY, triR;
+    const qVerts = [{x:0,y:0},{x:0,y:0},{x:0,y:0}];
+    function sizeQuiverCanvas() {
+        const wrap = document.getElementById('tabQuiver');
+        const dpr = window.devicePixelRatio || 1;
+        const maxW = wrap.clientWidth - 20;
+        const maxH = wrap.clientHeight - 100;
+        const w = Math.min(600, maxW);
+        const h = Math.min(480, maxH);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        qCenterX = w / 2;
+        qCenterY = h / 2 + 10;
+        triR = Math.min(w, h) * 0.32;
+        VERTEX_RADIUS = Math.max(16, Math.round(triR * 0.19));
+        for (let i = 0; i < 3; i++) {
+            const a = -Math.PI / 2 + i * 2 * Math.PI / 3;
+            qVerts[i] = { x: qCenterX + triR * Math.cos(a), y: qCenterY + triR * Math.sin(a) };
+        }
     }
 
     // ===========================================================
@@ -701,7 +898,9 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById(btn.dataset.tab).classList.add('active');
-            if (btn.dataset.tab === 'tabMG') {
+            if (btn.dataset.tab === 'tabQuiver') {
+                sizeQuiverCanvas(); drawQuiver();
+            } else if (btn.dataset.tab === 'tabMG') {
                 sizeMGCanvas();
                 if (mgNeedsRebuild) { updateMutationGraph(); mgNeedsRebuild = false; }
                 else drawMutationGraph();
@@ -740,6 +939,9 @@
         egCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     window.addEventListener('resize', () => {
+        if (document.getElementById('tabQuiver').classList.contains('active')) {
+            sizeQuiverCanvas(); drawQuiver();
+        }
         if (document.getElementById('tabMG').classList.contains('active')) {
             sizeMGCanvas(); drawMutationGraph();
         }
@@ -827,10 +1029,11 @@
         const ex = t.x-(t.x-cpX)/ed*gap, ey = t.y-(t.y-cpY)/ed*gap;
         ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
         ctx.strokeStyle = ARROW_COLOR; ctx.lineWidth = 2; ctx.stroke();
-        arrowhead(ctx, ex, ey, ux, uy, 13, ARROW_COLOR);
+        arrowhead(ctx, ex, ey, ux, uy, Math.max(8, VERTEX_RADIUS * 0.43), ARROW_COLOR);
         if (count > 1) {
-            const mx = (sx+ex)/2 + px*16, my = (sy+ey)/2 + py*16;
-            ctx.font = 'bold 16px "Segoe UI",sans-serif';
+            const labelOff = Math.max(10, VERTEX_RADIUS * 0.53);
+            const mx = (sx+ex)/2 + px*labelOff, my = (sy+ey)/2 + py*labelOff;
+            ctx.font = 'bold ' + Math.max(11, Math.round(VERTEX_RADIUS * 0.53)) + 'px "Segoe UI",sans-serif';
             ctx.fillStyle = ARROW_COLOR;
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             ctx.fillText(''+count, mx, my);
@@ -844,7 +1047,7 @@
         ctx.beginPath(); ctx.arc(v.x,v.y,VERTEX_RADIUS,0,Math.PI*2);
         ctx.fillStyle=VERTEX_COLORS[i]; ctx.fill();
         ctx.strokeStyle='rgba(0,0,0,0.15)'; ctx.lineWidth=2; ctx.stroke();
-        ctx.fillStyle='#fff'; ctx.font='bold 22px "Segoe UI",sans-serif';
+        ctx.fillStyle='#fff'; ctx.font='bold ' + Math.max(14, Math.round(VERTEX_RADIUS * 0.73)) + 'px "Segoe UI",sans-serif';
         ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText(''+(i+1), v.x, v.y+1);
     }
@@ -1410,6 +1613,28 @@
     }
 
     // ===========================================================
+    //  LOADING OVERLAY HELPERS
+    // ===========================================================
+    function showLoading(id, text, pct) {
+        const overlay = document.getElementById(id);
+        const textEl = document.getElementById(id + 'Text');
+        const barEl = document.getElementById(id + 'Bar');
+        textEl.textContent = text || 'Loading...';
+        barEl.style.width = (pct || 0) + '%';
+        overlay.style.display = 'flex';
+    }
+    function updateLoading(id, text, pct) {
+        const textEl = document.getElementById(id + 'Text');
+        const barEl = document.getElementById(id + 'Bar');
+        if (text) textEl.textContent = text;
+        barEl.style.width = Math.min(100, pct || 0) + '%';
+    }
+    function hideLoading(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ===========================================================
     //  FORCE-DIRECTED LAYOUT
     // ===========================================================
     // Simple seeded PRNG (mulberry32) for deterministic layout
@@ -1433,7 +1658,7 @@
         return t > 0.01 && t < 0.99 && u > 0.01 && u < 0.99;
     }
 
-    function layoutGraph(graph, nodeR) {
+    async function layoutGraph(graph, nodeR, onProgress) {
         const { nodes, edges } = graph;
         const keys = Array.from(nodes.keys());
         const n = keys.length;
@@ -1485,6 +1710,7 @@
         const attK = 0.2;
         const crossK = idealDist * 0.8;   // edge-crossing repulsion strength
         const iters = n <= 20 ? 600 : n <= 60 ? 450 : n <= 150 ? 300 : 150;
+        const CHUNK = 30; // yield to UI every CHUNK iterations
 
         for (let iter = 0; iter < iters; iter++) {
             const temp = Math.max(0.01, 1 - iter / iters);
@@ -1543,6 +1769,12 @@
                 const sp = Math.sqrt(vx[i]*vx[i]+vy[i]*vy[i]);
                 if (sp > maxD) { vx[i] = vx[i]/sp*maxD; vy[i] = vy[i]/sp*maxD; }
                 px[i] += vx[i]; py[i] += vy[i];
+            }
+
+            // Yield to UI periodically so the progress bar updates
+            if (onProgress && iter % CHUNK === CHUNK - 1) {
+                onProgress(iter / iters);
+                await sleep(0);
             }
         }
 
@@ -1747,9 +1979,10 @@
             mv.push({ x: x+mr*Math.cos(a), y: y+mr*Math.sin(a) });
         }
 
+        const mgCenter = { x: x, y: y };
         for (let i = 0; i < 3; i++)
             for (let j = 0; j < 3; j++)
-                if (i!==j && Q[i][j]>0) drawMiniArrowOn(mgCtx, mv[i],mv[j],Q[i][j]);
+                if (i!==j && Q[i][j]>0) drawMiniArrowOn(mgCtx, mv[i],mv[j],Q[i][j], mgCenter);
 
         for (let i = 0; i < 3; i++) {
             mgCtx.beginPath(); mgCtx.arc(mv[i].x,mv[i].y,vr,0,Math.PI*2);
@@ -1761,7 +1994,7 @@
         }
     }
 
-    function drawMiniArrowOn(c, from, to, count) {
+    function drawMiniArrowOn(c, from, to, count, center) {
         const dx = to.x-from.x, dy = to.y-from.y, len = norm(dx,dy);
         const ux = dx/len, uy = dy/len, px = -uy, py = ux;
         const gap = 5.5;
@@ -1773,7 +2006,14 @@
         arrowhead(c, ex, ey, ux, uy, 5, '#555');
 
         if (count > 1) {
-            const mx = (sx+ex)/2+px*5, my = (sy+ey)/2+py*5;
+            const midX = (sx+ex)/2, midY = (sy+ey)/2;
+            // Place label on the side away from the triangle center
+            let sign = 1;
+            if (center) {
+                const dot = (center.x - midX) * px + (center.y - midY) * py;
+                if (dot > 0) sign = -1;
+            }
+            const mx = midX + px*5*sign, my = midY + py*5*sign;
             c.font='bold 6px "Segoe UI",sans-serif';
             c.fillStyle='#333';
             c.textAlign='center'; c.textBaseline='middle';
@@ -1784,13 +2024,32 @@
     // ===========================================================
     //  MUTATION GRAPH UPDATE PIPELINE
     // ===========================================================
-    function updateMutationGraph() {
+    let mgGeneration = 0;
+    async function updateMutationGraph() {
+        const gen = ++mgGeneration;
         sizeMGCanvas();
+        showLoading('mgLoading', 'Building graph\u2026', 5);
+        await sleep(0);
+        if (gen !== mgGeneration) return;
+
         const B = quiverToMatrix(quiver);
         const depth = parseInt(document.getElementById('depthSelect').value);
         const upToPerm = document.getElementById('mgPermToggle').checked;
         currentGraph = buildMutationGraph(B, depth, upToPerm);
-        currentLayout = layoutGraph(currentGraph, MG_NODE_R);
+        if (gen !== mgGeneration) return;
+
+        updateLoading('mgLoading', 'Computing layout\u2026', 15);
+        await sleep(0);
+        if (gen !== mgGeneration) return;
+
+        currentLayout = await layoutGraph(currentGraph, MG_NODE_R, (p) => {
+            if (gen === mgGeneration) updateLoading('mgLoading', 'Computing layout\u2026', 15 + p * 83);
+        });
+        if (gen !== mgGeneration) return;
+
+        updateLoading('mgLoading', 'Drawing\u2026', 99);
+        await sleep(0);
+
         const fit = autoFitToCanvas(currentLayout, MG_NODE_R, mgCanvas);
         mgScale = fit[0]; mgPanX = fit[1]; mgPanY = fit[2];
         drawMutationGraph();
@@ -1800,6 +2059,7 @@
                   ', ' + totalEdges + ' edge' + (totalEdges!==1?'s':'');
         if (currentGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
         document.getElementById('mgInfo').innerHTML = txt;
+        hideLoading('mgLoading');
     }
 
     // ===========================================================
@@ -1973,9 +2233,10 @@
             const a = -Math.PI/2 + i*2*Math.PI/3;
             mv.push({ x: x + mr*Math.cos(a), y: qy + mr*Math.sin(a) });
         }
+        const egCenter = { x: x, y: qy };
         for (let i = 0; i < 3; i++)
             for (let j = 0; j < 3; j++)
-                if (i!==j && Q[i][j]>0) drawMiniArrowOn(egCtx, mv[i], mv[j], Q[i][j]);
+                if (i!==j && Q[i][j]>0) drawMiniArrowOn(egCtx, mv[i], mv[j], Q[i][j], egCenter);
         for (let i = 0; i < 3; i++) {
             egCtx.beginPath(); egCtx.arc(mv[i].x, mv[i].y, vr, 0, Math.PI*2);
             egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
@@ -2024,14 +2285,33 @@
     // ===========================================================
     //  EXCHANGE GRAPH UPDATE PIPELINE
     // ===========================================================
-    function updateExchangeGraph() {
+    let egGeneration = 0;
+    async function updateExchangeGraph() {
+        const gen = ++egGeneration;
         sizeEGCanvas();
+        showLoading('egLoading', 'Building graph\u2026', 5);
+        await sleep(0);
+        if (gen !== egGeneration) return;
+
         const B = quiverToMatrix(quiver);
         const depth = parseInt(document.getElementById('egDepthSelect').value);
         const egUpToPerm = document.getElementById('egPermToggle').checked;
         egSpecialize = document.getElementById('egSpecToggle').checked;
         currentEGGraph = buildExchangeGraph(B, depth, egUpToPerm, egSpecialize);
-        currentEGLayout = layoutGraph(currentEGGraph, EG_NODE_R);
+        if (gen !== egGeneration) return;
+
+        updateLoading('egLoading', 'Computing layout\u2026', 15);
+        await sleep(0);
+        if (gen !== egGeneration) return;
+
+        currentEGLayout = await layoutGraph(currentEGGraph, EG_NODE_R, (p) => {
+            if (gen === egGeneration) updateLoading('egLoading', 'Computing layout\u2026', 15 + p * 83);
+        });
+        if (gen !== egGeneration) return;
+
+        updateLoading('egLoading', 'Drawing\u2026', 99);
+        await sleep(0);
+
         const fit = autoFitToCanvas(currentEGLayout, EG_NODE_R, egCanvas);
         egScale = fit[0]; egPanX = fit[1]; egPanY = fit[2];
         drawExchangeGraph();
@@ -2040,6 +2320,7 @@
                   ', ' + egTotalEdges + ' edge' + (egTotalEdges!==1?'s':'');
         if (currentEGGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
         document.getElementById('egInfo').innerHTML = txt;
+        hideLoading('egLoading');
     }
 
     // ===========================================================
@@ -2071,6 +2352,56 @@
     });
     window.addEventListener('mouseup', function() { mgDragging = false; });
 
+    // -- mutation graph touch (pan + pinch-zoom) --
+    let mgTouchId = null, mgPinchDist = 0, mgPinchScale = 1;
+    mgCanvas.addEventListener('touchstart', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1) {
+            const t = ev.touches[0];
+            mgDragging = true;
+            mgDragX = t.clientX; mgDragY = t.clientY;
+            mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+            mgTouchId = t.identifier;
+        } else if (ev.touches.length === 2) {
+            mgDragging = false;
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            mgPinchDist = Math.sqrt(dx*dx + dy*dy);
+            mgPinchScale = mgScale;
+        }
+    }, { passive: false });
+    mgCanvas.addEventListener('touchmove', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1 && mgDragging) {
+            const t = ev.touches[0];
+            mgPanX = mgDragPanX + (t.clientX - mgDragX);
+            mgPanY = mgDragPanY + (t.clientY - mgDragY);
+            drawMutationGraph();
+        } else if (ev.touches.length === 2) {
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (mgPinchDist > 0) {
+                const ratio = dist / mgPinchDist;
+                const rect = mgCanvas.getBoundingClientRect();
+                const cw = parseFloat(mgCanvas.style.width), ch = parseFloat(mgCanvas.style.height);
+                const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
+                const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
+                const wx = (cx - cw/2 - mgPanX) / mgPinchScale;
+                const wy = (cy - ch/2 - mgPanY) / mgPinchScale;
+                mgScale = Math.max(0.03, Math.min(8, mgPinchScale * ratio));
+                mgPanX = cx - cw/2 - wx * mgScale;
+                mgPanY = cy - ch/2 - wy * mgScale;
+                drawMutationGraph();
+            }
+        }
+    }, { passive: false });
+    mgCanvas.addEventListener('touchend', function(ev) {
+        ev.preventDefault();
+        mgDragging = false;
+        mgPinchDist = 0;
+    }, { passive: false });
+
     // -- exchange graph zoom & pan --
     egCanvas.addEventListener('wheel', function(ev) {
         ev.preventDefault();
@@ -2094,6 +2425,56 @@
         drawExchangeGraph();
     });
     window.addEventListener('mouseup', function() { egDragging = false; });
+
+    // -- exchange graph touch (pan + pinch-zoom) --
+    let egTouchId = null, egPinchDist = 0, egPinchScale = 1;
+    egCanvas.addEventListener('touchstart', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1) {
+            const t = ev.touches[0];
+            egDragging = true;
+            egDragX = t.clientX; egDragY = t.clientY;
+            egDragPanX = egPanX; egDragPanY = egPanY;
+            egTouchId = t.identifier;
+        } else if (ev.touches.length === 2) {
+            egDragging = false;
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            egPinchDist = Math.sqrt(dx*dx + dy*dy);
+            egPinchScale = egScale;
+        }
+    }, { passive: false });
+    egCanvas.addEventListener('touchmove', function(ev) {
+        ev.preventDefault();
+        if (ev.touches.length === 1 && egDragging) {
+            const t = ev.touches[0];
+            egPanX = egDragPanX + (t.clientX - egDragX);
+            egPanY = egDragPanY + (t.clientY - egDragY);
+            drawExchangeGraph();
+        } else if (ev.touches.length === 2) {
+            const dx = ev.touches[0].clientX - ev.touches[1].clientX;
+            const dy = ev.touches[0].clientY - ev.touches[1].clientY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (egPinchDist > 0) {
+                const ratio = dist / egPinchDist;
+                const rect = egCanvas.getBoundingClientRect();
+                const cw = parseFloat(egCanvas.style.width), ch = parseFloat(egCanvas.style.height);
+                const cx = (ev.touches[0].clientX + ev.touches[1].clientX) / 2 - rect.left;
+                const cy = (ev.touches[0].clientY + ev.touches[1].clientY) / 2 - rect.top;
+                const wx = (cx - cw/2 - egPanX) / egPinchScale;
+                const wy = (cy - ch/2 - egPanY) / egPinchScale;
+                egScale = Math.max(0.03, Math.min(8, egPinchScale * ratio));
+                egPanX = cx - cw/2 - wx * egScale;
+                egPanY = cy - ch/2 - wy * egScale;
+                drawExchangeGraph();
+            }
+        }
+    }, { passive: false });
+    egCanvas.addEventListener('touchend', function(ev) {
+        ev.preventDefault();
+        egDragging = false;
+        egPinchDist = 0;
+    }, { passive: false });
 
     // -- exchange graph tooltip --
     const egTooltip = document.getElementById('egTooltip');
@@ -2226,101 +2607,111 @@
         document.getElementById('egAngleLabel').innerHTML = this.value + '&deg;';
         drawExchangeGraph();
     });
-    function exportPdf() {
+    // ===========================================================
+    //  EXPORT (shared for MG and EG)
+    // ===========================================================
+    function setupExportPopover(btnId, popoverId, containerId) {
+        const btn = document.getElementById(btnId);
+        const pop = document.getElementById(popoverId);
+        btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            pop.style.display = pop.style.display === 'none' ? 'block' : 'none';
+        });
+        // Close popover when clicking outside
+        document.addEventListener('mousedown', (ev) => {
+            if (pop.style.display !== 'none' &&
+                !document.getElementById(containerId).contains(ev.target)) {
+                pop.style.display = 'none';
+            }
+        });
+    }
+    setupExportPopover('mgExportBtn', 'mgExportPopover', 'mgExportContainer');
+    setupExportPopover('egExportBtn', 'egExportPopover', 'egExportContainer');
+
+    function renderHighRes(canvas, ctx, drawFn, scale) {
+        const dpr = window.devicePixelRatio || 1;
+        const cssW = parseFloat(canvas.style.width);
+        const cssH = parseFloat(canvas.style.height);
+        const origPxW = canvas.width, origPxH = canvas.height;
+
+        // Resize and re-render at requested scale
+        canvas.width = Math.round(cssW * scale);
+        canvas.height = Math.round(cssH * scale);
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        drawFn();
+
+        // Capture with white background
+        const offscreen = document.createElement('canvas');
+        offscreen.width = canvas.width; offscreen.height = canvas.height;
+        const oCtx = offscreen.getContext('2d');
+        oCtx.fillStyle = '#ffffff';
+        oCtx.fillRect(0, 0, offscreen.width, offscreen.height);
+        oCtx.drawImage(canvas, 0, 0);
+
+        // Restore original canvas
+        canvas.width = origPxW; canvas.height = origPxH;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        drawFn();
+
+        return { offscreen, cssW, cssH };
+    }
+
+    function doExportPdf(offscreen, cssW, cssH, filename) {
+        function go() {
+            const { jsPDF } = window.jspdf;
+            const imgData = offscreen.toDataURL('image/png');
+            const landscape = cssW >= cssH;
+            const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [cssW, cssH] });
+            doc.addImage(imgData, 'PNG', 0, 0, cssW, cssH);
+            doc.save(filename);
+        }
+        if (window.jspdf) { go(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = go;
+        s.onerror = function() { alert('Could not load PDF library. Check your internet connection.'); };
+        document.head.appendChild(s);
+    }
+
+    function doExportPng(offscreen, filename) {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = offscreen.toDataURL('image/png');
+        link.click();
+    }
+
+    function handleExport(prefix, canvas, ctx, drawFn, filenameBase) {
+        const fmt = document.querySelector('input[name="'+prefix+'Fmt"]:checked').value;
+        const scale = parseInt(document.querySelector('input[name="'+prefix+'Res"]:checked').value);
+        const pop = document.getElementById(prefix + 'ExportPopover');
+        pop.style.display = 'none';
+
+        const btn = document.getElementById(prefix + 'ExportBtn');
+        btn.textContent = 'Exporting\u2026'; btn.disabled = true;
+
+        // Use setTimeout to let UI update before heavy rendering
+        setTimeout(() => {
+            const { offscreen, cssW, cssH } = renderHighRes(canvas, ctx, drawFn, scale);
+            if (fmt === 'pdf') {
+                doExportPdf(offscreen, cssW, cssH, filenameBase + '.pdf');
+            } else {
+                doExportPng(offscreen, filenameBase + '.png');
+            }
+            btn.textContent = 'Export'; btn.disabled = false;
+        }, 50);
+    }
+
+    document.getElementById('mgExportGo').addEventListener('click', () => {
         if (!currentGraph || !currentLayout) return;
-        const btn = document.getElementById('exportPdfBtn');
-        btn.textContent = 'Exporting...'; btn.disabled = true;
-
-        // render with white background
-        const srcW = mgCanvas.width, srcH = mgCanvas.height;
-        const offscreen = document.createElement('canvas');
-        offscreen.width = srcW; offscreen.height = srcH;
-        const oCtx = offscreen.getContext('2d');
-        oCtx.fillStyle = '#ffffff';
-        oCtx.fillRect(0, 0, srcW, srcH);
-        oCtx.drawImage(mgCanvas, 0, 0);
-
-        const cssW = parseFloat(mgCanvas.style.width) || srcW;
-        const cssH = parseFloat(mgCanvas.style.height) || srcH;
-
-        function done() { btn.textContent = 'Export PDF'; btn.disabled = false; }
-
-        // load jsPDF dynamically if not already loaded
-        function doExport() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const imgData = offscreen.toDataURL('image/jpeg', 0.95);
-                const landscape = cssW >= cssH;
-                const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [cssW, cssH] });
-                doc.addImage(imgData, 'JPEG', 0, 0, cssW, cssH);
-                doc.save('mutation_graph.pdf');
-            } catch(err) {
-                console.error('PDF export failed:', err);
-                alert('PDF export failed. Check console for details.');
-            }
-            done();
-        }
-
-        if (window.jspdf) { doExport(); return; }
-        const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        s.onload = doExport;
-        s.onerror = function() {
-            console.error('Failed to load jsPDF library');
-            alert('Could not load PDF library. Check your internet connection.');
-            done();
-        };
-        document.head.appendChild(s);
-    }
-    document.getElementById('exportPdfBtn').addEventListener('click', exportPdf);
-
-    function exportEGPdf() {
+        handleExport('mg', mgCanvas, mgCtx, drawMutationGraph, 'mutation_graph');
+    });
+    document.getElementById('egExportGo').addEventListener('click', () => {
         if (!currentEGGraph || !currentEGLayout) return;
-        const btn = document.getElementById('egExportPdfBtn');
-        btn.textContent = 'Exporting...'; btn.disabled = true;
-
-        const srcW = egCanvas.width, srcH = egCanvas.height;
-        const offscreen = document.createElement('canvas');
-        offscreen.width = srcW; offscreen.height = srcH;
-        const oCtx = offscreen.getContext('2d');
-        oCtx.fillStyle = '#ffffff';
-        oCtx.fillRect(0, 0, srcW, srcH);
-        oCtx.drawImage(egCanvas, 0, 0);
-
-        const cssW = parseFloat(egCanvas.style.width) || srcW;
-        const cssH = parseFloat(egCanvas.style.height) || srcH;
-
-        function done() { btn.textContent = 'Export PDF'; btn.disabled = false; }
-
-        function doExport() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const imgData = offscreen.toDataURL('image/jpeg', 0.95);
-                const landscape = cssW >= cssH;
-                const doc = new jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'pt', format: [cssW, cssH] });
-                doc.addImage(imgData, 'JPEG', 0, 0, cssW, cssH);
-                doc.save('exchange_graph.pdf');
-            } catch(err) {
-                console.error('PDF export failed:', err);
-                alert('PDF export failed. Check console for details.');
-            }
-            done();
-        }
-
-        if (window.jspdf) { doExport(); return; }
-        const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-        s.onload = doExport;
-        s.onerror = function() {
-            console.error('Failed to load jsPDF library');
-            alert('Could not load PDF library. Check your internet connection.');
-            done();
-        };
-        document.head.appendChild(s);
-    }
-    document.getElementById('egExportPdfBtn').addEventListener('click', exportEGPdf);
+        handleExport('eg', egCanvas, egCtx, drawExchangeGraph, 'exchange_graph');
+    });
 
     // Default: scattering diagram quiver
+    sizeQuiverCanvas();
     setQuiver(PRESET_SCATTER);
     </script>
 </body>
