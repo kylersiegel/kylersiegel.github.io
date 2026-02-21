@@ -625,7 +625,7 @@
                 <input type="range" id="mgRotate" min="0" max="360" value="0">
                 <span class="angle-label" id="mgAngleLabel">0&deg;</span>
             </div>
-            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan &middot; drag nodes to reposition</span>
             <div class="mg-legend">
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
@@ -698,7 +698,7 @@
                 <input type="range" id="egRotate" min="0" max="360" value="0">
                 <span class="angle-label" id="egAngleLabel">0&deg;</span>
             </div>
-            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan &middot; drag nodes to reposition</span>
             <div class="mg-legend">
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
@@ -768,7 +768,7 @@
                 <input type="range" id="sgRotate" min="0" max="360" value="0">
                 <span class="angle-label" id="sgAngleLabel">0&deg;</span>
             </div>
-            <span class="mg-hint">scroll to zoom &middot; drag to pan</span>
+            <span class="mg-hint">scroll to zoom &middot; drag to pan &middot; drag nodes to reposition</span>
             <div class="mg-legend">
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#3498db"></span>&mu;&#x2081;</div>
                 <div class="mg-legend-item"><span class="mg-legend-dot" style="background:#e74c3c"></span>&mu;&#x2082;</div>
@@ -1017,12 +1017,14 @@
     let currentLayout = null;
     let mgScale = 1, mgPanX = 0, mgPanY = 0;
     let mgDragging = false, mgDragX = 0, mgDragY = 0, mgDragPanX = 0, mgDragPanY = 0;
+    let mgNodeDragKey = null;
     let mgRotation = 0; // radians
     let mgNeedsRebuild = true;  // deferred build when switching to tab
 
     let currentEGGraph = null, currentEGLayout = null;
     let egScale = 1, egPanX = 0, egPanY = 0;
     let egDragging = false, egDragX = 0, egDragY = 0, egDragPanX = 0, egDragPanY = 0;
+    let egNodeDragKey = null, egNodeDragMoved = false;
     let egRotation = 0; // radians
     let egSpecialize = false;
     let egNeedsRebuild = true;
@@ -1030,6 +1032,7 @@
     let currentSGGraph = null, currentSGLayout = null;
     let sgScale = 1, sgPanX = 0, sgPanY = 0;
     let sgDragging = false, sgDragX = 0, sgDragY = 0, sgDragPanX = 0, sgDragPanY = 0;
+    let sgNodeDragKey = null, sgNodeDragMoved = false;
     let sgRotation = 0;
     let sgNeedsRebuild = true;
     const SG_NODE_W = 120, SG_NODE_H = 100, SG_NODE_R = 78;
@@ -1899,13 +1902,13 @@
         const px = new Float64Array(n), py = new Float64Array(n);
         const vx = new Float64Array(n), vy = new Float64Array(n);
 
-        // Find root node (depth 0)
+        // Find root node (depth 0) and build depth array
         let rootIdx = 0;
-        const byDepth = new Map();
+        const nodeDepth = new Int32Array(n);
         for (const [k, d] of nodes) {
-            if (!byDepth.has(d.depth)) byDepth.set(d.depth, []);
-            byDepth.get(d.depth).push(k);
-            if (d.depth === 0) rootIdx = idx.get(k);
+            const i = idx.get(k);
+            nodeDepth[i] = d.depth;
+            if (d.depth === 0) rootIdx = i;
         }
 
         // Scale ring spacing with edge density for better spread
@@ -1913,21 +1916,76 @@
         const densityScale = 1 + Math.max(0, density - 1.5) * 0.6;
         const ringR = nodeR * 5 * densityScale;
 
-        for (const [depth, ks] of byDepth) {
-            for (let j = 0; j < ks.length; j++) {
-                const i = idx.get(ks[j]);
-                if (depth === 0) { px[i] = 0; py[i] = 0; continue; }
-                const a = (j / ks.length) * 2 * Math.PI + (rng()-0.5)*0.4;
-                const r = depth * ringR + (rng()-0.5)*30;
-                px[i] = r * Math.cos(a); py[i] = r * Math.sin(a);
-            }
-        }
-
         // Precompute edge index pairs for the force loop (skip self-loops)
         const edgeIdx = [];
         for (const e of edges) {
             const a = idx.get(e.from), b = idx.get(e.to);
             if (a !== undefined && b !== undefined && a !== b) edgeIdx.push([a, b]);
+        }
+
+        // Build adjacency list for BFS spanning tree construction
+        const adj = new Array(n).fill(null).map(() => []);
+        for (const [a, b] of edgeIdx) { adj[a].push(b); adj[b].push(a); }
+
+        // Build BFS spanning tree: for each non-root node, pick a neighbor
+        // at depth-1 as its parent. This gives a rooted tree.
+        const parent = new Int32Array(n).fill(-1);
+        const children = new Array(n).fill(null).map(() => []);
+        for (let i = 0; i < n; i++) {
+            if (nodeDepth[i] === 0) continue;
+            for (const j of adj[i]) {
+                if (nodeDepth[j] === nodeDepth[i] - 1) {
+                    parent[i] = j;
+                    children[j].push(i);
+                    break;
+                }
+            }
+        }
+
+        // Compute subtree sizes bottom-up
+        const subtreeSize = new Int32Array(n).fill(1);
+        let maxDepthVal = 0;
+        for (let i = 0; i < n; i++) if (nodeDepth[i] > maxDepthVal) maxDepthVal = nodeDepth[i];
+        for (let d = maxDepthVal; d >= 1; d--) {
+            for (let i = 0; i < n; i++) {
+                if (nodeDepth[i] === d && parent[i] >= 0) {
+                    subtreeSize[parent[i]] += subtreeSize[i];
+                }
+            }
+        }
+
+        // Radial tree layout: assign angular intervals proportionally
+        // by subtree size. This produces a crossing-free layout for trees.
+        const angleStart = new Float64Array(n);
+        const angleEnd = new Float64Array(n);
+        angleStart[rootIdx] = 0;
+        angleEnd[rootIdx] = 2 * Math.PI;
+        px[rootIdx] = 0; py[rootIdx] = 0;
+        for (let d = 0; d <= maxDepthVal; d++) {
+            for (let i = 0; i < n; i++) {
+                if (nodeDepth[i] !== d || children[i].length === 0) continue;
+                const totalSize = children[i].reduce((s, c) => s + subtreeSize[c], 0);
+                let a = angleStart[i];
+                for (const c of children[i]) {
+                    const span = (angleEnd[i] - angleStart[i]) * subtreeSize[c] / totalSize;
+                    angleStart[c] = a;
+                    angleEnd[c] = a + span;
+                    const midAngle = a + span / 2;
+                    const r = nodeDepth[c] * ringR;
+                    px[c] = r * Math.cos(midAngle);
+                    py[c] = r * Math.sin(midAngle);
+                    a += span;
+                }
+            }
+        }
+
+        // Fallback for orphan nodes (no parent found, e.g. due to node cap)
+        for (let i = 0; i < n; i++) {
+            if (nodeDepth[i] > 0 && parent[i] < 0) {
+                const a = rng() * 2 * Math.PI;
+                const r = nodeDepth[i] * ringR + (rng() - 0.5) * 30;
+                px[i] = r * Math.cos(a); py[i] = r * Math.sin(a);
+            }
         }
 
         const idealDist = (nodeR * 4 + 12 * Math.sqrt(n)) * densityScale;
@@ -1999,9 +2057,9 @@
                         const cx2 = px[a] + t * abx, cy2 = py[a] + t * aby;
                         let dx = px[c] - cx2, dy = py[c] - cy2;
                         const dist = Math.sqrt(dx * dx + dy * dy) + 1;
-                        const minDist = nodeR * 1.8;
+                        const minDist = nodeR * 2.5;
                         if (dist < minDist) {
-                            const strength = (minDist - dist) * 0.3 * temp;
+                            const strength = (minDist - dist) * 0.5 * temp;
                             dx = dx / dist * strength; dy = dy / dist * strength;
                             vx[c] += dx; vy[c] += dy;
                             // Push edge endpoints slightly in opposite direction
@@ -2047,6 +2105,31 @@
         const panX = -((x0+x1)/2)*scale;
         const panY = -((y0+y1)/2)*scale;
         return [scale, panX, panY];
+    }
+
+    // ===========================================================
+    //  MUTATION GRAPH — HIT TESTING
+    // ===========================================================
+    function mgScreenToWorld(sx, sy) {
+        const rect = mgCanvas.getBoundingClientRect();
+        const cw = parseFloat(mgCanvas.style.width), ch = parseFloat(mgCanvas.style.height);
+        let x = (sx - rect.left) - cw/2 - mgPanX;
+        let y = (sy - rect.top) - ch/2 - mgPanY;
+        const c = Math.cos(-mgRotation), s = Math.sin(-mgRotation);
+        const rx = x*c - y*s, ry = x*s + y*c;
+        return { x: rx/mgScale, y: ry/mgScale };
+    }
+
+    function mgHitTest(sx, sy) {
+        if (!currentGraph || !currentLayout) return null;
+        const w = mgScreenToWorld(sx, sy);
+        for (const [key, data] of currentGraph.nodes) {
+            const p = currentLayout.get(key);
+            if (!p) continue;
+            const dx = w.x - p.x, dy = w.y - p.y;
+            if (dx*dx + dy*dy <= MG_NODE_R*MG_NODE_R) return { key, data };
+        }
+        return null;
     }
 
     // ===========================================================
@@ -2591,17 +2674,37 @@
     }, { passive: false });
 
     mgCanvas.addEventListener('mousedown', function(ev) {
-        mgDragging = true;
-        mgDragX = ev.clientX; mgDragY = ev.clientY;
-        mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+        const hit = mgHitTest(ev.clientX, ev.clientY);
+        if (hit) {
+            mgNodeDragKey = hit.key;
+            mgCanvas.style.cursor = 'grabbing';
+        } else {
+            mgDragging = true;
+            mgDragX = ev.clientX; mgDragY = ev.clientY;
+            mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+        }
     });
     window.addEventListener('mousemove', function(ev) {
+        if (mgNodeDragKey) {
+            const w = mgScreenToWorld(ev.clientX, ev.clientY);
+            const p = currentLayout.get(mgNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawMutationGraph();
+            return;
+        }
         if (!mgDragging) return;
         mgPanX = mgDragPanX+(ev.clientX-mgDragX);
         mgPanY = mgDragPanY+(ev.clientY-mgDragY);
         drawMutationGraph();
     });
-    window.addEventListener('mouseup', function() { mgDragging = false; });
+    window.addEventListener('mouseup', function() {
+        mgDragging = false;
+        if (mgNodeDragKey) { mgNodeDragKey = null; mgCanvas.style.cursor = ''; }
+    });
+    mgCanvas.addEventListener('mousemove', function(ev) {
+        if (mgNodeDragKey || mgDragging) return;
+        mgCanvas.style.cursor = mgHitTest(ev.clientX, ev.clientY) ? 'grab' : '';
+    });
 
     // -- mutation graph touch (pan + pinch-zoom) --
     let mgPinchDist = 0;
@@ -2609,11 +2712,16 @@
         ev.preventDefault();
         if (ev.touches.length === 1) {
             const t = ev.touches[0];
-            mgDragging = true;
-            mgDragX = t.clientX; mgDragY = t.clientY;
-            mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+            const hit = mgHitTest(t.clientX, t.clientY);
+            if (hit) {
+                mgNodeDragKey = hit.key;
+            } else {
+                mgDragging = true;
+                mgDragX = t.clientX; mgDragY = t.clientY;
+                mgDragPanX = mgPanX; mgDragPanY = mgPanY;
+            }
         } else if (ev.touches.length === 2) {
-            mgDragging = false;
+            mgDragging = false; mgNodeDragKey = null;
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             mgPinchDist = Math.sqrt(dx*dx + dy*dy);
@@ -2621,7 +2729,13 @@
     }, { passive: false });
     mgCanvas.addEventListener('touchmove', function(ev) {
         ev.preventDefault();
-        if (ev.touches.length === 1 && mgDragging) {
+        if (ev.touches.length === 1 && mgNodeDragKey) {
+            const t = ev.touches[0];
+            const w = mgScreenToWorld(t.clientX, t.clientY);
+            const p = currentLayout.get(mgNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawMutationGraph();
+        } else if (ev.touches.length === 1 && mgDragging) {
             const t = ev.touches[0];
             mgPanX = mgDragPanX + (t.clientX - mgDragX);
             mgPanY = mgDragPanY + (t.clientY - mgDragY);
@@ -2646,7 +2760,7 @@
     }, { passive: false });
     mgCanvas.addEventListener('touchend', function(ev) {
         ev.preventDefault();
-        mgDragging = false;
+        mgDragging = false; mgNodeDragKey = null;
         mgPinchDist = 0;
     }, { passive: false });
 
@@ -2663,16 +2777,33 @@
         drawExchangeGraph();
     }, { passive: false });
     egCanvas.addEventListener('mousedown', function(ev) {
-        egDragging = true; egDragX = ev.clientX; egDragY = ev.clientY;
-        egDragPanX = egPanX; egDragPanY = egPanY;
+        const hit = egHitTest(ev.clientX, ev.clientY);
+        if (hit) {
+            egNodeDragKey = hit.key; egNodeDragMoved = false;
+            egCanvas.style.cursor = 'grabbing';
+        } else {
+            egDragging = true; egDragX = ev.clientX; egDragY = ev.clientY;
+            egDragPanX = egPanX; egDragPanY = egPanY;
+        }
     });
     window.addEventListener('mousemove', function(ev) {
+        if (egNodeDragKey) {
+            egNodeDragMoved = true;
+            const w = egScreenToWorld(ev.clientX, ev.clientY);
+            const p = currentEGLayout.get(egNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawExchangeGraph();
+            return;
+        }
         if (!egDragging) return;
         egPanX = egDragPanX+(ev.clientX-egDragX);
         egPanY = egDragPanY+(ev.clientY-egDragY);
         drawExchangeGraph();
     });
-    window.addEventListener('mouseup', function() { egDragging = false; });
+    window.addEventListener('mouseup', function() {
+        egDragging = false;
+        if (egNodeDragKey) { egNodeDragKey = null; egCanvas.style.cursor = ''; }
+    });
 
     // -- exchange graph touch (pan + pinch-zoom) --
     let egPinchDist = 0;
@@ -2680,11 +2811,16 @@
         ev.preventDefault();
         if (ev.touches.length === 1) {
             const t = ev.touches[0];
-            egDragging = true;
-            egDragX = t.clientX; egDragY = t.clientY;
-            egDragPanX = egPanX; egDragPanY = egPanY;
+            const hit = egHitTest(t.clientX, t.clientY);
+            if (hit) {
+                egNodeDragKey = hit.key;
+            } else {
+                egDragging = true;
+                egDragX = t.clientX; egDragY = t.clientY;
+                egDragPanX = egPanX; egDragPanY = egPanY;
+            }
         } else if (ev.touches.length === 2) {
-            egDragging = false;
+            egDragging = false; egNodeDragKey = null;
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             egPinchDist = Math.sqrt(dx*dx + dy*dy);
@@ -2692,7 +2828,13 @@
     }, { passive: false });
     egCanvas.addEventListener('touchmove', function(ev) {
         ev.preventDefault();
-        if (ev.touches.length === 1 && egDragging) {
+        if (ev.touches.length === 1 && egNodeDragKey) {
+            const t = ev.touches[0];
+            const w = egScreenToWorld(t.clientX, t.clientY);
+            const p = currentEGLayout.get(egNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawExchangeGraph();
+        } else if (ev.touches.length === 1 && egDragging) {
             const t = ev.touches[0];
             egPanX = egDragPanX + (t.clientX - egDragX);
             egPanY = egDragPanY + (t.clientY - egDragY);
@@ -2717,7 +2859,7 @@
     }, { passive: false });
     egCanvas.addEventListener('touchend', function(ev) {
         ev.preventDefault();
-        egDragging = false;
+        egDragging = false; egNodeDragKey = null;
         egPinchDist = 0;
     }, { passive: false });
 
@@ -2771,8 +2913,10 @@
     }
 
     egCanvas.addEventListener('mousemove', function(ev) {
+        if (egNodeDragKey) { egCanvas.style.cursor = 'grabbing'; return; }
         if (egDragging || egTooltipPinned) return;
         const hit = egHitTest(ev.clientX, ev.clientY);
+        egCanvas.style.cursor = hit ? 'grab' : '';
         if (!hit) {
             if (egTooltipKey) egDismissTooltip();
             return;
@@ -2787,6 +2931,7 @@
     });
 
     egCanvas.addEventListener('click', function(ev) {
+        if (egNodeDragMoved) { egNodeDragMoved = false; return; }
         if (egTooltipPinned) { egDismissTooltip(); return; }
         const hit = egHitTest(ev.clientX, ev.clientY);
         if (!hit) return;
@@ -3283,28 +3428,50 @@
     }, { passive: false });
 
     sgCanvas.addEventListener('mousedown', function(ev) {
-        sgDragging = true;
-        sgDragX = ev.clientX; sgDragY = ev.clientY;
-        sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+        const hit = sgHitTest(ev.clientX, ev.clientY);
+        if (hit) {
+            sgNodeDragKey = hit.key; sgNodeDragMoved = false;
+            sgCanvas.style.cursor = 'grabbing';
+        } else {
+            sgDragging = true;
+            sgDragX = ev.clientX; sgDragY = ev.clientY;
+            sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+        }
     });
     window.addEventListener('mousemove', function(ev) {
+        if (sgNodeDragKey) {
+            sgNodeDragMoved = true;
+            const w = sgScreenToWorld(ev.clientX, ev.clientY);
+            const p = currentSGLayout.get(sgNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawScatteringGraph();
+            return;
+        }
         if (!sgDragging) return;
         sgPanX = sgDragPanX + (ev.clientX - sgDragX);
         sgPanY = sgDragPanY + (ev.clientY - sgDragY);
         drawScatteringGraph();
     });
-    window.addEventListener('mouseup', function() { sgDragging = false; });
+    window.addEventListener('mouseup', function() {
+        sgDragging = false;
+        if (sgNodeDragKey) { sgNodeDragKey = null; sgCanvas.style.cursor = ''; }
+    });
 
     let sgPinchDist = 0;
     sgCanvas.addEventListener('touchstart', function(ev) {
         ev.preventDefault();
         if (ev.touches.length === 1) {
             const t = ev.touches[0];
-            sgDragging = true;
-            sgDragX = t.clientX; sgDragY = t.clientY;
-            sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+            const hit = sgHitTest(t.clientX, t.clientY);
+            if (hit) {
+                sgNodeDragKey = hit.key;
+            } else {
+                sgDragging = true;
+                sgDragX = t.clientX; sgDragY = t.clientY;
+                sgDragPanX = sgPanX; sgDragPanY = sgPanY;
+            }
         } else if (ev.touches.length === 2) {
-            sgDragging = false;
+            sgDragging = false; sgNodeDragKey = null;
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
             sgPinchDist = Math.sqrt(dx * dx + dy * dy);
@@ -3312,7 +3479,13 @@
     }, { passive: false });
     sgCanvas.addEventListener('touchmove', function(ev) {
         ev.preventDefault();
-        if (ev.touches.length === 1 && sgDragging) {
+        if (ev.touches.length === 1 && sgNodeDragKey) {
+            const t = ev.touches[0];
+            const w = sgScreenToWorld(t.clientX, t.clientY);
+            const p = currentSGLayout.get(sgNodeDragKey);
+            if (p) { p.x = w.x; p.y = w.y; }
+            drawScatteringGraph();
+        } else if (ev.touches.length === 1 && sgDragging) {
             const t = ev.touches[0];
             sgPanX = sgDragPanX + (t.clientX - sgDragX);
             sgPanY = sgDragPanY + (t.clientY - sgDragY);
@@ -3337,7 +3510,7 @@
     }, { passive: false });
     sgCanvas.addEventListener('touchend', function(ev) {
         ev.preventDefault();
-        sgDragging = false;
+        sgDragging = false; sgNodeDragKey = null;
         sgPinchDist = 0;
     }, { passive: false });
 
@@ -3394,8 +3567,10 @@
     }
 
     sgCanvas.addEventListener('mousemove', function(ev) {
+        if (sgNodeDragKey) { sgCanvas.style.cursor = 'grabbing'; return; }
         if (sgDragging || sgTooltipPinned) return;
         const hit = sgHitTest(ev.clientX, ev.clientY);
+        sgCanvas.style.cursor = hit ? 'grab' : '';
         if (!hit) { if (sgTooltipKey) sgDismissTooltip(); return; }
         if (hit.key !== sgTooltipKey) {
             sgTooltipKey = hit.key;
@@ -3406,6 +3581,7 @@
         sgTooltip.style.top = (ev.clientY + 14) + 'px';
     });
     sgCanvas.addEventListener('click', function(ev) {
+        if (sgNodeDragMoved) { sgNodeDragMoved = false; return; }
         if (sgTooltipPinned) { sgDismissTooltip(); return; }
         const hit = sgHitTest(ev.clientX, ev.clientY);
         if (!hit) return;
