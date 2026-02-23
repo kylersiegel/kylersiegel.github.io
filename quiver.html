@@ -85,6 +85,32 @@
             align-items: center;
             gap: 8px;
         }
+        .matrix-extras {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .mat-bracket { font-weight: bold; }
+        .mat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        .mat-input {
+            width: 36px;
+            padding: 3px 4px;
+            font-size: 13px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .mat-input:disabled {
+            background: #eee;
+            color: #999;
+        }
+        .mat-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .mat-input { -moz-appearance: textfield; }
         .header button {
             padding: 6px 18px;
             font-size: 14px;
@@ -508,6 +534,8 @@
             .random-extras { gap: 4px; }
             .random-extras select { font-size: 12px; padding: 4px 6px; }
             .random-extras label { font-size: 12px; }
+            .matrix-extras { gap: 4px; font-size: 12px; flex-wrap: wrap; }
+            .mat-input { width: 30px; font-size: 11px; padding: 2px 3px; }
 
             .tab-bar {
                 padding: 0 8px;
@@ -558,6 +586,8 @@
                 <label for="qt_markov">Markov</label>
                 <input type="radio" name="quiverType" id="qt_random" value="random">
                 <label for="qt_random">Random</label>
+                <input type="radio" name="quiverType" id="qt_matrix" value="matrix">
+                <label for="qt_matrix">Exchange matrix</label>
             </div>
             <div class="vector-extras" id="vectorExtras">
                 <label class="vec-label" style="color:#3498db">v<sub>1</sub>=</label>(<input type="number" id="v1x" value="1" class="vec-input">,<input type="number" id="v1y" value="0" class="vec-input">)
@@ -580,6 +610,21 @@
                 </select>
                 <label>arrows</label>
                 <button id="randomizeBtn">Randomize</button>
+            </div>
+            <div class="matrix-extras" id="matrixExtras" style="display:none">
+                <span class="mat-bracket">B =</span>
+                <div class="mat-grid">
+                    <input type="number" id="b00" value="0" class="mat-input" disabled>
+                    <input type="number" id="b01" value="-1" class="mat-input" data-ij="0,1">
+                    <input type="number" id="b02" value="-2" class="mat-input" data-ij="0,2">
+                    <input type="number" id="b10" value="1" class="mat-input" data-ij="1,0">
+                    <input type="number" id="b11" value="0" class="mat-input" disabled>
+                    <input type="number" id="b12" value="1" class="mat-input" data-ij="1,2">
+                    <input type="number" id="b20" value="2" class="mat-input" data-ij="2,0">
+                    <input type="number" id="b21" value="-1" class="mat-input" data-ij="2,1">
+                    <input type="number" id="b22" value="0" class="mat-input" disabled>
+                </div>
+                <button id="applyMatrixBtn">Apply</button>
             </div>
         </div>
     </div>
@@ -1184,6 +1229,25 @@
         setQuiver(raysToQuiver(customVectors));
     }
 
+    function applyMatrixInput() {
+        const B = [[0,0,0],[0,0,0],[0,0,0]];
+        for (let i = 0; i < 3; i++)
+            for (let j = 0; j < 3; j++)
+                if (i !== j) B[i][j] = parseInt(document.getElementById('b' + i + j).value) || 0;
+        setQuiver(matrixToQuiver(B));
+    }
+
+    function initMatrixMirroring() {
+        document.querySelectorAll('.mat-grid .mat-input[data-ij]').forEach(input => {
+            input.addEventListener('input', function() {
+                const [i, j] = this.dataset.ij.split(',');
+                const mirror = document.getElementById('b' + j + i);
+                const v = parseInt(this.value) || 0;
+                mirror.value = -v;
+            });
+        });
+    }
+
     // ===========================================================
     //  QUIVER SELECTION
     // ===========================================================
@@ -1226,8 +1290,10 @@
         const type = getQuiverType();
         document.getElementById('vectorExtras').style.display = type === 'scatter' ? 'flex' : 'none';
         document.getElementById('randomExtras').style.display = type === 'random' ? 'flex' : 'none';
+        document.getElementById('matrixExtras').style.display = type === 'matrix' ? 'flex' : 'none';
         if (type === 'scatter') applyVectorTriple();
         else if (type === 'markov') setQuiver(PRESET_MARKOV);
+        else if (type === 'matrix') applyMatrixInput();
         else generateRandomQuiver();
     }
 
@@ -3610,6 +3676,8 @@
     // ===========================================================
     document.querySelectorAll('input[name="quiverType"]').forEach(r => r.addEventListener('change', applyQuiverSelection));
     document.getElementById('applyVectorsBtn').addEventListener('click', applyVectorTriple);
+    document.getElementById('applyMatrixBtn').addEventListener('click', applyMatrixInput);
+    initMatrixMirroring();
     document.getElementById('randomizeBtn').addEventListener('click', generateRandomQuiver);
     document.getElementById('depthSelect').addEventListener('change', () => {
         if (document.getElementById('tabMG').classList.contains('active')) {
