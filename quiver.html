@@ -515,6 +515,41 @@
         #tabAbout .section-note {
             font-size: 12px; color: #999; font-style: italic;
         }
+        /* Collapsible sections */
+        #tabAbout details {
+            margin: 16px 0 0 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        #tabAbout details summary {
+            font-size: 16px; font-weight: 600; color: #2c3e50;
+            padding: 10px 14px;
+            cursor: pointer;
+            background: #f8f9fa;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        #tabAbout details summary::-webkit-details-marker { display: none; }
+        #tabAbout details summary::before {
+            content: '\25B6'; font-size: 11px; color: #888;
+            transition: transform 0.15s ease;
+            display: inline-block;
+        }
+        #tabAbout details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        #tabAbout details summary:hover { background: #eef1f5; }
+        #tabAbout details .about-section-body {
+            padding: 6px 16px 16px 16px;
+            border-top: 1px solid #e8e8e8;
+        }
+        #tabAbout details .about-section-body h3 {
+            font-size: 15px; color: #34495e; margin: 14px 0 6px 0;
+        }
+        #tabAbout details .about-section-body h3:first-child { margin-top: 6px; }
 
         /* ---- mobile responsive ---- */
         @media (max-width: 600px) {
@@ -737,6 +772,20 @@
                 </label>
                 <label for="egSpecToggle">Specialize x=1</label>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="egGVecToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="egGVecToggle">g-vectors</label>
+            </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="egCVecToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="egCVecToggle">c-vectors</label>
+            </div>
             <div class="mg-info" id="egInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -856,191 +905,276 @@
 
     <!-- about tab -->
     <div id="tabAbout" class="tab-content">
-        <h2>AI Assistance</h2>
-        <p>
+        <p style="color:#888;font-size:13px;margin:0 0 8px 0;">
             This app was created by Kyler Siegel with heavy AI assistance. There may be errors.
         </p>
-
-        <h2>Overview</h2>
         <p>
             This is an interactive visualizer for <b>quiver mutations</b> and <b>cluster algebras</b>,
             two closely related structures introduced by Fomin and Zelevinsky in the early 2000s.
             Cluster algebras arise in diverse areas of mathematics, including representation theory,
             Teichm&uuml;ller theory, tropical geometry, and the study of scattering diagrams.
-        </p>
-        <p>
-            The app runs entirely in the browser with no server or external dependencies&mdash;everything
+            The app runs entirely in the browser&mdash;everything
             is implemented from scratch in a single HTML file using JavaScript and the Canvas API.
         </p>
 
-        <h2>Quivers</h2>
-        <p>
-            A <b>quiver</b> is a directed graph, possibly with multiple edges between vertices but
-            no loops (edges from a vertex to itself) and no 2-cycles (a pair of edges going in
-            opposite directions between two vertices). In this visualizer we work with quivers on
-            3 vertices, labeled 1, 2, 3.
-        </p>
-        <p>
-            A quiver is equivalently described by its <b>exchange matrix</b> $B$, a
-            skew-symmetric integer matrix where $B_{ij}$ records the
-            number of arrows from $i$ to $j$ (positive) or from $j$ to $i$
-            (negative). In rank 3, $B$ is determined by its three upper-triangular
-            entries $B_{12}$, $B_{13}$, $B_{23}$.
-        </p>
+        <details>
+            <summary>Quivers &amp; mutation</summary>
+            <div class="about-section-body">
+                <p>
+                    A <b>quiver</b> is a directed graph, possibly with multiple edges between vertices but
+                    no loops (edges from a vertex to itself) and no 2-cycles (a pair of edges going in
+                    opposite directions between two vertices). In this visualizer we work with quivers on
+                    3 vertices, labeled 1, 2, 3.
+                </p>
+                <p>
+                    A quiver is equivalently described by its <b>exchange matrix</b> $B$, a
+                    skew-symmetric integer matrix where $B_{ij}$ records the
+                    number of arrows from $i$ to $j$ (positive) or from $j$ to $i$
+                    (negative). In rank 3, $B$ is determined by its three upper-triangular
+                    entries $B_{12}$, $B_{13}$, $B_{23}$.
+                </p>
+                <p>
+                    <b>Mutation</b> at vertex $k$ transforms the exchange matrix $B$ into a
+                    new matrix $B'$ by the Fomin&ndash;Zelevinsky rule:
+                </p>
+                <div class="formula">$$B'_{ij} = \begin{cases} -B_{ij} & \text{if } i = k \text{ or } j = k, \\ B_{ij} + \dfrac{|B_{ik}|\,B_{kj} + B_{ik}\,|B_{kj}|}{2} & \text{otherwise.} \end{cases}$$</div>
+                <p>
+                    Mutation is an <b>involution</b>: mutating twice at the same vertex returns the original quiver.
+                    Note also that mutation preserves skew-symmetry.
+                </p>
+            </div>
+        </details>
 
-        <h2>Quiver mutation</h2>
-        <p>
-            <b>Mutation</b> at vertex $k$ transforms the exchange matrix $B$ into a
-            new matrix $B'$ by the Fomin&ndash;Zelevinsky rule:
-        </p>
-        <div class="formula">$$B'_{ij} = \begin{cases} -B_{ij} & \text{if } i = k \text{ or } j = k, \\ B_{ij} + \dfrac{|B_{ik}|\,B_{kj} + B_{ik}\,|B_{kj}|}{2} & \text{otherwise.} \end{cases}$$</div>
-        <p>
-            Mutation is an <b>involution</b>: mutating twice at the same vertex returns the original quiver.
-            Note also that mutation preserves skew-symmetry.
-        </p>
+        <details>
+            <summary>Mutation graph</summary>
+            <div class="about-section-body">
+                <p>
+                    The <b>mutation graph</b> shows all quivers reachable from the initial quiver by iterated
+                    mutations, up to a chosen depth. Vertices of this graph are quivers (identified by their
+                    exchange matrix), and edges correspond to single mutations, colored by which vertex was
+                    mutated:
+                    <span style="color:#3498db">$\mu_1$</span>,
+                    <span style="color:#e74c3c">$\mu_2$</span>,
+                    <span style="color:#27ae60">$\mu_3$</span>.
+                    Each node displays a miniature picture of the corresponding quiver.
+                </p>
+                <p>
+                    Two quivers occupy the same node if and only if their exchange matrices are identical.
+                    Dashed lines at the boundary indicate mutations that would lead to quivers not yet explored
+                    at the current depth.
+                </p>
+            </div>
+        </details>
 
-        <h2>Mutation graph</h2>
-        <p>
-            The <b>mutation graph</b> shows all quivers reachable from the initial quiver by iterated
-            mutations, up to a chosen depth. Vertices of this graph are quivers (identified by their
-            exchange matrix), and edges correspond to single mutations, colored by which vertex was
-            mutated:
-            <span style="color:#3498db">$\mu_1$</span>,
-            <span style="color:#e74c3c">$\mu_2$</span>,
-            <span style="color:#27ae60">$\mu_3$</span>.
-            Each node displays a miniature picture of the corresponding quiver.
-        </p>
-        <p>
-            Two quivers occupy the same node if and only if their exchange matrices are identical.
-            Dashed lines at the boundary indicate mutations that would lead to quivers not yet explored
-            at the current depth.
-        </p>
+        <details>
+            <summary>Exchange graph &amp; cluster variables</summary>
+            <div class="about-section-body">
+                <p>
+                    A <b>cluster</b> is a triple of <b>cluster variables</b> $(x_1, x_2, x_3)$
+                    together with an exchange matrix.
+                    The initial cluster simply has formal variables $x_1, x_2, x_3$.
+                </p>
+                <p>
+                    When we mutate at vertex $k$, the exchange matrix transforms as above, and the
+                    cluster variable $x_k$ is replaced by a new variable $x'_k$ defined by the
+                    <b>exchange relation</b>:
+                </p>
+                <div class="formula">$$x_k \cdot x'_k = \prod_{B_{ik} > 0} x_i^{B_{ik}} + \prod_{B_{ik} < 0} x_i^{-B_{ik}}$$</div>
+                <p>
+                    The other two variables remain unchanged. The <b>exchange graph</b> records all
+                    (quiver, cluster) pairs reachable by iterated mutations. Unlike the mutation graph,
+                    two nodes are identified only when <em>both</em> the exchange matrix and the cluster
+                    variables agree. This means the exchange graph may have more nodes than the mutation graph.
+                </p>
+                <p>
+                    A foundational result in the theory of cluster algebras is the <b>Laurent phenomenon</b>
+                    (Fomin&ndash;Zelevinsky, 2002): every cluster variable can be expressed as a
+                    Laurent polynomial in the initial variables $x_1, x_2, x_3$&mdash;that is, a polynomial
+                    with integer coefficients divided by a monomial. This is nontrivial because the exchange
+                    relation involves division, and it is not obvious a priori that repeated application
+                    always produces Laurent polynomials.
+                </p>
+            </div>
+        </details>
 
-        <h2>Exchange graph &amp; cluster variables</h2>
-        <p>
-            A <b>cluster</b> is a triple of <b>cluster variables</b> $(x_1, x_2, x_3)$
-            together with an exchange matrix.
-            The initial cluster simply has formal variables $x_1, x_2, x_3$.
-        </p>
-        <p>
-            When we mutate at vertex $k$, the exchange matrix transforms as above, and the
-            cluster variable $x_k$ is replaced by a new variable $x'_k$ defined by the
-            <b>exchange relation</b>:
-        </p>
-        <div class="formula">$$x_k \cdot x'_k = \prod_{B_{ik} > 0} x_i^{B_{ik}} + \prod_{B_{ik} < 0} x_i^{-B_{ik}}$$</div>
-        <p>
-            The other two variables remain unchanged. The <b>exchange graph</b> records all
-            (quiver, cluster) pairs reachable by iterated mutations. Unlike the mutation graph,
-            two nodes are identified only when <em>both</em> the exchange matrix and the cluster
-            variables agree. This means the exchange graph may have more nodes than the mutation graph.
-        </p>
-        <p>
-            A foundational result in the theory of cluster algebras is the <b>Laurent phenomenon</b>
-            (Fomin&ndash;Zelevinsky, 2002): every cluster variable can be expressed as a
-            Laurent polynomial in the initial variables $x_1, x_2, x_3$&mdash;that is, a polynomial
-            with integer coefficients divided by a monomial. This is nontrivial because the exchange
-            relation involves division, and it is not obvious a priori that repeated application
-            always produces Laurent polynomials.
-        </p>
+        <details>
+            <summary>g-vectors &amp; c-vectors</summary>
+            <div class="about-section-body">
+                <p>
+                    Each seed (exchange matrix + cluster) carries two additional integer matrices:
+                    the <b>$G$-matrix</b> (whose columns are the <b>g-vectors</b>) and the
+                    <b>$C$-matrix</b> (whose columns are the <b>c-vectors</b>). Both
+                    are $3 \times 3$ integer matrices, initialized as the identity $G = C = I_3$.
+                </p>
 
-        <h2>Scattering graph</h2>
-        <p>
-            The <b>scattering graph</b> is based on a piecewise-linear mutation operation on triples
-            of integer vectors in $\mathbb{Z}^2$, motivated by the theory of scattering diagrams.
-            Given a triple of vectors $(\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3)$, we define
-            a <b>piecewise-linear shear</b> $\mu_{\mathbf{v}}$ for any vector $\mathbf{v}$ by:
-        </p>
-        <div class="formula">$$\mu_{\mathbf{v}}(\mathbf{w}) = \mathbf{w} + \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$$</div>
-        <p>
-            where $\mathbf{w} \wedge \mathbf{v} = \det(\mathbf{w}, \mathbf{v})$ is the $2 \times 2$ determinant.
-            Mutation $\operatorname{mut}_k$ negates the $k$-th vector and applies $\mu_{\mathbf{v}_k}$
-            to the other two. Unlike quiver mutation, these mutations are <em>not</em> involutions,
-            but we still require that mutation sequences have no consecutive repeats.
-        </p>
-        <p>
-            Each mutated triple carries not only the current vectors but also the mutation path
-            $i_1, \ldots, i_m$ used to reach it. The <b>base-mapped triple</b> is obtained by
-            recursively unwinding this path: at each step, the inverse shear
-            $\mu_{\mathbf{v}}^{-1}(\mathbf{w}) = \mathbf{w} - \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$
-            is applied (with respect to the negated mutated vector $-\mathbf{v}'_{i_m}$) to all three
-            components, peeling off the last mutation.
-        </p>
-        <p>
-            Two nodes in the scattering graph are identified if they have the same base-mapped triple.
-            When "Vector triple" is selected, the initial triple is taken directly from the user-specified
-            vectors. For other quiver presets, an initial triple is derived from the exchange matrix $B$ by
-            choosing vectors satisfying $\det(\mathbf{v}_i, \mathbf{v}_j) = B_{ij}$.
-        </p>
+                <h3>g-vectors</h3>
+                <p>
+                    The <b>g-vector</b> $\mathbf{g}_i \in \mathbb{Z}^3$ of a cluster variable
+                    $x_i$ records its &ldquo;leading term&rdquo; in a certain tropical sense.
+                    More precisely, $\mathbf{g}_i$ encodes the multi-degree of $x_i$ with respect
+                    to the initial cluster when we write the cluster variable as a Laurent polynomial
+                    and extract the monomial with the most refined dominance.
+                    In the initial seed, $\mathbf{g}_i = \mathbf{e}_i$ (the $i$-th standard basis vector).
+                </p>
+                <p>
+                    When mutating at vertex $k$, the $G$-matrix updates as follows.
+                    Let $\varepsilon_k$ denote the <b>sign</b> of the $k$-th c-vector (by sign-coherence,
+                    all nonzero entries of $\mathbf{c}_k$ share the same sign).
+                    Then the $k$-th column of $G$ is replaced by:
+                </p>
+                <div class="formula">
+                    $$\mathbf{g}'_k \;=\; -\mathbf{g}_k \;+\; \sum_{i} [\varepsilon_k \, B_{ik}]_+\;\mathbf{g}_i$$
+                </div>
+                <p>
+                    where $[x]_+ = \max(x, 0)$. All other columns of $G$ remain unchanged.
+                </p>
+                <p>
+                    Fomin and Zelevinsky conjectured (and it was subsequently proved) that the g-vectors
+                    of any cluster form a $\mathbb{Z}$-basis
+                    of $\mathbb{Z}^3$, and that distinct cluster variables always have distinct g-vectors.
+                </p>
 
-        <h2>Preset quivers</h2>
-        <ul>
-            <li>
-                <b>Vector triple</b> &mdash; A quiver defined by three user-specified vectors
-                $\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3 \in \mathbb{Z}^2$.
-                The exchange matrix entry $B_{ij}$ is the determinant
-                $\det(\mathbf{v}_i, \mathbf{v}_j)$.
-                The default vectors $(1, 0), (0, -1), (-1, -2)$ correspond
-                to the Hirzebruch surface $F_1$.
-            </li>
-            <li>
-                <b>Markov</b> &mdash; A 3-cycle with 2 arrows on each edge, related to the Markov equation
-                $x^2 + y^2 + z^2 = 3xyz$.
-            </li>
-            <li>
-                <b>Random</b> &mdash; A randomly generated quiver (no loops or 2-cycles) with a configurable
-                specified number of arrows.
-            </li>
-        </ul>
+                <h3>c-vectors</h3>
+                <p>
+                    The <b>c-vector</b> $\mathbf{c}_i \in \mathbb{Z}^3$ tracks how the $i$-th
+                    <b>coefficient</b> (frozen variable) transforms under mutation. When mutating at vertex $k$, the
+                    $C$-matrix updates as follows. The $k$-th column is negated, and each other column
+                    $j \neq k$ is adjusted:
+                </p>
+                <div class="formula">
+                    $$\mathbf{c}'_k = -\mathbf{c}_k, \qquad
+                    \mathbf{c}'_j = \mathbf{c}_j + [-\varepsilon_k \, B_{kj}]_+\;\mathbf{c}_k \quad (j \neq k)$$
+                </div>
+                <p>
+                    where $\varepsilon_k$ is the sign of $\mathbf{c}_k$ as above.
+                </p>
+                <p>
+                    A key property is <b>sign-coherence</b>: every c-vector is either a nonnegative
+                    or a nonpositive vector (all entries share the same sign). This was conjectured
+                    by Fomin and Zelevinsky and proved in various generality by Derksen&ndash;Weyman&ndash;Zelevinsky,
+                    Gross&ndash;Hacking&ndash;Keel&ndash;Kontsevich, and others.
+                </p>
 
-        <h2>Implementation details</h2>
-        <p>
-            The entire application is self-contained in a single HTML file with inline CSS and JavaScript.
-            No external libraries are used for the core functionality (jsPDF is loaded on demand from a CDN
-            only when PDF export is requested).
-        </p>
-        <p><b>Laurent polynomial arithmetic.</b>
-            Cluster variables are represented as Laurent polynomials in $x_1, x_2, x_3$.
-            Internally, each Laurent polynomial is stored
-            as a JavaScript <code>Map</code> from exponent triples (e.g. <code>"2,-1,0"</code> for
-            $x_1^2 x_2^{-1}$) to integer coefficients.
-            No external computer algebra system is used&mdash;addition, multiplication, exponentiation,
-            and exact polynomial division are all implemented from scratch.
-        </p>
-        <p>
-            The division step deserves special mention: when computing the exchange relation,
-            we must divide a polynomial by a (potentially complex) Laurent polynomial. This is done via
-            multivariate polynomial long division with lexicographic monomial ordering. The Laurent
-            phenomenon guarantees that this division is always exact (zero remainder), so the algorithm
-            is correct for our use case. Coefficients are rounded to integers after each operation to
-            avoid floating-point drift.
-        </p>
-        <p><b>Graph layout.</b>
-            All three graph tabs use a custom <b>force-directed layout</b> algorithm.
-            Nodes are initialized on concentric rings (by BFS depth from the initial node), then
-            iteratively adjusted: a repulsive Coulomb-like force pushes all node pairs apart, an
-            attractive spring force pulls connected nodes together, a node-edge repulsion force prevents
-            nodes from overlapping non-adjacent edges, an edge-crossing repulsion reduces edge intersections,
-            and a mild gravitational pull toward the center prevents drift.
-        </p>
-        <p><b>Rendering.</b>
-            All graphics are drawn on HTML5 Canvas elements, scaled by <code>devicePixelRatio</code> for
-            crisp rendering on high-DPI displays. Zoom uses <code>Math.exp(-deltaY * 0.002)</code> for
-            smooth, proportional scrolling on trackpads. Mutation graph nodes are circles containing mini
-            quiver drawings; exchange graph nodes are rounded rectangles showing both the quiver and the
-            three cluster variable expressions; scattering graph nodes are rounded rectangles showing
-            three color-coded vector arrows and the base-mapped triple coordinates.
-        </p>
-        <p><b>Graph construction.</b>
-            All three graphs are built by breadth-first search from the initial node.
-            At each depth level, all three possible mutations are applied to each frontier node.
-            For the mutation graph, nodes are identified by exchange matrix alone; for the exchange graph,
-            nodes are identified by the pair (exchange matrix, cluster variables); for the scattering graph,
-            nodes are identified by base-mapped triple. A cap of 500 nodes
-            prevents the browser from hanging on deeply explored graphs. Dashed &ldquo;stub&rdquo; edges
-            at the frontier indicate mutations that would produce new nodes beyond the current depth.
-        </p>
+                <h3>Tropical duality</h3>
+                <p>
+                    The $G$- and $C$-matrices satisfy the <b>tropical duality</b> relation
+                    $G^T C = I$ at every seed. In particular, knowing one matrix determines the other.
+                    This app computes both independently via the mutation formulas above,
+                    which also serves as an internal consistency check.
+                </p>
+            </div>
+        </details>
 
-        <p class="section-note">Last updated: February 19, 2026.</p>
+        <details>
+            <summary>Scattering graph</summary>
+            <div class="about-section-body">
+                <p>
+                    The <b>scattering graph</b> is based on a piecewise-linear mutation operation on triples
+                    of integer vectors in $\mathbb{Z}^2$, motivated by the theory of scattering diagrams.
+                    Given a triple of vectors $(\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3)$, we define
+                    a <b>piecewise-linear shear</b> $\mu_{\mathbf{v}}$ for any vector $\mathbf{v}$ by:
+                </p>
+                <div class="formula">$$\mu_{\mathbf{v}}(\mathbf{w}) = \mathbf{w} + \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$$</div>
+                <p>
+                    where $\mathbf{w} \wedge \mathbf{v} = \det(\mathbf{w}, \mathbf{v})$ is the $2 \times 2$ determinant.
+                    Mutation $\operatorname{mut}_k$ negates the $k$-th vector and applies $\mu_{\mathbf{v}_k}$
+                    to the other two. Unlike quiver mutation, these mutations are <em>not</em> involutions,
+                    but we still require that mutation sequences have no consecutive repeats.
+                </p>
+                <p>
+                    Each mutated triple carries not only the current vectors but also the mutation path
+                    $i_1, \ldots, i_m$ used to reach it. The <b>base-mapped triple</b> is obtained by
+                    recursively unwinding this path: at each step, the inverse shear
+                    $\mu_{\mathbf{v}}^{-1}(\mathbf{w}) = \mathbf{w} - \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$
+                    is applied (with respect to the negated mutated vector $-\mathbf{v}'_{i_m}$) to all three
+                    components, peeling off the last mutation.
+                </p>
+                <p>
+                    Two nodes in the scattering graph are identified if they have the same base-mapped triple.
+                    When &ldquo;Vector triple&rdquo; is selected, the initial triple is taken directly from the user-specified
+                    vectors. For other quiver presets, an initial triple is derived from the exchange matrix $B$ by
+                    choosing vectors satisfying $\det(\mathbf{v}_i, \mathbf{v}_j) = B_{ij}$.
+                </p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Preset quivers</summary>
+            <div class="about-section-body">
+                <ul>
+                    <li>
+                        <b>Vector triple</b> &mdash; A quiver defined by three user-specified vectors
+                        $\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3 \in \mathbb{Z}^2$.
+                        The exchange matrix entry $B_{ij}$ is the determinant
+                        $\det(\mathbf{v}_i, \mathbf{v}_j)$.
+                        The default vectors $(1, 0), (0, -1), (-1, -2)$ correspond
+                        to the Hirzebruch surface $F_1$.
+                    </li>
+                    <li>
+                        <b>Markov</b> &mdash; A 3-cycle with 2 arrows on each edge, related to the Markov equation
+                        $x^2 + y^2 + z^2 = 3xyz$.
+                    </li>
+                    <li>
+                        <b>Random</b> &mdash; A randomly generated quiver (no loops or 2-cycles) with a configurable
+                        specified number of arrows.
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Implementation details</summary>
+            <div class="about-section-body">
+                <p>
+                    The entire application is self-contained in a single HTML file with inline CSS and JavaScript.
+                    No external libraries are used for the core functionality (jsPDF is loaded on demand from a CDN
+                    only when PDF export is requested).
+                </p>
+                <p><b>Laurent polynomial arithmetic.</b>
+                    Cluster variables are represented as Laurent polynomials in $x_1, x_2, x_3$.
+                    Internally, each Laurent polynomial is stored
+                    as a JavaScript <code>Map</code> from exponent triples (e.g. <code>"2,-1,0"</code> for
+                    $x_1^2 x_2^{-1}$) to integer coefficients.
+                    No external computer algebra system is used&mdash;addition, multiplication, exponentiation,
+                    and exact polynomial division are all implemented from scratch.
+                </p>
+                <p>
+                    The division step deserves special mention: when computing the exchange relation,
+                    we must divide a polynomial by a (potentially complex) Laurent polynomial. This is done via
+                    multivariate polynomial long division with lexicographic monomial ordering. The Laurent
+                    phenomenon guarantees that this division is always exact (zero remainder), so the algorithm
+                    is correct for our use case. Coefficients are rounded to integers after each operation to
+                    avoid floating-point drift.
+                </p>
+                <p><b>Graph layout.</b>
+                    All three graph tabs use a custom <b>force-directed layout</b> algorithm.
+                    Nodes are initialized on concentric rings (by BFS depth from the initial node), then
+                    iteratively adjusted: a repulsive Coulomb-like force pushes all node pairs apart, an
+                    attractive spring force pulls connected nodes together, a node-edge repulsion force prevents
+                    nodes from overlapping non-adjacent edges, an edge-crossing repulsion reduces edge intersections,
+                    and a mild gravitational pull toward the center prevents drift.
+                </p>
+                <p><b>Rendering.</b>
+                    All graphics are drawn on HTML5 Canvas elements, scaled by <code>devicePixelRatio</code> for
+                    crisp rendering on high-DPI displays. Zoom uses <code>Math.exp(-deltaY * 0.002)</code> for
+                    smooth, proportional scrolling on trackpads. Mutation graph nodes are circles containing mini
+                    quiver drawings; exchange graph nodes are rounded rectangles showing both the quiver and the
+                    three cluster variable expressions; scattering graph nodes are rounded rectangles showing
+                    three color-coded vector arrows and the base-mapped triple coordinates.
+                </p>
+                <p><b>Graph construction.</b>
+                    All three graphs are built by breadth-first search from the initial node.
+                    At each depth level, all three possible mutations are applied to each frontier node.
+                    For the mutation graph, nodes are identified by exchange matrix alone; for the exchange graph,
+                    nodes are identified by the pair (exchange matrix, cluster variables); for the scattering graph,
+                    nodes are identified by base-mapped triple. A cap of 500 nodes
+                    prevents the browser from hanging on deeply explored graphs. Dashed &ldquo;stub&rdquo; edges
+                    at the frontier indicate mutations that would produce new nodes beyond the current depth.
+                </p>
+            </div>
+        </details>
+
+        <p class="section-note">Last updated: February 24, 2026.</p>
     </div>
 
     <script>
@@ -1051,7 +1185,7 @@
     const ARROW_COLOR = '#4a4a4a';
     let VERTEX_RADIUS = 30;
     const MG_NODE_R = 42;
-    const EG_NODE_W = 160, EG_NODE_H = 100, EG_NODE_R = 95;
+    const EG_NODE_W = 160; let EG_NODE_H = 100, EG_NODE_R = 95;
     const MAX_GRAPH_NODES = 500;
 
     // ===========================================================
@@ -1072,6 +1206,7 @@
     let egNodeDragKey = null, egNodeDragMoved = false;
     let egRotation = 0; // radians
     let egSpecialize = false;
+    let egShowGVec = false, egShowCVec = false;
     let egNeedsRebuild = true;
 
     let currentSGGraph = null, currentSGLayout = null;
@@ -1146,6 +1281,15 @@
                 if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                     MathJax.typesetPromise([document.getElementById('tabAbout')]);
                 }
+            }
+        });
+    });
+
+    // Retypeset MathJax when collapsible About sections are opened
+    document.querySelectorAll('#tabAbout details').forEach(det => {
+        det.addEventListener('toggle', () => {
+            if (det.open && typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
+                MathJax.typesetPromise([det]);
             }
         });
     });
@@ -1476,16 +1620,16 @@
         return best;
     }
 
-    function canonicalEGData(B, cluster) {
-        let bestKey = egNodeKey(B, cluster), bestB = B, bestC = cluster;
+    function canonicalEGData(B, cluster, G, C) {
+        let bestKey = egNodeKey(B, cluster), bestB = B, bestCl = cluster, bestG = G, bestC = C;
         for (let pi = 1; pi < PERMS_3.length; pi++) {
             const p = PERMS_3[pi];
             const pB = permuteMatrix(B, p);
-            const pC = permuteCluster(cluster, p);
-            const key = egNodeKey(pB, pC);
-            if (key < bestKey) { bestKey = key; bestB = pB; bestC = pC; }
+            const pCl = permuteCluster(cluster, p);
+            const key = egNodeKey(pB, pCl);
+            if (key < bestKey) { bestKey = key; bestB = pB; bestCl = pCl; bestG = permuteMatrix(G, p); bestC = permuteMatrix(C, p); }
         }
-        return { matrix: bestB, cluster: bestC };
+        return { matrix: bestB, cluster: bestCl, gMatrix: bestG, cMatrix: bestC };
     }
 
     // Specialize-at-1 key: uses integer values instead of full LP strings
@@ -1503,16 +1647,16 @@
         return best;
     }
 
-    function canonicalEGDataSpec(B, cluster) {
-        let bestKey = egNodeKeySpec(B, cluster), bestB = B, bestC = cluster;
+    function canonicalEGDataSpec(B, cluster, G, C) {
+        let bestKey = egNodeKeySpec(B, cluster), bestB = B, bestCl = cluster, bestG = G, bestC = C;
         for (let pi = 1; pi < PERMS_3.length; pi++) {
             const p = PERMS_3[pi];
             const pB = permuteMatrix(B, p);
-            const pC = permuteCluster(cluster, p);
-            const key = egNodeKeySpec(pB, pC);
-            if (key < bestKey) { bestKey = key; bestB = pB; bestC = pC; }
+            const pCl = permuteCluster(cluster, p);
+            const key = egNodeKeySpec(pB, pCl);
+            if (key < bestKey) { bestKey = key; bestB = pB; bestCl = pCl; bestG = permuteMatrix(G, p); bestC = permuteMatrix(C, p); }
         }
-        return { matrix: bestB, cluster: bestC };
+        return { matrix: bestB, cluster: bestCl, gMatrix: bestG, cMatrix: bestC };
     }
 
     // ===========================================================
@@ -1687,6 +1831,48 @@
     }
 
     // ===========================================================
+    //  G-VECTOR AND C-VECTOR MUTATION
+    // ===========================================================
+    const IDENTITY_3 = [[1,0,0],[0,1,0],[0,0,1]];
+
+    function signOfCVector(C, k) {
+        for (let i = 0; i < 3; i++) {
+            if (C[i][k] > 0) return 1;
+            if (C[i][k] < 0) return -1;
+        }
+        return 1;
+    }
+
+    function mutateGMatrix(B, G, C, k) {
+        const eps = signOfCVector(C, k);
+        const G2 = G.map(r => [...r]);
+        for (let i = 0; i < 3; i++) {
+            G2[i][k] = -G[i][k];
+            for (let j = 0; j < 3; j++) {
+                if (j === k) continue;
+                const v = eps * B[j][k];
+                if (v > 0) G2[i][k] += v * G[i][j];
+            }
+        }
+        return G2;
+    }
+
+    function mutateCMatrix(B, C, k) {
+        const eps = signOfCVector(C, k);
+        const C2 = C.map(r => [...r]);
+        const origColK = [C[0][k], C[1][k], C[2][k]];
+        for (let i = 0; i < 3; i++) C2[i][k] = -C[i][k];
+        for (let j = 0; j < 3; j++) {
+            if (j === k) continue;
+            const v = -eps * B[k][j];
+            if (v > 0) {
+                for (let i = 0; i < 3; i++) C2[i][j] += v * origColK[i];
+            }
+        }
+        return C2;
+    }
+
+    // ===========================================================
     //  EXCHANGE GRAPH CONSTRUCTION (BFS)
     // ===========================================================
     function buildExchangeGraph(initialB, maxDepth, upToPermutation, specializeAtOne) {
@@ -1697,22 +1883,22 @@
         let keyFn, dataFn;
         if (upToPermutation && specializeAtOne) {
             keyFn = canonicalEGKeySpec;
-            dataFn = (B, cl) => canonicalEGDataSpec(B, cl);
+            dataFn = (B, cl, G, C) => canonicalEGDataSpec(B, cl, G, C);
         } else if (upToPermutation) {
             keyFn = canonicalEGKey;
-            dataFn = (B, cl) => canonicalEGData(B, cl);
+            dataFn = (B, cl, G, C) => canonicalEGData(B, cl, G, C);
         } else if (specializeAtOne) {
             keyFn = egNodeKeySpec;
-            dataFn = (B, cl) => ({ matrix: B, cluster: cl });
+            dataFn = (B, cl, G, C) => ({ matrix: B, cluster: cl, gMatrix: G, cMatrix: C });
         } else {
             keyFn = egNodeKey;
-            dataFn = (B, cl) => ({ matrix: B, cluster: cl });
+            dataFn = (B, cl, G, C) => ({ matrix: B, cluster: cl, gMatrix: G, cMatrix: C });
         }
 
         const initialCluster = [lpVar(0), lpVar(1), lpVar(2)];
-        const initData = dataFn(initialB, initialCluster);
+        const initData = dataFn(initialB, initialCluster, IDENTITY_3, IDENTITY_3);
         const ik = keyFn(initData.matrix, initData.cluster);
-        nodes.set(ik, { matrix: initData.matrix, cluster: initData.cluster, depth: 0 });
+        nodes.set(ik, { matrix: initData.matrix, cluster: initData.cluster, gMatrix: initData.gMatrix, cMatrix: initData.cMatrix, depth: 0 });
         let frontier = [ik];
         let capped = false;
 
@@ -1730,12 +1916,14 @@
                 for (let k = 0; k < 3; k++) {
                     const B2raw = mutateMatrix(nd.matrix, k);
                     const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                    const dat = dataFn(B2raw, cl2raw);
+                    const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
+                    const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
+                    const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
                     const k2 = keyFn(dat.matrix, dat.cluster);
                     if (k2 === key) { addEdge(key, key, k); continue; }
                     if (!nodes.has(k2)) {
                         if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
-                        nodes.set(k2, { matrix: dat.matrix, cluster: dat.cluster, depth: d + 1 });
+                        nodes.set(k2, { matrix: dat.matrix, cluster: dat.cluster, gMatrix: dat.gMatrix, cMatrix: dat.cMatrix, depth: d + 1 });
                         next.push(k2);
                     }
                     addEdge(key, k2, k);
@@ -1749,7 +1937,9 @@
             for (let k = 0; k < 3; k++) {
                 const B2raw = mutateMatrix(nd.matrix, k);
                 const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                const dat = dataFn(B2raw, cl2raw);
+                const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
+                const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
+                const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
                 const k2 = keyFn(dat.matrix, dat.cluster);
                 if (!nodes.has(k2)) continue;
                 addEdge(key, k2, k);
@@ -1762,7 +1952,9 @@
             for (let k = 0; k < 3; k++) {
                 const B2raw = mutateMatrix(nd.matrix, k);
                 const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                const dat = dataFn(B2raw, cl2raw);
+                const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
+                const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
+                const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
                 const k2 = keyFn(dat.matrix, dat.cluster);
                 if (nodes.has(k2)) continue;
                 stubs.push({ from: key, label: k });
@@ -2617,6 +2809,12 @@
         c.closePath();
     }
 
+    function egUpdateNodeDims() {
+        const extra = (egShowGVec ? 1 : 0) + (egShowCVec ? 1 : 0);
+        EG_NODE_H = 100 + extra * 44;
+        EG_NODE_R = Math.ceil(Math.sqrt((EG_NODE_W/2)**2 + (EG_NODE_H/2)**2)) + 2;
+    }
+
     function drawEGNode(x, y, data, isInitial) {
         const w2 = EG_NODE_W/2, h2 = EG_NODE_H/2;
         roundedRect(egCtx, x-w2, y-h2, EG_NODE_W, EG_NODE_H, 8);
@@ -2647,21 +2845,20 @@
         }
 
         // Separator line
-        const sepY = y - h2 + 52;
+        let sepY = y - h2 + 52;
         egCtx.beginPath(); egCtx.moveTo(x-w2+6, sepY); egCtx.lineTo(x+w2-6, sepY);
         egCtx.strokeStyle = '#e0e0e0'; egCtx.lineWidth = 0.5; egCtx.stroke();
 
         // Cluster variables
-        egCtx.textAlign = 'left'; egCtx.textBaseline = 'middle';
-        const startY = sepY + 11;
         const lineH = 13;
-        const textW = EG_NODE_W - 22; // available width for text
+        const textW = EG_NODE_W - 22;
+        egCtx.textAlign = 'left'; egCtx.textBaseline = 'middle';
+        let curY = sepY + 11;
         for (let i = 0; i < 3; i++) {
-            const cy = startY + i * lineH;
+            const cy = curY + i * lineH;
             egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
             egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
             let expr = egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]);
-            // auto-size font to fit, with a floor
             let fontSize = 7;
             egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
             let measured = egCtx.measureText(expr).width;
@@ -2671,7 +2868,6 @@
                 measured = egCtx.measureText(expr).width;
             }
             if (measured > textW) {
-                // still too long after shrinking — truncate
                 while (expr.length > 1 && egCtx.measureText(expr + '\u2026').width > textW) {
                     expr = expr.slice(0, -1);
                 }
@@ -2679,6 +2875,44 @@
             }
             egCtx.fillStyle = '#333';
             egCtx.fillText(expr, x-w2+16, cy);
+        }
+        curY += 3 * lineH;
+
+        // g-vectors section
+        if (egShowGVec && data.gMatrix) {
+            sepY = curY + 2;
+            egCtx.beginPath(); egCtx.moveTo(x-w2+6, sepY); egCtx.lineTo(x+w2-6, sepY);
+            egCtx.strokeStyle = '#e0e0e0'; egCtx.lineWidth = 0.5; egCtx.stroke();
+            curY = sepY + 11;
+            for (let i = 0; i < 3; i++) {
+                const cy = curY + i * lineH;
+                egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
+                egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
+                const gv = [data.gMatrix[0][i], data.gMatrix[1][i], data.gMatrix[2][i]];
+                const expr = 'g' + SUB[i] + ' = (' + gv.join(', ') + ')';
+                egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
+                egCtx.fillStyle = '#555';
+                egCtx.fillText(expr, x-w2+16, cy);
+            }
+            curY += 3 * lineH;
+        }
+
+        // c-vectors section
+        if (egShowCVec && data.cMatrix) {
+            sepY = curY + 2;
+            egCtx.beginPath(); egCtx.moveTo(x-w2+6, sepY); egCtx.lineTo(x+w2-6, sepY);
+            egCtx.strokeStyle = '#e0e0e0'; egCtx.lineWidth = 0.5; egCtx.stroke();
+            curY = sepY + 11;
+            for (let i = 0; i < 3; i++) {
+                const cy = curY + i * lineH;
+                egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
+                egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
+                const cv = [data.cMatrix[0][i], data.cMatrix[1][i], data.cMatrix[2][i]];
+                const expr = 'c' + SUB[i] + ' = (' + cv.join(', ') + ')';
+                egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
+                egCtx.fillStyle = '#555';
+                egCtx.fillText(expr, x-w2+16, cy);
+            }
         }
     }
 
@@ -2697,6 +2931,9 @@
         const depth = parseInt(document.getElementById('egDepthSelect').value);
         const egUpToPerm = document.getElementById('egPermToggle').checked;
         egSpecialize = document.getElementById('egSpecToggle').checked;
+        egShowGVec = document.getElementById('egGVecToggle').checked;
+        egShowCVec = document.getElementById('egCVecToggle').checked;
+        egUpdateNodeDims();
         currentEGGraph = buildExchangeGraph(B, depth, egUpToPerm, egSpecialize);
         if (gen !== egGeneration) return;
 
@@ -2966,6 +3203,24 @@
             html += '<div class="tt-var">'
                   + '<span class="tt-dot" style="background:'+colors[i]+'"></span>'
                   + '<span class="tt-expr">x' + SUB[i] + ' = ' + expr + '</span></div>';
+        }
+        if (egShowGVec && data.gMatrix) {
+            html += '<div style="border-top:1px solid #eee;margin:3px 0"></div>';
+            for (let i = 0; i < 3; i++) {
+                const gv = [data.gMatrix[0][i], data.gMatrix[1][i], data.gMatrix[2][i]];
+                html += '<div class="tt-var">'
+                      + '<span class="tt-dot" style="background:'+colors[i]+'"></span>'
+                      + '<span class="tt-expr">g' + SUB[i] + ' = (' + gv.join(', ') + ')</span></div>';
+            }
+        }
+        if (egShowCVec && data.cMatrix) {
+            html += '<div style="border-top:1px solid #eee;margin:3px 0"></div>';
+            for (let i = 0; i < 3; i++) {
+                const cv = [data.cMatrix[0][i], data.cMatrix[1][i], data.cMatrix[2][i]];
+                html += '<div class="tt-var">'
+                      + '<span class="tt-dot" style="background:'+colors[i]+'"></span>'
+                      + '<span class="tt-expr">c' + SUB[i] + ' = (' + cv.join(', ') + ')</span></div>';
+            }
         }
         html += '<div class="tt-hint">click to pin &amp; copy</div>';
         return html;
@@ -3700,6 +3955,16 @@
         } else { egNeedsRebuild = true; }
     });
     document.getElementById('egSpecToggle').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
+    document.getElementById('egGVecToggle').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
+    document.getElementById('egCVecToggle').addEventListener('change', () => {
         if (document.getElementById('tabEG').classList.contains('active')) {
             updateExchangeGraph();
         } else { egNeedsRebuild = true; }
