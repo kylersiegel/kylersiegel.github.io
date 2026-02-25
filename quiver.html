@@ -856,6 +856,13 @@
                 </label>
                 <label for="sgPermToggle">Up to permutation</label>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sgRawTripleToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="sgRawTripleToggle">Include non-base-mapped triples</label>
+            </div>
             <div class="mg-info" id="sgInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -1215,7 +1222,9 @@
     let sgNodeDragKey = null, sgNodeDragMoved = false;
     let sgRotation = 0;
     let sgNeedsRebuild = true;
-    const SG_NODE_W = 120, SG_NODE_H = 100, SG_NODE_R = 78;
+    let sgShowRawTriple = false;
+    const SG_NODE_W = 120;
+    let SG_NODE_H = 100, SG_NODE_R = 78;
 
     // ===========================================================
     //  CANVASES
@@ -1850,7 +1859,7 @@
             G2[i][k] = -G[i][k];
             for (let j = 0; j < 3; j++) {
                 if (j === k) continue;
-                const v = eps * B[j][k];
+                const v = -eps * B[j][k];
                 if (v > 0) G2[i][k] += v * G[i][j];
             }
         }
@@ -1864,7 +1873,7 @@
         for (let i = 0; i < 3; i++) C2[i][k] = -C[i][k];
         for (let j = 0; j < 3; j++) {
             if (j === k) continue;
-            const v = -eps * B[k][j];
+            const v = eps * B[k][j];
             if (v > 0) {
                 for (let i = 0; i < 3; i++) C2[i][j] += v * origColK[i];
             }
@@ -2811,7 +2820,7 @@
 
     function egUpdateNodeDims() {
         const extra = (egShowGVec ? 1 : 0) + (egShowCVec ? 1 : 0);
-        EG_NODE_H = 100 + extra * 44;
+        EG_NODE_H = 104 + extra * 54;
         EG_NODE_R = Math.ceil(Math.sqrt((EG_NODE_W/2)**2 + (EG_NODE_H/2)**2)) + 2;
     }
 
@@ -3553,6 +3562,47 @@
             sgCtx.fillStyle = '#333';
             sgCtx.fillText(expr, x - w2 + 16, cy);
         }
+
+        // Raw (non-base-mapped) triple, if toggle is on
+        if (sgShowRawTriple) {
+            const rawY = startY + 3 * lineH + 2;
+            // Separator before raw triple
+            sgCtx.beginPath();
+            sgCtx.moveTo(x - w2 + 6, rawY - 4);
+            sgCtx.lineTo(x + w2 - 6, rawY - 4);
+            sgCtx.strokeStyle = '#ccc';
+            sgCtx.lineWidth = 0.5;
+            sgCtx.setLineDash([2, 2]);
+            sgCtx.stroke();
+            sgCtx.setLineDash([]);
+
+            // Label
+            sgCtx.font = '5.5px "Segoe UI",system-ui,sans-serif';
+            sgCtx.fillStyle = '#999';
+            sgCtx.textAlign = 'center';
+            sgCtx.fillText('without base mapping', x, rawY + 1);
+
+            const raw = data.triple;
+            const rawStartY = rawY + 10;
+            sgCtx.textAlign = 'left';
+            for (let i = 0; i < 3; i++) {
+                const cy = rawStartY + i * lineH;
+                sgCtx.beginPath();
+                sgCtx.arc(x - w2 + 10, cy, 2, 0, Math.PI * 2);
+                sgCtx.fillStyle = EDGE_COLORS_SG[i];
+                sgCtx.fill();
+                const expr = '(' + raw[i][0] + ', ' + raw[i][1] + ')';
+                let fs = 6.5;
+                sgCtx.font = fs + 'px "Segoe UI",system-ui,sans-serif';
+                let m = sgCtx.measureText(expr).width;
+                if (m > textW) {
+                    fs = Math.max(4, Math.floor(fs * textW / m));
+                    sgCtx.font = fs + 'px "Segoe UI",system-ui,sans-serif';
+                }
+                sgCtx.fillStyle = '#666';
+                sgCtx.fillText(expr, x - w2 + 16, cy);
+            }
+        }
     }
 
     function drawSGLabels(cx, cy, labels) {
@@ -3985,6 +4035,14 @@
         } else { sgNeedsRebuild = true; }
     });
     document.getElementById('sgPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            updateScatteringGraph();
+        } else { sgNeedsRebuild = true; }
+    });
+    document.getElementById('sgRawTripleToggle').addEventListener('change', function() {
+        sgShowRawTriple = this.checked;
+        SG_NODE_H = sgShowRawTriple ? 155 : 100;
+        SG_NODE_R = sgShowRawTriple ? 105 : 78;
         if (document.getElementById('tabSG').classList.contains('active')) {
             updateScatteringGraph();
         } else { sgNeedsRebuild = true; }
