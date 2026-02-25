@@ -699,6 +699,13 @@
                 </label>
                 <label for="mgPermToggle">Up to permutation</label>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="mgTreeToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="mgTreeToggle">Check tree</label>
+            </div>
             <div class="mg-info" id="mgInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -786,6 +793,13 @@
                 </label>
                 <label for="egCVecToggle">c-vectors</label>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="egTreeToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="egTreeToggle">Check tree</label>
+            </div>
             <div class="mg-info" id="egInfo"></div>
             <div class="rotate-control">
                 <label>Rotate:</label>
@@ -862,6 +876,13 @@
                     <span class="slider"></span>
                 </label>
                 <label for="sgRawTripleToggle">Include non-base-mapped triples</label>
+            </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sgTreeToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="sgTreeToggle">Check tree</label>
             </div>
             <div class="mg-info" id="sgInfo"></div>
             <div class="rotate-control">
@@ -2001,6 +2022,15 @@
     }
 
     // ===========================================================
+    //  TREE CHECK — connected graph is a tree iff |E| = |V| - 1
+    // ===========================================================
+    function isGraphTree(graph) {
+        const nNodes = graph.nodes.size;
+        const nEdges = graph.edges.length; // merged undirected edges (self-loops excluded)
+        return nEdges === nNodes - 1;
+    }
+
+    // ===========================================================
     //  MUTATION GRAPH CONSTRUCTION (BFS)
     // ===========================================================
     function buildMutationGraph(initialB, maxDepth, upToPermutation) {
@@ -2659,6 +2689,10 @@
         let txt = currentGraph.nodes.size + ' quiver' + (currentGraph.nodes.size!==1?'s':'') +
                   ', ' + totalEdges + ' edge' + (totalEdges!==1?'s':'');
         if (currentGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
+        if (document.getElementById('mgTreeToggle').checked) {
+            const tree = isGraphTree(currentGraph);
+            txt += ' &middot; Tree? ' + (tree ? 'Yes' : 'No');
+        }
         document.getElementById('mgInfo').innerHTML = txt;
         hideLoading('mgLoading');
     }
@@ -2965,6 +2999,10 @@
         let txt = currentEGGraph.nodes.size + ' seed' + (currentEGGraph.nodes.size!==1?'s':'') +
                   ', ' + egTotalEdges + ' edge' + (egTotalEdges!==1?'s':'');
         if (currentEGGraph.capped) txt += ' <span class="warn">(truncated at '+MAX_GRAPH_NODES+' nodes)</span>';
+        if (document.getElementById('egTreeToggle').checked) {
+            const tree = isGraphTree(currentEGGraph);
+            txt += ' &middot; Tree? ' + (tree ? 'Yes' : 'No');
+        }
         document.getElementById('egInfo').innerHTML = txt;
         hideLoading('egLoading');
     }
@@ -3778,6 +3816,10 @@
         let txt = currentSGGraph.nodes.size + ' node' + (currentSGGraph.nodes.size !== 1 ? 's' : '') +
                   ', ' + totalEdges + ' edge' + (totalEdges !== 1 ? 's' : '');
         if (currentSGGraph.capped) txt += ' <span class="warn">(truncated at ' + MAX_GRAPH_NODES + ' nodes)</span>';
+        if (document.getElementById('sgTreeToggle').checked) {
+            const tree = isGraphTree(currentSGGraph);
+            txt += ' &middot; Tree? ' + (tree ? 'Yes' : 'No');
+        }
         document.getElementById('sgInfo').innerHTML = txt;
         hideLoading('sgLoading');
     }
@@ -3994,6 +4036,11 @@
             updateMutationGraph();
         } else { mgNeedsRebuild = true; }
     });
+    document.getElementById('mgTreeToggle').addEventListener('change', () => {
+        if (document.getElementById('tabMG').classList.contains('active')) {
+            updateMutationGraph();
+        } else { mgNeedsRebuild = true; }
+    });
     document.getElementById('egDepthSelect').addEventListener('change', () => {
         if (document.getElementById('tabEG').classList.contains('active')) {
             updateExchangeGraph();
@@ -4019,6 +4066,11 @@
             updateExchangeGraph();
         } else { egNeedsRebuild = true; }
     });
+    document.getElementById('egTreeToggle').addEventListener('change', () => {
+        if (document.getElementById('tabEG').classList.contains('active')) {
+            updateExchangeGraph();
+        } else { egNeedsRebuild = true; }
+    });
     document.getElementById('mgRotate').addEventListener('input', function() {
         mgRotation = this.value * Math.PI / 180;
         document.getElementById('mgAngleLabel').innerHTML = this.value + '&deg;';
@@ -4035,6 +4087,11 @@
         } else { sgNeedsRebuild = true; }
     });
     document.getElementById('sgPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabSG').classList.contains('active')) {
+            updateScatteringGraph();
+        } else { sgNeedsRebuild = true; }
+    });
+    document.getElementById('sgTreeToggle').addEventListener('change', () => {
         if (document.getElementById('tabSG').classList.contains('active')) {
             updateScatteringGraph();
         } else { sgNeedsRebuild = true; }
