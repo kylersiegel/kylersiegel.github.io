@@ -553,50 +553,104 @@
 
         /* ---- mobile responsive ---- */
         @media (max-width: 600px) {
+            /* -- header -- */
             .header {
                 flex-wrap: wrap;
-                gap: 8px;
-                padding: 8px 12px;
+                gap: 6px;
+                padding: 8px 10px;
+                justify-content: center;
             }
-            .header h1 { font-size: 16px; }
+            .header h1 {
+                font-size: 15px;
+                width: 100%;
+                text-align: center;
+            }
             .header .sep { display: none; }
             .header button { padding: 5px 12px; font-size: 12px; }
-            .quiver-picker label { padding: 4px 10px; font-size: 12px; }
-            .quiver-controls { gap: 6px; }
-            .vector-extras { gap: 2px; font-size: 12px; flex-wrap: wrap; }
-            .vec-input { width: 30px; font-size: 11px; padding: 2px 3px; }
-            .vec-label { margin-left: 4px; }
+            .quiver-controls {
+                gap: 6px;
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .quiver-controls > label { font-size: 12px; }
+            .quiver-picker { flex-wrap: wrap; justify-content: center; }
+            .quiver-picker label { padding: 4px 9px; font-size: 11px; }
+            .vector-extras {
+                gap: 2px; font-size: 11px;
+                flex-wrap: wrap; justify-content: center;
+                width: 100%;
+            }
+            .vec-input { width: 28px; font-size: 11px; padding: 2px 2px; }
+            .vec-label { margin-left: 3px; font-size: 11px; }
             .random-extras { gap: 4px; }
             .random-extras select { font-size: 12px; padding: 4px 6px; }
             .random-extras label { font-size: 12px; }
-            .matrix-extras { gap: 4px; font-size: 12px; flex-wrap: wrap; }
-            .mat-input { width: 30px; font-size: 11px; padding: 2px 3px; }
+            .matrix-extras {
+                gap: 4px; font-size: 12px;
+                flex-wrap: wrap; justify-content: center;
+                width: 100%;
+            }
+            .mat-input { width: 28px; font-size: 11px; padding: 2px 2px; }
 
+            /* -- tab bar -- */
             .tab-bar {
-                padding: 0 8px;
+                padding: 0 4px;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
             }
-            .tab-btn { padding: 8px 14px; font-size: 13px; white-space: nowrap; }
+            .tab-bar::-webkit-scrollbar { display: none; }
+            .tab-btn {
+                padding: 7px 9px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
 
+            /* -- graph toolbars -- */
             .mg-toolbar, .eg-toolbar, .sg-toolbar {
-                gap: 8px;
-                padding: 6px 10px;
-                font-size: 12px;
+                gap: 6px 10px;
+                padding: 6px 8px;
+                font-size: 11px;
             }
             .mg-hint { display: none; }
             .mg-legend { display: none; }
-            .depth-control { font-size: 12px; }
-            .depth-control select { font-size: 12px; padding: 3px 6px; }
-            .toggle-control { font-size: 11px; gap: 4px; }
-            .rotate-control { font-size: 11px; }
+            .depth-control { font-size: 11px; }
+            .depth-control select { font-size: 11px; padding: 3px 6px; }
+            .toggle-control { font-size: 10px; gap: 3px; }
+            .toggle-switch { width: 30px; height: 16px; }
+            .toggle-switch .slider::before { width: 12px; height: 12px; }
+            .toggle-switch input:checked + .slider::before { transform: translateX(14px); }
+            .rotate-control { font-size: 10px; }
             .rotate-control input[type="range"] { width: 50px; }
-            .mg-info { font-size: 11px; }
+            .mg-info { font-size: 10px; }
 
-            .mg-canvas-wrap, .eg-canvas-wrap, .sg-canvas-wrap { padding: 0 4px 4px 4px; }
+            /* -- canvas wraps -- */
+            .mg-canvas-wrap, .eg-canvas-wrap, .sg-canvas-wrap { padding: 0 2px 2px 2px; }
 
-            #tabQuiver { padding: 10px 8px; gap: 10px; }
-            #tabAbout { padding: 16px 14px 40px 14px; }
+            /* -- quiver tab -- */
+            #tabQuiver { padding: 10px 6px; gap: 8px; }
+            #tabQuiver canvas { max-width: 100%; }
+            .matrix-display { padding: 10px 14px; font-size: 13px; }
+
+            /* -- tooltips -- */
+            #egTooltip, #sgTooltip {
+                max-width: calc(100vw - 16px);
+                font-size: 12px;
+            }
+            #egTooltip .tt-expr, #sgTooltip .tt-expr { font-size: 11px; }
+
+            /* -- export popover -- */
+            .export-popover { min-width: 150px; }
+            .export-container { right: 10px; bottom: 12px; }
+
+            /* -- about tab -- */
+            #tabAbout { padding: 14px 12px 36px 12px; }
+            #tabAbout h2 { font-size: 16px; }
+            #tabAbout p, #tabAbout li { font-size: 13px; }
+            #tabAbout details summary { font-size: 14px; padding: 8px 10px; }
+            #tabAbout details .about-section-body { padding: 4px 10px 12px 10px; }
+            .formula { font-size: 13px !important; overflow-x: auto; }
         }
     </style>
     <script>
