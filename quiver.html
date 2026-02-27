@@ -744,6 +744,11 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                 </select>
             </div>
             <div class="toggle-control">
@@ -817,6 +822,11 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                 </select>
             </div>
             <div class="toggle-control">
@@ -915,6 +925,8 @@
                     <option value="6">6</option>
                     <option value="7">7</option>
                     <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                 </select>
             </div>
             <div class="toggle-control">
@@ -1667,16 +1679,35 @@
         return bestB;
     }
 
+    // Packed integer encoding for 3-variable exponent vectors.
+    // Each exponent in [-64, 63] packed into 7 bits; total 21 bits.
+    // Preserves lexicographic order: numeric comparison = lex comparison.
+    const EXP_OFFSET = 64, EXP_MASK = 0x7F;
+    function encodeExp(e0, e1, e2) {
+        return ((e0 + EXP_OFFSET) << 14) | ((e1 + EXP_OFFSET) << 7) | (e2 + EXP_OFFSET);
+    }
+    function decodeExp(k) {
+        return [(k >>> 14) - EXP_OFFSET, ((k >>> 7) & EXP_MASK) - EXP_OFFSET, (k & EXP_MASK) - EXP_OFFSET];
+    }
+    const ZERO_KEY = encodeExp(0, 0, 0);
+    const LP_VAR_KEYS = [encodeExp(1,0,0), encodeExp(0,1,0), encodeExp(0,0,1)];
+
     // Permute variable indices inside a Laurent polynomial:
     // x_i -> x_{p[i]}, so exponent e becomes newExp where newExp[p[i]] = e[i].
     function permuteLPVars(lp, p) {
+        // Inverse permutation: inv[p[i]] = i, so target[j] = source[inv[j]]
+        const inv = [0, 0, 0];
+        inv[p[0]] = 0; inv[p[1]] = 1; inv[p[2]] = 2;
         const result = new Map();
         for (const [key, coeff] of lp) {
-            const e = key.split(',').map(Number);
-            const ne = [0, 0, 0];
-            for (let i = 0; i < 3; i++) ne[p[i]] = e[i];
-            const nk = ne.join(',');
-            result.set(nk, (result.get(nk) || 0) + coeff);
+            // Extract the three 7-bit fields and reassemble in permuted order
+            const c0 = (key >>> 14) & EXP_MASK;
+            const c1 = (key >>> 7) & EXP_MASK;
+            const c2 = key & EXP_MASK;
+            const src = [c0, c1, c2];
+            const nk = (src[inv[0]] << 14) | (src[inv[1]] << 7) | src[inv[2]];
+            const prev = result.get(nk);
+            result.set(nk, (prev === undefined ? 0 : prev) + coeff);
         }
         return result;
     }
@@ -1690,72 +1721,21 @@
         ];
     }
 
-    function egNodeKey(B, cluster) {
-        return matrixKey(B) + '###' + clusterKey(cluster);
-    }
-
-    function canonicalEGKey(B, cluster) {
-        let best = egNodeKey(B, cluster);
-        for (let pi = 1; pi < PERMS_3.length; pi++) {
-            const p = PERMS_3[pi];
-            const key = egNodeKey(permuteMatrix(B, p), permuteCluster(cluster, p));
-            if (key < best) best = key;
-        }
-        return best;
-    }
-
-    function canonicalEGData(B, cluster, G, C) {
-        let bestKey = egNodeKey(B, cluster), bestB = B, bestCl = cluster, bestG = G, bestC = C;
-        for (let pi = 1; pi < PERMS_3.length; pi++) {
-            const p = PERMS_3[pi];
-            const pB = permuteMatrix(B, p);
-            const pCl = permuteCluster(cluster, p);
-            const key = egNodeKey(pB, pCl);
-            if (key < bestKey) { bestKey = key; bestB = pB; bestCl = pCl; bestG = permuteMatrix(G, p); bestC = permuteMatrix(C, p); }
-        }
-        return { matrix: bestB, cluster: bestCl, gMatrix: bestG, cMatrix: bestC };
-    }
-
-    // Specialize-at-1 key: uses integer values instead of full LP strings
-    function egNodeKeySpec(B, cluster) {
-        return matrixKey(B) + '###' + clusterIntKey(cluster);
-    }
-
-    function canonicalEGKeySpec(B, cluster) {
-        let best = egNodeKeySpec(B, cluster);
-        for (let pi = 1; pi < PERMS_3.length; pi++) {
-            const p = PERMS_3[pi];
-            const key = egNodeKeySpec(permuteMatrix(B, p), permuteCluster(cluster, p));
-            if (key < best) best = key;
-        }
-        return best;
-    }
-
-    function canonicalEGDataSpec(B, cluster, G, C) {
-        let bestKey = egNodeKeySpec(B, cluster), bestB = B, bestCl = cluster, bestG = G, bestC = C;
-        for (let pi = 1; pi < PERMS_3.length; pi++) {
-            const p = PERMS_3[pi];
-            const pB = permuteMatrix(B, p);
-            const pCl = permuteCluster(cluster, p);
-            const key = egNodeKeySpec(pB, pCl);
-            if (key < bestKey) { bestKey = key; bestB = pB; bestCl = pCl; bestG = permuteMatrix(G, p); bestC = permuteMatrix(C, p); }
-        }
-        return { matrix: bestB, cluster: bestCl, gMatrix: bestG, cMatrix: bestC };
-    }
 
     // ===========================================================
     //  LAURENT POLYNOMIAL ARITHMETIC
     // ===========================================================
-    // Represented as Map: "e1,e2,e3" -> integer coefficient
-    function lpOne() { const m = new Map(); m.set('0,0,0', 1); return m; }
-    function lpVar(i) { const e = [0,0,0]; e[i] = 1; const m = new Map(); m.set(e.join(','), 1); return m; }
+    // Represented as Map: packedIntKey -> integer coefficient
+    // Keys are packed via encodeExp(e0,e1,e2); see encoding helpers above.
+    function lpOne() { const m = new Map(); m.set(ZERO_KEY, 1); return m; }
+    function lpVar(i) { const m = new Map(); m.set(LP_VAR_KEYS[i], 1); return m; }
     function lpClone(p) { return new Map(p); }
 
     function lpAdd(a, b) {
         const r = new Map(a);
         for (const [k, v] of b) {
             const s = (r.get(k) || 0) + v;
-            if (Math.abs(s) < 0.5) r.delete(k); else r.set(k, Math.round(s));
+            if (s === 0) r.delete(k); else r.set(k, s);
         }
         return r;
     }
@@ -1763,12 +1743,13 @@
     function lpMul(a, b) {
         const r = new Map();
         for (const [ka, va] of a) {
-            const ea = ka.split(',').map(Number);
+            const a0 = (ka >>> 14), a1 = ((ka >>> 7) & EXP_MASK), a2 = (ka & EXP_MASK);
             for (const [kb, vb] of b) {
-                const eb = kb.split(',').map(Number);
-                const key = ea.map((e, i) => e + eb[i]).join(',');
+                const key = ((a0 + ((kb >>> 14) & EXP_MASK) - EXP_OFFSET) << 14) |
+                            ((a1 + (((kb >>> 7) & EXP_MASK)) - EXP_OFFSET) << 7) |
+                            (a2 + ((kb & EXP_MASK)) - EXP_OFFSET);
                 const s = (r.get(key) || 0) + va * vb;
-                if (Math.abs(s) < 0.5) r.delete(key); else r.set(key, Math.round(s));
+                if (s === 0) r.delete(key); else r.set(key, s);
             }
         }
         return r;
@@ -1776,47 +1757,50 @@
 
     function lpPow(p, n) {
         if (n === 0) return lpOne();
-        let r = lpOne();
-        for (let i = 0; i < n; i++) r = lpMul(r, p);
-        return r;
+        if (n === 1) return p;
+        let result = null, base = p;
+        while (n > 0) {
+            if (n & 1) result = result === null ? base : lpMul(result, base);
+            n >>>= 1;
+            if (n > 0) base = lpMul(base, base);
+        }
+        return result;
     }
 
-    // Exact division f/g (guaranteed by Laurent phenomenon)
+    // Exact division f/g (guaranteed by Laurent phenomenon).
+    // Integer-keyed: packed key ordering = lex ordering, so leading term = max key.
     function lpDiv(f, g) {
         const q = new Map();
         const rem = new Map(f);
-        // leading term of g (lex order)
-        let ltgKey = null, ltgExp = null;
-        for (const key of g.keys()) {
-            const e = key.split(',').map(Number);
-            if (!ltgExp || expGt(e, ltgExp)) { ltgKey = key; ltgExp = e; }
-        }
+        // Leading term of g: max integer key
+        let ltgKey = -1;
+        for (const key of g.keys()) if (key > ltgKey) ltgKey = key;
         const ltgCoeff = g.get(ltgKey);
+        const ltg = decodeExp(ltgKey);
+        // Precompute g's decoded terms
+        const gTerms = new Array(g.size);
+        let gi = 0;
+        for (const [gk, gv] of g) { gTerms[gi++] = { exp: decodeExp(gk), coeff: gv }; }
+
         let safety = 50000;
         while (rem.size > 0 && safety-- > 0) {
-            let bestKey = null, bestExp = null;
-            for (const key of rem.keys()) {
-                const e = key.split(',').map(Number);
-                if (!bestExp || expGt(e, bestExp)) { bestKey = key; bestExp = e; }
-            }
+            let bestKey = -1;
+            for (const key of rem.keys()) if (key > bestKey) bestKey = key;
             const ltrCoeff = rem.get(bestKey);
-            const qExp = bestExp.map((e, i) => e - ltgExp[i]);
-            const qCoeff = Math.round(ltrCoeff / ltgCoeff);
-            const qKey = qExp.join(',');
-            q.set(qKey, (q.get(qKey) || 0) + qCoeff);
-            for (const [gk, gv] of g) {
-                const ge = gk.split(',').map(Number);
-                const sk = ge.map((e, i) => e + qExp[i]).join(',');
-                const sv = (rem.get(sk) || 0) - qCoeff * gv;
-                if (Math.abs(sv) < 0.5) rem.delete(sk); else rem.set(sk, Math.round(sv));
+            const bestExp = decodeExp(bestKey);
+            const q0 = bestExp[0] - ltg[0], q1 = bestExp[1] - ltg[1], q2 = bestExp[2] - ltg[2];
+            const qCoeff = (ltrCoeff / ltgCoeff) | 0;
+            const qKey = encodeExp(q0, q1, q2);
+            const prev = q.get(qKey);
+            q.set(qKey, (prev === undefined ? 0 : prev) + qCoeff);
+            for (let i = 0; i < gTerms.length; i++) {
+                const gt = gTerms[i];
+                const sk = encodeExp(gt.exp[0] + q0, gt.exp[1] + q1, gt.exp[2] + q2);
+                const sv = (rem.get(sk) || 0) - qCoeff * gt.coeff;
+                if (sv === 0) rem.delete(sk); else rem.set(sk, sv);
             }
         }
         return q;
-    }
-
-    function expGt(a, b) {
-        for (let i = 0; i < 3; i++) { if (a[i] !== b[i]) return a[i] > b[i]; }
-        return false;
     }
 
     function lpEqual(a, b) {
@@ -1827,8 +1811,13 @@
 
     function lpKey(p) {
         if (p.size === 0) return '0';
-        const entries = [...p.entries()].sort((a, b) => a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
-        return entries.map(([k, v]) => v + ':' + k).join('|');
+        const entries = [...p.entries()].sort((a, b) => a[0] - b[0]);
+        let s = '';
+        for (let i = 0; i < entries.length; i++) {
+            if (i > 0) s += '|';
+            s += entries[i][1] + ':' + entries[i][0];
+        }
+        return s;
     }
 
     function clusterKey(cluster) { return cluster.map(lpKey).join('##'); }
@@ -1841,15 +1830,15 @@
         if (lp.size === 0) return '0';
         let minE = [Infinity, Infinity, Infinity];
         for (const key of lp.keys()) {
-            const e = key.split(',').map(Number);
+            const e = decodeExp(key);
             for (let i = 0; i < 3; i++) minE[i] = Math.min(minE[i], e[i]);
         }
         // only shift negative exponents to zero (for denominator)
         const shift = minE.map(v => v < 0 ? -v : 0);
         const terms = [];
         for (const [key, coeff] of lp) {
-            const e = key.split(',').map(Number);
-            terms.push({ coeff: Math.round(coeff), exp: e.map((v, i) => v + shift[i]) });
+            const e = decodeExp(key);
+            terms.push({ coeff: coeff, exp: [e[0]+shift[0], e[1]+shift[1], e[2]+shift[2]] });
         }
         terms.sort((a, b) => {
             const da = a.exp[0]+a.exp[1]+a.exp[2], db = b.exp[0]+b.exp[1]+b.exp[2];
@@ -1911,7 +1900,7 @@
         }
         const numerator = lpAdd(prodPos, prodNeg);
         const newVar = lpDiv(numerator, cluster[k]);
-        return cluster.map((v, i) => i === k ? newVar : lpClone(v));
+        return cluster.map((v, i) => i === k ? newVar : v);
     }
 
     // ===========================================================
@@ -1959,30 +1948,79 @@
     // ===========================================================
     //  EXCHANGE GRAPH CONSTRUCTION (BFS)
     // ===========================================================
-    function buildExchangeGraph(initialB, maxDepth, upToPermutation, specializeAtOne) {
+
+    // G-matrix key: 9 small integers, trivially fast.
+    function gMatrixKey(G) {
+        return G[0][0]+','+G[0][1]+','+G[0][2]+'|'+G[1][0]+','+G[1][1]+','+G[1][2]+'|'+G[2][0]+','+G[2][1]+','+G[2][2];
+    }
+
+    // Fast specialized mutation: integer arithmetic only, no LP computation.
+    function mutateSpecValues(B, sv, k) {
+        let prodPos = 1, prodNeg = 1;
+        for (let i = 0; i < 3; i++) {
+            if (i === k) continue;
+            const b = B[i][k];
+            if (b > 0) { for (let j = 0; j < b; j++) prodPos *= sv[i]; }
+            else if (b < 0) { for (let j = 0; j < -b; j++) prodNeg *= sv[i]; }
+        }
+        const result = [sv[0], sv[1], sv[2]];
+        result[k] = (prodPos + prodNeg) / sv[k];
+        return result;
+    }
+
+    async function buildExchangeGraph(initialB, maxDepth, upToPermutation, specializeAtOne, onProgress, cancelToken) {
         const nodes = new Map();
         const edgeSet = new Set();
         const edges = [];
 
-        let keyFn, dataFn;
-        if (upToPermutation && specializeAtOne) {
-            keyFn = canonicalEGKeySpec;
-            dataFn = (B, cl, G, C) => canonicalEGDataSpec(B, cl, G, C);
-        } else if (upToPermutation) {
-            keyFn = canonicalEGKey;
-            dataFn = (B, cl, G, C) => canonicalEGData(B, cl, G, C);
-        } else if (specializeAtOne) {
-            keyFn = egNodeKeySpec;
-            dataFn = (B, cl, G, C) => ({ matrix: B, cluster: cl, gMatrix: G, cMatrix: C });
-        } else {
-            keyFn = egNodeKey;
-            dataFn = (B, cl, G, C) => ({ matrix: B, cluster: cl, gMatrix: G, cMatrix: C });
+        // --- Fast node identity using g-vectors (or spec values) ---
+        // By g-vector uniqueness, (B,G) identifies a seed without computing
+        // full Laurent polynomials. For specialize mode, (B, specValues) suffices.
+        // The expensive mutateCluster is deferred to genuinely new nodes only.
+
+        function fastNodeKey(B, G, sv) {
+            if (specializeAtOne) return matrixKey(B) + '###' + sv[0] + ',' + sv[1] + ',' + sv[2];
+            return matrixKey(B) + '###' + gMatrixKey(G);
+        }
+
+        // Find canonical permutation; returns { key, perm } where perm is null if identity wins.
+        function findCanonical(B, G, sv) {
+            let bestKey = fastNodeKey(B, G, sv);
+            let bestPerm = null;
+            for (let pi = 1; pi < PERMS_3.length; pi++) {
+                const p = PERMS_3[pi];
+                const pB = permuteMatrix(B, p);
+                const pG = permuteMatrix(G, p);
+                const pSV = sv ? [sv[p[0]], sv[p[1]], sv[p[2]]] : null;
+                const key = fastNodeKey(pB, pG, pSV);
+                if (key < bestKey) { bestKey = key; bestPerm = p; }
+            }
+            return { key: bestKey, perm: bestPerm };
+        }
+
+        // Apply a permutation to (B, G, C, cluster, specValues).
+        function applyPerm(B, G, C, cl, sv, p) {
+            if (!p) return { matrix: B, gMatrix: G, cMatrix: C, cluster: cl, specValues: sv };
+            return {
+                matrix: permuteMatrix(B, p), gMatrix: permuteMatrix(G, p),
+                cMatrix: permuteMatrix(C, p),
+                cluster: cl ? permuteCluster(cl, p) : null,
+                specValues: sv ? [sv[p[0]], sv[p[1]], sv[p[2]]] : null
+            };
+        }
+
+        // Compute fast key (and canonical perm if needed), no LP computation.
+        function computeFastKey(B, G, sv) {
+            if (upToPermutation) return findCanonical(B, G, sv);
+            return { key: fastNodeKey(B, G, sv), perm: null };
         }
 
         const initialCluster = [lpVar(0), lpVar(1), lpVar(2)];
-        const initData = dataFn(initialB, initialCluster, IDENTITY_3, IDENTITY_3);
-        const ik = keyFn(initData.matrix, initData.cluster);
-        nodes.set(ik, { matrix: initData.matrix, cluster: initData.cluster, gMatrix: initData.gMatrix, cMatrix: initData.cMatrix, depth: 0 });
+        const initSV = specializeAtOne ? [1, 1, 1] : null;
+        const initFK = computeFastKey(initialB, IDENTITY_3, initSV);
+        const initDat = applyPerm(initialB, IDENTITY_3, IDENTITY_3, initialCluster, initSV, initFK.perm);
+        const ik = initFK.key;
+        nodes.set(ik, { matrix: initDat.matrix, cluster: initDat.cluster, gMatrix: initDat.gMatrix, cMatrix: initDat.cMatrix, specValues: initDat.specValues, depth: 0 });
         let frontier = [ik];
         let capped = false;
 
@@ -1993,55 +2031,62 @@
             edges.push({ from, to, label });
         }
 
+        let mutationsDone = 0;
+        const YIELD_INTERVAL = 20;
+
         for (let d = 0; d < maxDepth; d++) {
             const next = [];
             for (const key of frontier) {
                 const nd = nodes.get(key);
                 for (let k = 0; k < 3; k++) {
-                    const B2raw = mutateMatrix(nd.matrix, k);
-                    const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                    const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
-                    const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
-                    const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
-                    const k2 = keyFn(dat.matrix, dat.cluster);
+                    // Cheap: matrix, g-vector, c-vector mutations (small integer matrices)
+                    const B2 = mutateMatrix(nd.matrix, k);
+                    const G2 = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
+                    const C2 = mutateCMatrix(nd.matrix, nd.cMatrix, k);
+                    const sv2 = specializeAtOne ? mutateSpecValues(nd.matrix, nd.specValues, k) : null;
+
+                    // Fast key: uses g-vectors or spec values, NOT full cluster
+                    const fk = computeFastKey(B2, G2, sv2);
+                    const k2 = fk.key;
+
                     if (k2 === key) { addEdge(key, key, k); continue; }
-                    if (!nodes.has(k2)) {
-                        if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
-                        nodes.set(k2, { matrix: dat.matrix, cluster: dat.cluster, gMatrix: dat.gMatrix, cMatrix: dat.cMatrix, depth: d + 1 });
-                        next.push(k2);
-                    }
+                    if (nodes.has(k2)) { addEdge(key, k2, k); continue; }
+                    // ^^^ KEY WIN: skip expensive mutateCluster for already-seen nodes
+
+                    if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
+
+                    // Expensive: compute cluster only for genuinely new nodes
+                    const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
+                    const dat = applyPerm(B2, G2, C2, cl2raw, sv2, fk.perm);
+                    nodes.set(k2, { matrix: dat.matrix, cluster: dat.cluster, gMatrix: dat.gMatrix, cMatrix: dat.cMatrix, specValues: dat.specValues, depth: d + 1 });
+                    next.push(k2);
                     addEdge(key, k2, k);
+                    if (++mutationsDone % YIELD_INTERVAL === 0) {
+                        if (onProgress) onProgress(nodes.size);
+                        await sleep(0);
+                        if (cancelToken && cancelToken.cancelled) return null;
+                    }
                 }
             }
             frontier = next;
         }
-        // boundary edges from frontier nodes to known nodes
-        for (const key of frontier) {
-            const nd = nodes.get(key);
-            for (let k = 0; k < 3; k++) {
-                const B2raw = mutateMatrix(nd.matrix, k);
-                const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
-                const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
-                const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
-                const k2 = keyFn(dat.matrix, dat.cluster);
-                if (!nodes.has(k2)) continue;
-                addEdge(key, k2, k);
-            }
-        }
-        // frontier stubs
+        // Boundary edges and stubs: no cluster computation needed at all
         const stubs = [];
         for (const key of frontier) {
             const nd = nodes.get(key);
             for (let k = 0; k < 3; k++) {
-                const B2raw = mutateMatrix(nd.matrix, k);
-                const cl2raw = mutateCluster(nd.matrix, nd.cluster, k);
-                const G2raw = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
-                const C2raw = mutateCMatrix(nd.matrix, nd.cMatrix, k);
-                const dat = dataFn(B2raw, cl2raw, G2raw, C2raw);
-                const k2 = keyFn(dat.matrix, dat.cluster);
-                if (nodes.has(k2)) continue;
-                stubs.push({ from: key, label: k });
+                const B2 = mutateMatrix(nd.matrix, k);
+                const G2 = mutateGMatrix(nd.matrix, nd.gMatrix, nd.cMatrix, k);
+                const C2 = mutateCMatrix(nd.matrix, nd.cMatrix, k);
+                const sv2 = specializeAtOne ? mutateSpecValues(nd.matrix, nd.specValues, k) : null;
+                const k2 = computeFastKey(B2, G2, sv2).key;
+                if (nodes.has(k2)) { addEdge(key, k2, k); }
+                else { stubs.push({ from: key, label: k }); }
+                if (++mutationsDone % YIELD_INTERVAL === 0) {
+                    if (onProgress) onProgress(nodes.size);
+                    await sleep(0);
+                    if (cancelToken && cancelToken.cancelled) return null;
+                }
             }
         }
         // Merge directed edges into visual edges (same approach as mutation graph)
@@ -2955,7 +3000,9 @@
             const cy = curY + i * lineH;
             egCtx.beginPath(); egCtx.arc(x-w2+10, cy, 2.5, 0, Math.PI*2);
             egCtx.fillStyle = VERTEX_COLORS[i]; egCtx.fill();
-            let expr = egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]);
+            // Use cached label if available, otherwise compute (fallback)
+            let expr = (data._clusterLabels && data._clusterLabels[i]) ||
+                       (egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]));
             let fontSize = 7;
             egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
             let measured = egCtx.measureText(expr).width;
@@ -2965,10 +3012,14 @@
                 measured = egCtx.measureText(expr).width;
             }
             if (measured > textW) {
-                while (expr.length > 1 && egCtx.measureText(expr + '\u2026').width > textW) {
-                    expr = expr.slice(0, -1);
+                // Use binary search instead of character-by-character trimming
+                let lo = 1, hi = expr.length - 1;
+                while (lo < hi) {
+                    const mid = (lo + hi + 1) >> 1;
+                    if (egCtx.measureText(expr.slice(0, mid) + '\u2026').width <= textW) lo = mid;
+                    else hi = mid - 1;
                 }
-                expr += '\u2026';
+                expr = expr.slice(0, lo) + '\u2026';
             }
             egCtx.fillStyle = '#333';
             egCtx.fillText(expr, x-w2+16, cy);
@@ -3017,7 +3068,10 @@
     //  EXCHANGE GRAPH UPDATE PIPELINE
     // ===========================================================
     let egGeneration = 0;
+    let egCancelToken = null;
     async function updateExchangeGraph() {
+        if (egCancelToken) egCancelToken.cancelled = true;
+        const token = egCancelToken = { cancelled: false };
         const gen = ++egGeneration;
         sizeEGCanvas();
         showLoading('egLoading', 'Building graph\u2026', 5);
@@ -3031,8 +3085,10 @@
         egShowGVec = document.getElementById('egGVecToggle').checked;
         egShowCVec = document.getElementById('egCVecToggle').checked;
         egUpdateNodeDims();
-        currentEGGraph = buildExchangeGraph(B, depth, egUpToPerm, egSpecialize);
-        if (gen !== egGeneration) return;
+        currentEGGraph = await buildExchangeGraph(B, depth, egUpToPerm, egSpecialize, (nNodes) => {
+            if (gen === egGeneration) updateLoading('egLoading', 'Building graph\u2026 (' + nNodes + ' seeds)', 5 + Math.min(nNodes / 5, 9));
+        }, token);
+        if (gen !== egGeneration || !currentEGGraph) return;
 
         updateLoading('egLoading', 'Computing layout\u2026', 15);
         await sleep(0);
@@ -3045,6 +3101,13 @@
 
         updateLoading('egLoading', 'Drawing\u2026', 99);
         await sleep(0);
+
+        // Cache formatted cluster strings so lpToString isn't called every frame
+        for (const [, data] of currentEGGraph.nodes) {
+            data._clusterLabels = data.cluster.map(lp =>
+                egSpecialize ? String(lpEvalAtOne(lp)) : lpToString(lp)
+            );
+        }
 
         const fit = autoFitToCanvas(currentEGLayout, EG_NODE_R, egCanvas);
         egScale = fit[0]; egPanX = fit[1]; egPanY = fit[2];
@@ -3169,6 +3232,14 @@
     }, { passive: false });
 
     // -- exchange graph zoom & pan --
+    // Throttle EG redraws to one per animation frame (EG nodes are expensive to render)
+    let egDrawPending = false;
+    function scheduleEGDraw() {
+        if (egDrawPending) return;
+        egDrawPending = true;
+        requestAnimationFrame(function() { egDrawPending = false; drawExchangeGraph(); });
+    }
+
     egCanvas.addEventListener('wheel', function(ev) {
         ev.preventDefault();
         const rect = egCanvas.getBoundingClientRect();
@@ -3178,7 +3249,7 @@
         const factor = Math.exp(-ev.deltaY*0.002);
         egScale = Math.max(0.03, Math.min(8, egScale*factor));
         egPanX = mx-cw/2-wx*egScale; egPanY = my-ch/2-wy*egScale;
-        drawExchangeGraph();
+        scheduleEGDraw();
     }, { passive: false });
     egCanvas.addEventListener('mousedown', function(ev) {
         const hit = egHitTest(ev.clientX, ev.clientY);
@@ -3196,13 +3267,13 @@
             const w = egScreenToWorld(ev.clientX, ev.clientY);
             const p = currentEGLayout.get(egNodeDragKey);
             if (p) { p.x = w.x; p.y = w.y; }
-            drawExchangeGraph();
+            scheduleEGDraw();
             return;
         }
         if (!egDragging) return;
         egPanX = egDragPanX+(ev.clientX-egDragX);
         egPanY = egDragPanY+(ev.clientY-egDragY);
-        drawExchangeGraph();
+        scheduleEGDraw();
     });
     window.addEventListener('mouseup', function() {
         egDragging = false;
@@ -3237,12 +3308,12 @@
             const w = egScreenToWorld(t.clientX, t.clientY);
             const p = currentEGLayout.get(egNodeDragKey);
             if (p) { p.x = w.x; p.y = w.y; }
-            drawExchangeGraph();
+            scheduleEGDraw();
         } else if (ev.touches.length === 1 && egDragging) {
             const t = ev.touches[0];
             egPanX = egDragPanX + (t.clientX - egDragX);
             egPanY = egDragPanY + (t.clientY - egDragY);
-            drawExchangeGraph();
+            scheduleEGDraw();
         } else if (ev.touches.length === 2 && egPinchDist > 0) {
             const dx = ev.touches[0].clientX - ev.touches[1].clientX;
             const dy = ev.touches[0].clientY - ev.touches[1].clientY;
@@ -3258,7 +3329,7 @@
             egPanX = cx - cw/2 - wx * egScale;
             egPanY = cy - ch/2 - wy * egScale;
             egPinchDist = dist;
-            drawExchangeGraph();
+            scheduleEGDraw();
         }
     }, { passive: false });
     egCanvas.addEventListener('touchend', function(ev) {
@@ -3462,7 +3533,7 @@
     // ===========================================================
     //  SCATTERING GRAPH — BFS CONSTRUCTION
     // ===========================================================
-    function buildScatteringGraph(initialRays, maxDepth, upToPermutation) {
+    async function buildScatteringGraph(initialRays, maxDepth, upToPermutation, onProgress, cancelToken) {
         const keyFn = upToPermutation ? sgCanonicalTripleKey : sgTripleKey;
         const nodes = new Map();
         const edgeSet = new Set();
@@ -3474,6 +3545,9 @@
         nodes.set(ik, { triple: initialRays.map(v => [v[0], v[1]]), path: [], baseMap: initBM, depth: 0 });
         let frontier = [ik];
         let capped = false;
+
+        let mutationsDone = 0;
+        const YIELD_INTERVAL = 20;
 
         for (let d = 0; d < maxDepth; d++) {
             const next = [];
@@ -3504,27 +3578,17 @@
                         nodes.set(nk, { triple: newTriple, path: newPath, baseMap: newBM, depth: d + 1 });
                         next.push(nk);
                     }
+                    if (++mutationsDone % YIELD_INTERVAL === 0) {
+                        if (onProgress) onProgress(nodes.size);
+                        await sleep(0);
+                        if (cancelToken && cancelToken.cancelled) return null;
+                    }
                 }
             }
             frontier = next;
         }
 
-        // Boundary edges from frontier into known nodes
-        for (const key of frontier) {
-            const nd = nodes.get(key);
-            const lastMut = nd.path.length > 0 ? nd.path[nd.path.length - 1] : -1;
-            for (let k = 0; k < 3; k++) {
-                if (k === lastMut) continue;
-                const newTriple = scatterMutate(nd.triple, k);
-                const newPath = nd.path.concat(k);
-                const newBM = computeBaseMap(newTriple, newPath);
-                const nk = keyFn(newBM);
-                if (!nodes.has(nk)) continue;
-                rawEdges.push({ from: key, to: nk, label: k });
-            }
-        }
-
-        // Stubs for unexplored frontier edges
+        // Boundary edges and stubs in a single pass
         const stubs = [];
         for (const key of frontier) {
             const nd = nodes.get(key);
@@ -3535,8 +3599,14 @@
                 const newPath = nd.path.concat(k);
                 const newBM = computeBaseMap(newTriple, newPath);
                 const nk = keyFn(newBM);
-                if (!nodes.has(nk)) {
+                if (nodes.has(nk)) {
+                    rawEdges.push({ from: key, to: nk, label: k });
+                } else {
                     stubs.push({ from: key, label: k });
+                }
+                if (++mutationsDone % YIELD_INTERVAL === 0) {
+                    if (onProgress) onProgress(nodes.size);
+                    await sleep(0);
                 }
             }
         }
@@ -3835,7 +3905,10 @@
     //  SCATTERING GRAPH — ASYNC UPDATE
     // ===========================================================
     let sgGeneration = 0;
+    let sgCancelToken = null;
     async function updateScatteringGraph() {
+        if (sgCancelToken) sgCancelToken.cancelled = true;
+        const token = sgCancelToken = { cancelled: false };
         const gen = ++sgGeneration;
         sizeSGCanvas();
         showLoading('sgLoading', 'Building graph\u2026', 5);
@@ -3847,8 +3920,10 @@
             : quiverToRays(quiverToMatrix(quiver));
         const depth = parseInt(document.getElementById('sgDepthSelect').value);
         const sgUpToPerm = document.getElementById('sgPermToggle').checked;
-        currentSGGraph = buildScatteringGraph(rays, depth, sgUpToPerm);
-        if (gen !== sgGeneration) return;
+        currentSGGraph = await buildScatteringGraph(rays, depth, sgUpToPerm, (nNodes) => {
+            if (gen === sgGeneration) updateLoading('sgLoading', 'Building graph\u2026 (' + nNodes + ' triples)', 5 + Math.min(nNodes / 5, 9));
+        }, token);
+        if (gen !== sgGeneration || !currentSGGraph) return;
 
         updateLoading('sgLoading', 'Computing layout\u2026', 15);
         await sleep(0);
@@ -4133,7 +4208,7 @@
     document.getElementById('egRotate').addEventListener('input', function() {
         egRotation = this.value * Math.PI / 180;
         document.getElementById('egAngleLabel').innerHTML = this.value + '&deg;';
-        drawExchangeGraph();
+        scheduleEGDraw();
     });
     document.getElementById('sgDepthSelect').addEventListener('change', () => {
         if (document.getElementById('tabSG').classList.contains('active')) {
