@@ -156,7 +156,7 @@
         }
 
         /* ---- tab content ---- */
-        .tab-content { flex: 1; overflow: hidden; display: none; }
+        .tab-content { flex: 1; overflow: hidden; display: none; min-height: 0; }
         .tab-content.active { display: flex; }
 
         /* -- quiver tab -- */
@@ -629,9 +629,18 @@
             .mg-canvas-wrap, .eg-canvas-wrap, .sg-canvas-wrap { padding: 0 2px 2px 2px; }
 
             /* -- quiver tab -- */
-            #tabQuiver { padding: 10px 6px; gap: 8px; }
+            #tabQuiver {
+                padding: 10px 6px;
+                gap: 8px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                justify-content: flex-start;
+            }
             #tabQuiver canvas { max-width: 100%; }
-            .matrix-display { padding: 10px 14px; font-size: 13px; }
+            .matrix-display { padding: 8px 12px; font-size: 12px; flex-shrink: 0; }
+            .matrix-display .label { font-size: 11px; margin-bottom: 3px; }
+            .matrix-row { line-height: 1.4; }
+            .matrix-row span { width: 28px; }
 
             /* -- tooltips -- */
             #egTooltip, #sgTooltip {
@@ -1326,9 +1335,12 @@
         const wrap = document.getElementById('tabQuiver');
         const dpr = window.devicePixelRatio || 1;
         const maxW = wrap.clientWidth - 20;
-        const maxH = wrap.clientHeight - 100;
+        const isMobile = window.innerWidth <= 600;
+        // Reserve more space on mobile for the matrix display below the canvas
+        const matrixReserve = isMobile ? 140 : 100;
+        const maxH = wrap.clientHeight - matrixReserve;
         const w = Math.min(600, maxW);
-        const h = Math.min(480, maxH);
+        const h = Math.min(480, Math.max(200, maxH));
         canvas.style.width = w + 'px';
         canvas.style.height = h + 'px';
         canvas.width = Math.round(w * dpr);
