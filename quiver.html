@@ -157,6 +157,10 @@
         /* ---- tab content ---- */
         .tab-content { flex: 1; overflow: hidden; display: none; min-height: 0; }
         .tab-content.active { display: flex; }
+        .sl-depth-header { font-weight: bold; margin: 16px 0 6px; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 4px; color: #222; }
+        .sl-depth-header:first-child { margin-top: 0; }
+        .sl-entry { margin: 1px 0; padding: 3px 0 3px 12px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.5; }
+        .sl-mutation { font-weight: 600; }
 
         /* -- quiver tab -- */
         #tabQuiver {
@@ -746,6 +750,7 @@
         <button class="tab-btn" data-tab="tabMG">Mutation Graph</button>
         <button class="tab-btn" data-tab="tabEG">Exchange Graph</button>
         <button class="tab-btn" data-tab="tabSG">Scattering Graph</button>
+        <button class="tab-btn" data-tab="tabSL">Scattering List</button>
         <button class="tab-btn" data-tab="tabAbout">About</button>
     </div>
 
@@ -1023,6 +1028,34 @@
             </div>
         </div>
         <div id="sgTooltip"></div>
+    </div>
+
+    <!-- scattering list tab -->
+    <div id="tabSL" class="tab-content" style="flex-direction:column;">
+        <div class="sg-toolbar">
+            <div class="depth-control">
+                <label for="slDepthSelect">Depth:</label>
+                <select id="slDepthSelect">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="slPermToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="slPermToggle">Up to permutation</label>
+            </div>
+            <div class="mg-info" id="slInfo"></div>
+        </div>
+        <div id="slContent" style="flex:1;overflow:auto;padding:12px 16px;"></div>
     </div>
 
     <!-- about tab -->
@@ -1336,6 +1369,7 @@
     let sgNodeDragKey = null, sgNodeDragMoved = false;
     let sgRotation = 0;
     let sgNeedsRebuild = true;
+    let slNeedsRebuild = true;
     let sgShowRawTriple = false;
     let sgShowDiagram = true;
     let sdScale = 1, sdPanX = 0, sdPanY = 0;
@@ -1413,6 +1447,8 @@
                 if (sgShowDiagram) sizeSDCanvas();
                 if (sgNeedsRebuild) { updateScatteringGraph(); sgNeedsRebuild = false; }
                 else { drawScatteringGraph(); if (sgShowDiagram) drawScatteringDiagram(); }
+            } else if (btn.dataset.tab === 'tabSL') {
+                if (slNeedsRebuild) { updateScatteringList(); slNeedsRebuild = false; }
             } else if (btn.dataset.tab === 'tabAbout') {
                 if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) {
                     MathJax.typesetPromise([document.getElementById('tabAbout')]);
@@ -1625,6 +1661,9 @@
         if (document.getElementById('tabSG').classList.contains('active')) {
             updateScatteringGraph(); sgNeedsRebuild = false;
         } else { sgNeedsRebuild = true; }
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList(); slNeedsRebuild = false;
+        } else { slNeedsRebuild = true; }
     }
 
     function generateRandomQuiver() {
@@ -1687,15 +1726,24 @@
         ctx.strokeStyle = ARROW_COLOR; ctx.lineWidth = 2; ctx.stroke();
         arrowhead(ctx, ex, ey, ux, uy, Math.max(8, VERTEX_RADIUS * 0.43), ARROW_COLOR);
         if (count > 1) {
-            const labelOff = Math.max(10, VERTEX_RADIUS * 0.53);
-            const midX = (sx+ex)/2, midY = (sy+ey)/2;
-            // Place label on the side away from the polygon center
-            const dot = (qCenterX - midX) * px + (qCenterY - midY) * py;
+            // Place label ~25% along the edge (near source), offset perpendicular
+            const perpOff = Math.max(10, VERTEX_RADIUS * 0.53);
+            const anchorX = sx + (ex - sx) * 0.25, anchorY = sy + (ey - sy) * 0.25;
+            // Offset perpendicular, away from polygon center
+            const dot = (qCenterX - anchorX) * px + (qCenterY - anchorY) * py;
             const sign = dot > 0 ? -1 : 1;
-            const mx = midX + px*labelOff*sign, my = midY + py*labelOff*sign;
-            ctx.font = 'bold ' + Math.max(11, Math.round(VERTEX_RADIUS * 0.53)) + 'px "Segoe UI",sans-serif';
-            ctx.fillStyle = ARROW_COLOR;
+            const mx = anchorX + px * perpOff * sign, my = anchorY + py * perpOff * sign;
+            const fontSize = Math.max(11, Math.round(VERTEX_RADIUS * 0.53));
+            ctx.font = 'bold ' + fontSize + 'px "Segoe UI",sans-serif';
             ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            // White background pill for readability
+            const tw = ctx.measureText('' + count).width;
+            const padX = 4, padY = 2;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.roundRect(mx - tw/2 - padX, my - fontSize/2 - padY, tw + padX*2, fontSize + padY*2, 4);
+            ctx.fill();
+            ctx.fillStyle = ARROW_COLOR;
             ctx.fillText(''+count, mx, my);
         }
     }
@@ -2988,7 +3036,7 @@
         const lineCol = e.labels.length === 1 ? VERTEX_COLORS[e.labels[0]] : '#aaa';
         egCtx.beginPath();
         egCtx.arc(cx, cy, loopR, 0, Math.PI * 2);
-        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 2.5; egCtx.stroke();
+        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 3; egCtx.stroke();
         const lx = pA.x + Math.cos(angle) * (EG_NODE_R + loopR * 2 + 10);
         const ly = pA.y + Math.sin(angle) * (EG_NODE_R + loopR * 2 + 10);
         drawEGLabels(lx, ly, e.labels);
@@ -3014,7 +3062,7 @@
         const lineCol = allLabels.length === 1 ? VERTEX_COLORS[allLabels[0]] : '#aaa';
 
         egCtx.beginPath(); egCtx.moveTo(sx,sy); egCtx.lineTo(ex,ey);
-        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 2.5; egCtx.stroke();
+        egCtx.strokeStyle = lineCol; egCtx.lineWidth = 3; egCtx.stroke();
 
         function edgePt(t) {
             return { x: sx + t*(ex-sx), y: sy + t*(ey-sy) };
@@ -3089,8 +3137,8 @@
         const w2 = EG_NODE_W/2, h2 = EG_NODE_H/2;
         roundedRect(egCtx, x-w2, y-h2, EG_NODE_W, EG_NODE_H, 8);
         egCtx.fillStyle = isInitial ? '#fffde7' : '#ffffff'; egCtx.fill();
-        egCtx.strokeStyle = isInitial ? '#f39c12' : '#bdc3c7';
-        egCtx.lineWidth = isInitial ? 3 : 1.5; egCtx.stroke();
+        egCtx.strokeStyle = isInitial ? '#f39c12' : '#a0a6ab';
+        egCtx.lineWidth = isInitial ? 4 : 2.5; egCtx.stroke();
 
         // Mini quiver in upper portion
         const Q = matrixToQuiver(data.matrix);
@@ -3132,12 +3180,12 @@
             // Use cached label if available, otherwise compute (fallback)
             let expr = (data._clusterLabels && data._clusterLabels[i]) ||
                        (egSpecialize ? String(lpEvalAtOne(data.cluster[i])) : lpToString(data.cluster[i]));
-            let fontSize = 7;
-            egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+            let fontSize = 7.5;
+            egCtx.font = '500 ' + fontSize + 'px "Segoe UI",system-ui,sans-serif';
             let measured = egCtx.measureText(expr).width;
             if (measured > textW) {
                 fontSize = Math.max(4, Math.floor(fontSize * textW / measured));
-                egCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+                egCtx.font = '500 ' + fontSize + 'px "Segoe UI",system-ui,sans-serif';
                 measured = egCtx.measureText(expr).width;
             }
             if (measured > textW) {
@@ -3149,7 +3197,7 @@
                 }
                 expr = expr.slice(0, lo) + '\u2026';
             }
-            egCtx.fillStyle = '#333';
+            egCtx.fillStyle = '#222';
             egCtx.fillText(expr, x-w2+16, cy);
         }
         curY += n * lineH;
@@ -3167,8 +3215,8 @@
                 const gv = [];
                 for (let r = 0; r < n; r++) gv.push(data.gMatrix[r][i]);
                 const expr = 'g' + SUB[i] + ' = (' + gv.join(', ') + ')';
-                egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
-                egCtx.fillStyle = '#555';
+                egCtx.font = '500 7px "Segoe UI",system-ui,sans-serif';
+                egCtx.fillStyle = '#333';
                 egCtx.fillText(expr, x-w2+16, cy);
             }
             curY += n * lineH;
@@ -3187,8 +3235,8 @@
                 const cv = [];
                 for (let r = 0; r < n; r++) cv.push(data.cMatrix[r][i]);
                 const expr = 'c' + SUB[i] + ' = (' + cv.join(', ') + ')';
-                egCtx.font = '7px "Segoe UI",system-ui,sans-serif';
-                egCtx.fillStyle = '#555';
+                egCtx.font = '500 7px "Segoe UI",system-ui,sans-serif';
+                egCtx.fillStyle = '#333';
                 egCtx.fillText(expr, x-w2+16, cy);
             }
         }
@@ -3784,8 +3832,8 @@
         roundedRect(sgCtx, x - w2, y - h2, SG_NODE_W, SG_NODE_H, 8);
         sgCtx.fillStyle = isInitial ? '#fffde7' : '#fff';
         sgCtx.fill();
-        sgCtx.lineWidth = isInitial ? 3 : 1.5;
-        sgCtx.strokeStyle = isInitial ? '#f39c12' : '#bdc3c7';
+        sgCtx.lineWidth = isInitial ? 4 : 2.5;
+        sgCtx.strokeStyle = isInitial ? '#f39c12' : '#a0a6ab';
         sgCtx.stroke();
 
         // Draw n base-mapped vectors as arrows in upper portion
@@ -3805,7 +3853,7 @@
             sgCtx.moveTo(arrowCX, arrowCY);
             sgCtx.lineTo(arrowCX + vx, arrowCY + vy);
             sgCtx.strokeStyle = EDGE_COLORS_SG[i];
-            sgCtx.lineWidth = 2;
+            sgCtx.lineWidth = 3;
             sgCtx.stroke();
             if (len > 6) {
                 const ux = vx / len, uy = vy / len;
@@ -3843,14 +3891,14 @@
             sgCtx.fillStyle = EDGE_COLORS_SG[i];
             sgCtx.fill();
             const expr = 'v' + SUB[i] + ' = (' + bm[i][0] + ', ' + bm[i][1] + ')';
-            let fontSize = 7;
-            sgCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+            let fontSize = 7.5;
+            sgCtx.font = '500 ' + fontSize + 'px "Segoe UI",system-ui,sans-serif';
             let measured = sgCtx.measureText(expr).width;
             if (measured > textW) {
                 fontSize = Math.max(4, Math.floor(fontSize * textW / measured));
-                sgCtx.font = fontSize + 'px "Segoe UI",system-ui,sans-serif';
+                sgCtx.font = '500 ' + fontSize + 'px "Segoe UI",system-ui,sans-serif';
             }
-            sgCtx.fillStyle = '#333';
+            sgCtx.fillStyle = '#222';
             sgCtx.fillText(expr, x - w2 + 16, cy);
         }
 
@@ -3883,14 +3931,14 @@
                 sgCtx.fillStyle = EDGE_COLORS_SG[i];
                 sgCtx.fill();
                 const expr = '(' + raw[i][0] + ', ' + raw[i][1] + ')';
-                let fs = 6.5;
+                let fs = 7;
                 sgCtx.font = fs + 'px "Segoe UI",system-ui,sans-serif';
                 let m = sgCtx.measureText(expr).width;
                 if (m > textW) {
                     fs = Math.max(4, Math.floor(fs * textW / m));
                     sgCtx.font = fs + 'px "Segoe UI",system-ui,sans-serif';
                 }
-                sgCtx.fillStyle = '#666';
+                sgCtx.fillStyle = '#444';
                 sgCtx.fillText(expr, x - w2 + 16, cy);
             }
         }
@@ -3951,7 +3999,7 @@
         const lineCol = allLabels.length === 1 ? EDGE_COLORS_SG[allLabels[0]] : '#aaa';
 
         sgCtx.beginPath(); sgCtx.moveTo(sx, sy); sgCtx.lineTo(ex, ey);
-        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 2.5; sgCtx.stroke();
+        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 3; sgCtx.stroke();
 
         function edgePt(t) { return { x: sx + t * (ex - sx), y: sy + t * (ey - sy) }; }
 
@@ -3979,7 +4027,7 @@
         const lineCol = e.labels.length === 1 ? EDGE_COLORS_SG[e.labels[0]] : '#aaa';
         sgCtx.beginPath();
         sgCtx.arc(cx, cy, loopR, 0, Math.PI * 2);
-        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 2.5; sgCtx.stroke();
+        sgCtx.strokeStyle = lineCol; sgCtx.lineWidth = 3; sgCtx.stroke();
         const lx = pA.x + Math.cos(angle) * (SG_NODE_R + loopR * 2 + 10);
         const ly = pA.y + Math.sin(angle) * (SG_NODE_R + loopR * 2 + 10);
         drawSGLabels(lx, ly, e.labels);
@@ -4028,6 +4076,75 @@
         }
 
         sgCtx.restore();
+    }
+
+    // ===========================================================
+    //  SCATTERING LIST
+    // ===========================================================
+    async function updateScatteringList() {
+        const contentEl = document.getElementById('slContent');
+        contentEl.innerHTML = '<div style="color:#888;padding:20px;">Building list\u2026</div>';
+
+        await sleep(0);
+
+        const rays = (getQuiverType() === 'scatter')
+            ? customVectors.map(v => [v[0], v[1]])
+            : quiverToRays(quiverToMatrix(quiver));
+        const depth = parseInt(document.getElementById('slDepthSelect').value);
+        const upToPerm = document.getElementById('slPermToggle').checked;
+        const graph = await buildScatteringGraph(rays, depth, upToPerm);
+        if (!graph) { contentEl.innerHTML = ''; return; }
+
+        // Group nodes by depth
+        const byDepth = new Map();
+        for (const [, data] of graph.nodes) {
+            const d = data.depth;
+            if (!byDepth.has(d)) byDepth.set(d, []);
+            byDepth.get(d).push(data);
+        }
+
+        // Sort depths
+        const depths = [...byDepth.keys()].sort((a, b) => a - b);
+
+        // Build HTML
+        let html = '';
+        let totalTuples = 0;
+        for (const d of depths) {
+            const entries = byDepth.get(d);
+            // Sort entries by mutation path (lexicographic)
+            entries.sort((a, b) => {
+                const la = a.path.length, lb = b.path.length;
+                if (la !== lb) return la - lb;
+                for (let i = 0; i < la; i++) {
+                    if (a.path[i] !== b.path[i]) return a.path[i] - b.path[i];
+                }
+                return 0;
+            });
+            totalTuples += entries.length;
+            html += '<div class="sl-depth-header">Depth ' + d + ' \u2014 ' + entries.length + ' tuple' + (entries.length !== 1 ? 's' : '') + '</div>';
+            for (const data of entries) {
+                // Format mutation sequence
+                let mutSeq;
+                if (data.path.length === 0) {
+                    mutSeq = '<span style="color:#888">(initial)</span>';
+                } else {
+                    mutSeq = '<span class="sl-mutation">';
+                    for (const k of data.path) {
+                        mutSeq += '<span style="color:' + VERTEX_COLORS[k] + '">\u03bc' + SUB[k] + '</span>';
+                    }
+                    mutSeq += '</span>';
+                }
+                // Format base-mapped tuple
+                const bm = data.baseMap;
+                const vecs = bm.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009');
+                html += '<div class="sl-entry">' + mutSeq + '  \u2192  ' + vecs + '</div>';
+            }
+        }
+        contentEl.innerHTML = html;
+
+        let infoTxt = totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ' through depth ' + depth;
+        if (graph.capped) infoTxt += ' <span class="warn">(truncated at ' + MAX_GRAPH_NODES + ' nodes)</span>';
+        document.getElementById('slInfo').innerHTML = infoTxt;
     }
 
     // ===========================================================
@@ -4607,6 +4724,16 @@
         if (document.getElementById('tabSG').classList.contains('active')) {
             updateScatteringGraph();
         } else { sgNeedsRebuild = true; }
+    });
+    document.getElementById('slDepthSelect').addEventListener('change', () => {
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList();
+        } else { slNeedsRebuild = true; }
+    });
+    document.getElementById('slPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList();
+        } else { slNeedsRebuild = true; }
     });
     function sgUpdateNodeDims() {
         const n = quiver.length;
