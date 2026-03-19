@@ -1031,7 +1031,7 @@
     </div>
 
     <!-- scattering list tab -->
-    <div id="tabSL" class="tab-content" style="flex-direction:column;">
+    <div id="tabSL" class="tab-content" style="flex-direction:column;position:relative;">
         <div class="sg-toolbar">
             <div class="depth-control">
                 <label for="slDepthSelect">Depth:</label>
@@ -1053,9 +1053,45 @@
                 </label>
                 <label for="slPermToggle">Up to permutation</label>
             </div>
+            <div class="toggle-control" id="slPQControl">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="slPQToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="slPQToggle">Include (p,q) coordinates</label>
+            </div>
             <div class="mg-info" id="slInfo"></div>
         </div>
+        <div id="slPQInputs" style="display:none; padding:4px 16px; border-bottom:1px solid #eee; font-size:13px; align-items:center; gap:4px; flex-shrink:0;">
+            <label style="font-weight:bold; margin-right:4px;">(p,q) data:</label>
+            <span id="uVectorInputContainer"></span>
+        </div>
         <div id="slContent" style="flex:1;overflow:auto;padding:12px 16px;"></div>
+        <div class="export-container" id="slExportContainer">
+            <button class="export-btn" id="slExportBtn">Export</button>
+            <div class="export-popover" id="slExportPopover" style="display:none">
+                <div class="ep-row">
+                    <div class="ep-label">Format</div>
+                    <div class="ep-options">
+                        <label><input type="radio" name="slFmt" value="txt" checked><span>Text</span></label>
+                        <label><input type="radio" name="slFmt" value="md"><span>Markdown</span></label>
+                        <label><input type="radio" name="slFmt" value="png"><span>PNG</span></label>
+                        <label><input type="radio" name="slFmt" value="pdf"><span>PDF</span></label>
+                    </div>
+                </div>
+                <div class="ep-row" id="slResRow" style="display:none">
+                    <div class="ep-label">Resolution</div>
+                    <div class="ep-options">
+                        <label><input type="radio" name="slRes" value="2"><span>2&times;</span></label>
+                        <label><input type="radio" name="slRes" value="4" checked><span>4&times;</span></label>
+                        <label><input type="radio" name="slRes" value="8"><span>8&times;</span></label>
+                    </div>
+                </div>
+                <div class="ep-row">
+                    <button class="ep-go" id="slExportGo">Export</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- about tab -->
@@ -1228,7 +1264,7 @@
                     Given a tuple of vectors $(\mathbf{v}_1, \ldots, \mathbf{v}_n)$, we define
                     a <b>piecewise-linear shear</b> $\mu_{\mathbf{v}}$ for any vector $\mathbf{v}$ by:
                 </p>
-                <div class="formula">$$\mu_{\mathbf{v}}(\mathbf{w}) = \mathbf{w} + \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$$</div>
+                <div class="formula">$$\mu_{\mathbf{v}}(\mathbf{w}) = \mathbf{w} + \max(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$$</div>
                 <p>
                     where $\mathbf{w} \wedge \mathbf{v} = \det(\mathbf{w}, \mathbf{v})$ is the $2 \times 2$ determinant.
                     Mutation $\operatorname{mut}_k$ negates the $k$-th vector and applies $\mu_{\mathbf{v}_k}$
@@ -1239,7 +1275,7 @@
                     Each mutated tuple carries not only the current vectors but also the mutation path
                     $i_1, \ldots, i_m$ used to reach it. The <b>base-mapped tuple</b> is obtained by
                     recursively unwinding this path: at each step, the inverse shear
-                    $\mu_{\mathbf{v}}^{-1}(\mathbf{w}) = \mathbf{w} - \min(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$
+                    $\mu_{\mathbf{v}}^{-1}(\mathbf{w}) = \mathbf{w} - \max(\mathbf{w} \wedge \mathbf{v},\, 0)\,\mathbf{v}$
                     is applied (with respect to the negated mutated vector $-\mathbf{v}'_{i_m}$) to all $n$
                     components, peeling off the last mutation.
                 </p>
@@ -1370,6 +1406,7 @@
     let sgRotation = 0;
     let sgNeedsRebuild = true;
     let slNeedsRebuild = true;
+    let slLastData = null; // { byDepth, depths, totalTuples, depth, capped }
     let sgShowRawTriple = false;
     let sgShowDiagram = true;
     let sdScale = 1, sdPanX = 0, sdPanY = 0;
@@ -1559,6 +1596,44 @@
         6: [[1, 0], [0, -1], [-1, -2], [-1, 1], [1, 2], [2, -1]]
     };
 
+    // Default (p,q) data: [v_0, u_1, ..., u_k] (k+1 values for k input vectors)
+    // v_0 is a source vector in Z²; u_1,...,u_k ∈ Z²≥0 are images of v_1,...,v_k
+    const DEFAULT_PQ_DATA = {
+        3: [[0, 1], [1, 2], [1, 1], [2, 1]]
+    };
+
+    function readPQInputs() {
+        const container = document.getElementById('uVectorInputContainer');
+        const rows = container.querySelectorAll('.vec-row');
+        return Array.from(rows, row => {
+            const inputs = row.querySelectorAll('.vec-input');
+            return [parseInt(inputs[0].value) || 0, parseInt(inputs[1].value) || 0];
+        });
+    }
+
+    function buildPQInputs(n) {
+        const container = document.getElementById('uVectorInputContainer');
+        if (!container) return;
+        const current = readPQInputs();
+        container.innerHTML = '';
+        const count = n + 1; // v_0, u_1, ..., u_k where k = n
+        const defaults = DEFAULT_PQ_DATA[n];
+        for (let i = 0; i < count; i++) {
+            const val = (current.length > i) ? current[i] : (defaults ? defaults[i] : (i === 0 ? [0, 1] : [1, 1]));
+            const span = document.createElement('span');
+            span.className = 'vec-row';
+            if (i === 0) {
+                // v_0 input
+                span.innerHTML = `<label class="vec-label" style="color:#888">v<sub>0</sub>=</label>(<input type="number" value="${val[0]}" class="vec-input">,<input type="number" value="${val[1]}" class="vec-input">)`;
+            } else {
+                // u_i input
+                const color = VERTEX_COLORS[i - 1];
+                span.innerHTML = `<label class="vec-label" style="color:${color}">u<sub>${i}</sub>=</label>(<input type="number" value="${val[0]}" class="vec-input">,<input type="number" value="${val[1]}" class="vec-input">)`;
+            }
+            container.appendChild(span);
+        }
+    }
+
     function buildVectorInputs(n) {
         const container = document.getElementById('vectorInputContainer');
         const current = readVectorInputs();
@@ -1691,6 +1766,16 @@
         document.getElementById('vectorExtras').style.display = type === 'scatter' ? 'flex' : 'none';
         document.getElementById('randomExtras').style.display = type === 'random' ? 'flex' : 'none';
         document.getElementById('matrixExtras').style.display = type === 'matrix' ? 'flex' : 'none';
+        // Show/hide (p,q) controls based on whether vector triple is selected
+        const pqControl = document.getElementById('slPQControl');
+        const pqInputs = document.getElementById('slPQInputs');
+        if (type !== 'scatter') {
+            pqControl.style.display = 'none';
+            pqInputs.style.display = 'none';
+            document.getElementById('slPQToggle').checked = false;
+        } else {
+            pqControl.style.display = '';
+        }
         if (type === 'scatter') applyVectorTuple();
         else if (type === 'markov') setQuiver(PRESET_MARKOV);
         else if (type === 'matrix') applyMatrixInput();
@@ -3635,13 +3720,15 @@
     // ===========================================================
     function wedge(w, v) { return w[0] * v[1] - w[1] * v[0]; }
 
+    // 2026-03-18: switched convention from min to max (μ_v(w) = w + max(w∧v, 0)v)
     function muV(v, w) {
-        const d = Math.min(wedge(w, v), 0);
+        const d = Math.max(wedge(w, v), 0);
         return [w[0] + d * v[0], w[1] + d * v[1]];
     }
 
+    // 2026-03-18: switched convention from min to max (μ_v⁻¹(w) = w − max(w∧v, 0)v)
     function muVInv(v, w) {
-        const d = Math.min(wedge(w, v), 0);
+        const d = Math.max(wedge(w, v), 0);
         return [w[0] - d * v[0], w[1] - d * v[1]];
     }
 
@@ -3653,11 +3740,15 @@
         });
     }
 
-    function computeBaseMap(triple, path) {
+    // forwardVecs[s] = the pre-mutation vector T_s[path[s]] at forward step s.
+    // Since scatterMutate negates the k-th vector, the mutated triple has
+    // T_mutated[k] = -T_s[k], so -T_mutated[k] = T_s[k] = forwardVecs[s].
+    // Using forwardVecs directly (= the neg_v from the spec) prevents spurious
+    // shears when the same mutation index appears multiple times in the path.
+    function computeBaseMap(triple, path, forwardVecs) {
         let T = triple.map(v => [v[0], v[1]]);
         for (let s = path.length - 1; s >= 0; s--) {
-            const ik = path[s];
-            const neg_v = [-T[ik][0], -T[ik][1]];
+            const neg_v = forwardVecs[s]; // = T_s[path[s]] = -T_{s+1}[path[s]]
             T = T.map(w => muVInv(neg_v, w));
         }
         return T;
@@ -3674,6 +3765,108 @@
             if (best === null || k < best) best = k;
         }
         return best;
+    }
+
+    // ===========================================================
+    //  PIECEWISE-LINEAR MAP Q  (fundamental bijection Z² → Z²≥0/~)
+    // ===========================================================
+    // Validate that {v_0, v_1, ..., v_k} form a valid fan (all cones non-reflex).
+    // Returns null if valid, or an error message string if invalid.
+    function validatePQFan(vs, pqData) {
+        const k = vs.length;
+        const v0 = pqData[0];
+        const allVs = [v0, ...vs];
+        const n = allVs.length;
+        const angleOf = v => {
+            let a = Math.atan2(v[1], v[0]);
+            if (a < 0) a += 2 * Math.PI;
+            return a;
+        };
+        const indices = Array.from({length: n}, (_, i) => i);
+        indices.sort((a, b) => angleOf(allVs[a]) - angleOf(allVs[b]));
+        const sorted = indices.map(i => allVs[i]);
+        for (let j = 0; j < n; j++) {
+            const a = sorted[j], b = sorted[(j + 1) % n];
+            if (wedge(a, b) <= 0)
+                return 'Fan invalid: v\u2080 must be placed so that all consecutive cones are non-reflex (\u2264 180\u00b0). ' +
+                    'Try choosing v\u2080 in the largest angular gap between the other rays.';
+        }
+        // Also check u_i are in Z²≥0
+        for (let i = 1; i <= k; i++) {
+            if (pqData[i][0] < 0 || pqData[i][1] < 0)
+                return 'u' + SUB[i - 1] + ' = (' + pqData[i][0] + ',' + pqData[i][1] + ') must be in \u2124\u00b2\u2265\u2080.';
+        }
+        return null;
+    }
+
+    // vs = [v_1, ..., v_k] (the k input vectors / customVectors)
+    // pqData = [v_0, u_1, ..., u_k] (k+1 entries)
+    //   pqData[0] = v_0 ∈ Z² (user-specified source vector, maps to (1,0)≡(0,1))
+    //   pqData[i] = u_i ∈ Z²≥0 for i=1..k (image of v_i)
+    function computeMapQ(w, vs, pqData) {
+        const k = vs.length;
+        const v0 = pqData[0];
+        // allVs[0] = v_0, allVs[1..k] = v_1..v_k
+        const allVs = [v0, ...vs];
+        const n = k + 1;
+
+        // Sort counterclockwise by angle
+        const angleOf = v => {
+            let a = Math.atan2(v[1], v[0]);
+            if (a < 0) a += 2 * Math.PI;
+            return a;
+        };
+        const indices = Array.from({length: n}, (_, i) => i);
+        indices.sort((a, b) => angleOf(allVs[a]) - angleOf(allVs[b]));
+
+        const sortedVs = indices.map(i => allVs[i]);
+
+        // Find which cone contains w
+        for (let j = 0; j < n; j++) {
+            const nextJ = (j + 1) % n;
+            const a = sortedVs[j];
+            const b = sortedVs[nextJ];
+
+            const det_ab = wedge(a, b);
+            if (det_ab === 0) continue; // degenerate cone, skip
+
+            // Check if w is in cone going counterclockwise from a to b
+            const wa = wedge(a, w);
+            const wb = wedge(w, b);
+            let inCone;
+            if (det_ab > 0) {
+                inCone = wa >= 0 && wb >= 0;
+            } else {
+                inCone = wa >= 0 || wb >= 0;
+            }
+            if (!inCone) continue;
+
+            // Determine images of a and b
+            const aOrigIdx = indices[j];
+            const bOrigIdx = indices[nextJ];
+            let aImg, bImg;
+            if (aOrigIdx === 0) {
+                // v_0 as left boundary → image is (1,0) or (0,1)
+                // Choose so target cone is non-reflex with adjacent u
+                // wedge((1,0), u) = u[1] ≥ 0 for u ∈ Z²≥0 → (1,0) gives non-reflex
+                aImg = [1, 0];
+            } else {
+                aImg = pqData[aOrigIdx];
+            }
+            if (bOrigIdx === 0) {
+                // v_0 as right boundary → image is (0,1) or (1,0)
+                // wedge(u, (0,1)) = u[0] ≥ 0 for u ∈ Z²≥0 → (0,1) gives non-reflex
+                bImg = [0, 1];
+            } else {
+                bImg = pqData[bOrigIdx];
+            }
+
+            // Linear map: w = alpha*a + beta*b → Q(w) = alpha*aImg + beta*bImg
+            const alpha = (w[0] * b[1] - w[1] * b[0]) / det_ab;
+            const beta = (a[0] * w[1] - a[1] * w[0]) / det_ab;
+            return [alpha * aImg[0] + beta * bImg[0], alpha * aImg[1] + beta * bImg[1]];
+        }
+        return [0, 0]; // origin or error
     }
 
     function quiverToRays(B) {
@@ -3717,9 +3910,9 @@
         const rawEdges = [];
         const rawSelfLoops = [];
 
-        const initBM = computeBaseMap(initialRays, []);
+        const initBM = computeBaseMap(initialRays, [], []);
         const ik = keyFn(initBM);
-        nodes.set(ik, { triple: initialRays.map(v => [v[0], v[1]]), path: [], baseMap: initBM, depth: 0 });
+        nodes.set(ik, { triple: initialRays.map(v => [v[0], v[1]]), path: [], forwardVecs: [], baseMap: initBM, depth: 0 });
         let frontier = [ik];
         let capped = false;
 
@@ -3735,7 +3928,9 @@
                     if (k === lastMut) continue; // no consecutive repeats
                     const newTriple = scatterMutate(nd.triple, k);
                     const newPath = nd.path.concat(k);
-                    const newBM = computeBaseMap(newTriple, newPath);
+                    // forwardVecs: append the pre-mutation vector nd.triple[k]
+                    const newFV = nd.forwardVecs.concat([nd.triple[k]]);
+                    const newBM = computeBaseMap(newTriple, newPath, newFV);
                     const nk = keyFn(newBM);
 
                     if (nk === key) {
@@ -3752,7 +3947,7 @@
 
                     if (!nodes.has(nk)) {
                         if (nodes.size >= MAX_GRAPH_NODES) { capped = true; continue; }
-                        nodes.set(nk, { triple: newTriple, path: newPath, baseMap: newBM, depth: d + 1 });
+                        nodes.set(nk, { triple: newTriple, path: newPath, forwardVecs: newFV, baseMap: newBM, depth: d + 1 });
                         next.push(nk);
                     }
                     if (++mutationsDone % YIELD_INTERVAL === 0) {
@@ -3774,7 +3969,8 @@
                 if (k === lastMut) continue;
                 const newTriple = scatterMutate(nd.triple, k);
                 const newPath = nd.path.concat(k);
-                const newBM = computeBaseMap(newTriple, newPath);
+                const newFV = nd.forwardVecs.concat([nd.triple[k]]);
+                const newBM = computeBaseMap(newTriple, newPath, newFV);
                 const nk = keyFn(newBM);
                 if (nodes.has(nk)) {
                     rawEdges.push({ from: key, to: nk, label: k });
@@ -4087,13 +4283,28 @@
 
         await sleep(0);
 
-        const rays = (getQuiverType() === 'scatter')
+        const isVectorTriple = getQuiverType() === 'scatter';
+        const rays = isVectorTriple
             ? customVectors.map(v => [v[0], v[1]])
             : quiverToRays(quiverToMatrix(quiver));
         const depth = parseInt(document.getElementById('slDepthSelect').value);
         const upToPerm = document.getElementById('slPermToggle').checked;
+        const showPQ = document.getElementById('slPQToggle').checked && isVectorTriple;
         const graph = await buildScatteringGraph(rays, depth, upToPerm);
         if (!graph) { contentEl.innerHTML = ''; return; }
+
+        // Read (p,q) data: [v_0, u_1, ..., u_k]
+        let pqData = null;
+        let pqError = null;
+        if (showPQ) {
+            pqData = readPQInputs();
+            if (pqData.length !== rays.length + 1) {
+                pqData = null;
+            } else {
+                pqError = validatePQFan(rays, pqData);
+                if (pqError) pqData = null;
+            }
+        }
 
         // Group nodes by depth
         const byDepth = new Map();
@@ -4108,6 +4319,9 @@
 
         // Build HTML
         let html = '';
+        if (pqError) {
+            html += '<div style="color:#c00;margin:6px 0;font-size:13px">\u26a0 (p,q) coordinates disabled: ' + pqError + '</div>';
+        }
         let totalTuples = 0;
         for (const d of depths) {
             const entries = byDepth.get(d);
@@ -4137,14 +4351,178 @@
                 // Format base-mapped tuple
                 const bm = data.baseMap;
                 const vecs = bm.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009');
-                html += '<div class="sl-entry">' + mutSeq + '  \u2192  ' + vecs + '</div>';
+                let pqStr = '';
+                if (pqData) {
+                    const pqs = bm.map(v => computeMapQ(v, rays, pqData));
+                    pqStr = ' &nbsp;<span style="color:#888;font-size:11px">base:</span> ' + vecs
+                        + ' &nbsp;<span style="color:#888;font-size:11px">(p,q):</span> '
+                        + '<span style="color:#666">' + pqs.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009') + '</span>';
+                }
+                html += '<div class="sl-entry">' + mutSeq + '  \u2192  ' + (pqData ? pqStr : vecs) + '</div>';
             }
         }
         contentEl.innerHTML = html;
 
+        slLastData = { byDepth, depths, totalTuples, depth, capped: !!graph.capped, showPQ: !!pqData, pqData, rays };
+
         let infoTxt = totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ' through depth ' + depth;
         if (graph.capped) infoTxt += ' <span class="warn">(truncated at ' + MAX_GRAPH_NODES + ' nodes)</span>';
         document.getElementById('slInfo').innerHTML = infoTxt;
+    }
+
+    function generateScatteringListText(format) {
+        if (!slLastData) return '';
+        const { byDepth, depths, totalTuples, depth, capped, showPQ, pqData, rays } = slLastData;
+        const isMd = format === 'md';
+        let out = '';
+        const title = 'Scattering List (depth ' + depth + ', ' + totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ')' + (capped ? ' [truncated]' : '');
+        out += isMd ? '# ' + title + '\n\n' : title + '\n\n';
+        for (const d of depths) {
+            const entries = byDepth.get(d);
+            const hdr = 'Depth ' + d + ' \u2014 ' + entries.length + ' tuple' + (entries.length !== 1 ? 's' : '');
+            if (isMd) {
+                out += '## ' + hdr + '\n\n';
+                out += showPQ
+                    ? '| Mutation | Base-mapped tuple | (p,q) coordinates |\n|----------|-------------------|--------------------|\n'
+                    : '| Mutation | Base-mapped tuple |\n|----------|-------------------|\n';
+            } else {
+                out += hdr + '\n';
+            }
+            for (const data of entries) {
+                let mutSeq;
+                if (data.path.length === 0) {
+                    mutSeq = '(initial)';
+                } else {
+                    mutSeq = data.path.map(k => '\u03bc' + SUB[k]).join('');
+                }
+                const vecs = data.baseMap.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                let pqStr = '';
+                if (showPQ && pqData && rays) {
+                    const pqs = data.baseMap.map(v => computeMapQ(v, rays, pqData));
+                    pqStr = pqs.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                }
+                if (isMd) {
+                    out += showPQ
+                        ? '| ' + mutSeq + ' | ' + vecs + ' | ' + pqStr + ' |\n'
+                        : '| ' + mutSeq + ' | ' + vecs + ' |\n';
+                } else {
+                    if (pqStr) {
+                        out += '  ' + mutSeq + '  \u2192  base: ' + vecs + '  (p,q): ' + pqStr + '\n';
+                    } else {
+                        out += '  ' + mutSeq + '  \u2192  ' + vecs + '\n';
+                    }
+                }
+            }
+            out += '\n';
+        }
+        return out.trimEnd() + '\n';
+    }
+
+    function renderScatteringListCanvas(scale) {
+        if (!slLastData) return null;
+        const { byDepth, depths, totalTuples, depth, capped, showPQ, pqData, rays } = slLastData;
+
+        const baseFont = 13, headerFont = 15, titleFont = 16;
+        const lineH = Math.round(baseFont * 1.6);
+        const headerH = Math.round(headerFont * 2.2);
+        const titleH = Math.round(titleFont * 2.5);
+        const padX = 24, padY = 20;
+
+        // Count total lines to compute canvas height
+        let totalLines = 0;
+        let totalHeaders = depths.length;
+        for (const d of depths) totalLines += byDepth.get(d).length;
+        const contentH = titleH + totalHeaders * headerH + totalLines * lineH + padY * 2;
+        const contentW = showPQ ? 1000 : 700;
+
+        const c = document.createElement('canvas');
+        c.width = Math.round(contentW * scale);
+        c.height = Math.round(contentH * scale);
+        const ctx = c.getContext('2d');
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, contentW, contentH);
+
+        let y = padY;
+
+        // Title
+        const title = 'Scattering List (depth ' + depth + ', ' + totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ')' + (capped ? ' [truncated]' : '');
+        ctx.font = 'bold ' + titleFont + 'px "Segoe UI", system-ui, sans-serif';
+        ctx.fillStyle = '#111';
+        ctx.textBaseline = 'top';
+        ctx.fillText(title, padX, y);
+        y += titleH;
+
+        for (const d of depths) {
+            const entries = byDepth.get(d);
+            // Depth header
+            const hdr = 'Depth ' + d + ' \u2014 ' + entries.length + ' tuple' + (entries.length !== 1 ? 's' : '');
+            ctx.font = 'bold ' + headerFont + 'px "Segoe UI", system-ui, sans-serif';
+            ctx.fillStyle = '#222';
+            ctx.fillText(hdr, padX, y);
+            y += headerFont + 4;
+            ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(padX, y); ctx.lineTo(contentW - padX, y); ctx.stroke();
+            y += headerH - headerFont - 4;
+
+            for (const data of entries) {
+                let curX = padX + 12;
+                ctx.font = '600 ' + baseFont + 'px "SF Mono", Consolas, monospace';
+                ctx.textBaseline = 'top';
+                if (data.path.length === 0) {
+                    ctx.fillStyle = '#888';
+                    ctx.fillText('(initial)', curX, y);
+                    curX += ctx.measureText('(initial)').width;
+                } else {
+                    for (const k of data.path) {
+                        ctx.fillStyle = VERTEX_COLORS[k];
+                        const ch = '\u03bc' + SUB[k];
+                        ctx.fillText(ch, curX, y);
+                        curX += ctx.measureText(ch).width;
+                    }
+                }
+                ctx.fillStyle = '#333';
+                ctx.font = baseFont + 'px "SF Mono", Consolas, monospace';
+                const arrow = '  \u2192  ';
+                ctx.fillText(arrow, curX, y);
+                curX += ctx.measureText(arrow).width;
+                const vecs = data.baseMap.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                if (showPQ && pqData && rays) {
+                    ctx.fillStyle = '#888';
+                    ctx.font = '600 11px "SF Mono", Consolas, monospace';
+                    ctx.fillText('base: ', curX, y);
+                    curX += ctx.measureText('base: ').width;
+                    ctx.fillStyle = '#333';
+                    ctx.font = baseFont + 'px "SF Mono", Consolas, monospace';
+                }
+                ctx.fillText(vecs, curX, y);
+                curX += ctx.measureText(vecs).width;
+                if (showPQ && pqData && rays) {
+                    const pqs = data.baseMap.map(v => computeMapQ(v, rays, pqData));
+                    ctx.fillStyle = '#888';
+                    ctx.font = '600 11px "SF Mono", Consolas, monospace';
+                    const pqLabel = '  (p,q): ';
+                    ctx.fillText(pqLabel, curX, y);
+                    curX += ctx.measureText(pqLabel).width;
+                    ctx.fillStyle = '#666';
+                    ctx.font = baseFont + 'px "SF Mono", Consolas, monospace';
+                    const pqStr = pqs.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                    ctx.fillText(pqStr, curX, y);
+                }
+                y += lineH;
+            }
+        }
+
+        return { offscreen: c, cssW: contentW, cssH: contentH };
+    }
+
+    function downloadTextFile(text, filename) {
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        URL.revokeObjectURL(link.href);
     }
 
     // ===========================================================
@@ -4645,6 +5023,7 @@
     document.getElementById('tupleNSelect').addEventListener('change', function() {
         const n = parseInt(this.value);
         buildVectorInputs(n);
+        if (document.getElementById('slPQToggle').checked) buildPQInputs(n);
         applyVectorTuple();
     });
     document.getElementById('applyMatrixBtn').addEventListener('click', applyMatrixInput);
@@ -4735,6 +5114,26 @@
             updateScatteringList();
         } else { slNeedsRebuild = true; }
     });
+    document.getElementById('slPQToggle').addEventListener('change', function() {
+        const isVectorTriple = getQuiverType() === 'scatter';
+        const pqInputs = document.getElementById('slPQInputs');
+        if (this.checked && isVectorTriple) {
+            pqInputs.style.display = 'flex';
+            const n = customVectors.length;
+            buildPQInputs(n);
+        } else {
+            pqInputs.style.display = 'none';
+        }
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList();
+        } else { slNeedsRebuild = true; }
+    });
+    // Rebuild list when u-vector inputs change
+    document.getElementById('uVectorInputContainer').addEventListener('input', () => {
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList();
+        } else { slNeedsRebuild = true; }
+    });
     function sgUpdateNodeDims() {
         const n = quiver.length;
         const lineH = 13;
@@ -4794,6 +5193,15 @@
     setupExportPopover('mgExportBtn', 'mgExportPopover', 'mgExportContainer');
     setupExportPopover('egExportBtn', 'egExportPopover', 'egExportContainer');
     setupExportPopover('sgExportBtn', 'sgExportPopover', 'sgExportContainer');
+    setupExportPopover('slExportBtn', 'slExportPopover', 'slExportContainer');
+
+    // Show/hide resolution row based on SL format selection
+    document.querySelectorAll('input[name="slFmt"]').forEach(r => {
+        r.addEventListener('change', () => {
+            const fmt = document.querySelector('input[name="slFmt"]:checked').value;
+            document.getElementById('slResRow').style.display = (fmt === 'png' || fmt === 'pdf') ? '' : 'none';
+        });
+    });
 
     function renderHighRes(canvas, ctx, drawFn, scale) {
         const dpr = window.devicePixelRatio || 1;
@@ -4879,6 +5287,33 @@
     document.getElementById('sgExportGo').addEventListener('click', () => {
         if (!currentSGGraph || !currentSGLayout) return;
         handleExport('sg', sgCanvas, sgCtx, drawScatteringGraph, 'scattering_graph');
+    });
+
+    document.getElementById('slExportGo').addEventListener('click', () => {
+        if (!slLastData) return;
+        const fmt = document.querySelector('input[name="slFmt"]:checked').value;
+        const pop = document.getElementById('slExportPopover');
+        pop.style.display = 'none';
+        const btn = document.getElementById('slExportBtn');
+        btn.textContent = 'Exporting\u2026'; btn.disabled = true;
+        setTimeout(() => {
+            if (fmt === 'txt') {
+                downloadTextFile(generateScatteringListText('txt'), 'scattering_list.txt');
+            } else if (fmt === 'md') {
+                downloadTextFile(generateScatteringListText('md'), 'scattering_list.md');
+            } else {
+                const scale = parseInt(document.querySelector('input[name="slRes"]:checked').value);
+                const result = renderScatteringListCanvas(scale);
+                if (result) {
+                    if (fmt === 'pdf') {
+                        doExportPdf(result.offscreen, result.cssW, result.cssH, 'scattering_list.pdf');
+                    } else {
+                        doExportPng(result.offscreen, 'scattering_list.png');
+                    }
+                }
+            }
+            btn.textContent = 'Export'; btn.disabled = false;
+        }, 50);
     });
 
     // Default: vector tuple quiver
