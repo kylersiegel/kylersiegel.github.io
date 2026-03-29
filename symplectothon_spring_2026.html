@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Symplectothon Spring 2026</title>
+  <meta name="description" content="Symplectothon Spring 2026: Recent developments in non-exact microlocal sheaf theory. April 16–19, 2026. Big Bear Lake, California." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-image: url('symplectothon_spring_2026/bbpic_cropped.jpg');
+      --overlay: rgba(0,0,0,.48);
+      --panel: rgba(255,255,255,.06);
+      --text: #ffffff;
+      --muted: #cfd8dc;
+      --accent: #7ecbf5;
+      --accent-2: #f5c77e;
+      --radius: 18px;
+      --shadow: 0 10px 45px rgba(0,0,0,.35);
+      --maxw: 960px;
+    }
+    html, body { height: 100%; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: #0b0f14;
+    }
+    .hero-bg {
+      position: fixed; inset: 0;
+      background: linear-gradient(var(--overlay), var(--overlay)), var(--bg-image) center / cover no-repeat;
+      background-attachment: fixed;
+      z-index: -2;
+    }
+    /* iOS Safari doesn't support background-attachment: fixed */
+    @supports (-webkit-touch-callout: none) {
+      .hero-bg { background-attachment: scroll; }
+    }
+
+    /* ── Header / Hero ── */
+    header.site {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 48px 16px 32px;
+    }
+    @media (max-width: 768px) {
+      header.site { padding: 32px 10px 24px; }
+    }
+    .brand {
+      width: min(100%, 1100px);
+      background: color-mix(in oklab, var(--panel) 90%, transparent);
+      backdrop-filter: blur(10px) saturate(1.15);
+      -webkit-backdrop-filter: blur(10px) saturate(1.15);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 48px);
+      text-align: center;
+    }
+    .brand-label {
+      text-transform: uppercase;
+      letter-spacing: .35em;
+      font-size: clamp(.75rem, 1.2vw, .95rem);
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: .3rem;
+    }
+    h1 {
+      margin: 0 0 .15rem 0;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 1.1;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: .6rem 0 .2rem;
+      font-size: clamp(.95rem, 1.3vw, 1.15rem);
+    }
+    .topic {
+      color: var(--accent-2);
+      font-style: italic;
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      margin: .4rem 0 1.4rem;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: .65rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(0,0,0,.35);
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: .95rem;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(0,0,0,.55);
+      border-color: rgba(255,255,255,.45);
+    }
+    .btn.accent {
+      border-color: rgba(126,203,245,.6);
+      background: rgba(126,203,245,.12);
+    }
+    .deadline {
+      color: var(--accent-2);
+      font-size: clamp(.9rem, 1.1vw, 1rem);
+      margin: .2rem 0 1rem;
+      letter-spacing: .02em;
+    }
+    .btn.apply {
+      border-color: rgba(245,199,126,.6);
+      background: rgba(245,199,126,.12);
+      color: var(--accent-2);
+    }
+
+    /* ── Main sections ── */
+    main { padding: 16px 10px 72px; }
+    .section {
+      width: min(100%, var(--maxw));
+      margin: 20px auto 0;
+      background: color-mix(in oklab, var(--panel) 90%, transparent);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(20px, 3vw, 32px);
+      backdrop-filter: blur(10px) saturate(1.15);
+    }
+    h2 {
+      margin: 0 0 .7rem 0;
+      font-size: clamp(1.1rem, 1.3vw + .7rem, 1.6rem);
+      border-left: 4px solid var(--accent);
+      padding-left: .65rem;
+    }
+    p, li { line-height: 1.75; }
+    ul { margin: .3rem 0 0 1.1rem; padding: 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Speaker cards ── */
+    .speakers {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .speakers { grid-template-columns: 1fr; }
+    }
+    .card {
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(0,0,0,.28);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .speaker-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,.2);
+    }
+    .card strong { font-size: 1.05rem; }
+    .card .muted { color: var(--muted); font-size: .92rem; }
+    .card a { color: var(--accent); font-size: .88rem; }
+
+    /* ── Previous editions ── */
+    .prev-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+    }
+    .prev-list li {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: .45rem;
+    }
+    .prev-list li a {
+      display: inline-block;
+      padding: .35rem .8rem;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      background: rgba(0,0,0,.25);
+      font-weight: 600;
+      font-size: .92rem;
+      white-space: nowrap;
+      transition: background .2s, border-color .2s;
+    }
+    .prev-list li a:hover {
+      background: rgba(0,0,0,.45);
+      border-color: rgba(255,255,255,.4);
+      text-decoration: none;
+    }
+
+    /* ── Funding ── */
+    .funding {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .funding img {
+      height: 52px;
+      flex-shrink: 0;
+    }
+    .funding p {
+      margin: 0;
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    footer {
+      color: #e0e0e0;
+      opacity: .75;
+      width: min(100%, var(--maxw));
+      margin: 24px auto 80px;
+      font-size: .88rem;
+      padding: 0 8px;
+      text-align: center;
+    }
+
+    .muted { color: var(--muted); }
+
+    /* ── Mobile refinements ── */
+    @media (max-width: 480px) {
+      .brand { padding: clamp(16px, 4vw, 24px); }
+      h1 { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+      .btn { padding: .55rem .85rem; font-size: .88rem; }
+      .section { padding: clamp(16px, 4vw, 24px); border-radius: 14px; }
+      .card { padding: 12px; gap: 10px; }
+      .speaker-img { width: 64px; height: 64px; }
+      .funding { flex-direction: column; align-items: flex-start; }
+      a { word-break: break-word; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <header class="site" role="banner">
+    <div class="brand">
+      <div class="brand-label">Southern California</div>
+      <h1>Symplectothon Spring 2026</h1>
+      <p class="subtitle">April 16&ndash;19, 2026 &middot; Big Bear Lake, California</p>
+      <p class="topic">&ldquo;Recent developments in non-exact microlocal sheaf theory&rdquo;</p>
+      <p class="deadline">Application deadline: <strong>Friday, April 3, 2026</strong></p>
+      <nav class="cta-row" aria-label="Quick links">
+        <a class="btn" href="#overview">Overview</a>
+        <a class="btn" href="#experts">Invited Experts</a>
+        <a class="btn" href="#faq">FAQ</a>
+        <a class="btn" href="#previous">Previous Editions</a>
+        <a class="btn apply" href="https://forms.gle/K1CaNELYP8rYEZrN7" target="_blank">Apply</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Overview -->
+    <section id="overview" class="section">
+      <h2>Overview</h2>
+      <p>
+        The <strong>Symplectothon</strong> is a weekend-long geometry workshop for researchers of all levels based in the greater Southern California area.
+        Participants will stay together in a large house near
+        <a href="https://www.google.com/maps/place/Big+Bear+Lake,+CA" target="_blank">Big Bear Lake</a>.
+        There will be a schedule of talks for which participants can sign up, as well as talks from our invited experts on the topic.
+      </p>
+      <p>
+        This is a great opportunity to learn about an exciting emerging topic in an environment that is engaging and intensive but also low-stakes and fun. It is also a chance to connect geometers across different universities in the greater Southern California area, and to explore new potential research directions and tools.
+      </p>
+    </section>
+
+    <!-- Topic -->
+    <section id="topic" class="section">
+      <h2>Topic</h2>
+      <p>
+        Our chosen topic this year is <em>Recent developments in non-exact microlocal sheaf theory</em>.
+        <!-- TODO: Add more description of the topic here -->
+        Check back soon for more details, including background reading materials and other resources.
+      </p>
+    </section>
+
+    <!-- Invited Experts -->
+    <section id="experts" class="section">
+      <h2>Invited Experts</h2>
+      <div class="speakers">
+        <div class="card">
+          <img src="symplectothon_spring_2026/experts/kuwagaki_1.jpg" alt="Tatsuki Kuwagaki" class="speaker-img">
+          <div>
+            <strong>Tatsuki Kuwagaki</strong><br>
+            <span class="muted">Kyoto University</span><br>
+            <a href="https://sites.google.com/view/tatsuki-kuwagaki/home" target="_blank">Homepage</a>
+          </div>
+        </div>
+        <div class="card">
+          <img src="symplectothon_spring_2026/experts/li_1.jpg" alt="Wenyuan Li" class="speaker-img">
+          <div>
+            <strong>Wenyuan Li</strong><br>
+            <span class="muted">University of Southern California</span><br>
+            <a href="https://wenyuanli1995-math.github.io/" target="_blank">Homepage</a>
+          </div>
+        </div>
+        <div class="card">
+          <img src="symplectothon_spring_2026/experts/shende_1.jpg" alt="Vivek Shende" class="speaker-img">
+          <div>
+            <strong>Vivek Shende</strong><br>
+            <span class="muted">University of Southern Denmark</span><br>
+            <a href="https://sites.google.com/view/vivek-shende/" target="_blank">Homepage</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <h2>FAQ</h2>
+
+      <p><strong>Do I need to already know about this topic?</strong><br>
+      You certainly do not need to be an expert, as this is meant to be a learning workshop! We will however assume familiarity with the basics of symplectic geometry. We will provide background reading materials and other resources beforehand to help all participants get maximum benefit out of the workshop.</p>
+
+      <p><strong>Do I need to give a talk?</strong><br>
+      This year, a larger portion of the talks will be given by our three invited experts, with fewer talks by other participants. That said, we still encourage you to indicate your interest and availability for giving a talk in the application form.</p>
+
+      <p><strong>Who can apply?</strong><br>
+      Anyone is welcome to apply! Selection will be based on several factors, including how beneficial we think this workshop could be for your career and research.</p>
+
+      <p><strong>Do I need to apply?</strong><br>
+      Yes, please apply if you are interested! Due to space limitations in the house we can only accommodate a certain number of participants.</p>
+
+      <p><strong>How do I apply?</strong><br>
+      The short application form is available <a href="https://forms.gle/K1CaNELYP8rYEZrN7" target="_blank">here</a>.
+      Please apply by <strong>Friday, April 3, 2026</strong> (11:59pm Pacific) for full consideration.
+      </p>
+
+      <p><strong>How will I get there?</strong><br>
+      Most likely we will rent a few large cars and drive together. Stay tuned for more details.</p>
+
+      <p><strong>How can I learn more?</strong><br>
+      If you have any inquiries, please feel free to send us an email at
+      <a href="mailto:kylersiegel@usc.edu">kylersiegel@usc.edu</a> or
+      <a href="mailto:sheel.ganatra@usc.edu">sheel.ganatra@usc.edu</a>.
+      </p>
+    </section>
+
+    <!-- Organizers -->
+    <section id="organizers" class="section">
+      <h2>Organizers</h2>
+      <p>
+        <!-- TODO: list organizers -->
+        TBA
+      </p>
+    </section>
+
+    <!-- Previous Editions -->
+    <section id="previous" class="section">
+      <h2>Previous Editions</h2>
+      <ul class="prev-list">
+        <li><a href="https://kylersiegel.xyz/symplectothon2024.html" target="_blank">Symplectothon 2024</a> <span class="muted" style="font-size:.88rem;">&mdash; Global Kuranishi charts</span></li>
+        <li><a href="https://www.jojhelfer.com/symplectothon/" target="_blank">Symplectothon 2022</a> <span class="muted" style="font-size:.88rem;">&mdash; Floer theory in symmetric products and Lagrangian link spectral invariants</span></li>
+      </ul>
+    </section>
+
+    <!-- Funding -->
+    <section id="funding" class="section">
+      <h2>Funding</h2>
+      <div class="funding">
+        <img src="symplectothon_spring_2026/NSF_logo.png" alt="National Science Foundation logo">
+        <p>
+          This workshop is supported by the National Science Foundation under grant
+          <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2533874" target="_blank">DMS-2533874</a>.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Symplectothon Spring 2026 &middot; Big Bear Lake, CA</p>
+  </footer>
+</body>
+</html>
