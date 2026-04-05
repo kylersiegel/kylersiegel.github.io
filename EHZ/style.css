@@ -385,6 +385,11 @@ ol li:before {
 #########################################################
 */
 
+/* Accessibility: prevent aria-hidden MathJax elements from being focusable */
+.MathJax nobr[aria-hidden="true"] {
+	pointer-events: none;
+}
+
 =======
 
 #container{
