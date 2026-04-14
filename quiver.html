@@ -1053,6 +1053,13 @@
                 </label>
                 <label for="slPermToggle">Up to permutation</label>
             </div>
+            <div class="toggle-control">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="slRawTripleToggle">
+                    <span class="slider"></span>
+                </label>
+                <label for="slRawTripleToggle">Include non-base-mapped triples</label>
+            </div>
             <div class="toggle-control" id="slPQControl">
                 <label class="toggle-switch">
                     <input type="checkbox" id="slPQToggle">
@@ -1408,6 +1415,7 @@
     let slNeedsRebuild = true;
     let slLastData = null; // { byDepth, depths, totalTuples, depth, capped }
     let sgShowRawTriple = false;
+    let slShowRawTriple = false;
     let sgShowDiagram = true;
     let sdScale = 1, sdPanX = 0, sdPanY = 0;
     let sdDragging = false, sdDragX = 0, sdDragY = 0, sdDragPanX = 0, sdDragPanY = 0;
@@ -4351,6 +4359,13 @@
                 // Format base-mapped tuple
                 const bm = data.baseMap;
                 const vecs = bm.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009');
+                // Format raw (non-base-mapped) tuple
+                let rawStr = '';
+                if (slShowRawTriple) {
+                    const raw = data.triple;
+                    rawStr = ' &nbsp;<span style="color:#888;font-size:11px">raw:</span> '
+                        + '<span style="color:#996600">' + raw.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009') + '</span>';
+                }
                 let pqStr = '';
                 if (pqData) {
                     const pqs = bm.map(v => computeMapQ(v, rays, pqData));
@@ -4358,12 +4373,12 @@
                         + ' &nbsp;<span style="color:#888;font-size:11px">(p,q):</span> '
                         + '<span style="color:#666">' + pqs.map(v => '(' + v[0] + ',\u2009' + v[1] + ')').join(',\u2009') + '</span>';
                 }
-                html += '<div class="sl-entry">' + mutSeq + '  \u2192  ' + (pqData ? pqStr : vecs) + '</div>';
+                html += '<div class="sl-entry">' + mutSeq + '  \u2192  ' + (pqData ? pqStr : vecs) + rawStr + '</div>';
             }
         }
         contentEl.innerHTML = html;
 
-        slLastData = { byDepth, depths, totalTuples, depth, capped: !!graph.capped, showPQ: !!pqData, pqData, rays };
+        slLastData = { byDepth, depths, totalTuples, depth, capped: !!graph.capped, showPQ: !!pqData, showRaw: slShowRawTriple, pqData, rays };
 
         let infoTxt = totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ' through depth ' + depth;
         if (graph.capped) infoTxt += ' <span class="warn">(truncated at ' + MAX_GRAPH_NODES + ' nodes)</span>';
@@ -4372,7 +4387,7 @@
 
     function generateScatteringListText(format) {
         if (!slLastData) return '';
-        const { byDepth, depths, totalTuples, depth, capped, showPQ, pqData, rays } = slLastData;
+        const { byDepth, depths, totalTuples, depth, capped, showPQ, showRaw, pqData, rays } = slLastData;
         const isMd = format === 'md';
         let out = '';
         const title = 'Scattering List (depth ' + depth + ', ' + totalTuples + ' tuple' + (totalTuples !== 1 ? 's' : '') + ')' + (capped ? ' [truncated]' : '');
@@ -4382,9 +4397,10 @@
             const hdr = 'Depth ' + d + ' \u2014 ' + entries.length + ' tuple' + (entries.length !== 1 ? 's' : '');
             if (isMd) {
                 out += '## ' + hdr + '\n\n';
-                out += showPQ
-                    ? '| Mutation | Base-mapped tuple | (p,q) coordinates |\n|----------|-------------------|--------------------|\n'
-                    : '| Mutation | Base-mapped tuple |\n|----------|-------------------|\n';
+                const cols = ['Mutation', 'Base-mapped tuple'];
+                if (showRaw) cols.push('Raw tuple');
+                if (showPQ) cols.push('(p,q) coordinates');
+                out += '| ' + cols.join(' | ') + ' |\n|' + cols.map(() => '---').join('|') + '|\n';
             } else {
                 out += hdr + '\n';
             }
@@ -4396,21 +4412,22 @@
                     mutSeq = data.path.map(k => '\u03bc' + SUB[k]).join('');
                 }
                 const vecs = data.baseMap.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                const rawVecs = showRaw ? data.triple.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ') : '';
                 let pqStr = '';
                 if (showPQ && pqData && rays) {
                     const pqs = data.baseMap.map(v => computeMapQ(v, rays, pqData));
                     pqStr = pqs.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
                 }
                 if (isMd) {
-                    out += showPQ
-                        ? '| ' + mutSeq + ' | ' + vecs + ' | ' + pqStr + ' |\n'
-                        : '| ' + mutSeq + ' | ' + vecs + ' |\n';
+                    const cells = [mutSeq, vecs];
+                    if (showRaw) cells.push(rawVecs);
+                    if (showPQ) cells.push(pqStr);
+                    out += '| ' + cells.join(' | ') + ' |\n';
                 } else {
-                    if (pqStr) {
-                        out += '  ' + mutSeq + '  \u2192  base: ' + vecs + '  (p,q): ' + pqStr + '\n';
-                    } else {
-                        out += '  ' + mutSeq + '  \u2192  ' + vecs + '\n';
-                    }
+                    let line = '  ' + mutSeq + '  \u2192  ' + vecs;
+                    if (showRaw) line += '  raw: ' + rawVecs;
+                    if (pqStr) line += '  (p,q): ' + pqStr;
+                    out += line + '\n';
                 }
             }
             out += '\n';
@@ -4420,7 +4437,7 @@
 
     function renderScatteringListCanvas(scale) {
         if (!slLastData) return null;
-        const { byDepth, depths, totalTuples, depth, capped, showPQ, pqData, rays } = slLastData;
+        const { byDepth, depths, totalTuples, depth, capped, showPQ, showRaw, pqData, rays } = slLastData;
 
         const baseFont = 13, headerFont = 15, titleFont = 16;
         const lineH = Math.round(baseFont * 1.6);
@@ -4433,7 +4450,7 @@
         let totalHeaders = depths.length;
         for (const d of depths) totalLines += byDepth.get(d).length;
         const contentH = titleH + totalHeaders * headerH + totalLines * lineH + padY * 2;
-        const contentW = showPQ ? 1000 : 700;
+        const contentW = (showPQ || showRaw) ? 1000 : 700;
 
         const c = document.createElement('canvas');
         c.width = Math.round(contentW * scale);
@@ -4497,6 +4514,18 @@
                 }
                 ctx.fillText(vecs, curX, y);
                 curX += ctx.measureText(vecs).width;
+                if (showRaw) {
+                    const rawVecs = data.triple.map(v => '(' + v[0] + ', ' + v[1] + ')').join(', ');
+                    ctx.fillStyle = '#888';
+                    ctx.font = '600 11px "SF Mono", Consolas, monospace';
+                    const rawLabel = '  raw: ';
+                    ctx.fillText(rawLabel, curX, y);
+                    curX += ctx.measureText(rawLabel).width;
+                    ctx.fillStyle = '#996600';
+                    ctx.font = baseFont + 'px "SF Mono", Consolas, monospace';
+                    ctx.fillText(rawVecs, curX, y);
+                    curX += ctx.measureText(rawVecs).width;
+                }
                 if (showPQ && pqData && rays) {
                     const pqs = data.baseMap.map(v => computeMapQ(v, rays, pqData));
                     ctx.fillStyle = '#888';
@@ -5110,6 +5139,12 @@
         } else { slNeedsRebuild = true; }
     });
     document.getElementById('slPermToggle').addEventListener('change', () => {
+        if (document.getElementById('tabSL').classList.contains('active')) {
+            updateScatteringList();
+        } else { slNeedsRebuild = true; }
+    });
+    document.getElementById('slRawTripleToggle').addEventListener('change', function() {
+        slShowRawTriple = this.checked;
         if (document.getElementById('tabSL').classList.contains('active')) {
             updateScatteringList();
         } else { slNeedsRebuild = true; }
