@@ -106,6 +106,10 @@ details .math-body p { margin-top: 8px; }
       <input type="checkbox" id="show-uni-dots">
       <label for="show-uni-dots" style="font-size:0.85em" class="has-tip">Unicuspidal dots<span class="tip">Show a dot at each \((p/q,\; p/(d-bm))\) for unicuspidal curves (\(\delta=0\)) with \(p \ge q\). These are the "exact" constraint points from curves with one cusp.</span></label>
     </div>
+    <div class="ctrl-row">
+      <input type="checkbox" id="show-sesqui-dots">
+      <label for="show-sesqui-dots" style="font-size:0.85em" class="has-tip">Sesquicuspidal dots<span class="tip">Show a dot at each \((p/q,\; p/(d-bm))\) for sesquicuspidal curves (\(\delta>0\)) with \(p \ge q\). These are the constraint points from curves with a cusp and nodes.</span></label>
+    </div>
     <div class="ctrl-row" style="margin-top:4px;">
       <button id="reset-zoom" style="font-size:0.8em; padding:3px 10px; background:#2a2d38; color:#c0c8d8; border:1px solid #3a3d48; border-radius:4px; cursor:pointer;">Reset zoom</button>
       <span style="font-size:0.75em; color:#6a6e7a;">(drag on plot to zoom)</span>
@@ -133,6 +137,7 @@ details .math-body p { margin-top: 8px; }
   <div class="legend-item"><div class="legend-swatch" style="background:#ff6c6c"></div> Volume bound</div>
   <div class="legend-item"><div class="legend-swatch" style="background:#ffaa22"></div> Conjectural folding curve</div>
   <div class="legend-item"><div class="legend-swatch" style="background:#44ddaa; width:8px; height:8px; border-radius:50%;"></div> Unicuspidal dots</div>
+  <div class="legend-item"><div class="legend-swatch" style="background:#cc66ff; width:8px; height:8px; border-radius:50%;"></div> Sesquicuspidal dots</div>
   <div class="legend-item"><div class="legend-swatch" style="background:rgba(100,200,100,0.4)"></div> Constraint lines</div>
 </div>
 
@@ -498,6 +503,22 @@ function draw() {
     }
   }
 
+  // Sesquicuspidal dots
+  if (document.getElementById('show-sesqui-dots').checked) {
+    ctx.fillStyle = '#cc66ff';
+    for (let ci = 0; ci < maxCI; ci++) {
+      const [p, q, d, m, delta] = CURVES[ci];
+      if (delta === 0 || q === 0 || p < q) continue;
+      const area = d - paramB * m;
+      if (area <= 0) continue;
+      const x0 = p / q;
+      const L = p / area;
+      if (x0 < xLo || x0 > xHi || L < yMin || L > yMaxFinal) continue;
+      const sx = toSX(x0), sy = toSY(L);
+      ctx.beginPath(); ctx.arc(sx, sy, 3, 0, 2 * Math.PI); ctx.fill();
+    }
+  }
+
   // Drag selection rectangle
   if (dragStart && dragEnd) {
     ctx.fillStyle = 'rgba(108,140,255,0.12)';
@@ -602,6 +623,7 @@ document.getElementById('show-volume').addEventListener('change', draw);
 document.getElementById('show-lines').addEventListener('change', draw);
 document.getElementById('show-folding').addEventListener('change', draw);
 document.getElementById('show-uni-dots').addEventListener('change', draw);
+document.getElementById('show-sesqui-dots').addEventListener('change', draw);
 
 canvas.addEventListener('mousemove', e => {
   const rect = canvas.getBoundingClientRect();
