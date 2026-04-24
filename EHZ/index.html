@@ -61,6 +61,17 @@
 	</script>
 
 	
+	<script type="text/javascript">
+		// After MathJax finishes rendering, remove focusable links from
+		// aria-hidden elements so they don't trap keyboard focus (a11y fix).
+		MathJax.Hub.Register.StartupHook("End", function () {
+			var hidden = document.querySelectorAll('[aria-hidden="true"] a');
+			for (var i = 0; i < hidden.length; i++) {
+				hidden[i].setAttribute('tabindex', '-1');
+			}
+		});
+	</script>
+
 <!--  END OF SCRIPTS FOR NOW -->
 	
 <!-- IN CASE AN INEER CSS NEEDED -->
@@ -922,7 +933,7 @@ contact type boundary</i>. Pr&eacute;publication d'Orsay num&eacute;ro 32 (29/4/
 		
 		<li id="V1"> <b>[V1]</b>
 			-	C. Viterbo, <i>Metric and isoperimetric problems in symplectic geometry.</i>, 
-				J. Amer. Math. Soc. 13 (2000), no. 2, 411–431.
+				J. Amer. Math. Soc. 13 (2000), no. 2, 411ï¿½431.
 		</li>
 		
 		
