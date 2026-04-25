@@ -64,18 +64,22 @@
 	<script type="text/javascript">
 		// After MathJax finishes rendering, remove focusable links from
 		// aria-hidden elements so they don't trap keyboard focus (a11y fix).
-		MathJax.Hub.Register.StartupHook("End", function () {
-			var hidden = document.querySelectorAll('[aria-hidden="true"] a');
+		function fixAriaHiddenFocus() {
+			var hidden = document.querySelectorAll('[aria-hidden="true"] a[href]');
 			for (var i = 0; i < hidden.length; i++) {
 				hidden[i].setAttribute('tabindex', '-1');
 			}
-		});
+		}
+		MathJax.Hub.Queue(function () { fixAriaHiddenFocus(); });
+		MathJax.Hub.Register.MessageHook("End Process", function () { fixAriaHiddenFocus(); });
 	</script>
 
 <!--  END OF SCRIPTS FOR NOW -->
 	
 <!-- IN CASE AN INEER CSS NEEDED -->
 	<style type="text/css">
+		/* a11y: prevent focusable elements inside aria-hidden from receiving focus */
+		[aria-hidden="true"] a { pointer-events: none; }
 	</style>
 
 	
