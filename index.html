@@ -53,7 +53,6 @@ p {
 	.column {
 	    float: left;
 	    padding: 10px;
-	    height: 300px; /* Should be removed. Only for demonstration */
 	}
 
 	.left {
@@ -146,6 +145,92 @@ p {
 .tooltip a:hover {
   color: #2ecc71;
   text-decoration: underline;
+}
+
+.accessibility-details {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+}
+
+.accessibility-details > summary {
+  list-style: none;
+}
+
+.accessibility-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.accessibility-btn {
+  display: inline-block;
+  margin: 30px auto 10px auto;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s, opacity 0.2s;
+  vertical-align: middle;
+  outline: none;
+}
+
+.accessibility-btn img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+}
+
+.accessibility-btn:hover {
+  transform: scale(1.1);
+  opacity: 0.85;
+}
+
+.accessibility-btn:focus-visible {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+.accessibility-message {
+  position: absolute;
+  bottom: calc(100% - 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  max-width: 90vw;
+  padding: 14px 18px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+  color: #333;
+  z-index: 1000;
+}
+
+.accessibility-message::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.accessibility-message::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 9px;
+  border-style: solid;
+  border-color: #ccc transparent transparent transparent;
+  margin-top: 1px;
 }
 </style>
 
@@ -682,6 +767,33 @@ Your browser does not support the video tag.
 <p style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">
   Accessibility: please feel free to contact me at any time to request more accessible versions of resources on this website.
 </p>
+
+<div class="accessibility-footer" style="clear:both; width:100%; text-align:center; padding-top:20px;">
+  <details class="accessibility-details" id="accessibility-details">
+    <summary class="accessibility-btn" aria-label="Accessibility information"><img src="accessibility_logo.jpg" alt=""></summary>
+    <div id="accessibility-message" class="accessibility-message" role="region" aria-label="Accessibility statement">
+      Please feel free to contact Kyler directly if you have accessibility requests for any of the resources on this site (e.g. tex source code for PDFs).
+    </div>
+  </details>
+</div>
+
+<script>
+  document.addEventListener('click', function (e) {
+    var details = document.getElementById('accessibility-details');
+    if (details && details.open && !details.contains(e.target)) {
+      details.open = false;
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.keyCode === 27) {
+      var details = document.getElementById('accessibility-details');
+      if (details && details.open) {
+        details.open = false;
+      }
+    }
+  });
+</script>
 
 </body>
 </html>
