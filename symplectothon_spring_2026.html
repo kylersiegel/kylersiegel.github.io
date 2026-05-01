@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-image: url('symplectothon_spring_2026/bbpic_cropped.jpg');
+      --bg-image: url('symplectothon_spring_2026/group_pic.jpeg');
       --overlay: rgba(0,0,0,.48);
       --panel: rgba(255,255,255,.06);
       --text: #ffffff;
@@ -243,6 +243,21 @@
 
     .muted { color: var(--muted); }
 
+    /* ── Top banner ── */
+    #top-message {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: lightblue;
+      color: #000;
+      padding: 10px;
+      text-align: center;
+      z-index: 100;
+      font-size: 20px;
+      font-family: sans-serif;
+    }
+
     /* ── Mobile refinements ── */
     @media (max-width: 480px) {
       .brand { padding: clamp(16px, 4vw, 24px); }
@@ -257,6 +272,9 @@
   </style>
 </head>
 <body>
+  <div id="top-message">
+    Symplectothon Spring 2026 took place April 16&ndash;19. Please stay tuned for the next iteration.
+  </div>
   <div class="hero-bg" aria-hidden="true"></div>
 
   <header class="site" role="banner">

@@ -232,6 +232,13 @@ p {
   border-color: #ccc transparent transparent transparent;
   margin-top: 1px;
 }
+
+@media (max-width: 768px) {
+  .sem-video {
+    width: 32%;
+    height: auto;
+  }
+}
 </style>
 
 <script type="text/x-mathjax-config">
@@ -640,17 +647,17 @@ Your browser does not support the video tag.
   <source src="trajectory3d.mp4" type="video/mp4">
 Your browser does not support the video tag.
 </video> -->
-	<video width="300" controls aria-label="Hamiltonian flow training optimization">
+	<video class="sem-video" width="300" controls aria-label="Hamiltonian flow training optimization">
   <source src="training.mp4" type="video/mp4">
   <track kind="descriptions" srclang="en" label="English description" src="training_desc.vtt">
 Your browser does not support the video tag.
 </video>
-<video width="300" controls aria-label="Hamiltonian flow moment map projection">
+<video class="sem-video" width="300" controls aria-label="Hamiltonian flow moment map projection">
   <source src="trajectory.mp4" type="video/mp4">
   <track kind="descriptions" srclang="en" label="English description" src="trajectory_desc.vtt">
 Your browser does not support the video tag.
 </video>
-<video width="300" controls aria-label="Hamiltonian flow 3D projection">
+<video class="sem-video" width="300" controls aria-label="Hamiltonian flow 3D projection">
   <source src="trajectory3d.mp4" type="video/mp4">
   <track kind="descriptions" srclang="en" label="English description" src="trajectory3d_desc.vtt">
 Your browser does not support the video tag.
