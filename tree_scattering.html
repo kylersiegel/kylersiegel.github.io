@@ -111,6 +111,15 @@
     .tab-content { display: none; flex: 1; min-height: 0; }
     .tab-content.active { display: flex; }
 
+    /* ---- pill toggles: the label text IS the switch ---- */
+    label.tgl { display:inline-flex; align-items:center; cursor:pointer; user-select:none; }
+    label.tgl input { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+    label.tgl span { padding:2px 10px; border:1px solid #b9c2ca; border-radius:12px; color:#8a949c;
+                     background:#f6f7f8; font-size:0.95em; line-height:1.25; white-space:nowrap;
+                     transition: background .12s, color .12s, border-color .12s; }
+    label.tgl:hover span { border-color:#3498db; color:#5a6670; }
+    label.tgl input:checked + span { color:#fff; background:#3498db; border-color:#2980b9; font-weight:600; }
+
     /* ---- main area ---- */
     .main-area {
         gap: 12px;
@@ -126,11 +135,17 @@
     #xgControls .hint { color:#999; font-family: inherit; }
     #xgSearch { font: 12.5px ui-monospace, Menlo, monospace; padding: 2px 7px; width: 220px; border:1px solid #999; border-radius:4px; }
     #xgCount { color:#8c6d00; font-weight:bold; }
+    #xgHiInfo { color:#8c6d00; font-weight:bold; }
     #xgZlev { color:#777; }
     .xg-figwrap { border: 1px solid #ccc; background:#fff; border-radius: 6px; position: relative; }
     #xgFig { display:block; width:100%; height: min(72vh, 820px); cursor:grab; }
     #xgStatus { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#888; font-size:14px; }
     .xg-note { color:#555; font-size: 12.5px; margin: 7px 0 0; }
+    .xg-legend { margin: 10px 0 0; color:#3b4650; font-size: 12.5px; display: flex; flex-wrap: wrap;
+                 gap: 6px 18px; align-items: center; }
+    .xg-li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .xg-legend-foot { flex-basis: 100%; color:#98a2ab; font-size: 11.5px; margin-top: 2px; }
+    #xgChecks { color:#7a848d; font-size: 11.5px; }
     .xg-dot { display:inline-block; width:10px; height:10px; border-radius:5px; border:1px solid #333; vertical-align:-1px; margin-right:4px; }
     #xgTables { margin-top: 12px; font-size: 13px; }
     #xgTables summary { cursor:pointer; color:#24406e; }
@@ -142,6 +157,8 @@
     #xgFig .pent { fill:#e9f0fa; stroke:#8aa3c9; stroke-width:1; }
     #xgFig .pentname { font: bold 15px Georgia, serif; text-anchor:middle; fill:#24406e; }
     #xgFig .pentu { font: 11px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#4a5f85; }
+    #xgFig .bigname, #xgFig .bigu { display:none; }
+    #xgFig.showregions .bigname, #xgFig.showregions .bigu { display:inline; }
     #xgFig .bigname { font: bold 17px Georgia, serif; text-anchor:middle; fill:#333; }
     #xgFig .bigu { font: 12px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#666; }
     #xgFig .forku { font: 10px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#8c0f36; }
@@ -150,8 +167,24 @@
     #xgFig .forku3 { font: 10.5px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#a6506c; }
     #xgFig .fregion { font: italic 8.5px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#3f6a3f; }
     #xgFig .stripu { font: 7.5px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#333; }
+    /* the layer rules (#xgFig.z4 .lv4 etc.) outrank a plain class hide, so the
+       untoggled state must be enforced with !important */
+    #xgFig:not(.showratio) .xgratio { display:none !important; }
     #xgFig .xgratio { font: 9px ui-monospace, Menlo, monospace; text-anchor:middle; fill:#0d6a52; display:none; }
     #xgFig.showratio .xgratio { display:inline; }
+    #xgFig.showratio .forku { display:none; }   /* toggle swaps root triples for interval brackets */
+    #xgFig.showratio .xgratio.lv2, #xgFig.showratio .xgratio.lv3, #xgFig.showratio .xgratio.lv4 { display:none; }
+    #xgFig.showratio.z2 .xgratio.lv2 { display:inline; }
+    #xgFig.showratio.z3 .xgratio.lv3 { display:inline; }
+    #xgFig.showratio.z4 .xgratio.lv4 { display:inline; }
+    #xgFig .xgmv-cur { stroke:#fff; stroke-width:2.5; fill-opacity:.55; }
+    #xgFig .xgmv-trail { opacity:.22; }
+    #xgFig .xgmv-hop { fill:none; stroke-width:3; opacity:.35; }
+    #xgFig .xgmv-ghost { font: bold 12px ui-monospace, Menlo, monospace; text-anchor:middle;
+                         paint-order: stroke; stroke:#fff; stroke-width:3px; }
+    #xgFig .pent, #xgFig .pentname, #xgFig .pentu, #xgFig .bigname, #xgFig .bigu { cursor:pointer; }
+    #xgMovieInfo { flex-basis:100%; color:#8c6d00; font-weight:bold; min-height:0; }
+    #xgMovieInfo:empty { display:none; }
     #xgFig .pentname, #xgFig .pentu, #xgFig .bigname, #xgFig .bigu, #xgFig .forku,
     #xgFig .forku1, #xgFig .forku2, #xgFig .forku3, #xgFig .fregion, #xgFig .stripu, #xgFig .xgratio
         { paint-order: stroke; stroke:#fff; stroke-width:3px; }
@@ -166,9 +199,15 @@
     #xgFig .nk { fill:#1a1a1a; } #xgFig .nc { fill:#fff; }
     #xgFig .nf0 { fill:#a80f3c; stroke:#7c082a; } #xgFig .nf1 { fill:#cf5f83; stroke:#a3405f; } #xgFig .nf2 { fill:#eab6c6; stroke:#c791a1; }
     #xgFig .nd:hover { stroke-width:2.6; }
+    #xgFig .nd.nest { stroke:#0d6a52; stroke-width:2.6; }
+    #xgFig .nd.nest0 { stroke:#0d6a52; stroke-width:5; }
     #xgFig .nd.hit { stroke:#e0a400; stroke-width:4; }
+    #xgFig .xg-hide { opacity:.05; pointer-events:none; }
+    #xgFig.hidetriples .forku, #xgFig.hidetriples .forku1, #xgFig.hidetriples .forku2,
+    #xgFig.hidetriples .forku3, #xgFig.hidetriples .stripu { display:none !important; }
     #xgTip { position:fixed; display:none; background:#20242c; color:#f2f2ee; padding:9px 12px; border-radius:6px;
-             font: 12px/1.5 ui-monospace, Menlo, monospace; white-space:pre; pointer-events:none; z-index:60; max-width:520px; }
+             font: 12px/1.5 ui-monospace, Menlo, monospace; white-space:pre-wrap; overflow-wrap:break-word;
+             pointer-events:none; z-index:60; max-width:520px; }
 
     /* ---- anchor fan tab ---- */
     #tabAnchors.active { display: block; overflow-y: auto; }
@@ -215,7 +254,8 @@
                      paint-order: stroke; stroke:#fff; stroke-width:3px; pointer-events:none; }
     #afFig .af-lab.big { font-size: 13px; font-weight: bold; }
     #afTip { position:fixed; display:none; background:#20242c; color:#f2f2ee; padding:9px 12px; border-radius:6px;
-             font: 12px/1.5 ui-monospace, Menlo, monospace; white-space:pre; pointer-events:none; z-index:60; max-width:560px; }
+             font: 12px/1.5 ui-monospace, Menlo, monospace; white-space:pre-wrap; overflow-wrap:break-word;
+             pointer-events:none; z-index:60; max-width:480px; }
     #afPinned { margin-top: 8px; font: 12px/1.55 ui-monospace, Menlo, monospace; color:#2c3e50;
                 background:#f4f6f8; border:1px solid #d8dee4; border-radius:6px; padding:8px 12px;
                 white-space:pre-wrap; display:none; }
@@ -526,12 +566,12 @@
         <span class="vector-extras" id="pqMutate"
               title="mutate at wall i: v_i -> -v_i, v_j -> v_j + max(v_j∧v_i,0)v_i; fan data follows when valid; pressing the same μ twice undoes exactly"></span>
         <div class="sep"></div>
-        <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
-            <input type="checkbox" id="pqToggle"> (p,q)
+        <label class="tgl">
+            <input type="checkbox" id="pqToggle"><span>(p,q)</span>
         </label>
-        <label style="display:none;align-items:center;gap:5px;cursor:pointer" id="dmToggleWrap"
+        <label class="tgl" style="display:none" id="dmToggleWrap"
                title="curve class dL − mE (F1 configuration only)">
-            <input type="checkbox" id="dmToggle"> (d,m)
+            <input type="checkbox" id="dmToggle"><span>(d,m)</span>
         </label>
         <div class="sep"></div>
         <label>order &lt;</label>
@@ -588,12 +628,33 @@
     <div class="tab-content" id="tabExchange">
         <div class="xg-inner">
             <div id="xgControls">
+                <span>fork depth <select id="xgForkDepth" title="how many generations of each fork tree to compute and draw (they continue forever as complete binary trees); deeper = more seeds, a bit slower — zoom in to see the deep generations">
+                    <option value="4">4</option>
+                    <option value="6" selected>6</option>
+                    <option value="8">8 (slower)</option>
+                    <option value="10">10 (slow)</option>
+                    <option value="12">12 (slow)</option>
+                </select></span>
                 <span>labels: <select id="xgLmode">
                     <option value="auto" selected>auto — more appear as you zoom in</option>
                     <option value="all">all</option>
                     <option value="min">minimal</option>
                 </select> <span id="xgZlev"></span></span>
-                <span><label title="under every seed: the ratios max(p,q)/min(p,q) of its three u-values, in decimal — the seed's bracket on the anchor-fan ratio line"><input type="checkbox" id="xgRatios"> u-ratios</label></span>
+                <span><label class="tgl" title="under every seed: the interval of contact ratios p/q spanned by its u-curves — its bracket on the anchor-fan ratio line (base curves (1,1),(1,2),(2,1) and the boundary class omitted; e.g. the triple (1,1),(1,8),(1,10) shows [8, 10]) — labels appear progressively as you zoom in, like the u-triples The label belongs to the SEED it sits next to (vertices, not edges). Toggling swaps the fork-root u-triple labels for these interval brackets."><input type="checkbox" id="xgRatios"><span>p/q intervals</span></label></span>
+                <span><label class="tgl" title="show/hide the u-triple labels on seeds — turn off to see the interval structure uncluttered"><input type="checkbox" id="xgTriples" checked><span>u-triples</span></label></span>
+                <span><label class="tgl" title="show the Warkentin names of the unbounded regions (they float in the open area of the face they name — off by default to avoid orphan-looking headers)"><input type="checkbox" id="xgRegions"><span>region names</span></label></span>
+                <span>symmetry <select id="xgSym" title="step through the McDuff–Siegel symmetries at your own pace: each ▶ applies the chosen symmetry to all markers in tandem (◀ undoes). Markers label CURVES, drawn on the region (face) carrying that curve\u2019s u-value — pentagons are genuine 2-faces (the pentagon mutation relation), not layout artifacts. Beyond the drawn strip the orbit continues numerically: the marker parks and a ⇢ label shows the true value. Click any region to add or remove a marker.">
+                    <option value="off" selected>off</option>
+                    <option value="phi">Φ (glide)</option>
+                    <option value="psi">Ψ (reflection)</option>
+                    <option value="tau">τ (branch swap)</option>
+                </select> <button id="xgStepB" title="step the symmetry backwards">&#9664;</button><button id="xgStepF" title="apply the symmetry once">&#9654;</button></span>
+                <span id="xgMovieInfo"></span>
+                <span title="strongly dim everything except the subtree(s) whose p/q brackets are CONTAINED in this range — e.g. 8 to 10 leaves exactly the [8,10] interval tree at full strength (a seed spanning [10,12] is dimmed); clear either field to restore everything">focus p/q <input id="xgHiLo" type="number" min="1" step="any" style="width:4em"> to <input id="xgHiHi" type="number" min="1" step="any" style="width:4em"> <span id="xgHiInfo"></span></span>
+                <span>label size <input type="range" id="xgLblSize" min="0.5" max="3" step="0.1" value="1"
+                    style="width:80px;vertical-align:middle" title="how BIG all labels are (pure size; does not change which labels are visible)"><span id="xgLblSizeVal"></span></span>
+                <span>label detail <input type="range" id="xgLblDetail" min="0.4" max="4" step="0.1" value="1"
+                    style="width:80px;vertical-align:middle" title="how SOON labels appear: multiplies the effective zoom used for the reveal thresholds — ×2 shows deeper label layers (and more interval digits) at half the zoom, ×0.5 defers them; the view itself is unchanged"><span id="xgLblDetailVal"></span></span>
                 <span>find u: <input id="xgSearch" placeholder="e.g. 1,10  or  1,1 1,10 1,8" spellcheck="false"> <span id="xgCount"></span></span>
                 <span class="hint">scroll to zoom, drag to pan, double-click to reset, hover a seed for its toric model</span>
             </div>
@@ -601,18 +662,16 @@
                 <svg id="xgFig" preserveAspectRatio="xMidYMid meet"></svg>
                 <div id="xgStatus">Open this tab to compute&hellip;</div>
             </div>
-            <p class="xg-note" id="xgChecks"></p>
-            <p class="xg-note">
-                <span class="xg-dot" style="background:#1a1a1a"></span>transjective chain (thick line)&emsp;
-                <span class="xg-dot" style="background:#fff"></span>mutation-cyclic strip seed&emsp;
-                <span class="xg-dot" style="background:#a80f3c"></span>fork root (u-triple printed)&emsp;
-                <span class="xg-dot" style="background:#cf5f83"></span>fork gen 1&emsp;
-                <span class="xg-dot" style="background:#eab6c6"></span>fork gen 2/3 (dashes = the complete binary trees continue)&emsp;
-                <i style="color:#3f6a3f">green italic</i> = the region a fork introduces between its two branches.
-                Free-floating text labels name <b>regions</b> (faces of the graph), not seeds &mdash; each region
-                carries the one u-value shared by all seeds around it (hover a label).
-                See About &rarr; &ldquo;F&#8321; exchange graph tab&rdquo; for the identification with Warkentin&rsquo;s Figure 10.3 and what everything means.
-            </p>
+            <div class="xg-legend">
+                <span class="xg-li"><span class="xg-dot" style="background:#1a1a1a"></span>chain</span>
+                <span class="xg-li"><span class="xg-dot" style="background:#fff"></span>cyclic seed</span>
+                <span class="xg-li"><span class="xg-dot" style="background:#a80f3c"></span>fork root</span>
+                <span class="xg-li"><span class="xg-dot" style="background:#cf5f83"></span>deeper forks</span>
+                <span class="xg-li"><span class="xg-dot" style="background:#fff;border:2px solid #0d6a52;width:10px;height:10px;border-radius:6px"></span>green ring = nested seed <i style="color:#8a949c">(forward tree = nested subintervals)</i></span>
+                <span class="xg-li"><span class="xg-dot" style="background:#fff;border:4px solid #0d6a52;width:8px;height:8px;border-radius:8px"></span>thick = entry point <i style="color:#8a949c">(parent not nested)</i></span>
+                <span class="xg-li" id="xgChecks"></span>
+                <div class="xg-legend-foot">floating names label regions (faces), not seeds &middot; hover anything for details &middot; full guide: About &rarr; &ldquo;F&#8321; exchange graph tab&rdquo;</div>
+            </div>
             <details id="xgTables"><summary>fork &harr; u-triple tables</summary><div id="xgTablesBody"></div></details>
         </div>
     </div>
@@ -625,7 +684,11 @@
                     <option value="auto" selected>auto</option>
                     <option value="fan">fan (full plane)</option>
                     <option value="strip">strip (stretched)</option>
-                </select><span class="af-help" data-info="Fan = the honest scattering plane (both τ-halves).&#10;Strip = the chamber side stretched over an interval, linear in P/Q — far easier to read for a narrow window.&#10;Auto picks fan for the full window, strip for a restricted one. Instant.">?</span></span>
+                </select><span class="af-help" data-info="Fan = the honest scattering plane (both τ-halves).&#10;Strip = the chamber side stretched over an interval, linear in p/q — far easier to read for a narrow window.&#10;Auto picks fan for the full window, strip for a restricted one. Instant.">?</span></span>
+                <span>strip scale <select id="afScale">
+                    <option value="linear" selected>linear in p/q</option>
+                    <option value="tree">tree (equal cones)</option>
+                </select><span class="af-help" data-info="Strip view only. Linear = honest p/q axis (deep cascades are sub-pixel: e.g. in [8,10] everything beyond the three big cones lives in 0.2% of the width). Tree = every cone equal width — the abstract binary interval tree as a strip; the axis becomes nonlinear but every cascade is fully visible. Instant.">?</span></span>
                 <span>rays:
                     <label><input type="checkbox" id="afShowUni" checked> uni</label><span class="af-help" data-info="Unicurves: the δ = 0 curves — the potential anchors.&#10;Thick blue = currently an anchor. Instant toggle.">?</span>
                     <label><input type="checkbox" id="afShowSes" checked> sesqui</label><span class="af-help" data-info="Sesquicurves: δ ≥ 1 terms of the actual diagram.&#10;Orange ray = no unicurve there; orange dot = terms sharing a unicurve ray (hover it). Instant toggle.">?</span>
@@ -635,7 +698,7 @@
                     <option value="o15" selected>those of order &le; 15</option>
                     <option value="o40">those of order &le; 40</option>
                     <option value="all">all found</option>
-                </select><span class="af-help" data-info="Anchor unicurves are ALWAYS drawn; this adds the non-anchor ones,&#10;filtered by order = P − 3Q (the t-degree of the curve's term). Instant.">?</span></span>
+                </select><span class="af-help" data-info="Anchor unicurves are ALWAYS drawn; this adds the non-anchor ones,&#10;filtered by order = p − 3q (the t-degree of the curve's term). Instant.">?</span></span>
                 <span>family depth <select id="afDepth">
                     <option value="8">8</option>
                     <option value="10" selected>10</option>
@@ -649,9 +712,9 @@
                     <option value="240">240</option>
                     <option value="600">600 (narrow windows)</option>
                     <option value="1500">1500 (very narrow)</option>
-                </select><span class="af-help" data-info="Angular resolution: sweep all (P,Q) with Q up to this.&#10;Shrink the window before raising Q. Needs Recompute.">?</span></span>
-                <span>ratio P/Q from <input id="afWinLo" type="number" value="3" min="3" step="any" style="width:4.5em">
-                    to <input id="afWinHi" type="number" value="16" min="3" step="any" style="width:4.5em"><span class="af-help" data-info="Restrict to contact ratios P/Q in this range (e.g. 8 to 10).&#10;Narrow window ⇒ high Q affordable; view auto-fits. Needs Recompute.">?</span></span>
+                </select><span class="af-help" data-info="Angular resolution: sweep all (p,q) with Q up to this.&#10;Shrink the window before raising Q. Needs Recompute.">?</span></span>
+                <span>ratio p/q from <input id="afWinLo" type="number" value="3" min="3" step="any" style="width:4.5em">
+                    to <input id="afWinHi" type="number" value="16" min="3" step="any" style="width:4.5em"><span class="af-help" data-info="Restrict to contact ratios p/q in this range (e.g. 8 to 10).&#10;Narrow window ⇒ high Q affordable; view auto-fits. Needs Recompute.">?</span></span>
                 <span>sesqui order <select id="afOrder">
                     <option value="0">off</option>
                     <option value="10" selected>10</option>
@@ -677,11 +740,11 @@
                 <span class="af-li"><span class="af-dot af-dashed" style="color:#b03fb0"></span>&phi;&#8308;</span>
                 <span class="af-li"><span class="af-dot af-dashed" style="color:#999"></span>initial walls</span>
                 <span class="af-li"><span class="af-swatch" style="background:repeating-linear-gradient(45deg,#d7dce2 0 2px,#5f6a76 2px 4px)"></span>unresolved cascade <i>(structure below current resolution — hover it)</i></span>
-                <div class="af-legend-foot">left half = chamber side (P/Q &gt; 3) &nbsp;&middot;&nbsp; right = &tau;-mirror &nbsp;&middot;&nbsp; pale = outside the window &nbsp;&mdash;&nbsp; hover for basics, click to pin details, more in About &rarr; &ldquo;F&#8321; anchor fan tab&rdquo;</div>
+                <div class="af-legend-foot">left half = chamber side (p/q &gt; 3) &nbsp;&middot;&nbsp; right = &tau;-mirror &nbsp;&middot;&nbsp; pale = outside the window &nbsp;&mdash;&nbsp; hover for basics, click to pin details, more in About &rarr; &ldquo;F&#8321; anchor fan tab&rdquo;</div>
             </div>
             <details id="afKeys" open><summary>key facts (how to read this picture)</summary>
                 <ul>
-                    <li>A ray direction &hArr; a contact pair (P,Q). The curves on that ray form a degree column dL&minus;mE with m = 3d&minus;P&minus;Q, and every unicurve pairing is <b>linear in d</b>.</li>
+                    <li>A ray direction &hArr; a contact pair (p,q). The curves on that ray form a degree column dL&minus;mE with m = 3d&minus;P&minus;Q, and every unicurve pairing is <b>linear in d</b>.</li>
                     <li>So the existence filter is a window in d: max(lower bounds) &le; d &le; min(upper bounds). Each unicurve caps from one side only: <b>upper-type</b> if 3m &gt; d, <b>lower-type</b> if 3m &lt; d.</li>
                     <li><b>Cones</b> = maximal ranges where the upper anchor is constant; the <b>rim band</b> shows the lower anchor. Conjecture: a curve exists &hArr; &delta; &ge; 0 and it pairs &ge; 0 with just these two anchors (verified against the actual diagram through order 63).</li>
                     <li>Above <b>&phi;&#8308; = (7+3&radic;5)/2 &asymp; 6.854</b> the lower anchor is always E, i.e. just m &ge; 0. Below &phi;&#8308; the McDuff&ndash;Schlenk Fibonacci classes (5,1) = 2L, (13,2) = 5L, (34,5) = 13L, &hellip; own the lower side, accumulating at &phi;&#8308;.</li>
@@ -1044,7 +1107,7 @@
             <p>
                 The anchor fan shows where the condition &ldquo;C &sdot;<sub>res</sub> U &ge; 0 for
                 <i>every</i> unicurve U&rdquo; reduces to just <b>two</b> inequalities. A ray direction fixes
-                the contact pair (P,Q); the curves on that ray form a column dL&minus;mE with m = 3d&minus;P&minus;Q
+                the contact pair (p,q); the curves on that ray form a column dL&minus;mE with m = 3d&minus;P&minus;Q
                 and d free, and every pairing is linear in d. Each unicurve is intrinsically
                 <i>upper-type</i> (3m &gt; d: its inequality reads d &le; &hellip;) or <i>lower-type</i>
                 (3m &lt; d: it reads d &ge; &hellip;), so the all-unicurves filter is a d-interval:
@@ -1073,8 +1136,8 @@
             </p>
             <p>
                 <b>&tau;</b> is the symmetry of (F&#8321;, N) swapping the two branches of the node: it fixes
-                curve classes and transposes contact pairs, (P,Q) &harr; (Q,P). The left half of the picture
-                is the chamber side (s = P/Q &gt; 3), the right half its &tau;-mirror; mirror cones are
+                curve classes and transposes contact pairs, (p,q) &harr; (Q,P). The left half of the picture
+                is the chamber side (s = p/q &gt; 3), the right half its &tau;-mirror; mirror cones are
                 labelled by the transposed pair (e.g. (1,4) opposite (4,1) &mdash; the same curve 2L&minus;E,
                 tangent to the other branch). Both halves converge to the vertical ray of E.
             </p>
@@ -1091,7 +1154,7 @@
                 ratio range (e.g. 8..10): the direction count scales with the window width, so narrow windows
                 admit far higher resolution Q (up to 1500) and expose the deep self-similar cascades; the view
                 auto-fits the window's wedge and pale flanks mark the excluded ranges. Note that <b>sesquicurves mostly live on the
-                same rays as unicurves</b>: the direction fixes (P,Q), the &delta; = 0 member of the column
+                same rays as unicurves</b>: the direction fixes (p,q), the &delta; = 0 member of the column
                 (if realized) is the unicurve, and the &delta; &ge; 1 members at other degrees d are
                 sesquicurves &mdash; hover any blue ray to see them listed; an <b>orange dot at the rim</b> of a blue
                 ray marks exactly these shared directions. Full orange rays mark the directions that carry
@@ -1112,11 +1175,82 @@
                 is the tree child of its two adjacent owners. F&#8321; configuration only.
             </p>
 
+            <h3>Symmetries: the Orevkov twists (McDuff&ndash;Siegel)</h3>
+            <p>
+                The pair (F&#8321;, N) carries birational symmetries beyond the branch swap &tau;: the
+                <b>generalized Orevkov twists</b> &Phi;, &Psi; of McDuff&ndash;Siegel (Geiser-type involution
+                compositions in Koll&aacute;r&rsquo;s description). For F&#8321; (K = 6): &Phi; sends a
+                (p,q)-well-placed curve to (6p&minus;q, p), and &Psi; sends it to (q+6(p&minus;6q), p&minus;6q)
+                for p/q &gt; 6. On the exchange graph these act as <b>automorphisms realized by mutation
+                words</b>: &tau; is the mirror, &Phi; is the glide reflection (the strip translation /
+                AR translate — the u-chain recurrence u&#8342;&#8330;&#8321; = 6u&#8342; &minus; u&#8342;&#8331;&#8321;
+                <i>is</i> &Phi;), and together they generate an infinite dihedral symmetry group. The three
+                &Phi;-orbits of (1,1), (2,1), (4,1) are the three strands of the F&#8321; ellipsoid-embedding
+                staircase, accumulating at 3+2&radic;2 &asymp; 5.828 (the transjective cascade of the anchor
+                fan); &Psi; folds the ratio line at 7 and maps the trunks (2n,1) to the descending lower
+                cascade (13,2), (25,4), (37,6), &hellip; while &Phi; maps them to the ascending one (35,6),
+                (47,8), (59,10), &hellip; — so the lower-anchor structure at 6 is exactly the twist orbit of
+                the trunk family. On the m = 0 classes (pullbacks from &#8450;&#8473;&sup2;) the relevant twist
+                is &Phi;&#8327; (K = 7), whose orbits of (5,1) and (13,2) are the McDuff&ndash;Schlenk
+                Fibonacci classes accumulating at &phi;&#8308;. The <b>symmetry stepper</b> in the exchange graph tab walks all three generators: colored
+                markers start on the base regions 1, 2, 3 (click any region to add or remove markers) and each
+                &#9654; press applies the symmetry to all markers in tandem (&#9664; steps back) — &Phi; marches along the strip (chamber-oriented
+                regions move by (p,q) &mapsto; (6p&minus;q, p), mirror-oriented ones by the &tau;-conjugate
+                glide), while &Psi; and &tau; are involutions, so their markers bounce between partners
+                (&Psi; pairs the P-chain with the base/I-chain — the Geiser reflection). Markers whose image
+                lies beyond the drawn strip park with an &#10005;; the view expands to follow the markers. The twists do NOT relate the even strips [8,10], [10,12], &hellip;
+                to each other — those are only combinatorially isomorphic (identical fork-tree quivers).
+                This account is partial; see master.md &sect;5.8 for the recorded details and open ends.
+            </p>
+
+            <p>
+                <b>Below-figure caption, expanded.</b> The seed count reflects the current strip distance
+                (16) and fork depth; everything is recomputed in your browser with exact BigInt mutations.
+                &ldquo;All checks pass&rdquo; asserts: the graph is 3-regular away from its boundary,
+                &mu;&#7522;&sup2; = id on every edge, the wall wedges transform by the Fomin&ndash;Zelevinsky
+                rule, the engine&rsquo;s float arithmetic agrees with an exact recomputation wherever provably
+                exact, and the Markov-type invariant is &equiv; 8 on every seed. Dashed stubs mean the
+                complete binary fork trees continue beyond the computed depth.
+            </p>
+
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v0.71</b> — exchange graph: nested seeds now distinguish ENTRY POINTS (nested seed whose parent is not nested — the roots of the maximal pure-refinement subtrees) with a thick green ring; descendants keep the thin ring; tooltips say which is which.</li>
+                <li><b>v0.70</b> — exchange graph: restored planarity — the v0.52 widening let adjacent fork canopies interleave (total tree halfwidth exceeded half the root spacing); the branch width is now derived from the measured minimum gap between same-side fork roots (whole-tree halfwidth ≤ 46% of it), with child ratio 1/2, the exact sibling-noncrossing bound.</li>
+                <li><b>v0.69</b> — exchange graph: label controls split into two independent knobs — "label size" (pure font scale) and "label detail" (×0.4–×4, how soon the zoom-gated layers and interval digits appear); the previous single slider conflated both.</li>
+                <li><b>v0.68</b> — exchange graph: the label-size slider now also scales the effective zoom used for label gating — increasing it reveals deeper label layers (and more interval digits) without changing the view, decreasing it hides them sooner; the zoom readout shows the effective value.</li>
+                <li><b>v0.67</b> — exchange graph: u-triple labels get their own pill (default on — turn off to read the interval structure clean), and a "label size" slider (×0.5–×3) scales all labels globally on top of the zoom-adaptive sizing.</li>
+                <li><b>v0.66</b> — exchange graph: the green "+(p,q)" inserted-curve labels are gone (the information remains in every seed's tooltip as "inserts the curve …"); legend slimmed accordingly.</li>
+                <li><b>v0.65</b> — exchange graph: the p/q filter dims again rather than removes (per reconsideration — context is useful), but much more strongly than before (5% opacity, whole seed groups + labels + edges + faces, non-interactive); containment semantics kept; renamed "focus p/q".</li>
+                <li><b>v0.64</b> — exchange graph: the p/q filter uses CONTAINMENT, not intersection — a seed appears iff its bracket fits inside the window, so "8 to 10" shows exactly the [8,10] interval tree (a [10,12]-bracket seed touching 10 no longer leaks in); edges require both endpoints contained.</li>
+                <li><b>v0.63</b> — exchange graph: the p/q filter now REMOVES irrelevant structure instead of dimming it — seeds (with all their labels), edges, dangling stubs and pentagon faces whose intervals miss the range disappear entirely, leaving just the relevant subtree(s); renamed "show only p/q"; live "N of M seeds shown" readout; clearing a field restores the full graph.</li>
+                <li><b>v0.62</b> — exchange graph: the green inserted-curve labels no longer float in the wedge between branches — they hug their fork vertex (screen-constant offset on the subtree side) with a "+" prefix meaning "this fork inserted this curve"; seed tooltips state the inserted curve; legend reworded.</li>
+                <li><b>v0.61</b> — exchange graph: (1) the floating unbounded-region name headers are off by default behind a "region names" pill (they label open faces, which read as orphans over the tall trees); (2) NESTED-SUBDIVISION SEEDS get a green ring — verified characterization: the point of return removes the strict-middle ratio, which is hereditary and equivalent to "every descending mutation weaves the fresh curve between the retained two, forever" (420 seeds; these are exactly the seeds whose forward tree refines their p/q interval into nested subintervals); tooltip + legend updated; (3) the highlight-p/q inputs show live "N of M dimmed" feedback.</li>
+                <li><b>v0.60</b> — all checkboxes replaced by pill toggles: the label text itself is the switch (lit blue when on, muted when off) — (p,q) and (d,m) in the header, uni/sesqui rays in the anchor fan, p/q intervals in the exchange graph. The underlying checkbox semantics (and all listeners) are unchanged.</li>
+                <li><b>v0.59</b> — exchange graph: fixed interval labels leaking through when the toggle is off — the generic zoom-layer CSS rules (higher specificity) were force-showing the lv2/lv3/lv4 interval labels once zoomed (or with labels: all); the untoggled state is now enforced unconditionally.</li>
+                <li><b>v0.58</b> — exchange graph: interval labels now hug their seed at a constant screen distance at every zoom (previously the layout-unit offset pointed back along the parent edge and grew with zoom, so they read as edge labels); seed tooltips always include the triple's p/q ratios and the seed's p/q interval.</li>
+                <li><b>v0.57</b> — exchange graph: the "p/q intervals" toggle now visibly swaps the fork-root labels (u-triples when off, interval brackets when on) instead of stacking both; all user-facing text standardized to lowercase p/q (was inconsistently capitalized).</li>
+                <li><b>v0.56</b> — exchange graph: p/q interval labels render with zoom-adaptive precision (3 decimals at home view, up to 7 zoomed in), and always with at least enough digits to distinguish the endpoints — degenerate-looking labels like [5.830, 5.830] can no longer occur.</li>
+                <li><b>v0.55</b> — seeing the deep [8,10]-type structure: (1) clicking a hatched cascade zone in the anchor fan now zooms the window to it and recomputes (recursive descent into the interval tree); (2) new strip-view "tree scale" — every cone equal width, i.e. the abstract binary interval tree drawn as a strip, with boundary-valued axis ticks (the linear axis mathematically cannot show cascades: beyond the three big [8,10] cones everything lives in 0.2% of the width); (3) exchange graph gains a "highlight p/q" range that dims every seed whose u-interval misses it, making the relevant fork subtree pop.</li>
+                <li><b>v0.54</b> — Return/Enter triggers the relevant compute: in the header (walls, order, fan data) it presses Compute; in the anchor fan's control row it presses Recompute. (The exchange graph rebuilds automatically on change, so it needs no shortcut.)</li>
+                <li><b>v0.53</b> — exchange graph: the caption below the figure reduced to a minimal chip legend (chain / cyclic seed / fork root / deeper forks / green = curve a fork introduces), a short "N seeds · exact arithmetic · all checks pass" clause, and one faint footer line; the full check list and drawing conventions moved to About.</li>
+                <li><b>v0.52</b> — exchange graph: fork trees default two generations deeper (6; new 12 option), drawn wider and taller (canvas grew to fit); orphan floating labels fixed — big-region name/value labels are now emitted only for regions genuinely living in the outer unbounded area (≥ 2 strip-arc members), so fork-interior u-values like (1,6) are labeled only at their fork (green italic), not as free-floating headers.</li>
+                <li><b>v0.51</b> — symmetry stepper: markers are more transparent; Φ orbits continue numerically to 60 steps beyond the drawn strip (the marker parks at its last visible region and a live ⇢ label shows the curve's true u-value; narration marks off-strip values with ⇢, ✕ only for genuinely ended orbits); tooltip explains that markers label curves, drawn on the region (face) carrying that curve — pentagons being genuine 2-faces (the pentagon mutation relation).</li>
+                <li><b>v0.50</b> — exchange graph fixes after the deep-tree update: (1) rebuilds (e.g. changing fork depth) no longer stack duplicate event handlers (which multiplied zoom speed, broke find-u and made ▶ jump several steps); (2) the p/q interval labels are placed at structural offsets that scale with the graph and sit opposite the subtree, so they hug their seed at any zoom instead of floating away; (3) toggle tooltip states that interval labels belong to seeds (vertices), not edges.</li>
+                <li><b>v0.49</b> — exchange graph: "symmetry movie" renamed to plain "symmetry" (it is a manual stepper now), and the step narration moved to its own full-width row so selecting a symmetry no longer reflows the control bar onto the next line.</li>
+                <li><b>v0.48</b> — exchange graph: fork-tree depth is selectable (4 / 6 / 8 / 10 generations); placement is now self-similar (offsets and vertical steps shrink geometrically), so deeper trees stay inside the figure and zooming in reveals them at constant density; node radii shrink with generation; deep-generation triples appear at the deepest label layer.</li>
+                <li><b>v0.47</b> — symmetry movie is now self-paced: ◀ ▶ buttons step all markers backwards/forwards through the precomputed orbits (step counter shown); the automatic once-per-second advance is gone.</li>
+                <li><b>v0.46</b> — exchange graph: the symmetry overlay is now a MOVIE — colored markers on the base regions 1, 2, 3 (click regions to add/remove) hop in tandem to their images each second under the chosen generator, leaving arrow trails; involutions bounce; markers park with ✕ when their image leaves the drawn strip; the view auto-expands; ▶ replays. Replaces the static arc overlay, which was hard to parse.</li>
+                <li><b>v0.45</b> — exchange graph: the p/q interval labels now use the same zoom-layer system as the u-triple labels (fork roots always, deeper generations and strip seeds appear as you zoom in) and the same constant-screen-size scaling — no more overlapping label pile-ups at the home view.</li>
+                <li><b>v0.44</b> — anchor fan tooltips: truncated lists now say "(+N more)" instead of a bare ellipsis (which read as cut-off text), and the cascade hover includes the expand hint directly.</li>
+                <li><b>v0.43</b> — exchange graph: the symmetry overlay becomes a selector with all three generators — Φ orbits (glide arrows, as before), Ψ pairs and τ pairs (double-headed arcs matching each visible region with its partner; Ψ pairs the P-chain with the base/I-chain, exhibiting the Geiser reflection).</li>
+                <li><b>v0.42</b> — tooltips (anchor fan and exchange graph) now wrap long lines instead of spilling past the box edge.</li>
+                <li><b>v0.41</b> — exchange graph: the per-seed labels now show honest interval notation for the contact-ratio bracket spanned by the seed's u-curves (e.g. [6, 8]), omitting the base curves (1,1),(1,2),(2,1) and the boundary class; toggle renamed "p/q intervals" (was the cryptic "u-ratios" with dot-separated decimals).</li>
+                <li><b>v0.40</b> — twist orbits moved to their natural home: removed the anchor-fan overlay; the exchange graph gains a "Φ orbits" toggle drawing the glide orbits as colored arrows through the region sequences (1 → P₁ → τ⁻P₁ → …, etc.; dashed = τ-mirror I-families). Per-curve Φ/Ψ images remain in the anchor fan's pinned details.</li>
+                <li><b>v0.39</b> — anchor fan: optional "twist orbits" overlay (Φ staircase strands → 3+2√2; Φ/Ψ images of the trunks = the lower cascades at 6; Φ₇ Fibonacci classes → φ⁴), with per-curve Φ/Ψ images in the pinned details; About gains a "Symmetries: the Orevkov twists" section (concise; longer notes in master.md).</li>
                 <li><b>v0.38</b> — exchange graph: optional "u-ratios" toggle labels every seed with the decimal ratios max(p,q)/min(p,q) of its three u-values — the seed's bracket on the anchor-fan ratio line (fork seeds bracket nested subintervals; ∂ = the boundary class).</li>
                 <li><b>v0.37</b> — exchange graph: the region labels (which name faces, not seeds — including the unbounded regions whose labels float in open space) now explain themselves on hover, and the tab legend says so.</li>
-                <li><b>v0.36</b> — anchor fan: STRIP VIEW — a restricted window (e.g. 8..10) now renders by default as a stretched interval, linear in P/Q: cones as vertical strips, the two pure decompositions as rows above/below, rays as vertical lines, φ⁴ marker, axis ticks; the fan/strip choice is a display-only "view" selector (auto = fan for the full plane, strip for a window).</li>
+                <li><b>v0.36</b> — anchor fan: STRIP VIEW — a restricted window (e.g. 8..10) now renders by default as a stretched interval, linear in p/q: cones as vertical strips, the two pure decompositions as rows above/below, rays as vertical lines, φ⁴ marker, axis ticks; the fan/strip choice is a display-only "view" selector (auto = fan for the full plane, strip for a window).</li>
                 <li><b>v0.35</b> — anchor fan: sub-resolution structure is now shown honestly — consecutive cones/band segments thinner than the eye can see are overlaid with a hatched "unresolved cascade" zone (tooltip: how many hide there, that the true decomposition is infinite, and how to expand it). Fixes the misleading hairline "gap" between (8,1) and (10,1).</li>
                 <li><b>v0.34</b> — anchor fan redesigned per feedback: the wheel now shows the INTERSECTED cones (each with a unique upper + lower anchor pair, matching the table rows), while two rim bands show the pure decompositions — inner = upper anchors, outer = lower anchors. Upper-anchor labels still group the wheel at the run bisectors.</li>
                 <li><b>v0.33</b> — anchor fan: hovering a cone now highlights only the cone (gold outline); its anchor rays light up on click-pin instead, and stay lit until unpinned. Hovering a ray still highlights that ray.</li>
@@ -1127,8 +1261,8 @@
                 <li><b>v0.28</b> — anchor fan: every toolbar control gets a "?" help marker with a plain-language explanation (what unicurves/sesquicurves are, order vs family depth vs resolution, what needs Recompute), shown in the styled tooltip.</li>
                 <li><b>v0.27</b> — anchor fan: unicurve rays that also carry sesqui terms now show an orange rim dot (previously those sesquicurves were visible only in tooltips, making the sesqui population look misleadingly sparse); sesqui order options extended to 16 and 18; the table summary counts shared vs sesqui-only directions.</li>
                 <li><b>v0.26</b> — the header controls (k, walls, μ buttons, (p,q)/(d,m) toggles, order, Compute) are dimmed on the exchange-graph and anchor-fan tabs with a note, making their scope explicit: they configure the Scattering diagram tab only; the other tabs are self-contained (the anchor fan's sesqui order is its own independent computation).</li>
-                <li><b>v0.25</b> — anchor fan: the unicurve-ray selector now filters by curve order P − 3Q ("anchors only / + order ≤ 15 / + order ≤ 40 / everything") instead of the internal BFS-depth jargon; anchor rays are always drawn when unis are on.</li>
-                <li><b>v0.24</b> — anchor fan: the window control is now two labelled fields ("ratio P/Q from … to …") instead of the cryptic "s ∈ 3..16" range syntax.</li>
+                <li><b>v0.25</b> — anchor fan: the unicurve-ray selector now filters by curve order p − 3q ("anchors only / + order ≤ 15 / + order ≤ 40 / everything") instead of the internal BFS-depth jargon; anchor rays are always drawn when unis are on.</li>
+                <li><b>v0.24</b> — anchor fan: the window control is now two labelled fields ("ratio p/q from … to …") instead of the cryptic "s ∈ 3..16" range syntax.</li>
                 <li><b>v0.23</b> — anchor fan: ratio-window control (e.g. 8..10 — restricting the sweep lets Q go much higher, so narrow windows resolve the deep cascades; view auto-fits the window's wedge, pale flanks mark the excluded ranges) with Q options up to 1500; a collapsible "key facts" box under the figure summarizing how to read the picture (linear-in-d columns, two anchors, φ⁴, trunk/sliver structure, walls = unicurve rays, sesqui-on-uni-rays).</li>
                 <li><b>v0.22</b> — anchor fan: legend below the figure condensed to three compact lines (cones = upper anchor, rim = lower anchor, ray key, navigation); the explanations moved into this About section, including why a cone can list several lower anchors (the two decompositions have independent breakpoints).</li>
                 <li><b>v0.21</b> — anchor fan: the uni and sesqui checkboxes now sit side by side under a single &ldquo;rays:&rdquo; label, with the unicurve density dropdown as its own separate control.</li>
@@ -3241,6 +3375,17 @@ window.addEventListener('resize', () => {
     if (modalCtx) drawPlanarTree(modalPlanar, modalCtx.T, modalCtx.ci, modalCtx.ptNames, modalCtx.view);
 });
 
+// Enter in the header or the (p,q) bar = Compute
+for (const holder of [document.querySelector('.header'), document.getElementById('pqBar')]) {
+    if (holder) holder.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' && ev.target.tagName !== 'BUTTON') {
+            ev.preventDefault();
+            const btn = document.getElementById('computeBtn');
+            if (btn && !btn.disabled) btn.click();
+        }
+    });
+}
+
 // ---- tabs ----
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -3276,9 +3421,9 @@ compute();
 (function () {
 'use strict';
 const XG_DEPTH = 16;      // strip distance; exact BigInt mutation, no float ceiling
-const XG_FORK_CAP = 4;    // expand fork trees this far (drawn to gen 3; they provably
-                          // continue as complete binary trees, and their interiors
-                          // grow doubly exponentially, so we do not compute them)
+let XG_FORK_CAP = 6;      // expand fork trees this far (selectable in the UI; they
+                          // provably continue as complete binary trees, so any cap
+                          // is a truncation of the same self-similar structure)
 const XG_ENGINE_SAFE = 94906265;   // sqrt(2^53): engine Number wedges exact below this
 
 const B = x => BigInt(x);
@@ -3410,6 +3555,39 @@ function xgMutate(state, i) {
         if (pt[0] === null || pt[1] === null) return { error: 'coordinate overflow' };
     return { vs: nvs, pqData: npq };
 }
+// nested-subdivision seed: unique arrow-decreasing mutation (point of return)
+// removes the STRICT-MIDDLE folded ratio.  Verified on the whole graph: this
+// is hereditary and equivalent to "every descending mutation, forever, weaves
+// the fresh curve strictly between the two retained ones" — the seeds whose
+// entire forward tree subdivides their p/q bracket into nested subintervals.
+// relevance interval of a seed on the p/q line: span of its non-base u-ratios
+function seedIv(state) {
+    const rs = state.pq.slice(1).map(u => {
+        const [a, b] = u;
+        if (a === 0 || b === 0) return null;
+        return Math.max(a, b) / Math.min(a, b);
+    }).filter(r => r !== null && r > 2.0001);
+    if (!rs.length) return null;
+    return [Math.min.apply(null, rs), Math.max.apply(null, rs)];
+}
+
+function nestedSeed(state) {
+    const fr = u => (u[0] === 0 || u[1] === 0) ? Infinity : Math.max(u[0], u[1]) / Math.min(u[0], u[1]);
+    const rs = state.pq.slice(1).map(fr);
+    const so = [...rs].sort((a, b) => a - b);
+    if (!(so[0] < so[1] && so[1] < so[2])) return false;
+    const w = (a, b) => a[0] * b[1] - a[1] * b[0];
+    const arr = vs => Math.abs(w(vs[0], vs[1])) + Math.abs(w(vs[0], vs[2])) + Math.abs(w(vs[1], vs[2]));
+    const a0 = arr(state.vs);
+    let dec = -1, cnt = 0;
+    for (let i = 0; i < 3; i++) {
+        const r = xgMutate(state, i);
+        if (!r || r.error) continue;
+        if (arr(r.vs) < a0) { dec = i; cnt++; }
+    }
+    return cnt === 1 && rs[dec] === so[1];
+}
+
 function xgEngineSafe(state) {
     for (const arr of [state.vs, state.pq]) for (const pt of arr)
         if (Math.abs(pt[0]) > XG_ENGINE_SAFE || Math.abs(pt[1]) > XG_ENGINE_SAFE) return false;
@@ -3554,16 +3732,39 @@ function buildExchangeGraph() {
         }
     });
     const forkGen = new Map(), forkParent = new Map();
-    const FORK_OFF = [0.55, 0.27, 0.135];
+    // self-similar placement: offsets and vertical steps shrink geometrically,
+    // so any depth fits in bounded height and zooming in reveals the deeper
+    // generations at constant screen density (labels are zoom-gated anyway)
+    // FORK_X0 is set from the measured spacing of fork roots before placement:
+    // the whole-tree halfwidth is FORK_X0·Σ(1/2)^g = 2·FORK_X0, kept below 46%
+    // of the smallest gap between same-side roots so canopies never overlap
+    // (child ratio 1/2 is the exact sibling-noncrossing bound).
+    let FORK_X0 = 0.72;
+    const forkX = g => FORK_X0 * Math.pow(0.5, g);
+    const forkY = g => 0.95 * Math.pow(0.8, g);
     function placeFork(id, x, y, gen, side, parentId) {
         pos.set(id, { x, y });
         forkGen.set(id, gen);
         forkParent.set(id, parentId);
-        if (gen >= FORK_OFF.length) return;
+        if (gen >= XG_FORK_CAP - 1) return;
         const kids = nodes[id].adj.filter(a => nodes[a].quiver.fork &&
             nodes[a].quiver.totalArrows > nodes[id].quiver.totalArrows && !pos.has(a));
-        const off = FORK_OFF[gen];
-        kids.forEach((k, j) => placeFork(k, x + (j === 0 ? -off : off), y + side * 0.85, gen + 1, side, id));
+        kids.forEach((k, j) => placeFork(k, x + (j === 0 ? -forkX(gen) : forkX(gen)), y + side * forkY(gen), gen + 1, side, id));
+    }
+    {
+        const rxs = { top: [], bot: [] };
+        for (const f of forkRoots) {
+            const parent = f.adj.find(a => !nodes[a].quiver.fork);
+            const pp = parent !== undefined ? pos.get(parent) : null;
+            if (!pp || pp.y === 0) continue;
+            rxs[pp.y > 0 ? 'top' : 'bot'].push(pp.x);
+        }
+        let minGap = Infinity;
+        for (const k of ['top', 'bot']) {
+            const a = rxs[k].sort((u, v) => u - v);
+            for (let i = 0; i + 1 < a.length; i++) minGap = Math.min(minGap, a[i + 1] - a[i]);
+        }
+        FORK_X0 = Math.min(0.72, 0.23 * (isFinite(minGap) ? minGap : 3.2));
     }
     for (const f of forkRoots) {
         const parent = f.adj.find(a => !nodes[a].quiver.fork);
@@ -3571,6 +3772,17 @@ function buildExchangeGraph() {
         if (!pp || pp.y === 0) continue;
         placeFork(f.id, pp.x, pp.y * 2, 0, pp.y, parent);
     }
+    const nestMemo = new Map();
+    const isNestedId = id => {
+        if (!nestMemo.has(id)) nestMemo.set(id, nodes[id].quiver.fork && nestedSeed(nodes[id].state));
+        return nestMemo.get(id);
+    };
+    const isEntryNested = id => {
+        if (!isNestedId(id)) return false;
+        const n = nodes[id];
+        const par = n.adj.find(a => nodes[a].quiver.totalArrows < n.quiver.totalArrows);
+        return par === undefined || !isNestedId(par);
+    };
     function freshU(id) {
         const par = forkParent.get(id);
         if (par === undefined) return null;
@@ -3606,7 +3818,7 @@ function buildExchangeGraph() {
         if (pentagons.some(p => p.k === k)) continue;
         const mem = [...s].filter(id => pos.has(id));
         if (mem.length < 3) continue;
-        if (!mem.some(id => !nodes[id].quiver.fork && pos.get(id).y !== 0)) continue;
+        if (mem.filter(id => !nodes[id].quiver.fork && pos.get(id).y !== 0).length < 2) continue;
         const mx = mem.reduce((a, id) => a + pos.get(id).x, 0) / mem.length;
         const ys = mem.map(id => pos.get(id).y).filter(y => y !== 0);
         const side = Math.sign(ys.reduce((a, b) => a + b, 0)) || 1;
@@ -3617,43 +3829,75 @@ function buildExchangeGraph() {
     const PXU = 100, PYU = 100;
     let minX = 1e9, maxX = -1e9;
     for (const p of pos.values()) { minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x); }
-    const SW = (maxX - minX + 2) * PXU, SH = 12.0 * PYU;
+    const SW = (maxX - minX + 2) * PXU, SH = 14.5 * PYU;
     const px = x => (x - minX + 1) * PXU;
     const py = y => SH / 2 - y * PYU;
     function nodeInfo(n) {
         const cls = n.quiver.fork ? ('fork (generation ' + (forkGen.get(n.id) ?? '>3') + ' from strip)')
             : (n.quiver.cyclic ? 'strip, mutation-cyclic seed' : 'transjective chain (acyclic seed)');
         const s = n.state;
+        const rl = s.pq.slice(1).map(u => {
+            const [a, b] = u;
+            return (a === 0 || b === 0) ? '∂' : (Math.max(a, b) / Math.min(a, b)).toFixed(4);
+        });
+        const rsp = s.pq.slice(1).map(u => {
+            const [a, b] = u;
+            if (a === 0 || b === 0) return null;
+            return Math.max(a, b) / Math.min(a, b);
+        }).filter(r => r !== null && r > 2.0001);
+        const ival = rsp.length >= 2
+            ? '[' + Math.min.apply(null, rsp).toFixed(5) + ', ' + Math.max.apply(null, rsp).toFixed(5) + ']'
+            : (rsp.length === 1 ? rsp[0].toFixed(5) : '—');
+        const nst = isNestedId(n.id);
+        const ent = nst && isEntryNested(n.id);
+        const frU = n.quiver.fork ? freshU(n.id) : null;
         return 'seed ' + n.id + ' — ' + cls + ', BFS dist ' + n.dist +
+            (frU ? '\ninserts the curve ' + frU + ' (relative to its parent seed)' : '') +
+            (nst ? '\nNESTED-SUBDIVISION SEED' + (ent ? ' — ENTRY POINT (its parent is not nested; the pure-refinement regime starts here)' : ' (inherited: descendant of an entry seed)') + ': every descending mutation weaves the new curve strictly between the two retained ones, forever — the whole forward tree refines this seed\u2019s p/q interval into nested subintervals' : '') +
             '\nquiver: ' + quiverStr(n.quiver) +
             '\nmult (12,13,23) = (' + n.quiver.mult.join(', ') + ')' +
             '\nv₀ = ' + vstr(s.pq[0]) +
             '\nv₁, v₂, v₃ = ' + s.vs.map(vstr).join(', ') +
-            '\nu₁, u₂, u₃ = ' + s.pq.slice(1).map(vstr).join(', ');
+            '\nu₁, u₂, u₃ = ' + s.pq.slice(1).map(vstr).join(', ') +
+            '\nu ratios: ' + rl.join(',  ') +
+            '\np/q interval: ' + ival;
     }
     const svg = [];
+    const regIvAttr = k => {
+        const mm = k.match(/\((\d+),(\d+)\)/);
+        if (!mm || +mm[1] === 0 || +mm[2] === 0) return ' data-rlo="1" data-rhi="0"';
+        const r = Math.max(+mm[1], +mm[2]) / Math.min(+mm[1], +mm[2]);
+        return ' data-rlo="' + r + '" data-rhi="' + r + '"';
+    };
     for (const p of pentagons) {
         const pts = p.order.map(id => px(pos.get(id).x).toFixed(1) + ',' + py(pos.get(id).y).toFixed(1)).join(' ');
         const cx = p.order.reduce((a, id) => a + pos.get(id).x, 0) / 5;
         const cy = p.order.reduce((a, id) => a + pos.get(id).y, 0) / 5;
-        svg.push('<polygon class="pent" points="' + pts + '"/>');
+        svg.push('<polygon class="pent" data-rk="' + esc(p.k) + '"' + regIvAttr(p.k) + ' points="' + pts + '"/>');
         const w = NAMES[p.k];
-        svg.push('<text class="pentname" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces)." x="' + px(cx).toFixed(1) + '" y="' + (py(cy) - (w ? 4 : -4)).toFixed(1) + '">' + (w ? esc(w) : '') + '</text>');
-        svg.push('<text class="pentu" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces)." x="' + px(cx).toFixed(1) + '" y="' + (py(cy) + (w ? 14 : 4)).toFixed(1) + '">' + esc(p.k) + '</text>');
+        svg.push('<text class="pentname" data-rk="' + esc(p.k) + '" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces)." x="' + px(cx).toFixed(1) + '" y="' + (py(cy) - (w ? 4 : -4)).toFixed(1) + '">' + (w ? esc(w) : '') + '</text>');
+        svg.push('<text class="pentu" data-rk="' + esc(p.k) + '" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces)." x="' + px(cx).toFixed(1) + '" y="' + (py(cy) + (w ? 14 : 4)).toFixed(1) + '">' + esc(p.k) + '</text>');
     }
     for (const b of bigLabels) {
         const w = NAMES[b.k];
-        const ly = py(b.side * 5.35);
-        svg.push('<text class="bigname" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this UNBOUNDED region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces).&#10;This face is unbounded, so its label floats in the open area it names." x="' + px(b.x).toFixed(1) + '" y="' + ly.toFixed(1) + '">' + esc(w ? w : '') + '</text>');
-        svg.push('<text class="bigu" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this UNBOUNDED region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces).&#10;This face is unbounded, so its label floats in the open area it names." x="' + px(b.x).toFixed(1) + '" y="' + (ly + 17).toFixed(1) + '">' + esc(b.k) + (b.k === '(0,1)~(1,0)' ? ' boundary class' : '') + '</text>');
+        const ly = py(b.side * 6.4);
+        svg.push('<text class="bigname" data-rk="' + esc(b.k) + '" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this UNBOUNDED region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces).&#10;This face is unbounded, so its label floats in the open area it names." x="' + px(b.x).toFixed(1) + '" y="' + ly.toFixed(1) + '">' + esc(w ? w : '') + '</text>');
+        svg.push('<text class="bigu" data-rk="' + esc(b.k) + '" data-info="region label — names a FACE of the graph, not a seed:&#10;all seeds around this UNBOUNDED region share the u-value shown&#10;(mutation changes exactly one u, so u-values live on faces).&#10;This face is unbounded, so its label floats in the open area it names." x="' + px(b.x).toFixed(1) + '" y="' + (ly + 17).toFixed(1) + '">' + esc(b.k) + (b.k === '(0,1)~(1,0)' ? ' boundary class' : '') + '</text>');
     }
+    const edgeIv = (a, b) => {
+        const ia = seedIv(nodes[a].state), ib = seedIv(nodes[b].state);
+        if (!ia || !ib) return ' data-rlo="1" data-rhi="0"';
+        // union: the edge is shown only when BOTH endpoints' brackets fit the window
+        const lo = Math.min(ia[0], ib[0]), hi = Math.max(ia[1], ib[1]);
+        return ' data-rlo="' + lo + '" data-rhi="' + hi + '"';
+    };
     for (const [a, b] of edges) {
         const A = pos.get(a), Bp = pos.get(b);
         const isChain = chainSet.has(a) && chainSet.has(b);
         const isFork = nodes[a].quiver.fork || nodes[b].quiver.fork;
         const g = Math.max(forkGen.get(a) ?? -1, forkGen.get(b) ?? -1);
         const cls = isChain ? 'e-chain' : (isFork ? (g >= 2 ? 'e-fork2' : 'e-fork') : 'e-strip');
-        svg.push('<line class="' + cls + '" x1="' + px(A.x).toFixed(1) + '" y1="' + py(A.y).toFixed(1) +
+        svg.push('<line class="' + cls + '"' + edgeIv(a, b) + ' x1="' + px(A.x).toFixed(1) + '" y1="' + py(A.y).toFixed(1) +
                  '" x2="' + px(Bp.x).toFixed(1) + '" y2="' + py(Bp.y).toFixed(1) + '"/>');
     }
     for (const [id, g] of forkGen) {
@@ -3662,8 +3906,10 @@ function buildExchangeGraph() {
         const drawn = kids.filter(a => pos.has(a)).length;
         if (drawn >= 2) continue;
         const p = pos.get(id), side = Math.sign(p.y);
+        const sIv = seedIv(nodes[id].state);
+        const sAttr = ' data-rlo="' + (sIv ? sIv[0] : 1) + '" data-rhi="' + (sIv ? sIv[1] : 0) + '"';
         for (const dx of [-0.13, 0.13])
-            svg.push('<line class="e-stub" x1="' + px(p.x).toFixed(1) + '" y1="' + py(p.y).toFixed(1) +
+            svg.push('<line class="e-stub"' + sAttr + ' x1="' + px(p.x).toFixed(1) + '" y1="' + py(p.y).toFixed(1) +
                      '" x2="' + px(p.x + dx).toFixed(1) + '" y2="' + py(p.y + side * 0.4).toFixed(1) + '"/>');
     }
     for (const xe of [minX, maxX]) {
@@ -3674,41 +3920,75 @@ function buildExchangeGraph() {
     }
     for (const [id, p] of pos) {
         const n = nodes[id];
+        const iv = seedIv(n.state);
+        svg.push('<g class="seedg" data-rlo="' + (iv ? iv[0] : 1) + '" data-rhi="' + (iv ? iv[1] : 0) + '">');
         const g = forkGen.get(id);
-        const cls = n.quiver.fork ? 'nf' + Math.min(g ?? 2, 2) : (n.quiver.cyclic ? 'nc' : 'nk');
-        const r = n.quiver.fork ? (g === 0 ? 5.5 : g === 1 ? 4.5 : g === 2 ? 3.5 : 2.8) : 5.5;
+        const cls = (n.quiver.fork ? 'nf' + Math.min(g ?? 2, 2) : (n.quiver.cyclic ? 'nc' : 'nk')) +
+            (isNestedId(id) ? (isEntryNested(id) ? ' nest nest0' : ' nest') : '');
+        const r = n.quiver.fork ? Math.max(1.4, 5.5 * Math.pow(0.82, g ?? 3)) : 5.5;
         const uks = n.state.pq.slice(1).map(uKey).join('|');
         svg.push('<circle class="nd ' + cls + '" r="' + r + '" cx="' + px(p.x).toFixed(1) + '" cy="' + py(p.y).toFixed(1) +
                  '" data-info="' + esc(nodeInfo(n)) + '" data-us="' + esc(uks) + '"/>');
         const triple = n.state.pq.slice(1).map(vstr).join(' ');
-        const rat = u => {
+        // interval on the contact-ratio line p/q spanned by the seed's u-curves
+        // (base curves (1,1),(1,2),(2,1) and the boundary class are omitted, so
+        //  e.g. {(1,1),(1,8),(1,10)} shows [8, 10])
+        const rs = n.state.pq.slice(1).map(u => {
             const [a, b] = u;
-            if (a === 0 || b === 0) return '∂';
-            const r = Math.max(a, b) / Math.min(a, b);
-            return r >= 100 ? Math.round(r).toString() : r.toFixed(r >= 10 ? 1 : 2);
-        };
-        const ratios = n.state.pq.slice(1).map(rat).join(' · ');
+            if (a === 0 || b === 0) return null;
+            return Math.max(a, b) / Math.min(a, b);
+        }).filter(r => r !== null && r > 2.0001);
+        const rfmt = r => Number.isInteger(r) ? String(r) : (r >= 100 ? Math.round(r).toString() : r.toFixed(r >= 10 ? 2 : 3));
+        const ratios = rs.length === 0 ? '' :
+            rs.length === 1 ? rfmt(rs[0]) :
+            '[' + rfmt(Math.min.apply(null, rs)) + ', ' + rfmt(Math.max.apply(null, rs)) + ']';
         const side = Math.sign(p.y) || 1;
         const T = (cls2, dy, txt, yPix) => svg.push('<text class="' + cls2 + '" x="' + px(p.x).toFixed(1) +
             '" y="' + (yPix !== undefined ? yPix : py(p.y + dy)).toFixed(1) + '">' + esc(txt) + '</text>');
         if (n.quiver.fork) {
             if (g === 0) {
                 T('forku', 0, triple, py(p.y) + (side > 0 ? -11 : 19));
-                T('fregion', side * 0.46, freshU(id) ?? '');
             } else if (g === 1) {
                 T('forku1 lv2', side * 0.16, triple);
-                T('fregion s1 lv2', side * 0.40, freshU(id) ?? '');
             } else if (g === 2) {
                 T('forku2 lv3', side * 0.14, triple);
-                T('fregion s2 lv3', side * 0.30, freshU(id) ?? '');
-            } else if (g === 3) {
-                T('forku3 lv4', side * 0.12, triple);
+            } else if (g >= 3) {
+                T('forku3 lv4', side * forkY(g) * 0.35, triple);
             }
         } else {
             T('stripu lv4', p.y === 0 ? -0.17 : side * 0.17, triple);
         }
-        T('xgratio', 0, ratios, py(p.y) + (n.quiver.fork ? (side > 0 ? 20 : -13) : (p.y === 0 ? 26 : side > 0 ? -24 : 30)));
+        if (ratios) {
+            const lay = n.quiver.fork ? (g === 0 ? '' : g === 1 ? ' lv2' : g === 2 ? ' lv3' : ' lv4') : ' lv4';
+            // (still inside this seed's <g>)
+            // offsets in layout units (scale with the graph): opposite the subtree
+            const dy = n.quiver.fork ? -side * Math.max(0.12, forkY(g ?? 0) * 0.4)
+                                     : (p.y === 0 ? 0.26 : -side * 0.26);
+            // endpoints carried at full precision; updateLabels() re-renders the
+            // digits adaptively with zoom (always enough to separate lo from hi)
+            const attrs = (rs.length >= 2
+                ? ' data-lo="' + Math.min.apply(null, rs) + '" data-hi="' + Math.max.apply(null, rs) + '"'
+                : ' data-lo="' + rs[0] + '"') +
+                ' data-nx="' + px(p.x).toFixed(1) + '" data-ny="' + py(p.y).toFixed(1) +
+                '" data-dir="' + (n.quiver.fork ? (side > 0 ? 1 : -1) : (p.y === 0 ? -1 : (side > 0 ? 1 : -1))) + '"';
+            svg.push('<text class="xgratio' + lay + '"' + attrs + ' x="' + px(p.x).toFixed(1) +
+                '" y="' + py(p.y + dy).toFixed(1) + '">' + esc(ratios) + '</text>');
+        }
+        svg.push('</g>');
     }
+    // ---------------- symmetry movie support ---------------------------------
+    // pixel positions of the visible regions (pentagon centroids + big-region
+    // label spots), exported so the movie engine can animate on top
+    const moviePos = {};
+    for (const pentagon of pentagons) {
+        const cx = pentagon.order.reduce((a, id) => a + pos.get(id).x, 0) / 5;
+        const cy = pentagon.order.reduce((a, id) => a + pos.get(id).y, 0) / 5;
+        moviePos[pentagon.k] = [px(cx), py(cy)];
+    }
+    for (const b of bigLabels) if (!moviePos[b.k]) moviePos[b.k] = [px(b.x), py(b.side * 6.0)];
+    svg.push('<defs><marker id="xgArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+             '<path d="M0,0 L10,5 L0,10 z" fill="context-stroke"/></marker></defs>');
+    svg.push('<g id="xgMovie"></g>');
 
     // ---------------- fork tables --------------------------------------------
     const rootInfos = forkRoots.map(f => {
@@ -3754,15 +4034,13 @@ function buildExchangeGraph() {
     if (engineMismatches) bad.push(engineMismatches + ' float mismatches');
     if (notThreeRegular) bad.push(notThreeRegular + ' non-3-regular seeds');
     if (invCyc.size > 1 || invAcy.size > 1 || (invCyc.size && !invCyc.has('8')) || (invAcy.size && !invAcy.has('8'))) bad.push('invariant ≠ 8');
-    const checksHtml = nodes.length + ' seeds from the standard F1 model (strip to distance ' + XG_DEPTH +
-        ', fork trees to generation ' + XG_FORK_CAP + '; exact BigInt mutations, computed just now in your browser; zoom out for the full strip) — ' +
-        (bad.length ? '<b style="color:#c0392b">CHECKS FAILED: ' + esc(bad.join('; ')) + '</b>'
-                    : 'internal checks all pass: 3-regular, μᵢ² = id, wedges follow the Fomin–Zelevinsky rule, ' +
-                      'engine arithmetic agrees where provably exact, Markov-type invariant ≡ 8.');
+    const checksHtml = bad.length
+        ? '<b style="color:#c0392b">CHECKS FAILED: ' + esc(bad.join('; ')) + '</b>'
+        : nodes.length + ' seeds · exact arithmetic · all checks pass';
 
     const vw = Math.min(SW, 23 * PXU);
     const vbInit = [Math.max(0, Math.min(SW - vw, px(0) - vw / 2)), 0, vw, SH];
-    return { svgBody: svg.join('\n'), SW, SH, vbInit, tablesHtml: TB.join('\n'), checksHtml };
+    return { svgBody: svg.join('\n'), SW, SH, vbInit, moviePos, tablesHtml: TB.join('\n'), checksHtml };
 }
 
 // ---------------- interactivity ----------------------------------------------
@@ -3787,36 +4065,73 @@ function wireExchangeFig() {
     const lmode = document.getElementById('xgLmode');
     const ratBox = document.getElementById('xgRatios');
     if (ratBox) ratBox.addEventListener('change', () => svgEl.classList.toggle('showratio', ratBox.checked));
+    const regBox = document.getElementById('xgRegions');
+    if (regBox) regBox.addEventListener('change', () => svgEl.classList.toggle('showregions', regBox.checked));
+    const triBox = document.getElementById('xgTriples');
+    if (triBox) triBox.addEventListener('change', () => svgEl.classList.toggle('hidetriples', !triBox.checked));
+    for (const sid of ['xgLblSize', 'xgLblDetail']) {
+        const sl = document.getElementById(sid);
+        if (sl) sl.addEventListener('input', () => updateLabels());
+    }
     const zlev = document.getElementById('xgZlev');
     const THRESH = { z2: 2.5, z3: 5.0, z4: 9.0 };
     // [selector, target screen px, cap in SVG px]: labels keep constant screen
     // size once zoomed (their SVG font shrinks), so zooming separates them
     const LBL = [
         ['.forku', 11, 10], ['.forku1', 11, 11], ['.forku2', 11, 11], ['.forku3', 10.5, 10.5],
-        ['.fregion', 12, 8.5], ['.fregion.s1', 11, 11], ['.fregion.s2', 10.5, 10.5],
-        ['.stripu', 11, 7.5],
+        ['.stripu', 11, 7.5], ['.xgratio', 11, 9],
         ['.pentname', 16, 15], ['.pentu', 12, 11], ['.bigname', 18, 17], ['.bigu', 13, 12],
     ];
     const dynStyle = document.createElement('style');
     document.head.appendChild(dynStyle);
     function updateLabels() {
         const z = home.w / vb.width;
+        const F = parseFloat((document.getElementById('xgLblSize') || {}).value) || 1;
+        const D = parseFloat((document.getElementById('xgLblDetail') || {}).value) || 1;
+        const fval = document.getElementById('xgLblSizeVal');
+        if (fval) fval.textContent = F === 1 ? '' : '×' + F.toFixed(1);
+        const dval = document.getElementById('xgLblDetailVal');
+        if (dval) dval.textContent = D === 1 ? '' : '×' + D.toFixed(1);
+        // size (F) and reveal (D) are independent: D scales the effective zoom
+        // used for label gating and digit counts; F scales only the fonts
+        const zEff = z * D;
         const mode = lmode.value;
         const on = { z2: false, z3: false, z4: false };
         if (mode === 'all') { on.z2 = on.z3 = on.z4 = true; }
         else if (mode === 'auto') {
-            on.z2 = z >= THRESH.z2; on.z3 = z >= THRESH.z3; on.z4 = z >= THRESH.z4;
+            on.z2 = zEff >= THRESH.z2; on.z3 = zEff >= THRESH.z3; on.z4 = zEff >= THRESH.z4;
         }
         for (const c in on) svgEl.classList.toggle(c, on[c]);
         const spp = svgEl.getBoundingClientRect().width / vb.width;
+        // interval labels: digits grow with zoom (always enough to tell the
+        // endpoints apart), and each label hugs ITS VERTEX at a constant
+        // screen distance regardless of zoom (they belong to seeds, not edges)
+        const baseDigits = zEff < 2.5 ? 3 : zEff < 5 ? 4 : zEff < 9 ? 5 : 7;
+        const fmtAt = (v, d) => Number.isInteger(v) ? String(v) : v.toFixed(d);
+        svgEl.querySelectorAll('.xgratio[data-lo]').forEach(el => {
+            const lo = +el.getAttribute('data-lo');
+            const hiA = el.getAttribute('data-hi');
+            if (hiA === null) el.textContent = fmtAt(lo, baseDigits);
+            else {
+                const hi = +hiA;
+                let d = baseDigits;
+                while (d < 10 && lo.toFixed(d) === hi.toFixed(d)) d++;
+                el.textContent = '[' + fmtAt(lo, d) + ', ' + fmtAt(hi, d) + ']';
+            }
+            const nx = +el.getAttribute('data-nx'), ny = +el.getAttribute('data-ny'), dir = +el.getAttribute('data-dir');
+            if (isFinite(nx) && spp > 0) {
+                el.setAttribute('x', nx.toFixed(1));
+                el.setAttribute('y', (ny + dir * (16 / spp + 7)).toFixed(1));
+            }
+        });
         if (spp > 0) {
             let css = '';
-            for (const l of LBL) css += '#xgFig ' + l[0] + '{font-size:' + Math.min(l[2], l[1] / spp).toFixed(2) + 'px}';
+            for (const l of LBL) css += '#xgFig ' + l[0] + '{font-size:' + (F * Math.min(l[2], l[1] / spp)).toFixed(2) + 'px}';
             dynStyle.textContent = css;
         }
         if (mode === 'auto') {
             const lv = on.z4 ? 'all labels' : on.z3 ? 'labels to gen 2' : on.z2 ? 'labels to gen 1' : 'root labels';
-            zlev.textContent = 'zoom ' + z.toFixed(1) + '× — ' + lv;
+            zlev.textContent = 'zoom ' + z.toFixed(1) + '×' + (D !== 1 ? ' (eff ' + zEff.toFixed(1) + '×)' : '') + ' — ' + lv;
         } else zlev.textContent = '';
     }
     lmode.addEventListener('change', updateLabels);
@@ -3844,7 +4159,7 @@ function wireExchangeFig() {
     updateLabels();
     const input = document.getElementById('xgSearch');
     const ucount = document.getElementById('xgCount');
-    const circles = svgEl.querySelectorAll('circle[data-us]');
+    let circles = svgEl.querySelectorAll('circle[data-us]');
     function fold(p, q) {
         if (q === '0' && p !== '0') return '(0,' + p + ')~(' + p + ',0)';
         if (p === '0' && q !== '0') return '(0,' + q + ')~(' + q + ',0)';
@@ -3865,10 +4180,179 @@ function wireExchangeFig() {
         });
         ucount.textContent = keys.length ? (hits + ' seed' + (hits === 1 ? '' : 's')) : '';
     });
+
+    // ---------------- symmetry movie ------------------------------------------
+    const movieInfo = document.getElementById('xgMovieInfo');
+    const mvLayer = () => svgEl.querySelector('#xgMovie');
+    const mvParse = k => { const mm = k.match(/^\((\d+),(\d+)\)$/); return mm ? [+mm[1], +mm[2]] : null; };
+    // Ψ pairing generated from the well-placed member (paper's K = 6 formulas)
+    let psiMap = new Map();
+    const buildPsiMap = () => {
+        psiMap = new Map();
+        const mp = (xgG && xgG.moviePos) || {};
+        for (const k of Object.keys(mp)) {
+            const u = mvParse(k);
+            if (!u || u[0] < u[1]) continue;
+            const [a, b] = u;
+            const part = a <= 6 * b ? [6 * b - a, b] : [b + 6 * (a - 6 * b), a - 6 * b];
+            const pk = uKey(part);
+            if (mp[pk] && pk !== k) { psiMap.set(k, pk); psiMap.set(pk, k); }
+        }
+    };
+    // Φ on chamber-oriented keys; the τ-conjugate glide on mirror-oriented keys
+    const stepOf = (mode, k) => {
+        const u = mvParse(k);
+        if (mode === 'tau') return u ? uKey([u[1], u[0]]) : k;      // boundary class: fixed
+        if (mode === 'psi') return psiMap.get(k) || null;
+        if (!u) return null;
+        const [a, b] = u;
+        return uKey(a >= b ? [6 * a - b, a] : [b, 6 * b - a]);
+    };
+    const MVCOLS = ['#0e7490', '#8e44ad', '#c0392b', '#b8860b', '#2e8b57', '#c2185b'];
+    let mvStarts = [];
+    const symSel = document.getElementById('xgSym');
+    const mvClear = () => {
+        const el = mvLayer(); if (el) el.innerHTML = '';
+        if (movieInfo) movieInfo.textContent = '';
+    };
+    let mvState = null, mvStep = 0, mvMax = 0;
+    function mvPlay() {
+        mvClear();
+        mvState = null; mvStep = 0; mvMax = 0;
+        const mode = symSel ? symSel.value : 'off';
+        if (mode === 'off' || !mvStarts.length) return;
+        const CAP = mode === 'phi' ? 60 : 3;
+        // precompute every marker's full orbit; it continues NUMERICALLY beyond
+        // the drawn strip (the marker then parks at its last visible region and
+        // a live label shows where the curve actually went)
+        mvState = mvStarts.map((k, i) => {
+            const hist = [k];
+            let died = false;
+            for (let t = 0; t < CAP; t++) {
+                const nk = stepOf(mode, hist[hist.length - 1]);
+                if (!nk) { died = true; break; }
+                if (nk === hist[hist.length - 1]) break;               // fixed point
+                hist.push(nk);
+            }
+            return { col: MVCOLS[i % MVCOLS.length], hist, died };
+        });
+        mvMax = Math.max.apply(null, mvState.map(m => m.hist.length - 1));
+        mvShow(0);
+    }
+    function mvShow(step) {
+        if (!mvState) return;
+        mvStep = Math.max(0, Math.min(step, mvMax));
+        const el = mvLayer(); if (!el) return;
+        let out = '';
+        for (const mkr of mvState) {
+            const upto = Math.min(mvStep, mkr.hist.length - 1);
+            let lastVis = -1;
+            for (let i = 0; i <= upto; i++) if (xgG.moviePos[mkr.hist[i]]) lastVis = i;
+            for (let i = 0; i + 1 <= upto; i++) {
+                const A = xgG.moviePos[mkr.hist[i]], B = xgG.moviePos[mkr.hist[i + 1]];
+                if (A && B) out += '<path class="xgmv-hop" stroke="' + mkr.col + '" marker-end="url(#xgArrow)"' +
+                    ' d="M' + A[0].toFixed(1) + ',' + A[1].toFixed(1) +
+                    ' Q' + ((A[0] + B[0]) / 2).toFixed(1) + ',' + ((A[1] + B[1]) / 2 - 70).toFixed(1) +
+                    ' ' + B[0].toFixed(1) + ',' + B[1].toFixed(1) + '"/>';
+            }
+            for (let i = 0; i <= upto; i++) {
+                const P = xgG.moviePos[mkr.hist[i]];
+                if (!P) continue;
+                out += '<circle class="' + (i === lastVis ? 'xgmv-cur' : 'xgmv-trail') + '" fill="' + mkr.col +
+                    '" r="' + (i === lastVis ? 13 : 8) + '" cx="' + P[0].toFixed(1) + '" cy="' + P[1].toFixed(1) + '"/>';
+            }
+            if (lastVis >= 0 && lastVis < upto) {
+                // the curve has left the drawn strip: park a ghost label with its true value
+                const P = xgG.moviePos[mkr.hist[lastVis]];
+                out += '<text class="xgmv-ghost" fill="' + mkr.col + '" x="' + P[0].toFixed(1) +
+                    '" y="' + (P[1] - 22).toFixed(1) + '">⇢ ' + mkr.hist[upto] + '</text>';
+            }
+        }
+        el.innerHTML = out;
+        // expand the view to keep the current markers visible
+        let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, any = false;
+        for (const mkr of mvState) {
+            const upto = Math.min(mvStep, mkr.hist.length - 1);
+            let P = null;
+            for (let i = 0; i <= upto; i++) if (xgG.moviePos[mkr.hist[i]]) P = xgG.moviePos[mkr.hist[i]];
+            if (P) { any = true; x0 = Math.min(x0, P[0]); x1 = Math.max(x1, P[0]); y0 = Math.min(y0, P[1]); y1 = Math.max(y1, P[1]); }
+        }
+        if (any) {
+            const pad = 280;
+            x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+            if (x0 < vb.x || y0 < vb.y || x1 > vb.x + vb.width || y1 > vb.y + vb.height) {
+                const nx = Math.min(vb.x, x0), ny = Math.min(vb.y, y0);
+                const sc = Math.max((Math.max(vb.x + vb.width, x1) - nx) / vb.width,
+                                    (Math.max(vb.y + vb.height, y1) - ny) / vb.height);
+                vb.x = nx; vb.y = ny; vb.width *= sc; vb.height *= sc;
+                updateLabels();
+            }
+        }
+        if (movieInfo)
+            movieInfo.textContent = 'step ' + mvStep + ' / ' + mvMax + ':  ' +
+                mvState.map(mkr => {
+                    const i = Math.min(mvStep, mkr.hist.length - 1);
+                    const off = !xgG.moviePos[mkr.hist[i]];
+                    const ended = mkr.died && mvStep >= mkr.hist.length - 1;
+                    return (ended ? '✕' : off ? '⇢' : '') + mkr.hist[i];
+                }).join('   ');
+    }
+    if (symSel) symSel.addEventListener('change', () => {
+        mvStarts = symSel.value === 'off' ? [] : ['(1,2)', '(2,1)', '(1,1)'];
+        mvPlay();
+    });
+    const stepB = document.getElementById('xgStepB'), stepF = document.getElementById('xgStepF');
+    if (stepB) stepB.addEventListener('click', () => mvShow(mvStep - 1));
+    if (stepF) stepF.addEventListener('click', () => mvShow(mvStep + 1));
+    svgEl.addEventListener('click', e => {
+        const t = e.target;
+        const rk = t && t.getAttribute && t.getAttribute('data-rk');
+        if (!rk || !symSel || symSel.value === 'off') return;
+        if (mvStarts.includes(rk)) mvStarts = mvStarts.filter(k => k !== rk);
+        else mvStarts.push(rk);
+        mvPlay();
+    });
+    const applyHighlight = () => {
+        const lo = parseFloat(document.getElementById('xgHiLo').value);
+        const hi = parseFloat(document.getElementById('xgHiHi').value);
+        const on = isFinite(lo) && isFinite(hi) && hi > lo;
+        let shown = 0, total = 0;
+        svgEl.querySelectorAll('[data-rlo]').forEach(el => {
+            if (!on) { el.classList.remove('xg-hide'); return; }
+            const rlo = +el.getAttribute('data-rlo'), rhi = +el.getAttribute('data-rhi');
+            const ok = rlo >= lo && rhi <= hi;   // the seed's bracket must be CONTAINED in the window
+            el.classList.toggle('xg-hide', !ok);
+            if (el.classList.contains('seedg')) { total++; if (ok) shown++; }
+        });
+        const info = document.getElementById('xgHiInfo');
+        if (info) info.textContent = !on ? '' : (shown + ' of ' + total + ' seeds in focus');
+    };
+    for (const id of ['xgHiLo', 'xgHiHi']) {
+        const el = document.getElementById(id);
+        if (el) { el.addEventListener('input', applyHighlight); el.addEventListener('change', applyHighlight); }
+    }
+    xgRefresh = () => {
+        circles = svgEl.querySelectorAll('circle[data-us]');
+        buildPsiMap();
+        applyHighlight();
+        mvStarts = symSel && symSel.value !== 'off' ? ['(1,2)', '(2,1)', '(1,1)'] : [];
+        mvPlay();
+        updateLabels();
+    };
+    xgRefresh();
 }
 
-let xgBuilt = false;
+let xgBuilt = false, xgDepthWired = false, xgFigWired = false, xgG = null, xgRefresh = null;
 window.initExchangeTab = function () {
+    if (!xgDepthWired) {
+        xgDepthWired = true;
+        const fd = document.getElementById('xgForkDepth');
+        if (fd) fd.addEventListener('change', () => {
+            XG_FORK_CAP = +fd.value;
+            xgBuilt = false;
+            window.initExchangeTab();
+        });
+    }
     if (xgBuilt) return;
     xgBuilt = true;
     const status = document.getElementById('xgStatus');
@@ -3882,7 +4366,9 @@ window.initExchangeTab = function () {
             document.getElementById('xgTablesBody').innerHTML = g.tablesHtml;
             document.getElementById('xgChecks').innerHTML = g.checksHtml;
             status.style.display = 'none';
-            wireExchangeFig();
+            xgG = g;
+            if (!xgFigWired) { xgFigWired = true; wireExchangeFig(); }
+            else if (xgRefresh) xgRefresh();
         } catch (err) {
             status.textContent = 'Exchange graph failed: ' + err.message;
             xgBuilt = false;
@@ -4075,7 +4561,7 @@ function annulusPath(u1, u2, R1, R2) {
     }
     return 'M' + outer.join(' L') + ' L' + inner.reverse().join(' L') + ' Z';
 }
-// strip view: the chamber side stretched over [SMIN, SMAX], linear in s = P/Q
+// strip view: the chamber side stretched over [SMIN, SMAX], linear in s = p/q
 function afRenderStrip() {
     const fig = document.getElementById('afFig');
     const rayMode = document.getElementById('afRays').value;
@@ -4083,7 +4569,24 @@ function afRenderStrip() {
     const showUni = document.getElementById('afShowUni').checked;
     const { curves, runsUp, runsLo, pairRuns, anchorKeys, sesByDir, SMIN, SMAX, sesOrder } = afData;
     const W = 2000, Y0 = 0, Y1 = 600, UB0 = -85, UB1 = -25, LB0 = 620, LB1 = 680;
-    const X = sv => (sv - SMIN) / (SMAX - SMIN) * W;
+    // tree scale: equal width per intersected cone — the abstract binary
+    // interval tree rendered as a strip (cascades become fully visible)
+    const bsP = (() => {
+        const b = [SMIN];
+        for (let i = 0; i + 1 < pairRuns.length; i++)
+            b.push((pairRuns[i].to.p + pairRuns[i + 1].from.p) / (pairRuns[i].to.q + pairRuns[i + 1].from.q));
+        b.push(SMAX);
+        return b;
+    })();
+    const treeScale = ((document.getElementById('afScale') || {}).value || 'linear') === 'tree';
+    const X = sv => {
+        if (!treeScale) return (sv - SMIN) / (SMAX - SMIN) * W;
+        let i = 0;
+        while (i + 1 < bsP.length - 1 && sv > bsP[i + 1]) i++;
+        const den = bsP[i + 1] - bsP[i];
+        const t = den > 0 ? Math.max(0, Math.min(1, (sv - bsP[i]) / den)) : 0;
+        return (i + t) * W / (bsP.length - 1);
+    };
     const S = ['<defs><pattern id="afHatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">' +
         '<rect width="8" height="8" fill="#d7dce2"/><line x1="0" y1="0" x2="0" y2="8" stroke="#5f6a76" stroke-width="3"/></pattern></defs>'];
     const boundsS = runs => {
@@ -4111,7 +4614,7 @@ function afRenderStrip() {
           info: r => 'cone:  s ≈ ' + (r.from.p / r.from.q).toFixed(4) + ' … ' + (r.to.p / r.to.q).toFixed(4) +
               '\nupper anchor: ' + r.up.key + ' = ' + afClass(r.up) +
               '\nlower anchor: ' + (r.lo.q === 0 ? 'E  (m ≥ 0)' : r.lo.key + ' = ' + afClass(r.lo)),
-          more: r => 'exact interval: s = P/Q ∈ [' + r.from.p + '/' + r.from.q + ' , ' + r.to.p + '/' + r.to.q + ']' +
+          more: r => 'exact interval: s = p/q ∈ [' + r.from.p + '/' + r.from.q + ' , ' + r.to.p + '/' + r.to.q + ']' +
               '\nexistence of a curve here:  δ ≥ 0,  C⋆(upper) ≥ 0,  C⋆(lower) ≥ 0' +
               '\n(strip shows the chamber side; the τ-mirror is the same with contact pairs transposed)',
           keys: r => [r.up.key, r.lo.key], pal: i => AF_PAL[i % AF_PAL.length] },
@@ -4130,11 +4633,15 @@ function afRenderStrip() {
             const members = row.runs.slice(z.i0, z.i1 + 1);
             const ks = [...new Set(members.flatMap(row.keys))];
             const info = 'unresolved cascade:  s ≈ ' + (members[0].from.p / members[0].from.q).toFixed(4) +
-                ' … ' + (members[members.length - 1].to.p / members[members.length - 1].to.q).toFixed(4) +
+                ' to ' + (members[members.length - 1].to.p / members[members.length - 1].to.q).toFixed(4) +
                 '\n' + members.length + ' ' + row.what + ' hide here — infinitely many in the limit' +
-                '\nfound: ' + ks.slice(0, 5).join(', ') + (ks.length > 5 ? ', …' : '');
+                '\nfound: ' + ks.slice(0, 5).join(', ') + (ks.length > 5 ? '  (+' + (ks.length - 5) + ' more)' : '') +
+                '\nnarrow the window to this range (and raise Q) to expand';
+            const wLo = members[0].from.p / members[0].from.q, wHi = members[members.length - 1].to.p / members[members.length - 1].to.q;
+            const pad = Math.max((wHi - wLo) * 0.4, 1e-4);
             S.push(rect(X(bs[z.i0]), X(bs[z.i1 + 1]), row.y1, row.y2, 'af-sec af-zone', null,
-                ' data-info="' + esc(info) + '" data-more="' + esc('Narrow the window to this range (and raise Q) to expand.') + '" data-anch="' + esc(ks.join('|')) + '"'));
+                ' data-win="' + Math.max(3, wLo - pad).toFixed(6) + ',' + (wHi + pad).toFixed(6) + '"' +
+                ' data-info="' + esc(info + '\n(click to zoom the window here)') + '" data-more="' + esc('CLICK to zoom the window to this cascade and recompute.') + '" data-anch="' + esc(ks.join('|')) + '"'));
             z = null;
         };
         for (let i = 0; i < row.runs.length; i++) {
@@ -4148,7 +4655,7 @@ function afRenderStrip() {
         }
         flush();
     }
-    // rays: vertical lines at s = P/Q (chamber side only)
+    // rays: vertical lines at s = p/q (chamber side only)
     const famPQ = new Set(curves.map(U => U.p + ',' + U.q));
     const uOrder = U => Math.abs(U.p - 3 * U.q);
     const showRay = U => !showUni ? false
@@ -4161,7 +4668,7 @@ function afRenderStrip() {
         const es = sesByDir.get(dk);
         if (!es) return '';
         return '\nsesqui on this ray: ' + es.slice(0, 4).map(e => e.d + 'L−' + e.m + 'E (δ' + e.delta + ')').join(', ') +
-            (es.length > 4 ? ', … ×' + es.length : '');
+            (es.length > 4 ? '  (+' + (es.length - 4) + ' more)' : '');
     };
     for (const U of curves) {
         if (U.q === 0 || !showRay(U)) continue;
@@ -4172,7 +4679,9 @@ function afRenderStrip() {
         const isAnchor = anchorKeys.has(U.key);
         const info = 'uni ' + U.key + ' = ' + afClass(U) + (isAnchor ? '   [anchor]' : '') + sesShort(dk);
         const more = 'ratio ' + ratioStr(U) + '   first reached at mutation depth ' + U.dep +
-            '\nrole: ' + (U.type === 'up' ? 'upper-type (3m > d)' : 'lower-type (3m < d)');
+            '\nrole: ' + (U.type === 'up' ? 'upper-type (3m > d)' : 'lower-type (3m < d)') +
+            (U.q > 0 ? '\ntwists: Φ ↦ (' + (6 * U.p - U.q) + ',' + U.p + ')' +
+                (U.p > 6 * U.q ? '   Ψ ↦ (' + (U.q + 6 * (U.p - 6 * U.q)) + ',' + (U.p - 6 * U.q) + ')' : '') : '');
         S.push('<line class="af-uni' + (isAnchor ? ' af-anchor' : '') + '" data-key="' + esc(U.key) +
             '" x1="' + x.toFixed(1) + '" y1="' + (Y0 - 12) + '" x2="' + x.toFixed(1) + '" y2="' + (Y1 + 12) + '"/>');
         if (showSes && sesByDir.has(dk))
@@ -4188,7 +4697,7 @@ function afRenderStrip() {
         if (sv < SMIN || sv > SMAX) continue;
         const x = X(sv);
         const info = 'sesqui-only ray (' + pq.join(',') + '): ' +
-            es.slice(0, 4).map(e => e.d + 'L−' + e.m + 'E (δ' + e.delta + ')').join(', ') + (es.length > 4 ? ', … ×' + es.length : '');
+            es.slice(0, 4).map(e => e.d + 'L−' + e.m + 'E (δ' + e.delta + ')').join(', ') + (es.length > 4 ? '  (+' + (es.length - 4) + ' more)' : '');
         S.push('<line class="af-ses" x1="' + x.toFixed(1) + '" y1="' + Y0 + '" x2="' + x.toFixed(1) + '" y2="' + Y1 + '"/>');
         S.push('<line class="af-hitline" x1="' + x.toFixed(1) + '" y1="' + Y0 + '" x2="' + x.toFixed(1) + '" y2="' + Y1 +
             '" data-info="' + esc(info) + '"/>');
@@ -4216,16 +4725,26 @@ function afRenderStrip() {
         }
         for (const [label, y] of [['upper', (UB0 + UB1) / 2 + 4], ['cones', (Y0 + Y1) / 2], ['lower', (LB0 + LB1) / 2 + 4]])
             S.push('<text class="af-lab" style="text-anchor:end" x="-14" y="' + y + '">' + label + '</text>');
-        const width = SMAX - SMIN;
-        let step = Math.pow(10, Math.floor(Math.log10(width / 6)));
-        if (width / step > 12) step *= 2;
-        if (width / step > 12) step *= 2.5;
-        for (let t = Math.ceil(SMIN / step) * step; t <= SMAX + 1e-9; t += step) {
-            const x = X(t);
-            S.push('<line x1="' + x.toFixed(1) + '" y1="' + (LB1 + 28) + '" x2="' + x.toFixed(1) + '" y2="' + (LB1 + 38) + '" stroke="#889" stroke-width="1.5"/>');
-            S.push('<text class="af-lab" x="' + x.toFixed(1) + '" y="' + (LB1 + 56) + '">' + (Math.round(t * 1000) / 1000) + '</text>');
+        if (treeScale) {
+            const n = bsP.length - 1, every = Math.max(1, Math.ceil(n / 10));
+            for (let i = 0; i <= n; i += every) {
+                const x = i * W / n;
+                S.push('<line x1="' + x.toFixed(1) + '" y1="' + (LB1 + 28) + '" x2="' + x.toFixed(1) + '" y2="' + (LB1 + 38) + '" stroke="#889" stroke-width="1.5"/>');
+                S.push('<text class="af-lab" x="' + x.toFixed(1) + '" y="' + (LB1 + 56) + '">' + bsP[i].toFixed(4) + '</text>');
+            }
+            S.push('<text class="af-lab" x="' + (W / 2) + '" y="' + (LB1 + 80) + '">contact ratio  s = p/q — TREE SCALE: every cone equal width (nonlinear axis; chamber side)</text>');
+        } else {
+            const width = SMAX - SMIN;
+            let step = Math.pow(10, Math.floor(Math.log10(width / 6)));
+            if (width / step > 12) step *= 2;
+            if (width / step > 12) step *= 2.5;
+            for (let t = Math.ceil(SMIN / step) * step; t <= SMAX + 1e-9; t += step) {
+                const x = X(t);
+                S.push('<line x1="' + x.toFixed(1) + '" y1="' + (LB1 + 28) + '" x2="' + x.toFixed(1) + '" y2="' + (LB1 + 38) + '" stroke="#889" stroke-width="1.5"/>');
+                S.push('<text class="af-lab" x="' + x.toFixed(1) + '" y="' + (LB1 + 56) + '">' + (Math.round(t * 1000) / 1000) + '</text>');
+            }
+            S.push('<text class="af-lab" x="' + (W / 2) + '" y="' + (LB1 + 80) + '">contact ratio  s = p/q   (chamber side; τ-mirror not drawn in strip view)</text>');
         }
-        S.push('<text class="af-lab" x="' + (W / 2) + '" y="' + (LB1 + 80) + '">contact ratio  s = P/Q   (chamber side; τ-mirror not drawn in strip view)</text>');
     }
     const vbStr = '-150 ' + (UB0 - 75) + ' ' + (W + 320) + ' ' + ((LB1 + 110) - (UB0 - 75));
     if (fig.dataset.homeVb !== vbStr) {
@@ -4266,7 +4785,7 @@ function afRender() {
             '\nupper anchor: ' + (side === 'C' ? run.up.key : keyT(run.up)) + ' = ' + afClass(run.up) +
             '\nlower anchor: ' + (run.lo.q === 0 ? 'E  (m ≥ 0)' : (side === 'C' ? run.lo.key : keyT(run.lo)) + ' = ' + afClass(run.lo));
         const more = side =>
-            'exact interval: s = P/Q ∈ [' + run.from.p + '/' + run.from.q + ' , ' + run.to.p + '/' + run.to.q + ']' +
+            'exact interval: s = p/q ∈ [' + run.from.p + '/' + run.from.q + ' , ' + run.to.p + '/' + run.to.q + ']' +
             (side === 'M' ? '\nτ-mirror: same curves with the two node branches swapped (contact pairs transpose)' : '') +
             '\nexistence of a curve here:  δ ≥ 0,  C⋆(upper) ≥ 0,  C⋆(lower) ≥ 0' +
             '\n(the two rim bands show each side\u2019s pure decomposition: inner = upper, outer = lower)';
@@ -4320,18 +4839,22 @@ function afRender() {
                 const members = spec.runs.slice(z.i0, z.i1 + 1);
                 const ks = [...new Set(members.flatMap(spec.keys))];
                 const info = 'unresolved cascade' + (side === 'M' ? ' (τ-mirror)' : '') + ':  s ≈ ' +
-                    (members[0].from.p / members[0].from.q).toFixed(4) + ' … ' +
+                    (members[0].from.p / members[0].from.q).toFixed(4) + ' to ' +
                     (members[members.length - 1].to.p / members[members.length - 1].to.q).toFixed(4) +
                     '\n' + members.length + ' ' + spec.what + ' hide here at this resolution — infinitely many in the limit' +
-                    '\nfound: ' + ks.slice(0, 5).join(', ') + (ks.length > 5 ? ', …' : '');
-                const more = 'The decomposition is self-similar: every wall is itself a unicurve ray whose curve' +
-                    '\nclaims its own cone at finer resolution. Narrow the ratio window to this range' +
-                    '\n(and raise Q) to expand the cascade.';
+                    '\nfound: ' + ks.slice(0, 5).join(', ') + (ks.length > 5 ? '  (+' + (ks.length - 5) + ' more)' : '') +
+                    '\nnarrow the window to this range (and raise Q) to expand';
+                const wLo = members[0].from.p / members[0].from.q, wHi = members[members.length - 1].to.p / members[members.length - 1].to.q;
+                const pad = Math.max((wHi - wLo) * 0.4, 1e-4);
+                const winAttr = ' data-win="' + Math.max(3, wLo - pad).toFixed(6) + ',' + (wHi + pad).toFixed(6) + '"';
+                const more = 'CLICK to zoom the window to this cascade and recompute.' +
+                    '\nThe decomposition is self-similar: every wall is itself a unicurve ray whose curve' +
+                    '\nclaims its own cone at finer resolution.';
                 const u1 = unitSvg(f(spec.bounds[z.i0][0], spec.bounds[z.i0][1]));
                 const u2 = unitSvg(f(spec.bounds[z.i1 + 1][0], spec.bounds[z.i1 + 1][1]));
                 S.push('<path class="af-sec af-zone" d="' +
                     (spec.R1 === 0 ? sectorPath(u1, u2, spec.R2) : annulusPath(u1, u2, spec.R1, spec.R2)) +
-                    '" data-info="' + esc(info) + '" data-more="' + esc(more) + '" data-anch="' + esc(ks.join('|')) + '"/>');
+                    winAttr + ' data-info="' + esc(info + '\n(click to zoom the window here)') + '" data-more="' + esc(more) + '" data-anch="' + esc(ks.join('|')) + '"/>');
                 z = null;
             };
             for (let i = 0; i < spec.runs.length; i++) {
@@ -4387,7 +4910,7 @@ function afRender() {
         const es = sesByDir.get(dk);
         if (!es) return '';
         return '\nsesqui on this ray: ' + es.slice(0, 4).map(e => e.d + 'L−' + e.m + 'E (δ' + e.delta + ')').join(', ') +
-            (es.length > 4 ? ', … ×' + es.length : '');
+            (es.length > 4 ? '  (+' + (es.length - 4) + ' more)' : '');
     };
     let shownCount = 0;
     const inWin = U => U.q === 0 ? true
@@ -4407,6 +4930,8 @@ function afRender() {
                 'δ = 0: exceptional after resolving the cusp — a potential anchor' +
                 '\nratio ' + ratioStr(U) + '   first reached at mutation depth ' + U.dep +
                 '\nrole: ' + (U.type === 'up' ? 'upper-type (3m > d: caps d from above)' : 'lower-type (3m < d: caps d from below)') +
+                (U.q > 0 ? '\ntwists: Φ ↦ (' + (6 * U.p - U.q) + ',' + U.p + ')' +
+                    (U.p > 6 * U.q ? '   Ψ ↦ (' + (U.q + 6 * (U.p - 6 * U.q)) + ',' + (U.p - 6 * U.q) + ')' : '') : '') +
                 '\n(sesqui list shows the δ ≥ 1 terms of the diagram sharing this direction, order < ' + sesOrder + ')';
             S.push('<line class="af-uni' + (isAnchor ? ' af-anchor' : '') + '" data-key="' + esc(U.key) +
                 '" x1="0" y1="0" x2="' + (AF_R * u[0]).toFixed(1) + '" y2="' + (AF_R * u[1]).toFixed(1) + '"/>');
@@ -4426,7 +4951,7 @@ function afRender() {
         const u = unitSvg(v);
         const info = 'sesqui-only ray (' + pq.join(',') + '): ' +
             es.slice(0, 4).map(e => e.d + 'L−' + e.m + 'E (δ' + e.delta + ')').join(', ') +
-            (es.length > 4 ? ', … ×' + es.length : '');
+            (es.length > 4 ? '  (+' + (es.length - 4) + ' more)' : '');
         const more = 'direction (' + dk + ');  no unicurve here (the δ = 0 slot is not realized)' +
             '\nδ ≥ 1 primitive terms of the diagram, order < ' + sesOrder;
         S.push('<line class="af-ses" x1="0" y1="0" x2="' + (AF_R * u[0]).toFixed(1) + '" y2="' + (AF_R * u[1]).toFixed(1) + '"/>');
@@ -4506,7 +5031,7 @@ async function afCompute() {
         const depth = +document.getElementById('afDepth').value;
         const QMAX = +document.getElementById('afQmax').value;
         const sesOrder = +document.getElementById('afOrder').value;
-        // ratio window P/Q ∈ [lo, hi]; a narrow window permits high resolution Q
+        // ratio window p/q ∈ [lo, hi]; a narrow window permits high resolution Q
         const SMIN = Math.max(3, parseFloat(document.getElementById('afWinLo').value));
         const SMAX = parseFloat(document.getElementById('afWinHi').value);
         if (!(SMAX > SMIN)) { say('the ratio window needs  3 ≤ from < to'); afBusy = false; return; }
@@ -4662,8 +5187,6 @@ function afWire() {
         if (t && t.classList && t.classList.contains('af-help')) {
             tip.textContent = t.getAttribute('data-info');
             tip.style.display = 'block';
-            tip.style.maxWidth = '440px';
-            tip.style.whiteSpace = 'pre-wrap';
             let x = ev.clientX + 14, y = ev.clientY + 16;
             if (x + tip.offsetWidth > window.innerWidth - 8) x = window.innerWidth - tip.offsetWidth - 8;
             tip.style.left = x + 'px'; tip.style.top = y + 'px';
@@ -4672,6 +5195,14 @@ function afWire() {
     controls.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
     fig.addEventListener('click', ev => {
         const t = ev.target;
+        const zoomWin = t && t.getAttribute && t.getAttribute('data-win');
+        if (zoomWin) {
+            const [lo, hi] = zoomWin.split(',').map(Number);
+            document.getElementById('afWinLo').value = lo;
+            document.getElementById('afWinHi').value = hi;
+            afCompute();
+            return;
+        }
         const info = t && t.getAttribute && t.getAttribute('data-info');
         fig.querySelectorAll('.af-sec.pin').forEach(el => el.classList.remove('pin'));
         pinnedKeys = [];
@@ -4719,10 +5250,14 @@ window.initAnchorsTab = function () {
         afWired = true;
         afWire();
         document.getElementById('afRecompute').addEventListener('click', () => afCompute());
+        document.getElementById('afControls').addEventListener('keydown', ev => {
+            if (ev.key === 'Enter' && ev.target.tagName !== 'BUTTON') { ev.preventDefault(); afCompute(); }
+        });
         document.getElementById('afRays').addEventListener('change', () => afRender());
         document.getElementById('afShowSes').addEventListener('change', () => afRender());
         document.getElementById('afShowUni').addEventListener('change', () => afRender());
         document.getElementById('afView').addEventListener('change', () => afRender());
+        document.getElementById('afScale').addEventListener('change', () => afRender());
     }
     if (afBuilt) return;
     afBuilt = true;
