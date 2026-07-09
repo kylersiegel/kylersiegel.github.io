@@ -199,8 +199,7 @@
     #xgFig .nk { fill:#1a1a1a; } #xgFig .nc { fill:#fff; }
     #xgFig .nf0 { fill:#a80f3c; stroke:#7c082a; } #xgFig .nf1 { fill:#cf5f83; stroke:#a3405f; } #xgFig .nf2 { fill:#eab6c6; stroke:#c791a1; }
     #xgFig .nd:hover { stroke-width:2.6; }
-    #xgFig .nd.nest { stroke:#0d6a52; stroke-width:2.6; }
-    #xgFig .nd.nest0 { stroke:#0d6a52; stroke-width:5; }
+    #xgFig .nesthalo { fill:none; stroke:#2e9e7e; stroke-width:1.8; stroke-opacity:.9; pointer-events:none; }
     #xgFig .nd.hit { stroke:#e0a400; stroke-width:4; }
     #xgFig .xg-hide { opacity:.05; pointer-events:none; }
     #xgFig.hidetriples .forku, #xgFig.hidetriples .forku1, #xgFig.hidetriples .forku2,
@@ -667,8 +666,7 @@
                 <span class="xg-li"><span class="xg-dot" style="background:#fff"></span>cyclic seed</span>
                 <span class="xg-li"><span class="xg-dot" style="background:#a80f3c"></span>fork root</span>
                 <span class="xg-li"><span class="xg-dot" style="background:#cf5f83"></span>deeper forks</span>
-                <span class="xg-li"><span class="xg-dot" style="background:#fff;border:2px solid #0d6a52;width:10px;height:10px;border-radius:6px"></span>green ring = nested seed <i style="color:#8a949c">(forward tree = nested subintervals)</i></span>
-                <span class="xg-li"><span class="xg-dot" style="background:#fff;border:4px solid #0d6a52;width:8px;height:8px;border-radius:8px"></span>thick = entry point <i style="color:#8a949c">(parent not nested)</i></span>
+                <span class="xg-li"><span style="display:inline-block;width:14px;height:14px;border:1.8px solid #2e9e7e;border-radius:50%;box-sizing:border-box;position:relative"><span style="position:absolute;inset:3px;background:#cf5f83;border-radius:50%"></span></span>halo = nesting root <i style="color:#8a949c">(its whole forward tree = nested subintervals)</i></span>
                 <span class="xg-li" id="xgChecks"></span>
                 <div class="xg-legend-foot">floating names label regions (faces), not seeds &middot; hover anything for details &middot; full guide: About &rarr; &ldquo;F&#8321; exchange graph tab&rdquo;</div>
             </div>
@@ -1215,6 +1213,8 @@
 
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v0.73</b> — exchange graph: FIX — the halo test looked up a seed's parent via adjacency, which is absent for the unexpanded frontier generation, so the whole last drawn row was wrongly haloed; the tree parent (forkParent) is used now. Terminology: haloed seeds are called NESTING ROOTS.</li>
+                <li><b>v0.72</b> — exchange graph: nested marking redesigned — only ENTRY seeds are marked, with a clean detached halo ring (teal, offset from the node); descendants are unmarked visually since heredity makes "below a halo" the exact meaning (tooltips still state nested/inherited); replaces the thin-vs-thick stroke scheme, which read poorly.</li>
                 <li><b>v0.71</b> — exchange graph: nested seeds now distinguish ENTRY POINTS (nested seed whose parent is not nested — the roots of the maximal pure-refinement subtrees) with a thick green ring; descendants keep the thin ring; tooltips say which is which.</li>
                 <li><b>v0.70</b> — exchange graph: restored planarity — the v0.52 widening let adjacent fork canopies interleave (total tree halfwidth exceeded half the root spacing); the branch width is now derived from the measured minimum gap between same-side fork roots (whole-tree halfwidth ≤ 46% of it), with child ratio 1/2, the exact sibling-noncrossing bound.</li>
                 <li><b>v0.69</b> — exchange graph: label controls split into two independent knobs — "label size" (pure font scale) and "label detail" (×0.4–×4, how soon the zoom-gated layers and interval digits appear); the previous single slider conflated both.</li>
@@ -3780,7 +3780,8 @@ function buildExchangeGraph() {
     const isEntryNested = id => {
         if (!isNestedId(id)) return false;
         const n = nodes[id];
-        const par = n.adj.find(a => nodes[a].quiver.totalArrows < n.quiver.totalArrows);
+        let par = forkParent.get(id);
+        if (par === undefined) par = n.adj.find(a => nodes[a].quiver.totalArrows < n.quiver.totalArrows);
         return par === undefined || !isNestedId(par);
     };
     function freshU(id) {
@@ -3853,7 +3854,7 @@ function buildExchangeGraph() {
         const frU = n.quiver.fork ? freshU(n.id) : null;
         return 'seed ' + n.id + ' — ' + cls + ', BFS dist ' + n.dist +
             (frU ? '\ninserts the curve ' + frU + ' (relative to its parent seed)' : '') +
-            (nst ? '\nNESTED-SUBDIVISION SEED' + (ent ? ' — ENTRY POINT (its parent is not nested; the pure-refinement regime starts here)' : ' (inherited: descendant of an entry seed)') + ': every descending mutation weaves the new curve strictly between the two retained ones, forever — the whole forward tree refines this seed\u2019s p/q interval into nested subintervals' : '') +
+            (nst ? '\n' + (ent ? 'NESTING ROOT (parent not nested — the pure-refinement regime starts here)' : 'nested seed (descendant of a nesting root)') + ': every descending mutation weaves the new curve strictly between the two retained ones, forever — the whole forward tree refines this seed\u2019s p/q interval into nested subintervals' : '') +
             '\nquiver: ' + quiverStr(n.quiver) +
             '\nmult (12,13,23) = (' + n.quiver.mult.join(', ') + ')' +
             '\nv₀ = ' + vstr(s.pq[0]) +
@@ -3923,10 +3924,12 @@ function buildExchangeGraph() {
         const iv = seedIv(n.state);
         svg.push('<g class="seedg" data-rlo="' + (iv ? iv[0] : 1) + '" data-rhi="' + (iv ? iv[1] : 0) + '">');
         const g = forkGen.get(id);
-        const cls = (n.quiver.fork ? 'nf' + Math.min(g ?? 2, 2) : (n.quiver.cyclic ? 'nc' : 'nk')) +
-            (isNestedId(id) ? (isEntryNested(id) ? ' nest nest0' : ' nest') : '');
+        const cls = n.quiver.fork ? 'nf' + Math.min(g ?? 2, 2) : (n.quiver.cyclic ? 'nc' : 'nk');
         const r = n.quiver.fork ? Math.max(1.4, 5.5 * Math.pow(0.82, g ?? 3)) : 5.5;
         const uks = n.state.pq.slice(1).map(uKey).join('|');
+        if (isEntryNested(id))
+            svg.push('<circle class="nesthalo" r="' + (r + 3.5).toFixed(1) + '" cx="' + px(p.x).toFixed(1) +
+                     '" cy="' + py(p.y).toFixed(1) + '"/>');
         svg.push('<circle class="nd ' + cls + '" r="' + r + '" cx="' + px(p.x).toFixed(1) + '" cy="' + py(p.y).toFixed(1) +
                  '" data-info="' + esc(nodeInfo(n)) + '" data-us="' + esc(uks) + '"/>');
         const triple = n.state.pq.slice(1).map(vstr).join(' ');
