@@ -108,6 +108,33 @@
     }
     .tab-btn:hover { color: #2c3e50; }
     .tab-btn.active { color: #2c3e50; border-bottom-color: #3498db; }
+    /* ---- sesqui constructions tab ---- */
+    #tabConstructions .about-inner { max-width: 1160px; }
+    .cx-card { border: 1.5px solid #9fb8c8; border-radius: 10px; background: #f7fafc;
+               padding: 12px 14px 6px 14px; margin: 18px 0; }
+    .cx-card h4 { margin: 2px 0 8px 0; font-size: 15.5px; color: #2c3e50; }
+    .cx-card .cx-range { color: #7a614b; font-weight: normal; font-size: 13px; }
+    .cx-chip { display: inline-block; border: 1px solid #9fb8c8; border-radius: 14px;
+               padding: 3px 12px; margin-right: 8px; font-size: 13px; background: #eaf2f8;
+               color: #2c3e50; font-weight: 600; }
+    .cx-chip.off { background: #f2f2f2; color: #aaa; border-color: #ddd; font-weight: normal; }
+    .cx-fig { margin: 6px 0 10px 0; }
+    .cx-fig svg { max-width: 100%; height: auto; }
+    .cx-figctl { font-size: 13px; color: #456; margin: 2px 0 10px 0; }
+    .cx-figctl label { margin-right: 14px; cursor: pointer; white-space: nowrap; }
+    .cx-figctl input { vertical-align: -2px; }
+    #tabConstructions.cx-hidev .tl-v { display: none; }
+    #tabConstructions.cx-hidee .tl-e { display: none; }
+    #tabConstructions.cx-hideg .tl-g { display: none; }
+    .cx-subtabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 10px 0;
+                   position: sticky; top: 0; background: #fff; padding: 8px 0 6px 0; z-index: 5; }
+    .cx-subbtn { border: 1px solid #9fb8c8; border-radius: 15px; background: #eaf2f8;
+                 color: #2c3e50; padding: 4px 14px; font-size: 13.5px; cursor: pointer; }
+    .cx-subbtn:hover { background: #d9e8f3; }
+    .cx-subbtn.active { background: #2c7bb5; border-color: #2c7bb5; color: #fff; font-weight: 600; }
+    #tabConstructions details { margin: 10px 0; }
+    #tabConstructions summary { cursor: pointer; color: #2471a3; font-weight: 600; }
+    #tabConstructions p, #tabConstructions li { font-size: 14px; line-height: 1.55; }
     .tab-content { display: none; flex: 1; min-height: 0; }
     .tab-content.active { display: flex; }
 
@@ -269,7 +296,7 @@
     #afTable th { background:#eef0ee; font-family: inherit; }
 
     /* ---- about tab ---- */
-    #tabAbout.active { display: block; overflow-y: auto; }
+    #tabAbout.active, #tabConstructions.active { display: block; overflow-y: auto; }
     .about-inner {
         max-width: 860px;
         margin: 0 auto;
@@ -593,6 +620,7 @@
         <button class="tab-btn active" data-tab="tabDiagram">Scattering diagram</button>
         <button class="tab-btn" data-tab="tabExchange">F1 exchange graph</button>
         <button class="tab-btn" data-tab="tabAnchors">F1 anchor fan</button>
+        <button class="tab-btn" data-tab="tabConstructions">General sesqui constructions</button>
         <button class="tab-btn" data-tab="tabAbout">About</button>
     </div>
 
@@ -756,6 +784,1347 @@
         </div>
     </div>
 
+
+    <!-- sesqui constructions tab -->
+    <div class="tab-content" id="tabConstructions">
+        <div class="about-inner">
+            <h2>General sesqui constructions</h2>
+            <p>
+                A handful of <b>general curve families</b> — symbolic trees whose decorations are
+                elementary functions of the class — together construct <i>every</i> conjectural
+                sesquicurve tested. This page is organized <b>by family</b>: each card states the
+                family, the exact regime in which it is expected to be valid, whether that validity
+                is rigorous or empirical, and the evidence. Reference documents:
+                <code>tree_construction_8_interval_7_9_26.html</code> (the interval owned by 8,
+                incl. proofs for Family 1) and
+                <code>tree_construction_deep_intervals_7_10_26.html</code> (all deeper intervals of
+                [8,10]); comprehensive state of the art with full proofs and open problems:
+                <code>sesqui_8_10_state_of_the_art_7_10_26.html</code>.
+            </p>
+            <p>
+                Conventions: a class is <span class="mth">(p, q, d)</span>, <span class="mth">gcd(p,q) = 1</span>
+                — the conjectural rational sesquicuspidal curve of class
+                <span class="mth">dL &minus; mE</span>, <span class="mth">m := 3d&minus;p&minus;q</span>, with one
+                <span class="mth">(p,q)</span>-cusp. The <b>conjectural list</b> (&ldquo;window&rdquo;) is:
+                <span class="mth">m &ge; 0</span>, adjunction <span class="mth">&delta; &ge; 0</span>, and
+                pairing <span class="mth">&ge; 0</span> against every unicuspidal curve (equivalently the two
+                anchors of the ratio interval). The families split at <span class="mth">m = q</span>:
+                Family 1 covers <span class="mth">m &le; q</span> outright; Families 2&ndash;7 partition
+                <span class="mth">m &gt; q</span>. Throughout <span class="mth">&tau;<sup>4</sup> =
+                (7+3&radic;5)/2 = 6.8541&hellip;</span> (<span class="mth">&tau;</span> the golden ratio).
+            </p>
+            <p>
+                Trees are written as nested brackets: <code>L1</code>, <code>L2</code>, <code>L3</code>
+                are <b>legs</b> — unbounded edges lying on the corresponding line, with integer weights
+                (<code>3*L1</code> = one leg of weight 3) — and <code>[a*X b*Y]</code> is the vertex where
+                the output edges of X and Y meet, consuming them with multiplicities a, b. A vertex whose
+                two children are legs on two different lines is forced to sit at the intersection of those
+                lines. One abbreviation is fixed once: <span class="mth">&Lambda;<sub>k</sub> :=
+                [(k+1)*L1 k*L3]</span> — the one-vertex tree with legs of weights k+1 and k at
+                L&#8321;&cap;L&#8323;, which is exactly the tree of the (2k+4, 1)-unicuspidal curve
+                (&Lambda;&#8322; = (8,1), &Lambda;&#8323; = (10,1), &hellip;). The one-vertex trees
+                [L1 L2] and [L2 L3] (unit legs, at the other two intersections) are the trees of the
+                (5,1)-curve and its counterpart. In the trees of Families 1&ndash;5 every vertex consumes
+                at most one multi-vertex subtree, so the internal (bounded) edges form a <b>single
+                path</b> ending at the output edge, each internal edge carrying the sum of the charges
+                attached below it; Family 7&rsquo;s canonical tree branches at its root (though its
+                classes also admit single-path witnesses); Family 6 is the one case where branching is
+                <i>necessary</i>.
+                On the 8-interval the whole of <span class="mth">m &gt; q</span> is now covered by a
+                <b>proved closed-form decision rule</b> (see the Families 2&ndash;4 card); on the deeper
+                intervals of [8,10] the same trees are exhaustively machine-verified.
+            </p>
+
+            <div class="cx-subtabs" id="cxSubtabs">
+                <button class="cx-subbtn" data-sec="cxSecF1">Family 1</button>
+                <button class="cx-subbtn" data-sec="cxSecF24">Families 2&ndash;4</button>
+                <button class="cx-subbtn" data-sec="cxSecF5">Family 5</button>
+                <button class="cx-subbtn" data-sec="cxSecF6">Family 6</button>
+                <button class="cx-subbtn" data-sec="cxSecF7">Family 7</button>
+                <button class="cx-subbtn" data-sec="cxSecSharp">Sharpness &amp; depth</button>
+                <button class="cx-subbtn" data-sec="cxSecRead">How to read</button>
+                <button class="cx-subbtn" data-sec="all">All</button>
+            </div>
+            <div class="cx-figctl"><b>Figure labels:</b>
+                <label><input type="checkbox" id="cxLabV" checked> vertex data (multiplicities &middot; det)</label>
+                <label><input type="checkbox" id="cxLabE" checked> edge charges</label>
+                <label><input type="checkbox" id="cxLabG" checked> weights</label>
+                <span style="color:#8a99a3">&mdash; uncheck to declutter; hovering a vertex dot always shows its full data</span>
+            </div>
+
+            <div class="cx-card" id="cxSecF1">
+                <h4>Family 1 &nbsp;<span class="cx-range">valid: 0 &le; m &le; q,&ensp;p/q &gt; &tau;<sup>4</sup></span></h4>
+                <p>
+                    <b>Tree.</b>
+                    <code>[(q&minus;m)&middot;L&#8322; [(d&minus;2q)&middot;[L&#8322; L&#8323;] (d&minus;q)&middot;L&#8321;]]</code>
+                    — the vertex [L&#8322; L&#8323;] consumed <span class="mth">d&minus;2q</span> times
+                    against a leg of weight <span class="mth">d&minus;q</span> on L&#8321;, then one leg on
+                    L&#8322; of weight exactly <span class="mth">q&minus;m</span>.
+                </p>
+                <p>
+                    <b>Regime.</b> Every conjectural class with <span class="mth">0 &le; m &le; q</span> and
+                    <span class="mth">p/q &gt; &tau;<sup>4</sup></span> — with <b>no reference to the ratio
+                    interval</b>: one formula for every owned interval of [8,10] at every nesting depth,
+                    and beyond both ends of the strip. This is possible because of the <b>band theorem</b>
+                    (proved, 2026-07-12 audit): no unicuspidal cap cuts into the band
+                    <span class="mth">0 &le; m &le; q</span> for any <span class="mth">p/q &ge; &tau;<sup>4</sup></span>
+                    — so on it the conjectural list is simply
+                    <span class="mth">{m &ge; 0, &delta; &ge; 0}</span>, uniformly on every strip. In
+                    node count the band is the bottom slice of each column:
+                    <span class="mth">&delta; &minus; &delta;<sub>min</sub> &le; q(p&minus;3q)/9</span>,
+                    <span class="mth">&delta;<sub>min</sub> = (p&sup2;&minus;7pq+q&sup2;+9)/18</span>. The edge
+                    <span class="mth">p/q = &tau;<sup>4</sup></span> is genuine twice over: below it the middle vertex leaves the dense range (<span class="mth">d &gt; &tau;&sup2;q</span> fails at
+                    <span class="mth">m = 0</span>), and <span class="mth">&delta;<sub>min</sub></span> goes
+                    negative on the conic through the Fibonacci staircase.
+                </p>
+                <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="244.1" x2="154.9" y2="244.1" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="55.2" y1="418.0" x2="55.2" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="4.8" y1="418.0" x2="207.8" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="55.2" y1="317.2" x2="79.6" y2="244.1" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="79.6" y1="244.1" x2="55.2" y2="146.5" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="55.2" y1="375.3" x2="55.2" y2="323.2" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="55.2,323.2 52.2,330.2 58.2,330.2" fill="#1a7a4a"/>
+<line x1="29.3" y1="369.1" x2="52.5" y2="322.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="52.5,322.6 46.7,327.5 52.1,330.2" fill="#1a7a4a"/>
+<line x1="137.7" y1="244.1" x2="85.6" y2="244.1" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="85.6,244.1 92.6,247.1 92.6,241.1" fill="#1a7a4a"/>
+<line x1="55.2" y1="204.6" x2="55.2" y2="152.5" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="55.2,152.5 52.2,159.5 58.2,159.5" fill="#1a7a4a"/>
+<line x1="55.2" y1="146.5" x2="35.6" y2="54.7" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="35.6,54.7 33.8,63.3 40.7,61.8" fill="#c53030"/>
+<circle cx="55.2" cy="317.2" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="79.6" cy="244.1" r="3.4" fill="#14171a"><title>(4,7)·det 3</title></circle>
+<circle cx="55.2" cy="146.5" r="3.4" fill="#14171a"><title>(2,1)·det 3</title></circle>
+<line class="tl-lead tl-v" x1="79.6" y1="244.1" x2="109.0" y2="255.1" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="138" y="239" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="63" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="204" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="76" y="297" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−2q) × (0,1,1)</text>
+<text class="tl-e" x="76" y="185" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−q, d−2q, d−2q)</text>
+<text class="tl-g" x="55" y="386" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="26" y="379" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="145" y="248" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−q)·L1</text>
+<text class="tl-g" x="55" y="216" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(q−m)·L2</text>
+<text class="tl-o" x="96" y="51" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="106" y="259" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−2q, d−q)·det 3</text>
+<text class="tl-v" x="64" y="138" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(q−m, 1)·det q</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="147.6" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="232.4" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="190.0" y1="276.6" x2="253.6" y2="185.3" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="203.4" y="223.0" width="36.8" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="221.8" y="234.5" font-size="10" fill="#333" text-anchor="middle">d−2q</text></g>
+<line x1="317.1" y1="367.8" x2="253.6" y2="185.3" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="270.6" y="268.6" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="285.4" y="280.1" font-size="10" fill="#333" text-anchor="middle">d−q</text></g>
+<line x1="62.9" y1="367.8" x2="158.2" y2="94.1" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="95.7" y="223.0" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="110.5" y="234.5" font-size="10" fill="#333" text-anchor="middle">q−m</text></g>
+<line x1="253.6" y1="185.3" x2="158.2" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="132.6" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="147.6" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<rect x="217.4" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="232.4" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="190.0" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (0,1,1)</title></circle>
+<rect x="302.1" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="317.1" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<circle cx="253.6" cy="185.3" r="4" fill="#2b6cb0"><title>(d−2q, d−q) det 3  (d−q, d−2q, d−2q)</title></circle>
+<rect x="47.9" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="62.9" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="158.2" cy="94.1" r="4" fill="#2b6cb0"><title>(q−m, 1) det q  α = (d−q, p−2d, d−2q)</title></circle>
+<line x1="158.2" y1="94.1" x2="158.2" y2="64.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="158.2,56.1 154.7,64.1 161.7,64.1" fill="#c53030"/>
+<text class="tl-e" x="198" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(0,1,1)</text>
+<text class="tl-v" x="246" y="181" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−2q, d−q) det 3</text>
+<text class="tl-e" x="246" y="206" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(d−q, d−2q, d−2q)</text>
+<text class="tl-v" x="166" y="90" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(q−m, 1) det q</text>
+<text class="tl-e" x="166" y="115" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α = (d−q, p−2d, d−2q)</text>
+</svg>
+</div></div>
+                <p>
+                    <b>Status.</b> <b>Proven</b> (closed-form vertex conditions + explicit placement;
+                    reference document &sect;5) — the only family with a symbolic argument.
+                </p>
+                <p>
+                    <b>Evidence.</b> All machine-verified with 0 failures, every class by this one formula:
+                </p>
+                <ul style="font-size:13.5px;margin:.2em 0 .6em 1.2em">
+                    <li>interval owned by 8, <span class="mth">q &le; 60</span>: <b>17,072 / 17,072</b> (orders to 367);</li>
+                    <li>all deeper intervals of [8,10] ((265,29), (55,6), (377,41), (10,1) incl. their
+                        micro-slivers), <span class="mth">q &le; 80</span>: <b>30,797 / 30,797</b> — and the
+                        band equals the Regime-E part of the true window exactly (all 2,821 phantoms at
+                        <span class="mth">q &le; 80</span> have <span class="mth">m &gt; q</span>);</li>
+                    <li><b>outside the strip</b>: <span class="mth">&tau;<sup>4</sup> &lt; p/q &lt; 8</span>,
+                        <span class="mth">q &le; 20</span>: 699 / 699; &nbsp;<span class="mth">10 &lt; p/q &lt; 12</span>,
+                        <span class="mth">q &le; 20</span>: 1,231 / 1,231 (band = window in both);</li>
+                    <li><b>deep nesting frontier</b> (unicurve degrees grow fast under the recursion):
+                        the full micro-owner columns (1270,139) at order 853 and (6085,666) at order 4,087;
+                        the class (29155,3191,11500) at order 9,582; and (194237,21259,71832) at order
+                        <b>130,460</b> — the <span class="mth">m = 0</span> class of the first column where
+                        the generation-2 micro-owner (1270,139) uniquely bites — verbatim
+                        <code>[21259*L2 [29314*[L2 L3] 50573*L1]]</code>.</li>
+                </ul>
+            </div>
+
+            <div class="cx-card" id="cxSecF24">
+                <h4>Families 2&ndash;4 &nbsp;<span class="cx-range">(m &gt; q; together they partition the regime)</span></h4>
+                <p>
+                    Every tree here uses <span class="mth">p&minus;2d</span> copies of the vertex
+                    [L&#8321; L&#8322;] together with vertices
+                    <span class="mth">&Lambda;<sub>k</sub></span> at L&#8321;&cap;L&#8323;, whose legs
+                    carry total weights <span class="mth">A = 3d&minus;p&minus;q</span> on L&#8321; and
+                    <span class="mth">B = d&minus;2q</span> on L&#8323;; everything is consumed along a
+                    single path of internal edges. Set
+                    <span class="mth">&sigma; = A&minus;B</span> (<span class="mth">= q &minus; (p&minus;2d)</span>) and, when
+                    <span class="mth">&sigma; &ne; 0</span>, let <span class="mth">r</span> be the
+                    remainder of <span class="mth">min(A,B)</span> mod <span class="mth">|&sigma;|</span>.
+                    The three families below <b>partition</b> the regime by <span class="mth">(&sigma;, r)</span> —
+                    every class falls in exactly one.
+                </p>
+                <details>
+                    <summary>the proved decision rule (8-interval) — which tree for which class, no search</summary>
+                    <p style="font-size:13.5px">
+                        With <span class="mth">x = p&minus;2d</span>, <span class="mth">s = |&sigma;|</span>,
+                        <span class="mth">e = B&minus;3&sigma;</span>, <span class="mth">k, r</span> as above
+                        (all for <span class="mth">8 &le; p/q &lt; &lambda;</span>):
+                    </p>
+                    <ol style="font-size:13.5px;margin:.2em 0 .6em 1.4em">
+                        <li><span class="mth">&sigma; &gt; 0, r = 0</span>: one vertex &Lambda;<sub>k</sub>
+                            (then <span class="mth">k &ge; 3</span> automatically).</li>
+                        <li><span class="mth">&sigma; &gt; 0, r &gt; 0, x &le; 2e+5</span>:
+                            <code>[(s&minus;1)*&Lambda;3 [x*[L1 L2] &Lambda;<sub>e+3</sub>]]</code> — this
+                            covers <i>all</i> <span class="mth">k &ge; 4</span>, since
+                            <span class="mth">k &ge; 4 &rArr; x &le; 2e+5</span>.</li>
+                        <li>Otherwise <span class="mth">k = 3</span> (and <span class="mth">e = r</span>).
+                            If <span class="mth">Q&#8327;(x,r) &le; 1</span>: the two-vertex split
+                            <span class="mth">(&Lambda;&#8323;, &Lambda;&#8324;)</span> with multiplicities
+                            <span class="mth">(s&minus;r, r)</span>.</li>
+                        <li>If <span class="mth">Q&#8327;(x,r) &gt; 1</span> and
+                            <span class="mth">3x &le; 2s+r</span>: Family 5.</li>
+                        <li>If <span class="mth">Q&#8327;(x,r) &gt; 1</span> and
+                            <span class="mth">3x &gt; 2s+r</span>: Family 7.</li>
+                        <li><span class="mth">&sigma; &lt; 0, r = 0</span>: one weight-exchanged vertex.</li>
+                        <li><span class="mth">&sigma; &lt; 0, r &gt; 0</span>:
+                            <code>[[{k+r}*L1 {k+r+1}*L3] [x*[L1 L2] (s&minus;1)*[k*L1 (k+1)*L3]]]</code>
+                            (the deeper vertex outside — the other order is provably unplaceable).</li>
+                        <li><span class="mth">&sigma; = 0</span>: <code>[A*L1 A*L3]</code> if
+                            <span class="mth">A = 2<sup>i</sup></span>; otherwise
+                            <code>[&Lambda;3 [x*[L1 L2] [(A&minus;4)*L1 (A&minus;3)*L3]]]</code>.</li>
+                    </ol>
+                    <p style="font-size:13px;color:#666">
+                        Each case comes with a proof of admissibility and an explicit placement; the case
+                        split is exhaustive by arithmetic. Failure sets are exact: cases 4&ndash;5 occur
+                        precisely on <span class="mth">{k=3, x&gt;2r+5, Q&#8327;(x,r)&gt;1}</span>
+                        (= the 327 classes at <span class="mth">q &le; 60</span> where every Family-2/3
+                        split fails — verified as an exact set equality).
+                    </p>
+                </details>
+                <p>
+                    <b>Regime.</b> Expected valid for every conjectural class with
+                    <span class="mth">m &gt; q</span> on all of [8,10] — every owned interval and every
+                    nesting generation — <i>except</i> the classes claimed by Families 5&ndash;6 below
+                    (a thin, empirically-delineated minority). Unlike Family 1 this regime does interact
+                    with the interval structure: each interval&rsquo;s own pairing inequality is enforced
+                    here, at the vertices where the &Lambda;-outputs are consumed and in the placement
+                    feasibility, which is exactly where the
+                    exceptions live.
+                </p>
+                <p>
+                    <b>Status.</b> On the <b>8-interval: proved</b> (modulo the local-rule and soundness
+                    citations) — a closed-form decision rule with an explicit tree and an explicit
+                    placement for every case, no search; from
+                    <code>regime_U_solutions_7_10_26</code> + an externally audited completion, every
+                    claim of which was re-verified against the exact gate
+                    (<code>verification_regime_U_audit_7_10_26</code>). On the <b>deeper intervals of
+                    [8,10]: empirical</b> (their windows have different constants; exhaustively verified
+                    <span class="mth">q &le; 80</span>). Counts below: 8-interval
+                    <span class="mth">q &le; 60</span> (31,049 U-classes) &brvbar; deeper intervals
+                    <span class="mth">q &le; 80</span> (74,227 U-classes):
+                </p>
+                <details>
+                    <summary>Family 2: one &Lambda;-vertex &nbsp;(&sigma; &ne; 0, r = 0) — 4,526 &brvbar; 6,755 classes</summary>
+                    <p>
+                        Here <span class="mth">(A,B) = |&sigma;|&middot;(k+1, k)</span> (or its reverse
+                        when <span class="mth">&sigma; &lt; 0</span>, exchanging the roles of L&#8321;
+                        and L&#8323;): a single vertex <span class="mth">&Lambda;<sub>k</sub></span> with
+                        legs of weights <span class="mth">(k+1, k)</span>, its output edge consumed
+                        <span class="mth">|&sigma;|</span> times. When <span class="mth">|&sigma;| = 1</span>
+                        the leg weights are <span class="mth">(A, B)</span> themselves.
+                    </p>
+                    <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="304.6" x2="316.5" y2="304.6" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="213.0" y1="418.0" x2="213.0" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="39.3" y1="418.0" x2="242.3" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="213.0" y1="304.6" x2="72.6" y2="164.3" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="96.0" y1="304.6" x2="72.6" y2="164.3" stroke="#2b6cb0" stroke-width="2.0"/>
+<line x1="280.5" y1="304.6" x2="219.0" y2="304.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="219.0,304.6 226.0,307.6 226.0,301.6" fill="#1a7a4a"/>
+<line x1="213.0" y1="372.1" x2="213.0" y2="310.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="213.0,310.6 210.0,317.6 216.0,317.6" fill="#1a7a4a"/>
+<line x1="163.5" y1="304.6" x2="102.0" y2="304.6" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="102.0,304.6 109.0,307.6 109.0,301.6" fill="#1a7a4a"/>
+<line x1="65.8" y1="365.0" x2="93.3" y2="310.0" stroke="#1a7a4a" stroke-width="2.2"/>
+<polygon points="93.3,310.0 87.5,314.9 92.9,317.6" fill="#1a7a4a"/>
+<line x1="72.6" y1="164.3" x2="48.1" y2="57.9" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="48.1,57.9 46.5,66.5 53.3,64.9" fill="#c53030"/>
+<circle cx="213.0" cy="304.6" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="96.0" cy="304.6" r="3.4" fill="#14171a"><title>(4,3)·det 2</title></circle>
+<circle cx="72.6" cy="164.3" r="3.4" fill="#14171a"><title>(1,2)·det 5</title></circle>
+<text class="tl-l" x="290" y="300" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="221" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="238" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="168" y="247" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d) × (1,1,0)</text>
+<text class="tl-e" x="70" y="224" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">σ × (k+1, 0, k)</text>
+<text class="tl-g" x="299" y="309" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="213" y="383" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="171" y="321" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L1</text>
+<text class="tl-g" x="63" y="375" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">k·L3</text>
+<text class="tl-o" x="96" y="54" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="87" y="320" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k)·det 2</text>
+<text class="tl-v" x="82" y="155" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, σ)·det 2k+1</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="62.9" y1="353.3" x2="105.2" y2="235.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="147.6" y1="353.3" x2="105.2" y2="235.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="232.4" y1="353.3" x2="274.8" y2="235.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="238.8" y="286.4" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="253.6" y="297.9" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="317.1" y1="353.3" x2="274.8" y2="235.6" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="287.0" y="286.4" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="296.0" y="297.9" font-size="10" fill="#333" text-anchor="middle">k</text></g>
+<line x1="105.2" y1="235.6" x2="190.0" y2="117.9" stroke="#7a8791" stroke-width="1.4"/>
+<g class="tl-g"><rect x="129.2" y="168.8" width="36.8" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="147.6" y="180.3" font-size="10" fill="#333" text-anchor="middle">p−2d</text></g>
+<line x1="274.8" y1="235.6" x2="190.0" y2="117.9" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="223.4" y="168.8" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="232.4" y="180.3" font-size="10" fill="#333" text-anchor="middle">σ</text></g>
+<rect x="47.9" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="62.9" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="132.6" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="147.6" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="105.2" cy="235.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="217.4" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="232.4" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="302.1" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="317.1" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="274.8" cy="235.6" r="4" fill="#2b6cb0"><title>(k+1,k) det 2  (k+1, 0, k)</title></circle>
+<circle cx="190.0" cy="117.9" r="4" fill="#2b6cb0"><title>(p−2d, σ) det 2k+1  α = (d−q, p−2d, d−2q)</title></circle>
+<line x1="190.0" y1="117.9" x2="190.0" y2="87.9" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="190.0,79.9 186.5,87.9 193.5,87.9" fill="#c53030"/>
+<text class="tl-e" x="113" y="232" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="267" y="232" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k) det 2</text>
+<text class="tl-e" x="267" y="257" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1, 0, k)</text>
+<text class="tl-v" x="198" y="114" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, σ) det 2k+1</text>
+<text class="tl-e" x="198" y="139" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α = (d−q, p−2d, d−2q)</text>
+</svg>
+</div></div>
+                </details>
+                <details>
+                    <summary>Family 3: two &Lambda;-vertices &nbsp;(&sigma; &ne; 0, r &ne; 0) — 25,787 &brvbar; 66,904 classes (the majority)</summary>
+                    <p>
+                        The weights split across two vertices
+                        <span class="mth">&Lambda;<sub>k</sub></span> and
+                        <span class="mth">&Lambda;<sub>k+1</sub></span>
+                        (<span class="mth">k = &lfloor;min(A,B)/|&sigma;|&rfloor;</span>), consumed with
+                        multiplicities <span class="mth">|&sigma;|&minus;r</span> and
+                        <span class="mth">r</span> at <i>different</i> points of the path — both sit at
+                        the same intersection point, so their output edges leave in different directions
+                        and can never meet each other directly; the [L&#8321; L&#8322;]-copies are
+                        consumed between them, the larger-index vertex first. The consecutive index pair
+                        <span class="mth">(k, k+1)</span> works for 20,124 of the 25,787; the other 5,663
+                        (mostly <span class="mth">&sigma; &lt; 0</span>) need a wider pair
+                        <span class="mth">(k, k+s)</span>, usually <span class="mth">s = 2</span> — the
+                        verifier takes the first spread that works.
+                    </p>
+                    <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="262.9" x2="285.0" y2="262.9" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="158.9" y1="418.0" x2="158.9" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="41.4" y1="418.0" x2="244.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="158.9" y1="262.9" x2="113.2" y2="217.2" stroke="#2b6cb0" stroke-width="2.3"/>
+<line x1="118.9" y1="262.9" x2="113.2" y2="217.2" stroke="#2b6cb0" stroke-width="2.3"/>
+<line x1="118.9" y1="262.9" x2="105.6" y2="182.9" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="113.2" y1="217.2" x2="105.6" y2="182.9" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="173.3" y1="262.9" x2="124.9" y2="262.9" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="124.9,262.9 131.9,265.9 131.9,259.9" fill="#1a7a4a"/>
+<line x1="94.6" y1="311.6" x2="116.2" y2="268.3" stroke="#1a7a4a" stroke-width="2.2"/>
+<polygon points="116.2,268.3 110.4,273.2 115.8,275.9" fill="#1a7a4a"/>
+<line x1="213.4" y1="262.9" x2="164.9" y2="262.9" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="164.9,262.9 171.9,265.9 171.9,259.9" fill="#1a7a4a"/>
+<line x1="158.9" y1="317.4" x2="158.9" y2="268.9" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="158.9,268.9 155.9,275.9 161.9,275.9" fill="#1a7a4a"/>
+<line x1="197.8" y1="262.9" x2="124.9" y2="262.9" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="124.9,262.9 131.9,265.9 131.9,259.9" fill="#1a7a4a"/>
+<line x1="83.6" y1="333.5" x2="116.2" y2="268.3" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="116.2,268.3 110.4,273.2 115.8,275.9" fill="#1a7a4a"/>
+<line x1="105.6" y1="182.9" x2="88.6" y2="96.5" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="88.6,96.5 86.7,105.0 93.6,103.7" fill="#c53030"/>
+<circle cx="118.9" cy="262.9" r="3.4" fill="#14171a"><title>(4,3)·det 2</title></circle>
+<circle cx="158.9" cy="262.9" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="118.9" cy="262.9" r="3.4" fill="#14171a"><title>(5,4)·det 2</title></circle>
+<circle cx="113.2" cy="217.2" r="3.4" fill="#14171a"><title>(3,3)·det 7</title></circle>
+<circle cx="105.6" cy="182.9" r="3.4" fill="#14171a"><title>(4,1)·det 9</title></circle>
+<line class="tl-lead tl-e" x1="115.4" y1="234.6" x2="81.4" y2="236.1" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="113.8" y1="232.5" x2="102.0" y2="200.5" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="108.5" y1="195.9" x2="96.7" y2="164.5" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="261" y="258" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="167" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="240" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="150" y="241" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">x × (1,1,0)</text>
+<text class="tl-e" x="81" y="240" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">r × Λₖ₊₁</text>
+<text class="tl-e" x="102" y="204" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(σ−r) × Λₖ</text>
+<text class="tl-e" x="97" y="169" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x+r(k+2), x, r(k+1))</text>
+<text class="tl-g" x="180" y="267" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L1</text>
+<text class="tl-g" x="91" y="322" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">k·L3</text>
+<text class="tl-g" x="220" y="289" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="159" y="328" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="189" y="251" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2)·L1</text>
+<text class="tl-g" x="80" y="344" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L3</text>
+<text class="tl-o" x="96" y="93" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="128" y="290" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k)·det 2</text>
+<text class="tl-v" x="106" y="267" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1)·det 2</text>
+<text class="tl-v" x="104" y="220" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x, r)</text>
+<text class="tl-v" x="119" y="187" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(σ−r, 1)</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="46.5" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="46.0" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="60.8" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="103.9" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="80.5" y="314.2" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="89.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">k</text></g>
+<line x1="161.3" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="218.7" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="276.1" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="275.7" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="290.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+2</text></g>
+<line x1="333.5" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="304.4" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="319.2" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="190.0" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="209.7" y="223.0" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="218.7" y="234.5" font-size="10" fill="#333" text-anchor="middle">x</text></g>
+<line x1="304.8" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="267.1" y="223.0" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="276.1" y="234.5" font-size="10" fill="#333" text-anchor="middle">r</text></g>
+<line x1="75.2" y1="276.6" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="103.4" y="177.3" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="118.2" y="188.8" font-size="10" fill="#333" text-anchor="middle">σ−r</text></g>
+<line x1="247.4" y1="185.3" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="31.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="46.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="88.9" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="103.9" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="75.2" cy="276.6" r="4" fill="#2b6cb0"><title>(k+1,k) det 2  Λₖ</title></circle>
+<rect x="146.3" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="161.3" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="203.7" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="218.7" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="190.0" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="261.1" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="276.1" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="318.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="333.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="304.8" cy="276.6" r="4" fill="#2b6cb0"><title>(k+2,k+1) det 2  Λₖ₊₁</title></circle>
+<circle cx="247.4" cy="185.3" r="4" fill="#2b6cb0"><title>(x, r)  (x+r(k+2), x, r(k+1))</title></circle>
+<circle cx="161.3" cy="94.1" r="4" fill="#2b6cb0"><title>(σ−r, 1)  α</title></circle>
+<line x1="161.3" y1="94.1" x2="161.3" y2="64.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="161.3,56.1 157.8,64.1 164.8,64.1" fill="#c53030"/>
+<line class="tl-lead tl-v" x1="304.8" y1="276.6" x2="299.8" y2="290.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-v" x="83" y="273" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k) det 2</text>
+<text class="tl-e" x="83" y="298" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ</text>
+<text class="tl-e" x="198" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="297" y="295" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1) det 2</text>
+<text class="tl-e" x="297" y="274" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ₊₁</text>
+<text class="tl-v" x="239" y="181" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x, r)</text>
+<text class="tl-e" x="239" y="206" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x+r(k+2), x, r(k+1))</text>
+<text class="tl-v" x="169" y="90" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(σ−r, 1)</text>
+<text class="tl-e" x="169" y="115" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α</text>
+</svg>
+</div></div>
+                </details>
+                <details>
+                    <summary>Family 4: equal totals &nbsp;(&sigma; = 0) — 408 &brvbar; 568 classes</summary>
+                    <p>
+                        A single vertex <span class="mth">[A*L1 A*L3]</span> works iff
+                        <span class="mth">A</span> is a power of two (12 classes):
+                    </p>
+                    <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="304.8" x2="322.9" y2="304.8" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="218.9" y1="418.0" x2="218.9" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="22.2" y1="418.0" x2="225.2" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="218.9" y1="304.8" x2="78.8" y2="164.7" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="78.8" y1="304.8" x2="78.8" y2="164.7" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="286.2" y1="304.8" x2="224.9" y2="304.8" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="224.9,304.8 231.9,307.8 231.9,301.8" fill="#1a7a4a"/>
+<line x1="218.9" y1="372.1" x2="218.9" y2="310.8" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="218.9,310.8 215.9,317.8 221.9,317.8" fill="#1a7a4a"/>
+<line x1="146.1" y1="304.8" x2="84.8" y2="304.8" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="84.8,304.8 91.8,307.8 91.8,301.8" fill="#1a7a4a"/>
+<line x1="48.7" y1="365.0" x2="76.1" y2="310.1" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="76.1,310.1 70.3,315.1 75.7,317.7" fill="#1a7a4a"/>
+<line x1="78.8" y1="164.7" x2="57.4" y2="57.9" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="57.4,57.9 55.6,66.4 62.4,65.0" fill="#c53030"/>
+<circle cx="218.9" cy="304.8" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="78.8" cy="304.8" r="3.4" fill="#14171a"><title>(2,2)·det 2</title></circle>
+<circle cx="78.8" cy="164.7" r="3.4" fill="#14171a"><title>(1,1)·det 4</title></circle>
+<text class="tl-l" x="296" y="300" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="227" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="212" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="174" y="247" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d) × (1,1,0)</text>
+<text class="tl-e" x="67" y="222" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(A, 0, A)</text>
+<text class="tl-g" x="305" y="309" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="219" y="383" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="153" y="309" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">A·L1</text>
+<text class="tl-g" x="46" y="375" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">A·L3</text>
+<text class="tl-o" x="96" y="54" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="70" y="320" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(A,A)·det 2</text>
+<text class="tl-v" x="88" y="156" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, 1)·det 2A</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="62.9" y1="353.3" x2="105.2" y2="235.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="147.6" y1="353.3" x2="105.2" y2="235.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="232.4" y1="353.3" x2="274.8" y2="235.6" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="244.6" y="286.4" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="253.6" y="297.9" font-size="10" fill="#333" text-anchor="middle">A</text></g>
+<line x1="317.1" y1="353.3" x2="274.8" y2="235.6" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="287.0" y="286.4" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="296.0" y="297.9" font-size="10" fill="#333" text-anchor="middle">A</text></g>
+<line x1="105.2" y1="235.6" x2="190.0" y2="117.9" stroke="#7a8791" stroke-width="1.4"/>
+<g class="tl-g"><rect x="129.2" y="168.8" width="36.8" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="147.6" y="180.3" font-size="10" fill="#333" text-anchor="middle">p−2d</text></g>
+<line x1="274.8" y1="235.6" x2="190.0" y2="117.9" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="47.9" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="62.9" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="132.6" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="147.6" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="105.2" cy="235.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="217.4" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="232.4" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="302.1" y="343.3" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="317.1" y="357.3" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="274.8" cy="235.6" r="4" fill="#2b6cb0"><title>(A,A) det 2  (A, 0, A)</title></circle>
+<circle cx="190.0" cy="117.9" r="4" fill="#2b6cb0"><title>(p−2d, 1) det 2A  α = (d−q, p−2d, d−2q)</title></circle>
+<line x1="190.0" y1="117.9" x2="190.0" y2="87.9" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="190.0,79.9 186.5,87.9 193.5,87.9" fill="#c53030"/>
+<text class="tl-e" x="113" y="232" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="267" y="232" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(A,A) det 2</text>
+<text class="tl-e" x="267" y="257" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(A, 0, A)</text>
+<text class="tl-v" x="198" y="114" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, 1) det 2A</text>
+<text class="tl-e" x="198" y="139" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α = (d−q, p−2d, d−2q)</text>
+</svg>
+</div></div>
+                    <p>
+                        Otherwise (396 classes): one vertex <span class="mth">[(k+1)*L1 k*L3]</span>
+                        plus one with the weights exchanged, <span class="mth">[j*L1 (j+1)*L3]</span>,
+                        where <span class="mth">k + j + 1 = A</span>, again consumed at different points
+                        of the path:
+                    </p>
+                    <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="267.6" x2="273.9" y2="267.6" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="153.0" y1="418.0" x2="153.0" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="39.4" y1="418.0" x2="242.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="153.0" y1="267.6" x2="118.1" y2="232.7" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="114.6" y1="267.6" x2="118.1" y2="232.7" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="114.6" y1="267.6" x2="103.3" y2="177.2" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="118.1" y1="232.7" x2="103.3" y2="177.2" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="166.8" y1="267.6" x2="120.6" y2="267.6" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="120.6,267.6 127.6,270.6 127.6,264.6" fill="#1a7a4a"/>
+<line x1="91.2" y1="314.3" x2="111.9" y2="273.0" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="111.9,273.0 106.1,277.9 111.5,280.6" fill="#1a7a4a"/>
+<line x1="205.2" y1="267.6" x2="159.0" y2="267.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="159.0,267.6 166.0,270.6 166.0,264.6" fill="#1a7a4a"/>
+<line x1="153.0" y1="319.8" x2="153.0" y2="273.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="153.0,273.6 150.0,280.6 156.0,280.6" fill="#1a7a4a"/>
+<line x1="190.3" y1="267.6" x2="120.6" y2="267.6" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="120.6,267.6 127.6,270.6 127.6,264.6" fill="#1a7a4a"/>
+<line x1="80.7" y1="335.3" x2="111.9" y2="273.0" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="111.9,273.0 106.1,277.9 111.5,280.6" fill="#1a7a4a"/>
+<line x1="103.3" y1="177.2" x2="85.3" y2="94.7" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="85.3,94.7 83.6,103.2 90.5,101.7" fill="#c53030"/>
+<circle cx="114.6" cy="267.6" r="3.4" fill="#14171a"><title>(5,4)·det 2</title></circle>
+<circle cx="153.0" cy="267.6" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="114.6" cy="267.6" r="3.4" fill="#14171a"><title>(4,5)·det 2</title></circle>
+<circle cx="118.1" cy="232.7" r="3.4" fill="#14171a"><title>(5,1)·det 11</title></circle>
+<circle cx="103.3" cy="177.2" r="3.4" fill="#14171a"><title>(1,1)·det 17</title></circle>
+<line class="tl-lead tl-e" x1="116.8" y1="246.0" x2="104.8" y2="222.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="110.3" y1="233.3" x2="98.4" y2="200.7" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="108.9" y1="198.3" x2="97.3" y2="167.4" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="114.6" y1="267.6" x2="120.6" y2="300.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="118.1" y1="232.7" x2="87.9" y2="243.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="250" y="263" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="161" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="238" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="148" y="250" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d) × (1,1,0)</text>
+<text class="tl-e" x="105" y="227" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(j, 0, j+1)</text>
+<text class="tl-e" x="98" y="205" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1, 0, k)</text>
+<text class="tl-e" x="97" y="171" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d+j, p−2d, p−2d+j+1)</text>
+<text class="tl-g" x="174" y="272" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L1</text>
+<text class="tl-g" x="88" y="325" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">k·L3</text>
+<text class="tl-g" x="212" y="294" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="153" y="331" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="182" y="287" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">j·L1</text>
+<text class="tl-g" x="78" y="346" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(j+1)·L3</text>
+<text class="tl-o" x="96" y="91" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="124" y="305" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k)·det 2</text>
+<text class="tl-v" x="102" y="272" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(j,j+1)·det 2</text>
+<text class="tl-v" x="85" y="248" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, 1)</text>
+<text class="tl-v" x="125" y="190" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1, 1)</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="46.5" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="46.0" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="60.8" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="103.9" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="80.5" y="314.2" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="89.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">k</text></g>
+<line x1="161.3" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="218.7" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="276.1" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="281.5" y="314.2" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="290.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">j</text></g>
+<line x1="333.5" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="304.4" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="319.2" y="325.7" font-size="10" fill="#333" text-anchor="middle">j+1</text></g>
+<line x1="190.0" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="200.3" y="223.0" width="36.8" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="218.7" y="234.5" font-size="10" fill="#333" text-anchor="middle">p−2d</text></g>
+<line x1="304.8" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="75.2" y1="276.6" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="247.4" y1="185.3" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="31.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="46.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="88.9" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="103.9" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="75.2" cy="276.6" r="4" fill="#2b6cb0"><title>(k+1,k) det 2  (k+1, 0, k)</title></circle>
+<rect x="146.3" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="161.3" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="203.7" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="218.7" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="190.0" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="261.1" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="276.1" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="318.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="333.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="304.8" cy="276.6" r="4" fill="#2b6cb0"><title>(j,j+1) det 2  (j, 0, j+1)</title></circle>
+<circle cx="247.4" cy="185.3" r="4" fill="#2b6cb0"><title>(p−2d, 1)  (p−2d+j, p−2d, p−2d+j+1)</title></circle>
+<circle cx="161.3" cy="94.1" r="4" fill="#2b6cb0"><title>(1,1)  α</title></circle>
+<line x1="161.3" y1="94.1" x2="161.3" y2="64.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="161.3,56.1 157.8,64.1 164.8,64.1" fill="#c53030"/>
+<line class="tl-lead tl-v" x1="304.8" y1="276.6" x2="299.8" y2="290.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="304.8" y1="276.6" x2="315.5" y2="266.0" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-v" x="83" y="273" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k) det 2</text>
+<text class="tl-e" x="83" y="298" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1, 0, k)</text>
+<text class="tl-e" x="198" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="297" y="295" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(j,j+1) det 2</text>
+<text class="tl-e" x="312" y="270" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(j, 0, j+1)</text>
+<text class="tl-v" x="239" y="181" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, 1)</text>
+<text class="tl-e" x="239" y="206" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d+j, p−2d, p−2d+j+1)</text>
+<text class="tl-e" x="169" y="90" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α</text>
+</svg>
+</div></div>
+                </details>
+                <p style="color:#666;font-size:13px">
+                    <b>Evidence.</b> 0 failures except the classes claimed by Families 5&ndash;6:
+                    interval owned by 8, <span class="mth">q &le; 60</span> — 48,121 classes total incl.
+                    Family 1, max order 367; deeper intervals of [8,10], <span class="mth">q &le; 80</span>
+                    — <b>105,024 classes</b>, max order &sim;560, incl. the (55,6)-activation column
+                    (477,52) at order 321; sliver window-tops at orders 5,825 and 8,481; full micro-owner
+                    columns (1270,139) &amp; (6085,666) at orders 853 &amp; 4,087; spot classes at orders
+                    9,582 and 130,460. Near each interval&rsquo;s window top the arithmetic lands on the vertex of
+                    that interval&rsquo;s own boundary curve (&Lambda;&#8322;, i.e. (8,1), in the
+                    8-interval; &Lambda;&#8323;, i.e. (10,1), everywhere deeper in [8,10]) — that curve is
+                    an output of the division, not an input. See &sect;4.0/&sect;7 of the 8-interval document and
+                    &sect;3/&sect;6 of the deep-intervals document.</p>
+            </div>
+
+            <div class="cx-card" id="cxSecF5">
+                <h4>Family 5 &nbsp;<span class="cx-range">(m &gt; q, small p&minus;2d, near window tops)</span></h4>
+                <p>
+                    <b>Tree.</b> <code>[w&#8322;&middot;&Lambda;&#8342;&#8330;&#8321; [(p&minus;2d)&middot;[L&#8322; L&#8323;] w&#8321;&middot;&Lambda;&#8342;]]</code>
+                    &mdash; the same pieces as Families 2&ndash;4 with [L&#8322; L&#8323;] in place of
+                    [L&#8321; L&#8322;]: <span class="mth">p&minus;2d</span> copies of [L&#8322; L&#8323;]
+                    against a pair of vertices &Lambda;<sub>k</sub>, &Lambda;<sub>k+1</sub> carrying total
+                    weights <span class="mth">(d&minus;q,&nbsp; 3d&minus;p&minus;2q)</span> on
+                    (L&#8321;, L&#8323;) (in all instances so far k = 1).
+                </p>
+                <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="204.6" x2="230.5" y2="204.6" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="64.4" y1="418.0" x2="64.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="13.0" y1="418.0" x2="216.0" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="64.4" y1="315.3" x2="108.7" y2="182.4" stroke="#2b6cb0" stroke-width="2.0"/>
+<line x1="119.8" y1="204.6" x2="108.7" y2="182.4" stroke="#2b6cb0" stroke-width="2.3"/>
+<line x1="119.8" y1="204.6" x2="105.9" y2="149.2" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="108.7" y1="182.4" x2="105.9" y2="149.2" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="178.0" y1="204.6" x2="125.8" y2="204.6" stroke="#1a7a4a" stroke-width="2.2"/>
+<polygon points="125.8,204.6 132.8,207.6 132.8,201.6" fill="#1a7a4a"/>
+<line x1="93.7" y1="256.6" x2="117.1" y2="209.9" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="117.1,209.9 111.3,214.8 116.6,217.5" fill="#1a7a4a"/>
+<line x1="64.4" y1="373.5" x2="64.4" y2="321.3" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="64.4,321.3 61.4,328.3 67.4,328.3" fill="#1a7a4a"/>
+<line x1="38.4" y1="367.4" x2="61.7" y2="320.7" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="61.7,320.7 55.9,325.6 61.3,328.3" fill="#1a7a4a"/>
+<line x1="204.2" y1="204.6" x2="125.8" y2="204.6" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="125.8,204.6 132.8,207.6 132.8,201.6" fill="#1a7a4a"/>
+<line x1="82.0" y1="280.1" x2="117.1" y2="209.9" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="117.1,209.9 111.3,214.8 116.6,217.5" fill="#1a7a4a"/>
+<line x1="105.9" y1="149.2" x2="89.4" y2="56.5" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="89.4,56.5 87.3,65.0 94.2,63.8" fill="#c53030"/>
+<circle cx="119.8" cy="204.6" r="3.4" fill="#14171a"><title>(3,2)·det 2</title></circle>
+<circle cx="64.4" cy="315.3" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="119.8" cy="204.6" r="3.4" fill="#14171a"><title>(2,1)·det 2</title></circle>
+<circle cx="108.7" cy="182.4" r="3.4" fill="#14171a"><title>(2,3)·det 5</title></circle>
+<circle cx="105.9" cy="149.2" r="3.4" fill="#14171a"><title>(4,1)·det 8</title></circle>
+<line class="tl-lead tl-e" x1="107.0" y1="161.8" x2="118.9" y2="138.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="119.8" y1="204.6" x2="125.8" y2="237.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="105.9" y1="149.2" x2="115.9" y2="115.2" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="209" y="200" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="72" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="212" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="70" y="265" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d) × (0,1,1)</text>
+<text class="tl-e" x="136" y="189" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">w₁ × Λₖ</text>
+<text class="tl-e" x="126" y="173" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">w₂ × Λₖ₊₁</text>
+<text class="tl-e" x="119" y="143" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(w₁(k+1), p−2d, p−2d+w₁k)</text>
+<text class="tl-g" x="185" y="221" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2)·L1</text>
+<text class="tl-g" x="91" y="289" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L3</text>
+<text class="tl-g" x="64" y="385" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="35" y="378" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="211" y="197" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L1</text>
+<text class="tl-g" x="94" y="306" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">k·L3</text>
+<text class="tl-o" x="96" y="53" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="129" y="242" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1)·det 2</text>
+<text class="tl-v" x="107" y="209" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k)·det 2</text>
+<text class="tl-v" x="88" y="173" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, w₁)</text>
+<text class="tl-v" x="119" y="119" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(w₂, 1)</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="46.5" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="46.0" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="60.8" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+2</text></g>
+<line x1="103.9" y1="367.8" x2="75.2" y2="276.6" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="74.7" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="89.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="161.3" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="218.7" y1="367.8" x2="190.0" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="276.1" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="275.7" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="290.5" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="333.5" y1="367.8" x2="304.8" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<g class="tl-g"><rect x="310.2" y="314.2" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="319.2" y="325.7" font-size="10" fill="#333" text-anchor="middle">k</text></g>
+<line x1="190.0" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="200.3" y="223.0" width="36.8" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="218.7" y="234.5" font-size="10" fill="#333" text-anchor="middle">p−2d</text></g>
+<line x1="304.8" y1="276.6" x2="247.4" y2="185.3" stroke="#7a8791" stroke-width="2.0"/>
+<g class="tl-g"><rect x="264.9" y="223.0" width="22.4" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="276.1" y="234.5" font-size="10" fill="#333" text-anchor="middle">w₁</text></g>
+<line x1="75.2" y1="276.6" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="107.0" y="177.3" width="22.4" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="118.2" y="188.8" font-size="10" fill="#333" text-anchor="middle">w₂</text></g>
+<line x1="247.4" y1="185.3" x2="161.3" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="31.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="46.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="88.9" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="103.9" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="75.2" cy="276.6" r="4" fill="#2b6cb0"><title>(k+2,k+1) det 2  Λₖ₊₁</title></circle>
+<rect x="146.3" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="161.3" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<rect x="203.7" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="218.7" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="190.0" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (0,1,1)</title></circle>
+<rect x="261.1" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="276.1" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="318.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="333.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="304.8" cy="276.6" r="4" fill="#2b6cb0"><title>(k+1,k) det 2  Λₖ</title></circle>
+<circle cx="247.4" cy="185.3" r="4" fill="#2b6cb0"><title>(p−2d, w₁)  (w₁(k+1), p−2d, p−2d+w₁k)</title></circle>
+<circle cx="161.3" cy="94.1" r="4" fill="#2b6cb0"><title>(w₂, 1)  α = (d−q, p−2d, d−2q)</title></circle>
+<line x1="161.3" y1="94.1" x2="161.3" y2="64.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="161.3,56.1 157.8,64.1 164.8,64.1" fill="#c53030"/>
+<line class="tl-lead tl-v" x1="304.8" y1="276.6" x2="299.8" y2="290.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-v" x="83" y="273" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1) det 2</text>
+<text class="tl-e" x="83" y="298" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ₊₁</text>
+<text class="tl-e" x="198" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(0,1,1)</text>
+<text class="tl-v" x="297" y="295" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k) det 2</text>
+<text class="tl-e" x="297" y="274" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ</text>
+<text class="tl-v" x="239" y="181" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(p−2d, w₁)</text>
+<text class="tl-e" x="239" y="206" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(w₁(k+1), p−2d, p−2d+w₁k)</text>
+<text class="tl-v" x="169" y="90" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(w₂, 1)</text>
+<text class="tl-e" x="169" y="115" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α = (d−q, p−2d, d−2q)</text>
+</svg>
+</div></div>
+                <p>
+                    <b>Regime.</b> Now known <b>exactly</b> on the 8-interval: needed precisely on
+                    <span class="mth">{&sigma; &gt; 0, k = 3, x &gt; 2r+5, Q&#8327;(x,r) &gt; 1}</span>
+                    (where every Family-2/3 split fails), and works there precisely when
+                    <span class="mth">3x &le; 2s+r</span>; the complementary case is Family 7. On the
+                    deeper intervals the delineation remains empirical.
+                </p>
+                <p>
+                    <b>Status.</b> <b>Proved on the 8-interval</b> (admissibility + explicit placement;
+                    see <code>verification_regime_U_audit_7_10_26</code>); empirical elsewhere.
+                </p>
+                <p>
+                    <b>Evidence.</b> 318 instances (interval owned by 8, <span class="mth">q &le; 60</span>;
+                    the other 9 of the old 327-class shell belong to Family 7); 165 (deeper intervals of [8,10],
+                    <span class="mth">q &le; 80</span>); 3 at the top of the (6085,666) micro-owner column
+                    (order 4,087); and the frontier window-tops (8672,949,4253) at order <b>5,825</b> and
+                    (194237,21259,95282) at order <b>130,460</b> &mdash; the latter is
+                    <code>[24159*[3*L1 2*L3] [3673*[L2 L3] 773*[2*L1 L3]]]</code>.
+                </p>
+            </div>
+
+            <div class="cx-card" id="cxSecF6">
+                <h4>Family 6 &nbsp;<span class="cx-range">(window tops with p/q just below 10; the internal edges must branch)</span></h4>
+                <p>
+                    <b>Tree.</b> <code>[[x&#8321;&middot;[L&#8321; L&#8322;] w&#8321;&middot;&Lambda;&#8342;]&nbsp;
+                    [x&#8322;&middot;[L&#8321; L&#8322;] w&#8322;&middot;&Lambda;&#8342;&#8242;]]</code>
+                    &mdash; the same pieces and the same totals as Family 3, but the
+                    [L&#8321; L&#8322;]-copies and the two &Lambda;-vertices split into two groups, each
+                    consumed along its own path of internal edges, the two paths meeting at the last vertex
+                    before the output: the internal edges form a <b>Y</b> rather than a single path. The
+                    &Lambda;-vertex of small weight and larger index gets its own [L&#8321; L&#8322;]-copy.
+                    The canonical allocation (proved, 2026-07-12 audit) is
+                    <span class="mth">x&#8321; = x&minus;r, w&#8321; = &sigma;&minus;r</span> at
+                    <span class="mth">&Lambda;&#8324;</span> and
+                    <span class="mth">x&#8322; = w&#8322; = r</span> at
+                    <span class="mth">&Lambda;&#8325;</span>; it covers every known member.
+                </p>
+                <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="269.0" x2="280.1" y2="269.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="144.4" y1="418.0" x2="144.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="34.6" y1="418.0" x2="237.6" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="144.4" y1="269.0" x2="104.0" y2="228.6" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="109.1" y1="269.0" x2="104.0" y2="228.6" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="144.4" y1="269.0" x2="105.1" y2="229.7" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="109.1" y1="269.0" x2="105.1" y2="229.7" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="104.0" y1="228.6" x2="93.9" y2="168.0" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="105.1" y1="229.7" x2="93.9" y2="168.0" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="192.5" y1="269.0" x2="150.4" y2="269.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="150.4,269.0 157.4,272.0 157.4,266.0" fill="#1a7a4a"/>
+<line x1="144.4" y1="317.1" x2="144.4" y2="275.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="144.4,275.0 141.4,282.0 147.4,282.0" fill="#1a7a4a"/>
+<line x1="157.2" y1="269.0" x2="115.1" y2="269.0" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="115.1,269.0 122.1,272.0 122.1,266.0" fill="#1a7a4a"/>
+<line x1="87.6" y1="312.1" x2="106.4" y2="274.4" stroke="#1a7a4a" stroke-width="2.5"/>
+<polygon points="106.4,274.4 100.6,279.3 105.9,282.0" fill="#1a7a4a"/>
+<line x1="214.2" y1="269.0" x2="150.4" y2="269.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="150.4,269.0 157.4,272.0 157.4,266.0" fill="#1a7a4a"/>
+<line x1="144.4" y1="338.8" x2="144.4" y2="275.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="144.4,275.0 141.4,282.0 147.4,282.0" fill="#1a7a4a"/>
+<line x1="178.8" y1="269.0" x2="115.1" y2="269.0" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="115.1,269.0 122.1,272.0 122.1,266.0" fill="#1a7a4a"/>
+<line x1="77.9" y1="331.4" x2="106.4" y2="274.4" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="106.4,274.4 100.6,279.3 105.9,282.0" fill="#1a7a4a"/>
+<line x1="93.9" y1="168.0" x2="81.1" y2="91.2" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="81.1,91.2 78.9,99.7 85.8,98.5" fill="#c53030"/>
+<circle cx="144.4" cy="269.0" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="109.1" cy="269.0" r="3.4" fill="#14171a"><title>(5,4)·det 2</title></circle>
+<circle cx="104.0" cy="228.6" r="3.4" fill="#14171a"><title>(10,25)·det 7</title></circle>
+<circle cx="144.4" cy="269.0" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="109.1" cy="269.0" r="3.4" fill="#14171a"><title>(6,5)·det 2</title></circle>
+<circle cx="105.1" cy="229.7" r="3.4" fill="#14171a"><title>(1,1)·det 9</title></circle>
+<circle cx="93.9" cy="168.0" r="3.4" fill="#14171a"><title>(1,1)·det 35</title></circle>
+<line class="tl-lead tl-e" x1="105.9" y1="244.0" x2="94.0" y2="211.5" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="129.5" y1="254.1" x2="153.6" y2="230.0" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="106.6" y1="244.7" x2="72.7" y2="245.9" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="104.0" y1="228.6" x2="110.0" y2="193.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="256" y="264" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="152" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="233" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="138" y="249" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x−1) × (1,1,0)</text>
+<text class="tl-e" x="94" y="215" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(σ−1) × Λₖ</text>
+<text class="tl-e" x="154" y="234" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-e" x="73" y="250" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ₊₁</text>
+<text class="tl-g" x="200" y="273" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="144" y="328" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="164" y="295" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L1</text>
+<text class="tl-g" x="84" y="322" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">k·L3</text>
+<text class="tl-g" x="221" y="273" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="144" y="350" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="186" y="251" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2)·L1</text>
+<text class="tl-g" x="75" y="342" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1)·L3</text>
+<text class="tl-o" x="96" y="87" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="100" y="284" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k)·det 2</text>
+<text class="tl-v" x="113" y="198" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x−1, σ−1)</text>
+<text class="tl-v" x="109" y="265" font-size="10" fill="#555" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1)·det 2</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="38.0" y1="367.8" x2="59.8" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="81.5" y1="367.8" x2="59.8" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="124.9" y1="367.8" x2="146.6" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="120.9" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="135.7" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="168.3" y1="367.8" x2="146.6" y2="276.6" stroke="#7a8791" stroke-width="2.4"/>
+<g class="tl-g"><rect x="148.4" y="314.2" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="157.4" y="325.7" font-size="10" fill="#333" text-anchor="middle">k</text></g>
+<line x1="59.8" y1="276.6" x2="103.2" y2="185.3" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="66.7" y="223.0" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="81.5" y="234.5" font-size="10" fill="#333" text-anchor="middle">x−1</text></g>
+<line x1="146.6" y1="276.6" x2="103.2" y2="185.3" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="110.1" y="223.0" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="124.9" y="234.5" font-size="10" fill="#333" text-anchor="middle">σ−1</text></g>
+<line x1="211.7" y1="367.8" x2="233.4" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="255.1" y1="367.8" x2="233.4" y2="276.6" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="298.5" y1="367.8" x2="320.2" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="294.6" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="309.4" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+2</text></g>
+<line x1="342.0" y1="367.8" x2="320.2" y2="276.6" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="316.3" y="314.2" width="29.6" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="331.1" y="325.7" font-size="10" fill="#333" text-anchor="middle">k+1</text></g>
+<line x1="233.4" y1="276.6" x2="276.8" y2="185.3" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="320.2" y1="276.6" x2="276.8" y2="185.3" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="103.2" y1="185.3" x2="190.0" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="276.8" y1="185.3" x2="190.0" y2="94.1" stroke="#7a8791" stroke-width="1.4"/>
+<rect x="23.0" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="38.0" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="66.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="81.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="59.8" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="109.9" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="124.9" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="153.3" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="168.3" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="146.6" cy="276.6" r="4" fill="#2b6cb0"><title>(k+1,k) det 2  Λₖ</title></circle>
+<circle cx="103.2" cy="185.3" r="4" fill="#2b6cb0"><title>(x−1, σ−1)</title></circle>
+<rect x="196.7" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="211.7" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="240.1" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="255.1" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<circle cx="233.4" cy="276.6" r="4" fill="#2b6cb0"><title>(1,1) det 1  (1,1,0)</title></circle>
+<rect x="283.5" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="298.5" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="327.0" y="357.8" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="342.0" y="371.8" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="320.2" cy="276.6" r="4" fill="#2b6cb0"><title>(k+2,k+1) det 2  Λₖ₊₁</title></circle>
+<circle cx="276.8" cy="185.3" r="4" fill="#2b6cb0"><title>(1,1)</title></circle>
+<circle cx="190.0" cy="94.1" r="4" fill="#2b6cb0"><title>(1,1)  α = (d−q, p−2d, d−2q)</title></circle>
+<line x1="190.0" y1="94.1" x2="190.0" y2="64.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="190.0,56.1 186.5,64.1 193.5,64.1" fill="#c53030"/>
+<line class="tl-lead tl-v" x1="320.2" y1="276.6" x2="315.2" y2="290.6" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-e" x="68" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="155" y="273" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+1,k) det 2</text>
+<text class="tl-e" x="155" y="298" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ</text>
+<text class="tl-v" x="111" y="181" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(x−1, σ−1)</text>
+<text class="tl-e" x="241" y="273" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,0)</text>
+<text class="tl-v" x="312" y="295" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(k+2,k+1) det 2</text>
+<text class="tl-e" x="312" y="274" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λₖ₊₁</text>
+<text class="tl-e" x="198" y="90" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α = (d−q, p−2d, d−2q)</text>
+</svg>
+</div></div>
+                <p>
+                    <b>Regime.</b> Window-top classes with <span class="mth">p/q</span> just below 10 —
+                    an <i>angular</i> shell, like Family 7&rsquo;s (all 54 known members have
+                    <span class="mth">k = 4</span>, remainder <span class="mth">r &le; 4</span>,
+                    (10,1)-margin 2&ndash;5, columns <span class="mth">p = 10q&minus;j</span> with
+                    <span class="mth">j = h&minus;r &le; 3</span>, and <span class="mth">10 &minus; p/q
+                    &lt; 0.05</span>); the exact boundary is open (E6).
+                    The cleanest sub-family is the ray
+                    <span class="mth">p = 10q&minus;1</span>, <span class="mth">q &equiv; 2 (mod 7)</span>,
+                    <span class="mth">d = (34q&minus;5)/7</span>: a single-path tree realizes it for
+                    <span class="mth">q = 2, 9, 16, 23, 30</span> and provably fails from
+                    <span class="mth">q = 37</span> on (exhaustion of the whole single-path recipe space,
+                    robust under relaxing genericity). Conjecturally the analogous rays just below the
+                    other even integers (e.g. p/q just below 12 in [10,12]) behave the same &mdash; untested.
+                    Family 7 is the mirror phenomenon at the other edge of the strip (p/q just above 8).
+                </p>
+                <p>
+                    <b>Status.</b> <b>Proved on the verified shell</b> (k = 4, r &le; 2, margin &le; 4;
+                    2026-07-12 audit, gate-verified): the Y-placement lemma (the root meet exists with positive
+                    parameters iff &Delta;<sub>Y</sub> = (2a&minus;1)w&#8321;x&#8322; &minus;
+                    (2b&minus;1)x&#8321;w&#8322; &minus; 2(b&minus;a)w&#8321;w&#8322; &gt; 0) plus the canonical
+                    allocation <span class="mth">x&#8321; = x&minus;r, w&#8321; = &sigma;&minus;r,
+                    x&#8322; = w&#8322; = r, b = 5</span> passes throughout the shell; on the clean ray the
+                    q = 30 &rarr; 37 transition is <b>proved</b> within the two-&Lambda; single-path family.
+                    The angular-shell prediction (by analogy with Family 7&rsquo;s corrected geometry)
+                    was <b>confirmed 2026-07-13</b>: 35 single-path failures with r &ge; 3 at q &le; 200
+                    (first: (909,91,441)), and the canonical Y allocation passes all 35 &mdash; Family 6 now
+                    has 54 gate-verified members. Still open: excluding <i>all</i> single-path shapes, and
+                    the exact shell boundary.
+                </p>
+                <p>
+                    <b>Evidence.</b> All 9 single-path failures in the deeper-interval sweeps
+                    (<span class="mth">q &le; 80</span>) are realized by this family, and the
+                    <span class="mth">p = 10q&minus;1</span> ray was followed to
+                    <span class="mth">q = 149</span>: <b>19 / 19 instances</b> (orders 258&ndash;1,042), each
+                    found within the first &sim;45 assemblies by <code>canon_branch</code>, uniform shape
+                    (e.g. (369,37,179): <code>[[10*[L1 L2] 25*[5*L1 4*L3]] [[L1 L2] [6*L1 5*L3]]]</code>;
+                    (668,67,324), the r = 2 case: <code>[[18*[L1 L2] 46*[5*L1 4*L3]] [2*[L1 L2] [7*L1 6*L3]]]</code>).
+                    No analog appears in the 8-interval through <span class="mth">q &le; 60</span> (its
+                    ratios stay well away from 10).
+                </p>
+            </div>
+
+            <div class="cx-card" id="cxSecF7">
+                <h4>Family 7 &nbsp;<span class="cx-range">(window tops with p/q just above 8)</span></h4>
+                <p>
+                    <b>Tree.</b> <code>[[N*[L2 L3] M*&Lambda;1] &ell;*[[[L2 L3] L1] &Lambda;1]]</code> with
+                    <span class="mth">&ell; = 3x&minus;2s&minus;r</span>,
+                    <span class="mth">N = x&minus;&ell;</span>, <span class="mth">M = s+2N</span>.
+                    The right piece uses a new building block: the vertex
+                    <span class="mth">[[L&#8322; L&#8323;] L&#8321;]</span> of charge (1,1,1), whose output
+                    direction (0,3) is <i>vertical</i> — the only unit in any family whose output does not
+                    travel left. An alternative verified shape on the same classes consumes one weight-1
+                    leg on L&#8322; mid-path (the verifier&rsquo;s witness, e.g.
+                    <code>[&Lambda;2 [L2 [14*[L2 L3] 49*&Lambda;1]]]</code> at (289,36,137)).
+                </p>
+                <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="218.2" x2="210.0" y2="218.2" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="69.8" y1="418.0" x2="69.8" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="9.3" y1="418.0" x2="212.3" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="69.8" y1="297.0" x2="101.3" y2="202.5" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="109.1" y1="218.2" x2="101.3" y2="202.5" stroke="#2b6cb0" stroke-width="2.7"/>
+<line x1="69.8" y1="297.0" x2="96.0" y2="218.2" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="96.0" y1="218.2" x2="96.0" y2="192.0" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="109.1" y1="218.2" x2="96.0" y2="192.0" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="101.3" y1="202.5" x2="85.5" y2="139.5" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="96.0" y1="192.0" x2="85.5" y2="139.5" stroke="#2b6cb0" stroke-width="1.6"/>
+<line x1="69.8" y1="350.8" x2="69.8" y2="303.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="69.8,303.0 66.8,310.0 72.8,310.0" fill="#1a7a4a"/>
+<line x1="45.7" y1="345.1" x2="67.1" y2="302.3" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="67.1,302.3 61.3,307.3 66.6,309.9" fill="#1a7a4a"/>
+<line x1="163.0" y1="218.2" x2="115.1" y2="218.2" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="115.1,218.2 122.1,221.2 122.1,215.2" fill="#1a7a4a"/>
+<line x1="85.1" y1="266.4" x2="106.5" y2="223.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="106.5,223.6 100.6,228.5 106.0,231.2" fill="#1a7a4a"/>
+<line x1="69.8" y1="375.0" x2="69.8" y2="303.0" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="69.8,303.0 66.8,310.0 72.8,310.0" fill="#1a7a4a"/>
+<line x1="34.9" y1="366.8" x2="67.1" y2="302.3" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="67.1,302.3 61.3,307.3 66.6,309.9" fill="#1a7a4a"/>
+<line x1="149.8" y1="218.2" x2="102.0" y2="218.2" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="102.0,218.2 109.0,221.2 109.0,215.2" fill="#1a7a4a"/>
+<line x1="187.2" y1="218.2" x2="115.1" y2="218.2" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="115.1,218.2 122.1,221.2 122.1,215.2" fill="#1a7a4a"/>
+<line x1="74.2" y1="288.0" x2="106.5" y2="223.6" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="106.5,223.6 100.6,228.5 106.0,231.2" fill="#1a7a4a"/>
+<line x1="85.5" y1="139.5" x2="64.5" y2="55.0" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="64.5,55.0 63.1,63.6 69.9,61.9" fill="#c53030"/>
+<circle cx="69.8" cy="297.0" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="109.1" cy="218.2" r="3.4" fill="#14171a"><title>(2,1)·det 2</title></circle>
+<circle cx="101.3" cy="202.5" r="3.4" fill="#14171a"><title>(14,49)·det 5</title></circle>
+<circle cx="69.8" cy="297.0" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="96.0" cy="218.2" r="3.4" fill="#14171a"><title>(1,1)·det 3</title></circle>
+<circle cx="109.1" cy="218.2" r="3.4" fill="#14171a"><title>(2,1)·det 2</title></circle>
+<circle cx="96.0" cy="192.0" r="3.4" fill="#14171a"><title>(1,1)·det 3</title></circle>
+<circle cx="85.5" cy="139.5" r="3.4" fill="#14171a"><title>(1,1)·det 35</title></circle>
+<line class="tl-lead tl-e" x1="96.0" y1="202.0" x2="108.0" y2="180.0" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="104.2" y1="208.3" x2="92.9" y2="202.9" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-e" x1="92.0" y1="172.0" x2="127.9" y2="145.5" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="101.3" y1="202.5" x2="155.3" y2="189.5" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="109.1" y1="218.2" x2="130.8" y2="244.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<line class="tl-lead tl-v" x1="96.0" y1="192.0" x2="96.0" y2="246.0" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="190" y="213" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="78" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="208" y="31" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="93" y="269" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">N × (0,1,1)</text>
+<text class="tl-e" x="127" y="207" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">M × Λ₁</text>
+<text class="tl-e" x="91" y="287" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(0,1,1)</text>
+<text class="tl-e" x="108" y="184" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,1)</text>
+<text class="tl-e" x="93" y="207" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λ₁</text>
+<text class="tl-e" x="103" y="165" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2M, N, N+M)</text>
+<text class="tl-e" x="128" y="150" font-size="10.5" fill="#2b6cb0" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">ℓ × (3,1,2)</text>
+<text class="tl-g" x="70" y="362" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="43" y="355" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="170" y="234" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L1</text>
+<text class="tl-g" x="66" y="292" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="70" y="386" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-g" x="32" y="377" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="157" y="222" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-g" x="206" y="222" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L1</text>
+<text class="tl-g" x="71" y="320" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-o" x="96" y="51" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (−q, p−4q)</text>
+<text class="tl-v" x="100" y="233" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,1)·det 2</text>
+<text class="tl-v" x="158" y="193" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(N,M)·det 5</text>
+<text class="tl-v" x="121" y="222" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">det 3</text>
+<text class="tl-v" x="134" y="249" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,1)·det 2</text>
+<text class="tl-v" x="96" y="250" font-size="10" fill="#555" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">det 3</text>
+<text class="tl-v" x="86" y="123" font-size="10" fill="#555" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,ℓ)·det 3s−2N</text>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="430" viewBox="0 0 380 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="35.2" y1="377.0" x2="54.6" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="73.9" y1="377.0" x2="54.6" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="112.6" y1="377.0" x2="132.0" y2="302.5" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="113.3" y="331.8" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="122.3" y="343.3" font-size="10" fill="#333" text-anchor="middle">2</text></g>
+<line x1="151.3" y1="377.0" x2="132.0" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="54.6" y1="302.5" x2="93.3" y2="228.0" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="64.9" y="257.3" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="73.9" y="268.8" font-size="10" fill="#333" text-anchor="middle">N</text></g>
+<line x1="132.0" y1="302.5" x2="93.3" y2="228.0" stroke="#7a8791" stroke-width="2.8"/>
+<g class="tl-g"><rect x="103.6" y="257.3" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="112.6" y="268.8" font-size="10" fill="#333" text-anchor="middle">M</text></g>
+<line x1="190.0" y1="377.0" x2="209.3" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="228.7" y1="377.0" x2="209.3" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="209.3" y1="302.5" x2="238.4" y2="228.0" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="267.4" y1="377.0" x2="238.4" y2="228.0" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="306.1" y1="377.0" x2="325.4" y2="302.5" stroke="#7a8791" stroke-width="1.7"/>
+<g class="tl-g"><rect x="306.8" y="331.8" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="315.8" y="343.3" font-size="10" fill="#333" text-anchor="middle">2</text></g>
+<line x1="344.8" y1="377.0" x2="325.4" y2="302.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="238.4" y1="228.0" x2="281.9" y2="153.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="325.4" y1="302.5" x2="281.9" y2="153.5" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="93.3" y1="228.0" x2="187.6" y2="79.0" stroke="#7a8791" stroke-width="1.4"/>
+<line x1="281.9" y1="153.5" x2="187.6" y2="79.0" stroke="#7a8791" stroke-width="1.4"/>
+<g class="tl-g"><rect x="225.7" y="108.3" width="18.0" height="16" rx="8" fill="#fff" stroke="#7a8791" stroke-width="0.6"/>
+<text x="234.7" y="119.8" font-size="10" fill="#333" text-anchor="middle">ℓ</text></g>
+<rect x="20.2" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="35.2" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<rect x="58.9" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="73.9" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="54.6" cy="302.5" r="4" fill="#2b6cb0"><title>(1,1) det 1  (0,1,1)</title></circle>
+<rect x="97.6" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="112.6" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="136.3" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="151.3" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="132.0" cy="302.5" r="4" fill="#2b6cb0"><title>(2,1) det 2  Λ₁</title></circle>
+<circle cx="93.3" cy="228.0" r="4" fill="#2b6cb0"><title>(N,M) det 5  (2M, N, N+M)</title></circle>
+<rect x="175.0" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="190.0" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L2</text>
+<rect x="213.7" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="228.7" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="209.3" cy="302.5" r="4" fill="#2b6cb0"><title>(1,1) det 1  (0,1,1)</title></circle>
+<rect x="252.4" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="267.4" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<circle cx="238.4" cy="228.0" r="4" fill="#2b6cb0"><title>(1,1) det 3  (1,1,1)</title></circle>
+<rect x="291.1" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="306.1" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L1</text>
+<rect x="329.8" y="367.0" width="30" height="20" rx="4" fill="#e7f3ec" stroke="#1a7a4a"/>
+<text x="344.8" y="381.0" font-size="11.5" fill="#1a7a4a" text-anchor="middle">L3</text>
+<circle cx="325.4" cy="302.5" r="4" fill="#2b6cb0"><title>(2,1) det 2  Λ₁</title></circle>
+<circle cx="281.9" cy="153.5" r="4" fill="#2b6cb0"><title>(1,1) det 3  (3,1,2)</title></circle>
+<circle cx="187.6" cy="79.0" r="4" fill="#2b6cb0"><title>(1,ℓ) det 3s−2N  α</title></circle>
+<line x1="187.6" y1="79.0" x2="187.6" y2="49.0" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="187.6,41.0 184.1,49.0 191.1,49.0" fill="#c53030"/>
+<text class="tl-e" x="63" y="299" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(0,1,1)</text>
+<text class="tl-v" x="140" y="299" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,1) det 2</text>
+<text class="tl-e" x="140" y="324" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λ₁</text>
+<text class="tl-v" x="101" y="224" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(N,M) det 5</text>
+<text class="tl-e" x="101" y="249" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2M, N, N+M)</text>
+<text class="tl-e" x="217" y="299" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(0,1,1)</text>
+<text class="tl-v" x="230" y="224" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">det 3</text>
+<text class="tl-e" x="230" y="249" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,1,1)</text>
+<text class="tl-v" x="329" y="299" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,1) det 2</text>
+<text class="tl-e" x="317" y="324" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Λ₁</text>
+<text class="tl-v" x="274" y="150" font-size="10.5" fill="#2b6cb0" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">det 3</text>
+<text class="tl-e" x="274" y="175" font-size="10" fill="#666" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(3,1,2)</text>
+<text class="tl-v" x="196" y="75" font-size="10.5" fill="#2b6cb0" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(1,ℓ) det 3s−2N</text>
+<text class="tl-e" x="196" y="100" font-size="10" fill="#666" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">α</text>
+</svg>
+</div></div>
+                <p>
+                    <b>Regime.</b> Exactly the classes
+                    <span class="mth">{&sigma; &gt; 0, k = 3, x &gt; 2r+5, Q&#8327;(x,r) &gt; 1,
+                    3x &gt; 2s+r}</span> — where every Family-2/3 split <i>and</i> every Family-5 tree
+                    provably fails. <b>Corrected geometry</b> (2026-07-12 audit): on this set
+                    <span class="mth">p &minus; 8q = r &minus; &ell; &isin; [0, r&minus;1]</span> with
+                    <b>no absolute bound</b> — the earlier claim &ldquo;p &minus; 8q &isin; {1,2}&rdquo; holds
+                    for all nine members with q &le; 60 but fails first at (563,70,267) (r = 4,
+                    p &minus; 8q = 3); the family p = 137r+15, q = 17r+2, d = 65r+7 has
+                    p &minus; 8q = r &minus; 1 unbounded. The set is a thin <i>angular</i> shell just above
+                    the (8,1)-ray (members satisfy 8 &lt; p/q &lt; 8 + 1/14) — still the mirror of Family 6
+                    at the other edge of the strip, but angular, not two lattice columns. No branching is
+                    needed here.
+                </p>
+                <p>
+                    <b>Status.</b> <b>Proved</b> (charge, admissibility and explicit placement for the
+                    whole family; membership is closed-form). Every claim re-verified against the exact
+                    gate.
+                </p>
+                <p>
+                    <b>Evidence.</b> <b>All 538 members with q &le; 200</b> (p &minus; 8q up to 10) pass
+                    the exact gate with the boxed tree — the theorem&rsquo;s proof never used the false
+                    p &minus; 8q bound, so it survives the correction intact. The nine q &le; 60 members
+                    (exact set equality with the classes where all other families fail) also pass with the
+                    alternative depth-3 single-path shape, as does the counterexample (563,70,267).
+                </p>
+            </div>
+
+            <div class="cx-card" id="cxSecSharp">
+                <h4>Sharpness &amp; depth &mdash; off the list nothing is constructed; on it, depth never exceeds 3</h4>
+                <p style="font-size:13.5px">
+                    <b>Sharpness.</b> The same machinery run on classes just <i>outside</i> the windows
+                    produces zero trees &mdash; the placement geometry reproduces each interval&rsquo;s own
+                    pairing inequality, including inequalities from interior curves that no 8-interval
+                    condition sees: 627 boundary classes (8-interval, <span class="mth">q &le; 30</span>);
+                    102 sliver + 843 (10,1)-interval
+                    boundary classes (<span class="mth">q &le; 52</span>, both window edges incl. the
+                    <span class="mth">m = &minus;1</span> side);
+                    <b>all 2,821 phantoms at <span class="mth">q &le; 80</span></b> (sweep complete:
+                    0 realize, the vast majority dying in the placement LP with every vertex locally
+                    admissible); the activation phantoms (477,52,234) at order 321,
+                    (8672,949,4254) at order 5,825 (1.5M assemblies exhausted) and (12588,1369,6177) at
+                    order 8,481 (3.1M); for the nine smallest, full enumeration confirms <b>zero trees of
+                    any shape</b>. Ground truth against the actual scattering diagram exists through order
+                    63 (exact match); beyond that the evidence is the exact agreement between the
+                    conjectural list and the tree criterion.
+                </p>
+                <p style="font-size:13.5px">
+                    <b>Depth of all scattering rays.</b> Full-shape enumeration of <i>every</i> charge of
+                    order &le; 20 (1,767 charges, 363 realizable — the entire diagram, not just sesqui
+                    classes; the 64-shape cap was never hit, so the minima are exact): the <b>maximal
+                    minimal tree depth is 3</b>, first attained at order 8 by (3,2,3); no ray anywhere
+                    requires depth 4. Combined with the window verifications (depth &le; 3 through order
+                    130,460), tree complexity shows no growth with order.
+                </p>
+            </div>
+
+            <details id="cxSecRead">
+                <summary>how to read the trees and figures</summary>
+                <p>
+                    A tree consists of weighted <b>legs</b> (unbounded edges, each lying on one of the
+                    three lines), internal edges, and trivalent vertices; one edge is the <b>output</b>
+                    (red), whose direction is (&minus;q, p&minus;4q), the wall direction of the class.
+                    A vertex whose two children are legs on two different lines must sit at the
+                    intersection of those lines. Below: the one-vertex tree [L&#8321; L&#8322;]
+                    (unit legs on L&#8321; and L&#8322;, sitting at L&#8321;&cap;L&#8322;):
+                </p>
+                <div class="cx-fig"><svg xmlns="http://www.w3.org/2000/svg" width="290" height="250" viewBox="0 0 290 250" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="128.4" x2="238.0" y2="128.4" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="128.4" y1="238.0" x2="128.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="496.4" y1="238.0" x2="609.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="176.4" y1="128.4" x2="134.4" y2="128.4" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="134.4,128.4 141.4,131.4 141.4,125.4" fill="#1a7a4a"/>
+<line x1="128.4" y1="176.4" x2="128.4" y2="134.4" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="128.4,134.4 125.4,141.4 131.4,141.4" fill="#1a7a4a"/>
+<line x1="128.4" y1="128.4" x2="73.6" y2="73.6" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="73.6,73.6 76.8,81.8 81.8,76.8" fill="#c53030"/>
+<circle cx="128.4" cy="128.4" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<text class="tl-l" x="216" y="123" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="136" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="272" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="183" y="144" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">1·L1</text>
+<text class="tl-g" x="128" y="187" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">1·L2</text>
+<text class="tl-o" x="70" y="72" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (-1,1)</text>
+</svg></div>
+                <p>
+                    At a vertex whose legs lie on L&#8321; and L&#8323; the local scattering rule admits
+                    the weight pairs <span class="mth">(k+1, k)</span> — this is
+                    <span class="mth">&Lambda;<sub>k</sub></span>, the tree of the (2k+4,1)-unicuspidal
+                    curve; below left, <span class="mth">(3,2) = &Lambda;&#8322;</span> — the exchanged
+                    weights <span class="mth">(k, k+1)</span> (middle, <span class="mth">(2,3)</span>),
+                    and equal weights <span class="mth">(A, A)</span> only when A is a power of two
+                    (right, <span class="mth">(2,2)</span>):
+                </p>
+                <div class="cx-fig" style="display:flex;flex-wrap:wrap;gap:10px"><svg xmlns="http://www.w3.org/2000/svg" width="290" height="250" viewBox="0 0 290 250" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="139.9" x2="182.3" y2="139.9" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="-305.0" y1="238.0" x2="-305.0" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="35.9" y1="238.0" x2="148.9" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="129.1" y1="139.9" x2="90.9" y2="139.9" stroke="#1a7a4a" stroke-width="2.2"/>
+<polygon points="90.9,139.9 97.9,142.9 97.9,136.9" fill="#1a7a4a"/>
+<line x1="65.2" y1="179.4" x2="82.2" y2="145.3" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="82.2,145.3 76.4,150.2 81.8,152.9" fill="#1a7a4a"/>
+<line x1="84.9" y1="139.9" x2="67.6" y2="70.6" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="67.6,70.6 66.1,79.2 72.9,77.5" fill="#c53030"/>
+<circle cx="84.9" cy="139.9" r="3.4" fill="#14171a"><title>(3,2)·det 2</title></circle>
+<line class="tl-lead tl-v" x1="84.9" y1="139.9" x2="90.9" y2="172.9" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="164" y="135" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="4" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="150" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="136" y="156" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">3·L1</text>
+<text class="tl-g" x="62" y="190" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L3</text>
+<text class="tl-o" x="70" y="67" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (-1,4)</text>
+<text class="tl-v" x="94" y="177" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(3,2)·det 2</text>
+</svg> <svg xmlns="http://www.w3.org/2000/svg" width="290" height="250" viewBox="0 0 290 250" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="140.4" x2="181.2" y2="140.4" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="-303.0" y1="238.0" x2="-303.0" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="35.7" y1="238.0" x2="148.7" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="128.4" y1="140.4" x2="90.5" y2="140.4" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="90.5,140.4 97.5,143.4 97.5,137.4" fill="#1a7a4a"/>
+<line x1="64.8" y1="179.7" x2="81.8" y2="145.8" stroke="#1a7a4a" stroke-width="2.2"/>
+<polygon points="81.8,145.8 76.0,150.7 81.3,153.4" fill="#1a7a4a"/>
+<line x1="84.5" y1="140.4" x2="96.1" y2="70.3" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="96.1,70.3 91.4,77.6 98.3,78.8" fill="#c53030"/>
+<circle cx="84.5" cy="140.4" r="3.4" fill="#14171a"><title>(2,3)·det 2</title></circle>
+<line class="tl-lead tl-v" x1="84.5" y1="140.4" x2="90.5" y2="173.4" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="163" y="135" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="4" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="150" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="135" y="156" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L1</text>
+<text class="tl-g" x="62" y="190" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">3·L3</text>
+<text class="tl-o" x="97" y="66" font-size="11" fill="#c53030" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (1,6)</text>
+<text class="tl-v" x="93" y="177" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,3)·det 2</text>
+</svg> <svg xmlns="http://www.w3.org/2000/svg" width="290" height="250" viewBox="0 0 290 250" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="140.8" x2="180.3" y2="140.8" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="-301.3" y1="238.0" x2="-301.3" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="35.5" y1="238.0" x2="148.5" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="127.8" y1="140.8" x2="90.1" y2="140.8" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="90.1,140.8 97.1,143.8 97.1,137.8" fill="#1a7a4a"/>
+<line x1="64.6" y1="179.9" x2="81.4" y2="146.2" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="81.4,146.2 75.6,151.1 81.0,153.8" fill="#1a7a4a"/>
+<line x1="84.1" y1="140.8" x2="84.1" y2="70.1" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="84.1,70.1 80.6,78.1 87.6,78.1" fill="#c53030"/>
+<circle cx="84.1" cy="140.8" r="3.4" fill="#14171a"><title>(2,2)·det 2</title></circle>
+<line class="tl-lead tl-v" x1="84.1" y1="140.8" x2="90.1" y2="173.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="162" y="136" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="4" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="150" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-g" x="135" y="157" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L1</text>
+<text class="tl-g" x="61" y="190" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L3</text>
+<text class="tl-o" x="84" y="66" font-size="11" fill="#c53030" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (0,1)</text>
+<text class="tl-v" x="93" y="178" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,2)·det 2</text>
+</svg></div>
+                <p>
+                    Each internal edge carries the sum of all charges attached below it
+                    (highlighted orange below): here <span class="mth">4&times;(0,1,1)</span> after the
+                    first vertex, then <span class="mth">(7,4,4)</span> after adding the
+                    <span class="mth">7&middot;L&#8321;</span> leg, then the output
+                    <span class="mth">(7,6,4)</span> after the final <span class="mth">2&middot;L&#8322;</span>.
+                    In Families 1&ndash;5 the internal edges form a single path; Family 7&rsquo;s canonical tree and all Family-6 trees form a Y (for Family 6, necessarily so).
+                </p>
+                <div class="cx-fig"><svg xmlns="http://www.w3.org/2000/svg" width="340" height="300" viewBox="0 0 340 300" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
+<line x1="12.0" y1="169.8" x2="109.2" y2="169.8" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="41.4" y1="288.0" x2="41.4" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="7.1" y1="288.0" x2="145.1" y2="12.0" stroke="#b8c4cc" stroke-width="1.1" stroke-dasharray="5,4"/>
+<line x1="41.4" y1="219.5" x2="58.0" y2="169.8" stroke="#e67e22" stroke-width="4.0"/>
+<line x1="58.0" y1="169.8" x2="41.4" y2="103.5" stroke="#e67e22" stroke-width="3.0"/>
+<line x1="41.4" y1="259.0" x2="41.4" y2="225.5" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="41.4,225.5 38.4,232.5 44.4,232.5" fill="#1a7a4a"/>
+<line x1="23.7" y1="254.8" x2="38.7" y2="224.9" stroke="#1a7a4a" stroke-width="1.6"/>
+<polygon points="38.7,224.9 32.9,229.8 38.3,232.5" fill="#1a7a4a"/>
+<line x1="97.4" y1="169.8" x2="64.0" y2="169.8" stroke="#1a7a4a" stroke-width="2.8"/>
+<polygon points="64.0,169.8 71.0,172.8 71.0,166.8" fill="#1a7a4a"/>
+<line x1="41.4" y1="142.9" x2="41.4" y2="109.5" stroke="#1a7a4a" stroke-width="1.9"/>
+<polygon points="41.4,109.5 38.4,116.5 44.4,116.5" fill="#1a7a4a"/>
+<line x1="41.4" y1="103.5" x2="28.0" y2="41.0" stroke="#c53030" stroke-width="1.9"/>
+<polygon points="28.0,41.0 26.3,49.6 33.1,48.1" fill="#c53030"/>
+<circle cx="41.4" cy="219.5" r="3.4" fill="#14171a"><title>(1,1)·det 1</title></circle>
+<circle cx="58.0" cy="169.8" r="3.4" fill="#14171a"><title>(4,7)·det 3</title></circle>
+<circle cx="41.4" cy="103.5" r="3.4" fill="#14171a"><title>(2,1)·det 3</title></circle>
+<line class="tl-lead tl-v" x1="58.0" y1="169.8" x2="73.0" y2="180.8" stroke="#c5c5c5" stroke-width="0.7" stroke-opacity="0.85"/>
+<text class="tl-l" x="95" y="165" font-size="11.5" fill="#8a99a3" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L1</text>
+<text class="tl-l" x="49" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L2</text>
+<text class="tl-l" x="145" y="26" font-size="11.5" fill="#8a99a3" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">L3</text>
+<text class="tl-e" x="59" y="208" font-size="10.5" fill="#e67e22" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">4×(0,1,1)</text>
+<text class="tl-e" x="59" y="130" font-size="10.5" fill="#e67e22" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(7,4,4)</text>
+<text class="tl-g" x="41" y="270" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">1·L2</text>
+<text class="tl-g" x="30" y="253" font-size="11" fill="#1a7a4a" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">1·L3</text>
+<text class="tl-g" x="104" y="174" font-size="11" fill="#1a7a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">7·L1</text>
+<text class="tl-g" x="41" y="154" font-size="11" fill="#1a7a4a" text-anchor="middle" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">2·L2</text>
+<text class="tl-o" x="77" y="46" font-size="11" fill="#c53030" text-anchor="end" font-weight="bold" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">out (-3,14)</text>
+<text class="tl-v" x="70" y="185" font-size="10" fill="#555" text-anchor="end" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(4,7)·det 3</text>
+<text class="tl-v" x="50" y="94" font-size="10" fill="#555" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">(2,1)·det 3</text>
+</svg></div>
+                <p style="margin-top:.8em">
+                    Colors: <b>dashed gray</b> — the lines L&#8321;, L&#8322;, L&#8323; (directions (1,0),
+                    (0,&minus;1), (&minus;1,&minus;2); offsets free — a valid placement exists for every
+                    class, as drawn); <b>green</b> — legs, with weights; <b>blue</b> — internal edges,
+                    labeled by the charge they carry; <b>red</b> — the output. Dots are vertices, labeled
+                    by the multiplicities consumed and the determinant of the two incoming directions.
+                    Right panels show the same tree combinatorially.
+                </p>
+            </details>
+        </div>
+    </div>
+
     <!-- about tab -->
     <div class="tab-content" id="tabAbout">
         <div class="about-inner">
@@ -855,18 +2224,20 @@
                     cover) are drawn offset side by side.
                 </li>
                 <li>
-                    <b>As a tree</b> — the same data as a graph: blue boxes are intermediate curves
-                    (charge @ vertex), <span style="color:#c0392b"><b>red pills</b></span> are the local
-                    packet coefficients, green circles are the initial-line leaves, and
-                    the gray annotation under each packet reads
-                    <span class="mth">(a₁,…,a_r), det d</span>: the output charge is the linear
-                    combination <span class="mth">Σ a_j X_j</span> of the incoming curves (ordered as
-                    the children, left to right), and for two-ray vertices
-                    <span class="mth">d = |m₁ ∧ m₂|</span> is the determinant of the two incoming raw
-                    monomial directions — the index of the local scattering packet (no single
-                    determinant is defined at vertices with ≥ 3 incoming curves, so only the
-                    combination is shown there). If one vertex box has several red branches, those are
-                    distinct local decompositions at that vertex and their contributions add.
+                    <b>As a tree</b> — the same data drawn as a genuine tree (matching the figures of
+                    the tree-construction note): green boxes are the initial-line leaves, and each
+                    <span style="color:#2471a3"><b>blue dot</b></span> is one scattering vertex,
+                    annotated below with its local type <span class="mth">(a₁,…,a_r)</span> — the
+                    multiplicities consumed from its children, ordered left to right — plus, for
+                    two-ray vertices, <span class="mth">det d = |m₁ ∧ m₂|</span> of the incoming raw
+                    monomial directions (the index of the local scattering packet; no single
+                    determinant is defined at ≥ 3-ray vertices), then the resulting charge
+                    <span class="mth">Σ a_j X_j</span> and the packet weight
+                    <span style="color:#8e44ad">wt … @vertex</span>. Circled numbers on edges repeat
+                    consumption multiplicities &gt; 1; the red arrow marks the output. When one packet
+                    admits several local decompositions at its vertex, its charge box hangs above the
+                    alternatives via dashed <i>alt</i> connectors — alternative readings whose
+                    contributions add, not extra tree edges.
                 </li>
             </ul>
             <p>
@@ -962,7 +2333,9 @@
             <p>
                 For scanning across rays, the hover pill and the panel header list the ray's δ
                 values succinctly (the set of values over its factors, with "+covers" when cover
-                factors are present), and — with (d,m) enabled — the panel header also lists the
+                factors are present). With (p,q) and/or (d,m) enabled, the hover pill gains one
+                extra line per toggle listing the distinct values over the ray's factors (capped
+                at six, "+N more" beyond), and the panel header lists the
                 distinct (d,m) classes on the ray in factor order.
                 This is only established for <b>primitive</b> charges
                 (<span class="mth">v_out</span> primitive): there the SI formula is invariant under
@@ -1101,6 +2474,28 @@
                 pentagon regions are named automatically from the transjective entry order
                 (&tau;<sup>&#8723;k</sup>-shifts).</p>
 
+            <h3>General sesqui constructions tab</h3>
+            <p>
+                Records the <b>general constructions</b>, organized <b>by curve family</b> rather
+                than by owned interval: six families of symbolic trees, each card stating the exact
+                regime of expected validity, the rigor status (Family 1, the E-cascade, is proven;
+                the rest are exhaustively machine-verified), and the evidence. Family 1 covers
+                every conjectural class with 0 &le; m &le; q for all p/q &gt; &tau;<sup>4</sup> &mdash;
+                interval-blind; Families 2&ndash;4 (partitioned by (&sigma;, r)) cover m &gt; q across
+                every owned interval of [8,10] at every nesting depth; Families 5&ndash;7 are the three
+                known thin exception families, now with exactly characterized domains on the
+                8-interval (5: window tops with small p&minus;2d; 6: p/q just below 10, the one case
+                where the internal edges must branch; 7: p/q just above 8, built on the new
+                charge-(1,1,1) block [[L2 L3] L1]). On the 8-interval the whole of m &gt; q is covered
+                by a proved closed-form decision rule. Terminology is deliberately plain: legs, vertices, weights,
+                paths — the only fixed notation is the bracket expressions and
+                &Lambda;<sub>k</sub> = [(k+1)*L1 k*L3]. Evidence spans the 8-interval (q &le; 60, 48,121 classes),
+                the deeper intervals of [8,10] (q &le; 52, 28,835 classes), bands outside the strip,
+                and frontier classes at orders up to 130,460; plus the sharpness converse (off-window
+                classes construct nothing). From <code>tree_construction_8_interval_7_9_26</code>
+                and <code>tree_construction_deep_intervals_7_10_26</code>.
+             Figure labels are layered &mdash; vertex data (multiplicities &middot; determinant), edge charges, weights &mdash; with checkbox toggles above the family cards; det-1 vertex data is suppressed from the drawings, and every vertex dot carries a hover tooltip with its full data. The cards are browsed via a sticky sub-tab bar (Family 1 &hellip; Family 7, sharpness &amp; depth, how-to-read); the &ldquo;All&rdquo; sub-tab restores the single stacked page.</p>
+
             <h3>F&#8321; anchor fan tab</h3>
             <p>
                 The anchor fan shows where the condition &ldquo;C &sdot;<sub>res</sub> U &ge; 0 for
@@ -1213,6 +2608,25 @@
 
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v0.92</b> &mdash; constructions tab: the six cards (Family 1, Families 2&ndash;4, Family 5, Family 6, Family 7, sharpness &amp; depth) and the how-to-read section are now organized into a sticky sub-tab bar instead of one long vertical stack, so the figures can be browsed side by side without scrolling; an &ldquo;All&rdquo; sub-tab restores the stacked view (also the no-JS fallback). The figure-label layer toggles remain global across sub-tabs.</li>
+                <li><b>v0.91</b> &mdash; constructions tab figure DECLUTTER pass (gen_tree_figs.py rewrite): omnidirectional collision-resolving label placement (labels fan out around crowded vertex clusters instead of stacking into a single column of determinant labels with crossing leader lines), white halos behind all figure text, trivial vertex data suppressed (det-1 vertices and bare (1,1) multiplicities lose their text label; the full (a,b)&middot;det data remains as a hover tooltip on every vertex dot), edge-charge labels moved off their edges (perpendicular offset, pushed away from the cluster), more canvas devoted to the vertex cluster (shorter leg stubs), and per-layer label classes with new checkbox toggles above the family cards (vertex data / edge charges / weights). Also fixes three long-standing figure-label bugs: Family 7&rsquo;s planar vertex labels were off by one from the second &Lambda;&#8321; block onward (the root displayed an instance determinant instead of (1,&#8467;)&middot;det 3s&minus;2N), and the combinatorial weight badges of Families 6 and 7 sat on the wrong links (N, M, &#8467;, x&minus;1, &sigma;&minus;1 displaced).</li>
+                <li><b>v0.90</b> &mdash; precision pass prompted by cross-document review: the &ldquo;single path except Family 6&rdquo; sentences (intro, how-to-read) corrected &mdash; Family 7&rsquo;s canonical tree also branches at its root (its classes do admit single-path witnesses; Family 6 remains the only <i>necessary</i> branching). Compact reference document re-synced with the state-of-the-art document (role note added: compact = proof-free quick reference + legacy glossary; state-of-the-art = primary), its Family-6 regime updated to the angular-shell statistics, Families-5&ndash;6 &rarr; 5&ndash;7 exception references, claims row C7 refreshed.</li>
+                <li><b>v0.89</b> &mdash; Family 6 card refreshed to the post-audit state: Tree paragraph now states the proved canonical allocation (x&minus;r, &sigma;&minus;r | r, r at &Lambda;&#8324;/&Lambda;&#8325;) instead of &ldquo;instances so far&rdquo;; Regime paragraph gives the accurate member statistics over all 54 gate-verified members (k = 4, r &le; 4, margin 2&ndash;5, j = h&minus;r &le; 3, 10 &minus; p/q &lt; 0.05) with the exact boundary marked open; member count corrected 56 &rarr; 54 (17 ray + 2 + 35).</li>
+                <li><b>v0.88</b> &mdash; folded in the external audit sesqui_audit_2026-07-12 (all claims re-verified against the exact gate): (1) CORRECTION &mdash; Family 7&rsquo;s domain (M) is NOT confined to p&minus;8q &isin; {1,2}: p&minus;8q = r&minus;&ell; is unbounded (first counterexample (563,70,267) at q = 70; 538 members at q &le; 200, all gate-verified with the boxed tree &mdash; the proof never used the false bound); (M) is an angular shell 8 &lt; p/q &lt; 8+1/14. (2) UPGRADES &mdash; band theorem proved (no unicuspidal cap cuts into 0 &le; m &le; q for p/q &ge; &tau;<sup>4</sup>, uniformly: Family 1 interval-blind as a theorem); Family 6 proved on its verified shell via the Y-placement lemma + canonical allocation (x&minus;r, &sigma;&minus;r | r, r at &Lambda;&#8324;/&Lambda;&#8325;), and the ray&rsquo;s q = 30 &rarr; 37 transition proved within the two-&Lambda; family; Theorem E&rsquo;s top-vertex display corrected (the one-sided divisor is the weighted child&rsquo;s gcd; old display refuted by (26,3,10)); order-rigidity and U8b(b=2) audit flags closed. State-of-the-art document revised accordingly (candidate-region logic, W1/W2 dictionary fix, depth convention). Follow-up probe: Family 6&rsquo;s shell is also angular &mdash; 35 new members with r &ge; 3 at q &le; 200, canonical Y allocation 35/35 (54 members total).</li>
+                <li><b>v0.87</b> &mdash; comprehensive state-of-the-art document <code>sesqui_8_10_state_of_the_art_7_10_26</code> added and linked from the constructions tab: full proofs of everything proved (adjunction redundancy; Theorem E with explicit placement; Lemmas O/D and Theorems U1&ndash;U9 incl. the exceptional-shell classification, Family 5&rsquo;s exact domain and Family 7; the assembled decision rule = the 8-interval is done modulo A1&ndash;A4), the complete empirical record, an explicit proved / expected / mysterious taxonomy (E1&ndash;E7, M1&ndash;M5), the honest answer to &ldquo;is the family list complete for [8,10]?&rdquo; (no &mdash; with the meta-pattern conjecture and the decisive untested generation-2 shell experiment), and eight ordered open problems. Written for external LLM audit; [audit flags] mark the two transcribed sub-proofs verified only through their conclusions.</li>
+                <li><b>v0.86</b> &mdash; REGIME U ON THE 8-INTERVAL IS NOW PROVED (modulo the local-rule/soundness citations): folded in the externally audited completion (ChatGPT_regime_U_corrected_solution, all claims re-verified against the exact gate &mdash; verification_regime_U_audit_7_10_26): exact failure sets for the Family-2/3 splits ({k=3, x&gt;2r+5, Q&#8327;(x,r)&gt;1} = the 327-class shell, verified as a set equality) and for Family 5 (works iff 3x &le; 2s+r); a single explicit split covers all k &ge; 4 (x &le; 2e+5 is automatic there); &sigma;=0 uniform choice corrected to (&Lambda;3, A&minus;4) ((25,3,11) refutes the old &lfloor;(A&minus;1)/2&rfloor; choice &mdash; gate-confirmed). NEW FAMILY 7 (proved): the nine p&minus;8q &isin; {1,2} window-top classes (mirror of Family 6 at the other strip edge) realized by [[N*[L2 L3] M*&Lambda;1] &ell;*[[[L2 L3] L1] &Lambda;1]] with the new charge-(1,1,1) block [[L2 L3] L1] (9/9 gate-verified; new figure), alternative z-leg shape also recorded. Families 2&ndash;4 card gains the full 8-case decision rule (no search); Family 5 count corrected 328 &rarr; 318 (+9 in Family 7). New tool tree_check (bracket string &rarr; exact gate).</li>
+                <li><b>v0.85</b> &mdash; constructions tab: TERMINOLOGY PURGE. All project-internal names (spine, corner tree, ladder / mirrored ladder / diagonal vertex, rung, packet, bundle, trunk-hugging, E-cascade, mirrored re-allocation, branched corner form) removed from the tab in favor of plain descriptions &mdash; legs, vertices, weights, single path of internal edges vs Y; the only retained notation is the bracket expressions and &Lambda;<sub>k</sub> := [(k+1)*L1 k*L3] (defined in the intro as the (2k+4,1)-unicuspidal curve&rsquo;s tree). Figure labels inside the SVGs updated to match (charge tuples instead of &ldquo;ladder/mirrored/diagonal&rdquo;, &ldquo;running sum&rdquo; instead of &ldquo;spine&rdquo;); the two collapsibles merged into one plain &ldquo;how to read the trees and figures&rdquo;. The self-contained status document was rewritten in the same plain language (with a short legacy-term glossary for reading older logs/documents). Family titles are now just Family 1&hellip;6.</li>
+                <li><b>v0.84</b> &mdash; constructions tab: uniform card template (Tree / Regime / Status / Evidence) across all six families; Family 5 gets a standard symbolic figure pair and Family 6&rsquo;s ad-hoc sketch replaced by a proper planar-embedding + combinatorial pair (both via gen_tree_figs.py, new F5-general/F6-general entries). DEEPER SEARCH folded in: deep-interval sweep extended to q &le; 80 (105,024 window classes; two NEW single-spine failures (668,67,324), (707,71,343) on p = 10q&minus;2, 10q&minus;3 &mdash; both realized by the branched family, whose regime is now stated as margin &le; 4 trunk-hugging window tops with r &isin; {1,2}); the p = 10q&minus;1 ray followed to q = 149 (19/19, orders to 1,042); phantom sweep extension q &le; 80 in progress (0 realizations). NEW: all-rays depth analysis &mdash; full-shape enumeration of every charge of order &le; 19: maximal minimal depth is 3 (first at (3,2,3), order 8); sharpness card now includes it. Self-contained status document sesqui_general_families_7_10_26 added (families, regimes, proof status, claims table, missing pieces) for independent auditing. All sweeps subsequently completed and final counts propagated (2,821/2,821 phantoms and 843/843 boundaries fail; all-rays depth analysis closed at order 20).</li>
+                <li><b>v0.83</b> &mdash; general sesqui constructions tab RESTRUCTURED BY CURVE FAMILY (was: by owned interval): six family cards, each with its explicit validity regime, rigor status and evidence. Family 1 &ldquo;E-cascade&rdquo; = old Regime E, now stated in its full generality (0 &le; m &le; q, p/q &gt; &tau;<sup>4</sup>, interval-blind; proven) with evidence incl. the deeper intervals of [8,10] (8,497 classes q &le; 52), bands outside the strip ((&tau;<sup>4</sup>,8): 699, (10,12): 1,231 &mdash; new runs) and micro-owner columns to order 130,460. Families 2&ndash;4 = the (&sigma;, r) ladder-bundle partition (counts now shown for both sweeps: q &le; 60 8-interval &brvbar; q &le; 52 deeper intervals). Family 5 = the mirrored re-allocation (old &ldquo;verified exceptions&rdquo;, 328 + 30 + frontier hits at orders 5,825 and 130,460). NEW Family 6 = the branched corner form on the trunk-hugging ray p = 10q&minus;1, q &equiv; 2 (mod 7) (7/7 verified, q = 37&ndash;79; new figure) &mdash; the only known configuration where all single-spine assemblies provably fail. New sharpness card (off-window classes construct nothing, incl. activation phantoms at orders 321/5,825/8,481). Companion document tree_construction_deep_intervals_7_10_26 added to references.</li>
+                <li><b>v0.82</b> — corrections from an external review of the reference document, propagated: ladder rung &Lambda;<sub>k</sub> is the (2k+4,1)-unicurve (not 2k+6); q &le; 6 window count is 49 incl. (8,1,3); exact max orders 181 (q &le; 30) / 367 (q &le; 60); "&delta; nodes" glossed as residual &delta;-invariant / nodes after generic perturbation. Adopted improvements in the reference doc: short convexity proof that adjunction is redundant on the interval (replacing the q &le; 1000 computation), &alpha;-coordinate identities &sigma; = q&minus;x and e = B&minus;3&sigma; (so the (8,1)-inequality says exactly: only rungs &Lambda;&#8323; = (10,1) and higher occur in upright bundles), and closed-form determinants for the two-rung vertices.</li>
+                <li><b>v0.81</b> — constructions tab: terminology entries illustrated — compact pictorial examples for corner tree, ladder / mirrored / diagonal vertex ((3,2), (2,3), (2,2) at L&#8321;&cap;L&#8323;), and spine (a three-vertex tree with the spine edges highlighted orange and the running-total charges read off).</li>
+                <li><b>v0.80</b> — constructions tab: "terminology" collapsible added (corner tree, ladder / mirrored ladder / diagonal vertex, spine) — the terms used by the case descriptions and the figure labels are now all defined in-tab.</li>
+                <li><b>v0.79</b> — constructions tab: verification extended to q &le; 60 (48,121 classes, 0 failures) and all case counts updated. CORRECTION: "exactly one class needs a non-consecutive rung pair" was wrong — the adjacent pair suffices for 20,124 of the 25,787 two-rung classes; 5,663 (mostly &sigma; &lt; 0) need a wider pair, usually spread 2; the verifier takes the first workable spread. Reference document and master updated accordingly.</li>
+                <li><b>v0.78</b> — general sesqui constructions tab: Regime U rewritten as a clean, provably exhaustive case partition by (&sigma;, r) = (A&minus;B, min(A,B) mod |&sigma;|) — Case 1 one ladder vertex (977 classes at q &le; 30), Case 2 two ladder vertices (2,829 — the majority; the old "generic single rung" label was wrong: |&sigma;| = 1 is only 430 classes), Case 3 A = B (99: 6 two-power diagonals + 93 ladder+mirror), plus the 21 verified exceptions — each case expandable with its own symbolic general diagram (two new figures); honest status line (verified q &le; 30; conjectural beyond; Regime E proven).</li>
+                <li><b>v0.77</b> — general sesqui constructions tab trimmed to the minimum: the two regime diagrams (+ expandable deeper U-cases) with a compact notation collapsible; prose moved to the reference document. Figure pairs (plane | tree) side by side via a wider content column for this tab.</li>
+                <li><b>v0.76</b> — new GENERAL SESQUI CONSTRUCTIONS tab (named to contrast with the per-factor example trees of the Scattering diagram tab): the general construction of all conjectural sesquicurves on the interval owned by 8 (from tree_construction_8_interval_7_9_26) — symbolic general diagrams for Regime E and Regime U with the deeper U-cases (two ladders, A = B, rare variants) behind a click, a how-to-read legend, and verification numbers; interval chips reserve space for future intervals (owned by 10, 55/6). Static content, no computation.</li>
+                <li><b>v0.75</b> — trees tab: the "as a tree" panel redrawn as a genuine tree in the style of the tree-construction note figures — the intermediate charge-box → red-pill → children diamond (which read as loops) is collapsed into one annotated vertex dot per scattering event, with circled edge multiplicities, adaptive column widths sized from the longest label, white-halo labels, and a red output arrow; packets with several local decompositions keep a charge box with dashed "alt" connectors so alternatives are visually distinct from tree edges. Planar panel: all labels now clamp inside the canvas (no more cut-offs at the edges) and fonts bumped 10→11px.</li>
+                <li><b>v0.74</b> — scattering tab: with (p,q) and/or (d,m) toggled on, the ray hover pill gains one compact extra line per toggle listing the distinct values over the ray's factors (deduped, capped at 6 with "+N more") — browse (p,q)/(d,m) data by mousing along rays without clicking each one. The panel-header (d,m) list now base-maps charges through the mutation path (matching the per-factor chips; previously it used the literal-frame dictionary even in mutated frames).</li>
                 <li><b>v0.73</b> — exchange graph: FIX — the halo test looked up a seed's parent via adjacency, which is absent for the unexpanded frontier generation, so the whole last drawn row was wrongly haloed; the tree parent (forkParent) is used now. Terminology: haloed seeds are called NESTING ROOTS.</li>
                 <li><b>v0.72</b> — exchange graph: nested marking redesigned — only ENTRY seeds are marked, with a clean detached halo ring (teal, offset from the node); descendants are unmarked visually since heredity makes "below a halo" the exact meaning (tooltips still state nested/inherited); replaces the thin-vs-thick stroke scheme, which read poorly.</li>
                 <li><b>v0.71</b> — exchange graph: nested seeds now distinguish ENTRY POINTS (nested seed whose parent is not nested — the roots of the maximal pure-refinement subtrees) with a thick green ring; descendants keep the thin ring; tooltips say which is which.</li>
@@ -2364,6 +3778,7 @@ function activePQ() {
 }
 function refreshPQ() {
     renderPanel();
+    drawDiagram();   // hover pill carries a (p,q) line when the toggle is on
 }
 document.getElementById('pqToggle').addEventListener('change', () => {
     const on = document.getElementById('pqToggle').checked;
@@ -2591,26 +4006,40 @@ function drawDiagram() {
             if (r.deltas.length) label += ' — δ: ' + r.deltas.join(',') + (r.hasCover ? ' (+covers)' : '');
             else if (r.hasCover) label += ' — covers only';
         }
+        // extra data lines when the (p,q) / (d,m) toggles are on
+        const lines = [label];
+        if (!r.incoming) {
+            const pq = activePQ();
+            if (pq) lines.push('(p,q): ' + raySummary(r,
+                t => { const q = computeMapQ(chargeMono(t.charge), curVS, pq); return '(' + q[0] + ',' + q[1] + ')'; }));
+            if (activeDM()) lines.push('(d,m): ' + raySummary(r, t => dmValStr(t.charge)));
+        }
         const color = r.incoming ? '#444' : depthColor(r.minDeg);
         sdCtx.save();
         sdCtx.scale(1 / sdScale, 1 / sdScale);
         const sx = lx * sdScale, sy = ly * sdScale;
         sdCtx.font = 'bold 12px monospace';
-        const tw = sdCtx.measureText(label).width;
-        const pad = 5;
+        let tw = sdCtx.measureText(lines[0]).width;
+        sdCtx.font = '11px monospace';
+        for (let i = 1; i < lines.length; i++) tw = Math.max(tw, sdCtx.measureText(lines[i]).width);
+        const pad = 5, lineH = 15;
         const px = sx + (ux >= 0 ? 8 : -tw - 8 - pad * 2);
         const py = sy - 10 - pad;
         sdCtx.fillStyle = 'rgba(255,255,255,0.93)';
         sdCtx.beginPath();
-        sdCtx.roundRect(px, py, tw + pad * 2, 20 + pad, 5);
+        sdCtx.roundRect(px, py, tw + pad * 2, 20 + pad + (lines.length - 1) * lineH, 5);
         sdCtx.fill();
         sdCtx.strokeStyle = color;
         sdCtx.lineWidth = 1;
         sdCtx.stroke();
-        sdCtx.fillStyle = color;
         sdCtx.textBaseline = 'middle';
         sdCtx.textAlign = 'left';
-        sdCtx.fillText(label, px + pad, py + 12);
+        sdCtx.fillStyle = color;
+        sdCtx.font = 'bold 12px monospace';
+        sdCtx.fillText(lines[0], px + pad, py + 12);
+        sdCtx.fillStyle = '#555';
+        sdCtx.font = '11px monospace';
+        for (let i = 1; i < lines.length; i++) sdCtx.fillText(lines[i], px + pad, py + 12 + i * lineH);
         sdCtx.restore();
     }
     sdCtx.restore();
@@ -2739,7 +4168,7 @@ function fmtFactorHTML(charge, count) {
 function activeDM() {
     return curVS && dmPath !== null && document.getElementById('dmToggle').checked;
 }
-document.getElementById('dmToggle').addEventListener('change', () => renderPanel());
+document.getElementById('dmToggle').addEventListener('change', () => { renderPanel(); drawDiagram(); });
 function updateDMVisibility() {
     document.getElementById('dmToggleWrap').style.display =
         (curVS && dmPath !== null) ? 'flex' : 'none';
@@ -2751,17 +4180,31 @@ function updateDMVisibility() {
 // the curve lies outside the dictionary chamber (p ≥ 2q ≥ 0), where the
 // bijection and the linear dictionary genuinely differ; "or" when two distinct
 // classes share the same (p,q) and δ.
-function dmChipPart(charge) {
+function dmValStr(charge) {
     if (dmPath === null) return null;
     // base-map the charge back along the mutation path to the F1 frame
     let a = charge.slice();
     for (let s = dmPath.length - 1; s >= 0; s--) {
         a = chargeTransport(a, dmPath[s].vs, dmPath[s].i);
         if (a.some(x => x < 0))
-            return '(d,m): —';   // no charge presentation in the original frame (echo-type)
+            return '—';          // no charge presentation in the original frame (echo-type)
     }
     const dm = dmF1(a);
-    return '(d,m) = (' + dm[0] + ', ' + dm[1] + ')';
+    return '(' + dm[0] + ',' + dm[1] + ')';
+}
+function dmChipPart(charge) {
+    const v = dmValStr(charge);
+    if (v === null) return null;
+    return v === '—' ? '(d,m): —' : '(d,m) = ' + v;
+}
+
+// deduped, capped per-factor value list for the hover pill data lines
+function raySummary(r, fn) {
+    const seen = new Set();
+    for (const t of r.terms) { const s = fn(t); if (s) seen.add(s); }
+    const list = [...seen];
+    const MAX = 6;
+    return list.slice(0, MAX).join(' ') + (list.length > MAX ? ' (+' + (list.length - MAX) + ' more)' : '');
 }
 
 // delta annotation for the pq chips: the double-point count of the corresponding
@@ -2803,8 +4246,8 @@ function renderPanel() {
     if (activeDM()) {
         const seen = new Set(), dms = [];
         for (const t of r.terms) {
-            const s = '(' + dmF1(t.charge).join(',') + ')';
-            if (!seen.has(s)) { seen.add(s); dms.push(s); }
+            const s = dmValStr(t.charge);
+            if (s && !seen.has(s)) { seen.add(s); dms.push(s); }
         }
         sub += ' — (d,m): ' + dms.join(', ');
     }
@@ -2913,8 +4356,12 @@ function drawPlanarTree(canvas, T, rootCi, ptNames, view) {
     c2.setTransform(dpr, 0, 0, dpr, 0, 0);
     c2.clearRect(0, 0, cw, ch);
     const vz = view ? view.z : 1, vpx = view ? view.panX : 0, vpy = view ? view.panY : 0;
-    // text with a white halo so labels stay readable over lines/rays
+    // text with a white halo so labels stay readable over lines/rays;
+    // clamped into the canvas so labels never get cut off at the edges
     const haloText = (txt, x, y) => {
+        const tw = c2.measureText(txt).width;
+        x = Math.max(4, Math.min(cw - tw - 4, x));
+        y = Math.max(12, Math.min(ch - 5, y));
         c2.save();
         c2.lineWidth = 3.5;
         c2.strokeStyle = 'rgba(255,255,255,0.88)';
@@ -2946,7 +4393,7 @@ function drawPlanarTree(canvas, T, rootCi, ptNames, view) {
     const wy = y => (wyB(y) - ch / 2) * vz + ch / 2 + vpy;
 
     // initial lines involved: light chords across the view
-    c2.font = '10px monospace';
+    c2.font = '11px monospace';
     for (const ci of involved) {
         const c = T.carriers[ci];
         if (!c.isLine) continue;
@@ -2992,7 +4439,7 @@ function drawPlanarTree(canvas, T, rootCi, ptNames, view) {
                 }
             }
         }
-        c2.font = 'bold 10px monospace';
+        c2.font = 'bold 11px monospace';
         for (const [, leg] of legs) {
             const v = curVS[leg.li];
             const dl = Math.hypot(v[0], v[1]);
@@ -3038,7 +4485,7 @@ function drawPlanarTree(canvas, T, rootCi, ptNames, view) {
         }
     }
     // draw segments with arrowheads at the consumer end
-    c2.font = '10px monospace';
+    c2.font = '11px monospace';
     for (const [, group] of segGroups) {
         group.forEach((seg, gi) => {
             const c = T.carriers[seg.ci], v = T.carriers[seg.vi];
@@ -3094,14 +4541,14 @@ function drawPlanarTree(canvas, T, rootCi, ptNames, view) {
         c2.lineTo(ex - 9 * Math.cos(ang + 0.4), ey - 9 * Math.sin(ang + 0.4));
         c2.stroke();
         c2.fillStyle = color;
-        c2.font = 'bold 10px monospace';
+        c2.font = 'bold 11px monospace';
         const lblX = Math.max(4, Math.min(cw - 44, ex + ux * 6 - 14));
         const lblY = Math.max(12, Math.min(ch - 4, ey + uy * 6 - 5));
         haloText('(' + c.X.join(',') + ')', lblX, lblY);
     }
 
     // vertex dots + P labels
-    c2.font = 'bold 10px monospace';
+    c2.font = 'bold 11px monospace';
     for (const ci of involved) {
         const c = T.carriers[ci];
         if (c.isLine) continue;
@@ -3133,77 +4580,131 @@ function abstractDepth(node) {
     return m + 2;   // carrier level + deriv level
 }
 function renderAbstractTree(container, T, rootCi, ptNames) {
-    const UNIT = 62, LV = 46, TOP = 20, BOT = 14;
+    // Note-style tree drawing (cf. tree_construction_8_interval_7_9_26):
+    // one blue DOT per scattering vertex, annotated below with its local type
+    // (a_1,..,a_r) [+ det for two-ray vertices], the resulting charge, and the
+    // packet weight @ vertex; leaves are green boxes; circled numbers on edges
+    // repeat consumption multiplicities > 1. A packet with SEVERAL local
+    // decompositions keeps a charge box with dashed "alt" connectors — those
+    // branches are alternatives whose contributions add, not tree edges.
     const root = buildAbstract(T, rootCi);
-    const depth = abstractDepth(root);
-    const width = Math.max(root.w * UNIT + 20, 200);
+    function dDepth(node) {
+        if (node.kind === 'line') return 1;
+        let m = 0;
+        for (const d of node.ders) for (const p of d.parts) m = Math.max(m, dDepth(p.node));
+        return m + (node.ders.length > 1 ? 2 : 1);
+    }
+    const annOf = d => {
+        let ann = '(' + d.parts.map(p => p.a).join(',') + ')';
+        if (d.parts.length === 2)
+            ann += '·det ' + Math.abs(wedge(T.carriers[d.parts[0].cidx].mraw, T.carriers[d.parts[1].cidx].mraw));
+        return ann;
+    };
+    // adaptive column width so side-by-side labels cannot collide
+    let maxLbl = 8;
+    (function scan(node) {
+        if (node.kind === 'line') return;
+        const c = T.carriers[node.ci];
+        maxLbl = Math.max(maxLbl, c.X.join(',').length + 2);
+        for (const d of node.ders) {
+            maxLbl = Math.max(maxLbl, annOf(d).length, ('wt ' + frStr(d.c)).length + 5);
+            for (const p of d.parts) scan(p.node);
+        }
+    })(root);
+    const UNIT = Math.max(68, Math.min(160, maxLbl * 6.8 + 10));
+    const LV = 80, TOP = 36, BOT = 20;
+    const depth = dDepth(root);
+    const width = Math.max(root.w * UNIT + 24, 220);
     const height = TOP + (depth - 1) * LV + BOT;
     const NS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('width', width);
     svg.setAttribute('height', height);
     svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
-    const mk = (tag, attrs, text) => {
+    const gE = document.createElementNS(NS, 'g');   // edges (below)
+    const gN = document.createElementNS(NS, 'g');   // nodes + labels (on top)
+    svg.appendChild(gE); svg.appendChild(gN);
+    const mk = (g, tag, attrs, text) => {
         const el = document.createElementNS(NS, tag);
         for (const k in attrs) el.setAttribute(k, attrs[k]);
         if (text !== undefined) el.textContent = text;
-        svg.appendChild(el);
+        g.appendChild(el);
         return el;
     };
-    const line = (x1, y1, x2, y2, lbl) => {
-        mk('line', { x1, y1, x2, y2, stroke: '#bbb', 'stroke-width': 1.2 });
-        if (lbl) mk('text', { x: (x1 + x2) / 2 + 4, y: (y1 + y2) / 2 + 3, 'font-size': 10, fill: '#c0392b', 'font-family': 'monospace', 'font-weight': 'bold' }, lbl);
+    // labels with a white halo so edges passing underneath never obscure them
+    const txt = (x, y, s, size, fill, extra) => mk(gN, 'text', Object.assign({
+        x, y, 'text-anchor': 'middle', 'font-size': size, fill,
+        'font-family': 'monospace', stroke: '#fff', 'stroke-width': 3, 'paint-order': 'stroke'
+    }, extra || {}), s);
+    const edge = (x1, y1, x2, y2, wgt, dashed, lbl) => {
+        const attrs = { x1, y1, x2, y2, stroke: '#8a97a1',
+                        'stroke-width': (1.1 + 0.35 * Math.min(wgt || 1, 5)).toFixed(1) };
+        if (dashed) attrs['stroke-dasharray'] = '4,3';
+        mk(gE, 'line', attrs);
+        // badge sits 35% along the edge from the child end, clear of the
+        // parent vertex's label stack
+        const mx = x1 + (x2 - x1) * 0.35, my = y1 + (y2 - y1) * 0.35;
+        if ((wgt || 1) > 1) {
+            mk(gN, 'circle', { cx: mx, cy: my, r: 9, fill: '#fff', stroke: '#8a97a1', 'stroke-width': 0.8 });
+            txt(mx, my + 3.5, String(wgt), 10.5, '#333', { stroke: 'none' });
+        }
+        if (lbl) txt(mx + 14, my + 3, lbl, 9.5, '#999');
     };
-    // recursive placement: returns center x
+    // one scattering vertex: dot + stacked labels (type/det, charge, weight@pt)
+    const drawVertex = (cx, y, d, chargeLbl, pn) => {
+        mk(gN, 'circle', { cx, cy: y, r: 4, fill: '#2471a3' });
+        txt(cx, y + 16, annOf(d), 11, '#2471a3', { 'font-weight': 'bold' });
+        let dy = 28;
+        if (chargeLbl) { txt(cx, y + dy, chargeLbl, 10.5, '#555'); dy += 12; }
+        txt(cx, y + dy, 'wt ' + frStr(d.c) + ' @' + pn, 9.5, '#8e44ad');
+    };
+    // recursive placement; returns the anchor the parent edge should attach to
     function place(node, x, y) {
         const cx = x + node.w * UNIT / 2;
         if (node.kind === 'line') {
-            mk('circle', { cx, cy: y, r: 11, fill: '#eaf5ea', stroke: '#1e8449', 'stroke-width': 1.4 });
-            mk('text', { x: cx, y: y + 3.5, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#1e8449', 'font-family': 'monospace', 'font-weight': 'bold' }, 'L' + subNum(node.li + 1));
-            return cx;
+            mk(gN, 'rect', { x: cx - 16, y: y - 10, width: 32, height: 20, rx: 4, fill: '#eaf5ea', stroke: '#1e8449', 'stroke-width': 1.4 });
+            txt(cx, y + 4, 'L' + subNum(node.li + 1), 11.5, '#1e8449', { 'font-weight': 'bold', stroke: 'none' });
+            return { cx, ay: y - 10 };
         }
         const c = T.carriers[node.ci];
-        const label = '(' + c.X.join(',') + ')';
-        const bw = Math.max(30, label.length * 6.4 + 10);
-        mk('rect', { x: cx - bw / 2, y: y - 12, width: bw, height: 24, rx: 5, fill: '#eef4fb', stroke: '#2471a3', 'stroke-width': 1.3 });
-        mk('text', { x: cx, y: y - 1, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#2471a3', 'font-family': 'monospace', 'font-weight': 'bold' }, label);
-        mk('text', { x: cx, y: y + 9, 'text-anchor': 'middle', 'font-size': 8.5, fill: '#8e44ad', 'font-family': 'monospace' }, '@' + ptName(T, c, ptNames));
-        // derivations
+        const chargeLbl = '(' + c.X.join(',') + ')';
+        const pn = ptName(T, c, ptNames);
+        if (node.ders.length === 1) {
+            const d = node.ders[0];
+            drawVertex(cx, y, d, chargeLbl, pn);
+            let px0 = x + (node.w - d.w) * UNIT / 2;
+            for (const p of d.parts) {
+                const a = place(p.node, px0, y + LV);
+                edge(a.cx, a.ay, cx, y, p.a);
+                px0 += p.node.w * UNIT;
+            }
+            return { cx, ay: y };
+        }
+        // several local decompositions: charge box above dashed alternatives
+        const bw = Math.max(36, chargeLbl.length * 6.8 + 14);
+        mk(gN, 'rect', { x: cx - bw / 2, y: y - 12, width: bw, height: 26, rx: 5, fill: '#eef4fb', stroke: '#2471a3', 'stroke-width': 1.3 });
+        txt(cx, y - 1, chargeLbl, 10.5, '#2471a3', { 'font-weight': 'bold', stroke: 'none' });
+        txt(cx, y + 10, '@' + pn, 8.5, '#8e44ad', { stroke: 'none' });
         let dx0 = x;
-        for (const d of node.ders) {
+        node.ders.forEach((d, di) => {
             const dcx = dx0 + d.w * UNIT / 2;
             const dy = y + LV;
-            line(cx, y + 12, dcx, dy - 9);
-            const ptxt = frStr(d.c);
-            const pw = Math.max(18, ptxt.length * 6.5 + 8);
-            mk('rect', { x: dcx - pw / 2, y: dy - 9, width: pw, height: 18, rx: 9, fill: '#fdeeee', stroke: '#c0392b', 'stroke-width': 1.3 });
-            mk('text', { x: dcx, y: dy + 3.5, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#c0392b', 'font-family': 'monospace', 'font-weight': 'bold' }, ptxt);
-            // vertex data: the linear combination (a_1,..,a_r) of the incoming
-            // curves, and (for two-ray vertices) det = |m_1 ^ m_2| of their raw
-            // monomial directions -- the index of the local D^{d,d}-type packet
-            {
-                const combo = '(' + d.parts.map(p => p.a).join(',') + ')';
-                let ann = combo;
-                if (d.parts.length === 2) {
-                    const w = Math.abs(wedge(T.carriers[d.parts[0].cidx].mraw, T.carriers[d.parts[1].cidx].mraw));
-                    ann = combo + ', det ' + w;
-                }
-                mk('text', { x: dcx, y: dy + 19, 'text-anchor': 'middle', 'font-size': 8.5, fill: '#888', 'font-family': 'monospace', stroke: '#fdfdfe', 'stroke-width': 3, 'paint-order': 'stroke' }, ann);
-            }
-            // parts
-            let px0 = dx0;
+            edge(dcx, dy, cx, y + 14, 1, true, 'alt ' + (di + 1));
+            drawVertex(dcx, dy, d, null, pn);
+            let px0 = dx0 + (d.w - d.parts.reduce((s, p) => s + p.node.w, 0)) * UNIT / 2;
             for (const p of d.parts) {
-                const pcx = px0 + p.node.w * UNIT / 2;
-                const py = dy + LV;
-                line(dcx, dy + 9, pcx, py - (p.node.kind === 'line' ? 11 : 12));
-                place(p.node, px0, py);
+                const a = place(p.node, px0, dy + LV);
+                edge(a.cx, a.ay, dcx, dy, p.a);
                 px0 += p.node.w * UNIT;
             }
             dx0 += d.w * UNIT;
-        }
-        return cx;
+        });
+        return { cx, ay: y - 12 };
     }
-    place(root, 10, TOP);
+    const r = place(root, 12, TOP);
+    // output arrow above the root
+    mk(gE, 'line', { x1: r.cx, y1: r.ay - 2, x2: r.cx, y2: r.ay - 24, stroke: '#c0392b', 'stroke-width': 2 });
+    mk(gN, 'polygon', { points: r.cx + ',' + (r.ay - 31) + ' ' + (r.cx - 3.5) + ',' + (r.ay - 23) + ' ' + (r.cx + 3.5) + ',' + (r.ay - 23), fill: '#c0392b' });
     container.appendChild(svg);
     return { svg, width, height };
 }
@@ -3407,6 +4908,34 @@ window.__sdState = () => ({ z: sdScale, px: sdPanX, py: sdPanY });
 sizeCanvas();
 renderPanelPlaceholder();
 compute();
+
+// figure-label layer toggles (general sesqui constructions tab, v0.91)
+[['cxLabV','cx-hidev'],['cxLabE','cx-hidee'],['cxLabG','cx-hideg']].forEach(([id, cls]) => {
+    const cb = document.getElementById(id);
+    if (cb) cb.addEventListener('change', () =>
+        document.getElementById('tabConstructions').classList.toggle(cls, !cb.checked));
+});
+
+// sub-tab navigation between the family cards (constructions tab, v0.92)
+(() => {
+    const secs = ['cxSecF1','cxSecF24','cxSecF5','cxSecF6','cxSecF7','cxSecSharp','cxSecRead'];
+    const bar = document.getElementById('cxSubtabs');
+    if (!bar) return;
+    bar.querySelectorAll('.cx-subbtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            bar.querySelectorAll('.cx-subbtn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tgt = btn.dataset.sec;
+            secs.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = (tgt === 'all' || tgt === id) ? '' : 'none';
+            });
+            if (tgt === 'cxSecRead') { const r = document.getElementById('cxSecRead'); if (r) r.open = true; }
+        });
+    });
+    const def = bar.querySelector('.cx-subbtn[data-sec="cxSecF1"]');
+    if (def) def.click();
+})();
 </script>
 <script id="exchangeGraph">
 // ============================================================================
