@@ -792,13 +792,19 @@
             <p>
                 A handful of <b>general curve families</b> — symbolic trees whose decorations are
                 elementary functions of the class — together construct <i>every</i> conjectural
-                sesquicurve tested. This page is organized <b>by family</b>: each card states the
-                family, the exact regime in which it is expected to be valid, whether that validity
-                is rigorous or empirical, and the evidence. Reference documents:
-                <code>tree_construction_8_interval_7_9_26.html</code> (the interval owned by 8,
-                incl. proofs for Family 1) and
-                <code>tree_construction_deep_intervals_7_10_26.html</code> (all deeper intervals of
-                [8,10]); comprehensive state of the art with full proofs and open problems:
+                sesquicurve tested. The page offers <b>two views of the same catalogue</b>:
+                <b>by interval</b> (the first sub-tab: each owned ratio interval with just the
+                families it actually needs — the same family can serve several intervals,
+                re-centered at each interval&rsquo;s own governing curve) and <b>by family</b>
+                (one card per family: the exact regime of expected validity, the rigor status, and
+                the evidence). Reference documents:
+                <code>sesqui_interval_owned_by_6_7_15_26.html</code> (the interval owned by (6,1):
+                two families, complete proofs — NEW 7/15),
+                <code>sesqui_interval_owned_by_8_7_14_26.html</code> (the interval owned by 8: six
+                families, complete proofs),
+                <code>tree_construction_8_interval_7_9_26.html</code> and
+                <code>tree_construction_deep_intervals_7_10_26.html</code> (working documents);
+                comprehensive state of the art with full proofs and open problems:
                 <code>sesqui_8_10_state_of_the_art_7_10_26.html</code>.
             </p>
             <p>
@@ -809,8 +815,11 @@
                 <span class="mth">m &ge; 0</span>, adjunction <span class="mth">&delta; &ge; 0</span>, and
                 pairing <span class="mth">&ge; 0</span> against every unicuspidal curve (equivalently the two
                 anchors of the ratio interval). The families split at <span class="mth">m = q</span>:
-                Family 1 covers <span class="mth">m &le; q</span> outright; Families 2&ndash;7 partition
-                <span class="mth">m &gt; q</span>. Throughout <span class="mth">&tau;<sup>4</sup> =
+                Family 1 covers <span class="mth">m &le; q</span> outright; on [8,10], Families
+                2&ndash;7 partition <span class="mth">m &gt; q</span>, while on the interval owned by
+                (6,1) a single re-centered Family-5 tree covers all of
+                <span class="mth">m &gt; q</span> by itself (see &ldquo;By interval&rdquo;). Throughout
+                <span class="mth">&tau;<sup>4</sup> =
                 (7+3&radic;5)/2 = 6.8541&hellip;</span> (<span class="mth">&tau;</span> the golden ratio).
             </p>
             <p>
@@ -836,6 +845,7 @@
             </p>
 
             <div class="cx-subtabs" id="cxSubtabs">
+                <button class="cx-subbtn" data-sec="cxSecIntervals">By interval</button>
                 <button class="cx-subbtn" data-sec="cxSecF1">Family 1</button>
                 <button class="cx-subbtn" data-sec="cxSecF24">Families 2&ndash;4</button>
                 <button class="cx-subbtn" data-sec="cxSecF5">Family 5</button>
@@ -850,6 +860,86 @@
                 <label><input type="checkbox" id="cxLabE" checked> edge charges</label>
                 <label><input type="checkbox" id="cxLabG" checked> weights</label>
                 <span style="color:#8a99a3">&mdash; uncheck to declutter; hovering a vertex dot always shows its full data</span>
+            </div>
+
+            <div class="cx-card" id="cxSecIntervals">
+                <h4>The catalogue by interval &nbsp;<span class="cx-range">which families each owned interval actually needs</span></h4>
+                <p style="font-size:13.5px">
+                    The strip of ratios splits into intervals, each <b>owned</b> by one unicuspidal
+                    curve (its pairing is the binding upper cap; the lower anchor is always E, i.e.
+                    <span class="mth">m &ge; 0</span>). The family cards describe shapes; this table
+                    says which shapes each interval uses, in which specialization. One pattern to
+                    hold on to: <b>Family 1 is interval-blind</b> (same formula everywhere,
+                    proved for all <span class="mth">p/q &gt; &tau;<sup>4</sup></span>), while the
+                    <span class="mth">m &gt; q</span> constructions <b>re-center at the owner</b> —
+                    their &Lambda;-blocks and division constants shift with the governing curve.
+                </p>
+                <table style="font-size:13px;border-collapse:collapse;margin:.6em 0">
+                    <tr style="background:#eaf2f8">
+                        <th style="border:1px solid #b9c8d4;padding:4px 8px">interval</th>
+                        <th style="border:1px solid #b9c8d4;padding:4px 8px">window (= conjectural list)</th>
+                        <th style="border:1px solid #b9c8d4;padding:4px 8px">families used</th>
+                        <th style="border:1px solid #b9c8d4;padding:4px 8px">status</th>
+                        <th style="border:1px solid #b9c8d4;padding:4px 8px">document</th>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>owned by (6,1)</b>: (&tau;<sup>4</sup>, &beta;&#8326;&#8314;) = (6.8541&hellip;, 7.1708&hellip;)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">m &ge; 0 and e&#8326; = p&minus;5q&minus;m &ge; 0 (&delta; &ge; 1 automatic; <b>no other cap to family depth 16</b>)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>1</b> (band) + <b>5 re-centered at the owner</b> with (&Lambda;&#8321;, &Lambda;&#8320; = bare L&#8321;-legs), i.e. <code>[(m&minus;q)*[2*L1 L3] [(p&minus;2d)*[L2 L3] (2p+3q&minus;5d)*L1]]</code>, covering ALL of m &gt; q — <b>both window edges enforced by the local rule</b> (root slack = e&#8326;; inner vertex at the top = adjunction). Families 2&ndash;4 (k &ge; 2) exist as alternative witnesses only.</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>proved</b> (validity + coverage + window theorem); 43,513/43,513 at q &le; 100, 1,928 boundaries all fail</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>sesqui_interval_owned_by_6_7_15_26.html</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>owned by 8</b>: [8, &lambda;), &lambda; = (105+5&radic;21)/14 = 9.1366&hellip;</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">m &ge; 0 and e = 3p&minus;5q&minus;5d &ge; 0 (&delta; &gt; 0 automatic)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>1</b> (band) + <b>2&ndash;4</b> (bulk of m &gt; q, division re-centered at k &ge; 3, so the blocks are &Lambda;<sub>&ge;3</sub> — the owner &Lambda;&#8322; enters only as arithmetic) + <b>5</b> and <b>7</b> on two thin left-edge shells. Family 6 never occurs. Upper cap enforced by placement infeasibility.</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>proved</b> (decision rule, 10 cases); 48,121/48,121 at q &le; 60</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>sesqui_interval_owned_by_8_7_14_26.html</code></td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>deeper intervals of [8,10]</b>: slivers of (265,29), (55,6), (377,41) + the (10,1) bulk, self-similar fan</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">m &ge; 0 and the owner&rsquo;s cap (two min-branches)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>1</b> (band, proved) + <b>2&ndash;4</b> re-centered (empirical) + <b>5</b> (mirror-shaped, 165 at q &le; 80) + <b>6</b> (branched, window tops just below 10 — the one necessary branching)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">Family 1 proved; rest exhaustively machine-verified (105,024 at q &le; 80; frontier to order 130,460)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>tree_construction_deep_intervals_7_10_26.html</code>, state of the art</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>the gap</b> (&beta;&#8326;&#8314;, 8)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">owners unmapped</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">open — the natural next target; the fan/generator machinery ports directly</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">open</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">&mdash;</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>below &tau;<sup>4</sup></b> (Fibonacci staircase)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">infinitely many anchors (staircase classes)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">none of the current families (Family 1&rsquo;s det-3 vertex provably leaves its range) — new constructions needed</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">out of scope</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">&mdash;</td>
+                    </tr>
+                </table>
+                <p style="font-size:13.5px">
+                    <b>Cross-family view.</b> Family 1 serves every interval (&ldquo;the permanent
+                    lower-anchor construction&rdquo;). Family 5&rsquo;s shape serves at least two:
+                    on the 8-interval with blocks (&Lambda;&#8322;, &Lambda;&#8321;) on a thin shell,
+                    on the (6,1)-interval with blocks (&Lambda;&#8321;, &Lambda;&#8320;) on the whole
+                    upper window — the degeneration &Lambda;&#8320; = bare legs is what collapses the
+                    entire m &gt; q apparatus into one formula there, and is special to owner
+                    index 1. Families 2&ndash;4&rsquo;s split system re-centers its division at
+                    k &ge; owner-index + 1 (k &ge; 3 on the 8-interval, k &ge; 2 on the
+                    (6,1)-interval where it provides alternative witnesses); the exact tangency
+                    identities ((10&minus;&lambda;)/(&lambda;&minus;5) = &rho;&#8331;(5) and
+                    (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3))
+                    show each interval&rsquo;s right endpoint on the tree side. Families 6 and 7 are
+                    edge repairs of [8,10]; nothing analogous is needed on the (6,1)-interval.
+                </p>
+                <p style="font-size:13px;color:#666">
+                    Structural contrast worth remembering: on [8,10] the upper window cap is enforced
+                    by <i>placement infeasibility</i> (the master-LP mystery of the duality program);
+                    on the (6,1)-interval it is enforced by the <i>local rule at one vertex</i>,
+                    because the owner is itself a block of the canonical tree. The (6,1)-interval is
+                    so far the only fully-local interval.
+                </p>
             </div>
 
             <div class="cx-card" id="cxSecF1">
@@ -957,7 +1047,11 @@
                         micro-slivers), <span class="mth">q &le; 80</span>: <b>30,797 / 30,797</b> — and the
                         band equals the Regime-E part of the true window exactly (all 2,821 phantoms at
                         <span class="mth">q &le; 80</span> have <span class="mth">m &gt; q</span>);</li>
-                    <li><b>outside the strip</b>: <span class="mth">&tau;<sup>4</sup> &lt; p/q &lt; 8</span>,
+                    <li><b>the interval owned by (6,1)</b> (&tau;<sup>4</sup>, &beta;&#8326;&#8314;),
+                        <span class="mth">q &le; 100</span>: <b>21,741 / 21,741</b> (orders to 417;
+                        the 7/15 document&rsquo;s sweep — the band is the m &le; q half of every
+                        window there too);</li>
+                    <li><b>elsewhere outside the strip</b>: <span class="mth">&tau;<sup>4</sup> &lt; p/q &lt; 8</span>,
                         <span class="mth">q &le; 20</span>: 699 / 699; &nbsp;<span class="mth">10 &lt; p/q &lt; 12</span>,
                         <span class="mth">q &le; 20</span>: 1,231 / 1,231 (band = window in both);</li>
                     <li><b>deep nesting frontier</b> (unicurve degrees grow fast under the recursion):
@@ -1030,7 +1124,15 @@
                     with the interval structure: each interval&rsquo;s own pairing inequality is enforced
                     here, at the vertices where the &Lambda;-outputs are consumed and in the placement
                     feasibility, which is exactly where the
-                    exceptions live.
+                    exceptions live. On the <b>interval owned by (6,1)</b> the same shapes re-center at
+                    <span class="mth">k &ge; 2</span> (the division constant is owner-index + 1; the
+                    endpoint tangency there is
+                    (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3),
+                    the det-3 analogue of the 8-interval&rsquo;s &rho;&#8331;(5) identity), but they are
+                    <b>not needed</b>: the re-centered Family 5 covers everything by itself (see
+                    &ldquo;By interval&rdquo;). Gate-verified alternative witnesses there, e.g.
+                    <code>[4*[L1 L2] 7*[3*L1 2*L3]]</code> for the window top (76,11,36) — note the
+                    blocks are &Lambda;&#8322; = the (8,1)-curve.
                 </p>
                 <p>
                     <b>Status.</b> On the <b>8-interval: proved</b> (modulo the local-rule and soundness
@@ -1445,14 +1547,19 @@
             </div>
 
             <div class="cx-card" id="cxSecF5">
-                <h4>Family 5 &nbsp;<span class="cx-range">(m &gt; q, small p&minus;2d, near window tops)</span></h4>
+                <h4>Family 5 &nbsp;<span class="cx-range">on [8,10]: m &gt; q, small p&minus;2d, near window tops &mdash; on the interval owned by (6,1): ALL of m &gt; q</span></h4>
                 <p>
                     <b>Tree.</b> <code>[w&#8322;&middot;&Lambda;&#8342;&#8330;&#8321; [(p&minus;2d)&middot;[L&#8322; L&#8323;] w&#8321;&middot;&Lambda;&#8342;]]</code>
                     &mdash; the same pieces as Families 2&ndash;4 with [L&#8322; L&#8323;] in place of
                     [L&#8321; L&#8322;]: <span class="mth">p&minus;2d</span> copies of [L&#8322; L&#8323;]
                     against a pair of vertices &Lambda;<sub>k</sub>, &Lambda;<sub>k+1</sub> carrying total
                     weights <span class="mth">(d&minus;q,&nbsp; 3d&minus;p&minus;2q)</span> on
-                    (L&#8321;, L&#8323;) (in all instances so far k = 1).
+                    (L&#8321;, L&#8323;). The index pair <b>re-centers at the interval&rsquo;s owner</b>:
+                    k = 1 in every [8,10] instance (blocks &Lambda;&#8322; = (8,1) and
+                    &Lambda;&#8321; = (6,1)); k = 0 on the interval owned by (6,1), where
+                    &Lambda;&#8320; degenerates to bare L&#8321;-legs and the tree becomes
+                    <code>[(m&minus;q)*[2*L1 L3] [(p&minus;2d)*[L2 L3] (2p+3q&minus;5d)*L1]]</code> —
+                    the repeated block is the owner (6,1) itself, taken m&minus;q times.
                 </p>
                 <div class="cx-fig"><div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;margin:.9em 0 1.3em 0">
 <svg xmlns="http://www.w3.org/2000/svg" width="520" height="430" viewBox="0 0 520 430" style="background:#fff;border:1px solid #d5dade;border-radius:6px">
@@ -1565,15 +1672,28 @@
                     <span class="mth">{&sigma; &gt; 0, k = 3, x &gt; 2r+5, Q&#8327;(x,r) &gt; 1}</span>
                     (where every Family-2/3 split fails), and works there precisely when
                     <span class="mth">3x &le; 2s+r</span>; the complementary case is Family 7. On the
-                    deeper intervals the delineation remains empirical.
+                    deeper intervals the delineation remains empirical. On the <b>interval owned by
+                    (6,1)</b> the k = 0 specialization covers the <b>entire</b> regime
+                    <span class="mth">q &lt; m &le; p&minus;5q</span> with no exceptions, and both window
+                    edges become <b>local</b>: the root&rsquo;s one-sided rule is
+                    <span class="mth">m&minus;q &le; p&minus;6q</span>, i.e. exactly the (6,1)-pairing
+                    e&#8326; &ge; 0 (equality at every window top), and at the top the inner det-3 vertex
+                    satisfies <span class="mth">Q&#8323; = 1 &minus; 2&delta;</span> — its admissibility
+                    <i>is</i> adjunction. Placement is always feasible there.
                 </p>
                 <p>
                     <b>Status.</b> <b>Proved on the 8-interval</b> (admissibility + explicit placement;
-                    see <code>verification_regime_U_audit_7_10_26</code>); empirical elsewhere.
+                    see <code>verification_regime_U_audit_7_10_26</code>); <b>proved on the interval
+                    owned by (6,1)</b> (validity on all of m &gt; q + coverage:
+                    <code>sesqui_interval_owned_by_6_7_15_26.html</code> &sect;6); empirical elsewhere.
                 </p>
                 <p>
                     <b>Evidence.</b> 318 instances (interval owned by 8, <span class="mth">q &le; 60</span>;
-                    the other 9 of the old 327-class shell belong to Family 7); 165 (deeper intervals of [8,10],
+                    the other 9 of the old 327-class shell belong to Family 7); <b>21,772 instances on the
+                    interval owned by (6,1)</b> (<span class="mth">q &le; 100</span>, the whole upper
+                    window, incl. all 243 window tops at the root-rule equality and the frontier
+                    certificates (5051,721,2268) at order 2,888 and (6953,1000,3302) at order 3,953);
+                    165 (deeper intervals of [8,10],
                     <span class="mth">q &le; 80</span>); 3 at the top of the (6085,666) micro-owner column
                     (order 4,087); and the frontier window-tops (8672,949,4253) at order <b>5,825</b> and
                     (194237,21259,95282) at order <b>130,460</b> &mdash; the latter is
@@ -1963,7 +2083,12 @@
                     admissible); the activation phantoms (477,52,234) at order 321,
                     (8672,949,4254) at order 5,825 (1.5M assemblies exhausted) and (12588,1369,6177) at
                     order 8,481 (3.1M); for the nine smallest, full enumeration confirms <b>zero trees of
-                    any shape</b>. Ground truth against the actual scattering diagram exists through order
+                    any shape</b>. On the <b>interval owned by (6,1)</b>: all 1,928 one-step-off-window
+                    classes at <span class="mth">q &le; 100</span> fail, and there the refusals are
+                    <b>local</b> on both sides (below: Family 1&rsquo;s top vertex; above: the
+                    Family-5(k=0) root rule — no placement mystery); full-shape enumeration on its 8
+                    smallest boundary classes finds zero trees. Ground truth against the actual
+                    scattering diagram exists through order
                     63 (exact match); beyond that the evidence is the exact agreement between the
                     conjectural list and the tree criterion.
                 </p>
@@ -2476,20 +2601,26 @@
 
             <h3>General sesqui constructions tab</h3>
             <p>
-                Records the <b>general constructions</b>, organized <b>by curve family</b> rather
-                than by owned interval: six families of symbolic trees, each card stating the exact
-                regime of expected validity, the rigor status (Family 1, the E-cascade, is proven;
-                the rest are exhaustively machine-verified), and the evidence. Family 1 covers
+                Records the <b>general constructions</b>, in <b>two views</b>: <b>by interval</b>
+                (the first sub-tab: each owned ratio interval with just the families it needs and
+                their specializations — added in v0.93 when the interval owned by (6,1) was closed)
+                and <b>by curve family</b> (one card per family stating the exact regime of expected
+                validity, the rigor status, and the evidence). Family 1 covers
                 every conjectural class with 0 &le; m &le; q for all p/q &gt; &tau;<sup>4</sup> &mdash;
                 interval-blind; Families 2&ndash;4 (partitioned by (&sigma;, r)) cover m &gt; q across
                 every owned interval of [8,10] at every nesting depth; Families 5&ndash;7 are the three
-                known thin exception families, now with exactly characterized domains on the
+                known thin exception families on [8,10], with exactly characterized domains on the
                 8-interval (5: window tops with small p&minus;2d; 6: p/q just below 10, the one case
-                where the internal edges must branch; 7: p/q just above 8, built on the new
+                where the internal edges must branch; 7: p/q just above 8, built on the
                 charge-(1,1,1) block [[L2 L3] L1]). On the 8-interval the whole of m &gt; q is covered
-                by a proved closed-form decision rule. Terminology is deliberately plain: legs, vertices, weights,
+                by a proved closed-form decision rule; on the <b>interval owned by (6,1)</b>
+                ((&tau;<sup>4</sup>, &beta;&#8326;&#8314;), the interval of the 7/13 McDuff note) the
+                complete proved catalogue is just Family 1 + Family 5 re-centered at the owner
+                (blocks (&Lambda;&#8321;, &Lambda;&#8320;)), with both window edges enforced by the
+                local rule. Terminology is deliberately plain: legs, vertices, weights,
                 paths — the only fixed notation is the bracket expressions and
                 &Lambda;<sub>k</sub> = [(k+1)*L1 k*L3]. Evidence spans the 8-interval (q &le; 60, 48,121 classes),
+                the (6,1)-interval (q &le; 100, 43,513 classes),
                 the deeper intervals of [8,10] (q &le; 52, 28,835 classes), bands outside the strip,
                 and frontier classes at orders up to 130,460; plus the sharpness converse (off-window
                 classes construct nothing). From <code>tree_construction_8_interval_7_9_26</code>
@@ -2608,6 +2739,7 @@
 
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v0.93</b> &mdash; the interval owned by (6,1) ((&tau;<sup>4</sup>, &beta;&#8326;&#8314;) = (6.8541&hellip;, 7.1708&hellip;), the interval of the 7/13 McDuff note) is CLOSED: two families suffice and are proved complete &mdash; Family 1 (band) + Family 5 re-centered at the owner with k = 0 (blocks (&Lambda;&#8321;, &Lambda;&#8320; = bare L&#8321;-legs); the tree <code>[(m&minus;q)*[2*L1 L3] [(p&minus;2d)*[L2 L3] (2p+3q&minus;5d)*L1]]</code> covers ALL of m &gt; q). Constructions tab reorganized into TWO views: a new &ldquo;By interval&rdquo; sub-tab (per-interval family lists, cross-family matrix, gap/staircase rows; now the landing view) alongside the existing per-family cards; Family-1/2&ndash;4/5/sharpness cards updated with the (6,1)-interval data (43,513 window classes at q &le; 100, zero failures; 1,928 boundaries all fail, both refusals LOCAL there &mdash; root slack = e&#8326; = the (6,1)-pairing, window-top inner vertex Q&#8323; = 1&minus;2&delta; = adjunction; endpoint tangency (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3)). Also NEW: the exact local rule at vertices with an imprimitive child re-validated against the KS engine over 91 configurations (one-sided rule exact 91/91; the per-copy &ldquo;&kappa; primitive copies&rdquo; reading wrong in 34 &mdash; this retires the gcd/coprimality caveats of the McDuff note and of both external audits). Full document: <code>sesqui_interval_owned_by_6_7_15_26.html</code> (families, proofs, sharpness, note review, comparison).</li>
                 <li><b>v0.92</b> &mdash; constructions tab: the six cards (Family 1, Families 2&ndash;4, Family 5, Family 6, Family 7, sharpness &amp; depth) and the how-to-read section are now organized into a sticky sub-tab bar instead of one long vertical stack, so the figures can be browsed side by side without scrolling; an &ldquo;All&rdquo; sub-tab restores the stacked view (also the no-JS fallback). The figure-label layer toggles remain global across sub-tabs.</li>
                 <li><b>v0.91</b> &mdash; constructions tab figure DECLUTTER pass (gen_tree_figs.py rewrite): omnidirectional collision-resolving label placement (labels fan out around crowded vertex clusters instead of stacking into a single column of determinant labels with crossing leader lines), white halos behind all figure text, trivial vertex data suppressed (det-1 vertices and bare (1,1) multiplicities lose their text label; the full (a,b)&middot;det data remains as a hover tooltip on every vertex dot), edge-charge labels moved off their edges (perpendicular offset, pushed away from the cluster), more canvas devoted to the vertex cluster (shorter leg stubs), and per-layer label classes with new checkbox toggles above the family cards (vertex data / edge charges / weights). Also fixes three long-standing figure-label bugs: Family 7&rsquo;s planar vertex labels were off by one from the second &Lambda;&#8321; block onward (the root displayed an instance determinant instead of (1,&#8467;)&middot;det 3s&minus;2N), and the combinatorial weight badges of Families 6 and 7 sat on the wrong links (N, M, &#8467;, x&minus;1, &sigma;&minus;1 displaced).</li>
                 <li><b>v0.90</b> &mdash; precision pass prompted by cross-document review: the &ldquo;single path except Family 6&rdquo; sentences (intro, how-to-read) corrected &mdash; Family 7&rsquo;s canonical tree also branches at its root (its classes do admit single-path witnesses; Family 6 remains the only <i>necessary</i> branching). Compact reference document re-synced with the state-of-the-art document (role note added: compact = proof-free quick reference + legacy glossary; state-of-the-art = primary), its Family-6 regime updated to the angular-shell statistics, Families-5&ndash;6 &rarr; 5&ndash;7 exception references, claims row C7 refreshed.</li>
@@ -4918,7 +5050,7 @@ compute();
 
 // sub-tab navigation between the family cards (constructions tab, v0.92)
 (() => {
-    const secs = ['cxSecF1','cxSecF24','cxSecF5','cxSecF6','cxSecF7','cxSecSharp','cxSecRead'];
+    const secs = ['cxSecIntervals','cxSecF1','cxSecF24','cxSecF5','cxSecF6','cxSecF7','cxSecSharp','cxSecRead'];
     const bar = document.getElementById('cxSubtabs');
     if (!bar) return;
     bar.querySelectorAll('.cx-subbtn').forEach(btn => {
@@ -4933,7 +5065,7 @@ compute();
             if (tgt === 'cxSecRead') { const r = document.getElementById('cxSecRead'); if (r) r.open = true; }
         });
     });
-    const def = bar.querySelector('.cx-subbtn[data-sec="cxSecF1"]');
+    const def = bar.querySelector('.cx-subbtn[data-sec="cxSecIntervals"]');
     if (def) def.click();
 })();
 </script>
