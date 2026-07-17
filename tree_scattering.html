@@ -719,6 +719,10 @@
                     <label><input type="checkbox" id="afShowUni" checked> uni</label><span class="af-help" data-info="Unicurves: the δ = 0 curves — the potential anchors.&#10;Thick blue = currently an anchor. Instant toggle.">?</span>
                     <label><input type="checkbox" id="afShowSes" checked> sesqui</label><span class="af-help" data-info="Sesquicurves: δ ≥ 1 terms of the actual diagram.&#10;Orange ray = no unicurve there; orange dot = terms sharing a unicurve ray (hover it). Instant toggle.">?</span>
                 </span>
+                <span>annotate:
+                    <label><input type="checkbox" id="afShowDM"> (d,m)</label><span class="af-help" data-info="Write out each anchor curve's d and m (its class dL−mE) wherever a single curve is meant — labels, tooltips, pinned details, table.&#10;Skipped where d, m make no sense: E's m ≥ 0 role, cascades, multi-curve sesqui lists. Instant toggle.">?</span>
+                    <label><input type="checkbox" id="afShowBounds"> bounds</label><span class="af-help" data-info="Spell out what the two anchor inequalities actually say: the pairing formula rearranged as an explicit upper/lower bound on m (and on d), plus the exact m-window at a cone's edge directions.&#10;Shown in pinned details, ray tooltips and the table. Instant toggle.">?</span>
+                </span>
                 <span>unis beyond the anchors: <select id="afRays">
                     <option value="anchors">none — anchors only</option>
                     <option value="o15" selected>those of order &le; 15</option>
@@ -771,7 +775,7 @@
             <details id="afKeys" open><summary>key facts (how to read this picture)</summary>
                 <ul>
                     <li>A ray direction &hArr; a contact pair (p,q). The curves on that ray form a degree column dL&minus;mE with m = 3d&minus;P&minus;Q, and every unicurve pairing is <b>linear in d</b>.</li>
-                    <li>So the existence filter is a window in d: max(lower bounds) &le; d &le; min(upper bounds). Each unicurve caps from one side only: <b>upper-type</b> if 3m &gt; d, <b>lower-type</b> if 3m &lt; d.</li>
+                    <li>So the existence filter is a window in d: max(lower bounds) &le; d &le; min(upper bounds). Each unicurve caps from one side only: <b>upper-type</b> if 3m &gt; d, <b>lower-type</b> if 3m &lt; d. The <b>annotate</b> toggles write this out: &ldquo;(d,m)&rdquo; adds each anchor&rsquo;s explicit class, &ldquo;bounds&rdquo; spells the two inequalities as bounds on m (with the exact m-window at a cone&rsquo;s edges).</li>
                     <li><b>Cones</b> = maximal ranges where the upper anchor is constant; the <b>rim band</b> shows the lower anchor. Conjecture: a curve exists &hArr; &delta; &ge; 0 and it pairs &ge; 0 with just these two anchors (verified against the actual diagram through order 63).</li>
                     <li>Above <b>&phi;&#8308; = (7+3&radic;5)/2 &asymp; 6.854</b> the lower anchor is always E, i.e. just m &ge; 0. Below &phi;&#8308; the McDuff&ndash;Schlenk Fibonacci classes (5,1) = 2L, (13,2) = 5L, (34,5) = 13L, &hellip; own the lower side, accumulating at &phi;&#8308;.</li>
                     <li>Upper anchors: each even trunk (2n,1) owns a wide cone; interior fork-tree curves own slivers between trunks, refining forever near quadratic-irrational limits (e.g. around 55/6 inside [8,10]) &mdash; the dense region.</li>
@@ -802,6 +806,10 @@
                 two families, complete proofs — NEW 7/15),
                 <code>sesqui_interval_owned_by_8_7_14_26.html</code> (the interval owned by 8: six
                 families, complete proofs),
+                <code>sesqui_interval_owned_by_29_4_7_15_26.html</code> (the interval owned by
+                (29,4): the first two-branch interval — NEW 7/15 evening),
+                <code>sesqui_intervals_master_7_15_26.html</code> (MASTER: all proofs for the
+                closed intervals in one auditable file),
                 <code>tree_construction_8_interval_7_9_26.html</code> and
                 <code>tree_construction_deep_intervals_7_10_26.html</code> (working documents);
                 comprehensive state of the art with full proofs and open problems:
@@ -890,6 +898,13 @@
                         <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>sesqui_interval_owned_by_6_7_15_26.html</code></td>
                     </tr>
                     <tr>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>owned by (29,4)</b>: ((135+13&radic;165)/42, (1515+13&radic;165)/230) = (7.1902&hellip;, 7.3130&hellip;)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">m &ge; 0 and e&#8322;&#8329; = 14d&minus;9m&minus;min(4p, 29q) &ge; 0 — the owner ratio 29/4 = 7.25 sits INSIDE the interval, so the cap has <b>two min-branches</b>; both endpoints are window-top adjunction walls (&delta; &ge; 1 automatic); no other cap to depth 16; the single self-exempt member is the owner itself</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>1</b> (band) + <b>the (6,1)-bundle T_B</b> (interval-blind: covers 2,122/2,170 upper classes at q &le; 60 on its closed-form domain) + <b>2&ndash;4 re-centered at k &ge; 2</b> (blocks &Lambda;<sub>&ge;2</sub>; k=2, r=0 provably impossible in-window — the owner&rsquo;s own tree [[L1 L2] 3*&Lambda;&#8322;] is that form&rsquo;s boundary real root). Remaining: an exactly-characterized window-top shell {k=2, Q&#8325;(x,r)&gt;1, Q&#8323;(x,U)&gt;1} (56 classes at q &le; 100), adjudicated by the box-truncated KS ground truth at order 89: the classes are REAL (c = 78 at the smallest member; c = 0 one step above the cap — the filter confirmed in both directions beyond order 63), so their certificates are exotic: outside every searched tree shape. Finding them (or refuting A2) is the program&rsquo;s top open problem.</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px">window arithmetic proved (two-branch); F1 + T_B-on-domain proved; split system machine-verified (18,184/18,240 at q &le; 100); sharpness: 271/272 boundaries fail, the unique pass being the self-exempt owner</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>sesqui_interval_owned_by_29_4_7_15_26.html</code></td>
+                    </tr>
+                    <tr>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>owned by 8</b>: [8, &lambda;), &lambda; = (105+5&radic;21)/14 = 9.1366&hellip;</td>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px">m &ge; 0 and e = 3p&minus;5q&minus;5d &ge; 0 (&delta; &gt; 0 automatic)</td>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>1</b> (band) + <b>2&ndash;4</b> (bulk of m &gt; q, division re-centered at k &ge; 3, so the blocks are &Lambda;<sub>&ge;3</sub> — the owner &Lambda;&#8322; enters only as arithmetic) + <b>5</b> and <b>7</b> on two thin left-edge shells. Family 6 never occurs. Upper cap enforced by placement infeasibility.</td>
@@ -904,7 +919,7 @@
                         <td style="border:1px solid #b9c8d4;padding:4px 8px"><code>tree_construction_deep_intervals_7_10_26.html</code>, state of the art</td>
                     </tr>
                     <tr>
-                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>the gap</b> (&beta;&#8326;&#8314;, 8)</td>
+                        <td style="border:1px solid #b9c8d4;padding:4px 8px"><b>the gaps</b> (&beta;&#8326;&#8314;, &alpha;&#8322;&#8329;&#8315;) &asymp; (7.171, 7.190) and (&beta;&#8322;&#8329;&#8314;, 8) &asymp; (7.313, 8)</td>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px">owners unmapped</td>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px">open — the natural next target; the fan/generator machinery ports directly</td>
                         <td style="border:1px solid #b9c8d4;padding:4px 8px">open</td>
@@ -932,6 +947,13 @@
                     (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3))
                     show each interval&rsquo;s right endpoint on the tree side. Families 6 and 7 are
                     edge repairs of [8,10]; nothing analogous is needed on the (6,1)-interval.
+                    Two lessons added by the (29,4)-interval (7/15 evening): the bundle family
+                    T_B is <b>anchored at the (6,1)-curve, not at any interval</b> — its root
+                    rule is the (6,1)-pairing, valid on every window everywhere — so it ports
+                    verbatim and covers 98% of the (29,4)-interval&rsquo;s upper window; and
+                    difficulty grades by <b>owner generation</b> (the (29,4)-curve is built
+                    from (8,1)-blocks as (8,1) is built from legs; its window tops produced
+                    the first shell needing direct diagram ground truth).
                 </p>
                 <p style="font-size:13px;color:#666">
                     Structural contrast worth remembering: on [8,10] the upper window cap is enforced
@@ -2689,6 +2711,24 @@
                 refined decomposition.
             </p>
             <p>
+                <b>Optional annotations.</b> Two display toggles in the toolbar (instant, no recompute).
+                <b>(d,m)</b> writes out each anchor curve&rsquo;s degree data explicitly &mdash; its class
+                dL&minus;mE plus &ldquo;(d = &hellip;, m = &hellip;)&rdquo; &mdash; wherever a single curve is
+                meant: cone and band labels on the figure (when the sector is wide enough), hover tooltips,
+                pinned details, and the table. It is deliberately omitted where d and m make no sense as a
+                single pair: the boundary class E (whose role is just the constraint m &ge; 0), unresolved
+                cascades, and multi-curve sesqui lists (which already carry per-curve classes).
+                <b>bounds</b> spells out what the two anchor inequalities actually say on the degree column
+                C = dL&minus;mE at contact pair (p,q) (so m = 3d&minus;(p+q)): the pairing
+                C &sdot; U = d&sdot;d<sub>U</sub> &minus; m&sdot;m<sub>U</sub> &minus; min(q<sub>U</sub>p, p<sub>U</sub>q)
+                &ge; 0 is rearranged into an explicit upper or lower bound on m (equivalently on d) &mdash;
+                e.g. the (8,1) anchor gives m &le; (4(p+q) &minus; 3&sdot;min(p,8q))/5 &mdash; and, for a
+                pinned cone, the exact m-window [max lower, min upper] is evaluated as a fraction at the
+                cone&rsquo;s two edge directions; the table gains the same m-window column, and hovering a
+                unicurve ray shows that curve&rsquo;s own inequality spelled out. On the &tau;-mirror side
+                the same formulas apply with p &harr; q.
+            </p>
+            <p>
                 Caveats: the decomposition is computed at finite resolution (all coprime directions with
                 denominator &le; Q<sub>max</sub>) from a finite unicurve family (mutation depth D); a family
                 of depth D only contains the trunk curves (2n,1) up to roughly n &asymp; D+1, so the far tail
@@ -2739,6 +2779,8 @@
 
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v0.95</b> &mdash; anchor fan: two optional &ldquo;annotate&rdquo; toggles (display-only, instant). &ldquo;(d,m)&rdquo; writes the explicit d and m (class dL&minus;mE) of every single-curve anchor mention into figure labels, tooltips, pinned details and the table &mdash; omitted where d, m make no sense as a single pair (E&rsquo;s m &ge; 0 role, cascades, multi-curve sesqui lists). &ldquo;bounds&rdquo; spells out what the two anchor inequalities actually say: the pairing formula rearranged as an explicit upper/lower bound on m (equivalently d), the exact m-window evaluated as fractions at a pinned cone&rsquo;s edge directions, an m-window column in the table, and per-ray inequalities on unicurve hover.</li>
+                <li><b>v0.94</b> &mdash; the interval owned by (29,4) ((7.1902&hellip;, 7.3130&hellip;), endpoints in Q(&radic;165)) added to the By-interval view: the FIRST TWO-BRANCH interval (owner ratio 29/4 inside; cap e&#8322;&#8329; = 14d&minus;9m&minus;min(4p,29q); both endpoints window-top adjunction walls; window theorem verified with a piecewise-cap fan, zero phantoms at q &le; 100). Families: 1 + the (6,1)-bundle T_B (now understood as INTERVAL-BLIND, anchored at the (6,1)-curve: 2,122/2,170 upper classes) + the split system re-centered at k &ge; 2 (k=2, r=0 provably impossible; the owner&rsquo;s own tree [[L1 L2] 3*&Lambda;&#8322;] is its boundary real root); an exactly-characterized window-top shell ({k=2, Q&#8325;(x,r)&gt;1, Q&#8323;(x,U)&gt;1}; 56 classes at q &le; 100) adjudicated by the NEW box-truncated KS tool (ks_box_7_15_26: exact diagram coefficients modulo a monomial-ideal box; selftest 259/259): at order 89, c(152,21,73) = 78 and c(152,21,74) = 0 — the shell classes are REAL, the cap exact, and the certificates lie outside every searched shape (first exotic classes; support-pruned hunt = top open problem). Sharpness: 271/272 boundary classes fail, the unique pass being the self-exempt owner unicurve itself. Master document added: <code>sesqui_intervals_master_7_15_26.html</code> (all foundations + proofs for the three closed intervals, cross-interval structure, audit interface). Folder reorganized (data/ + dated/).</li>
                 <li><b>v0.93</b> &mdash; the interval owned by (6,1) ((&tau;<sup>4</sup>, &beta;&#8326;&#8314;) = (6.8541&hellip;, 7.1708&hellip;), the interval of the 7/13 McDuff note) is CLOSED: two families suffice and are proved complete &mdash; Family 1 (band) + Family 5 re-centered at the owner with k = 0 (blocks (&Lambda;&#8321;, &Lambda;&#8320; = bare L&#8321;-legs); the tree <code>[(m&minus;q)*[2*L1 L3] [(p&minus;2d)*[L2 L3] (2p+3q&minus;5d)*L1]]</code> covers ALL of m &gt; q). Constructions tab reorganized into TWO views: a new &ldquo;By interval&rdquo; sub-tab (per-interval family lists, cross-family matrix, gap/staircase rows; now the landing view) alongside the existing per-family cards; Family-1/2&ndash;4/5/sharpness cards updated with the (6,1)-interval data (43,513 window classes at q &le; 100, zero failures; 1,928 boundaries all fail, both refusals LOCAL there &mdash; root slack = e&#8326; = the (6,1)-pairing, window-top inner vertex Q&#8323; = 1&minus;2&delta; = adjunction; endpoint tangency (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3)). Also NEW: the exact local rule at vertices with an imprimitive child re-validated against the KS engine over 91 configurations (one-sided rule exact 91/91; the per-copy &ldquo;&kappa; primitive copies&rdquo; reading wrong in 34 &mdash; this retires the gcd/coprimality caveats of the McDuff note and of both external audits). Full document: <code>sesqui_interval_owned_by_6_7_15_26.html</code> (families, proofs, sharpness, note review, comparison).</li>
                 <li><b>v0.92</b> &mdash; constructions tab: the six cards (Family 1, Families 2&ndash;4, Family 5, Family 6, Family 7, sharpness &amp; depth) and the how-to-read section are now organized into a sticky sub-tab bar instead of one long vertical stack, so the figures can be browsed side by side without scrolling; an &ldquo;All&rdquo; sub-tab restores the stacked view (also the no-JS fallback). The figure-label layer toggles remain global across sub-tabs.</li>
                 <li><b>v0.91</b> &mdash; constructions tab figure DECLUTTER pass (gen_tree_figs.py rewrite): omnidirectional collision-resolving label placement (labels fan out around crowded vertex clusters instead of stacking into a single column of determinant labels with crossing leader lines), white halos behind all figure text, trivial vertex data suppressed (det-1 vertices and bare (1,1) multiplicities lose their text label; the full (a,b)&middot;det data remains as a hover tooltip on every vertex dot), edge-charge labels moved off their edges (perpendicular offset, pushed away from the cluster), more canvas devoted to the vertex cluster (shorter leg stubs), and per-layer label classes with new checkbox toggles above the family cards (vertex data / edge charges / weights). Also fixes three long-standing figure-label bugs: Family 7&rsquo;s planar vertex labels were off by one from the second &Lambda;&#8321; block onward (the root displayed an instance determinant instead of (1,&#8467;)&middot;det 3s&minus;2N), and the combinatorial weight badges of Families 6 and 7 sat on the wrong links (N, M, &#8467;, x&minus;1, &sigma;&minus;1 displaced).</li>
@@ -6151,6 +6193,62 @@ function afClass(U) {
     return m > 0n ? `${d}L−${m}E` : `${d}L+${-m}E`;
 }
 
+// ---- optional annotations: explicit (d,m) and spelled-out bounds ------------
+const afDMOn = () => document.getElementById('afShowDM').checked;
+const afBoundsOn = () => document.getElementById('afShowBounds').checked;
+// "(8,1) = 4L−3E" + optional "(d = 4, m = 3)"; E (no degree column of its own,
+// its role is just m ≥ 0) keeps its short form
+const afCurveStr = (U, key) =>
+    key + ' = ' + afClass(U) + (afDMOn() && U.q !== 0 ? '  (d = ' + U.dN + ', m = ' + U.mN + ')' : '');
+// the inequality "C ⋆ U ≥ 0" on the degree column C = dL−mE at contact pair
+// (p,q) (so m = 3d−(p+q)), spelled out as an explicit bound on m and on d
+function afBoundLines(U, key) {
+    if (U.q === 0) return 'C ⋆ E = m ≥ 0  — the trivial lower bound   (⇔ d ≥ (p+q)/3)';
+    const cf = k => k === 1 ? '' : k === -1 ? '−' : String(k);
+    const mn = 'min(' + cf(U.q) + 'p,' + cf(U.p) + 'q)';
+    const A = Math.abs(U.cN), dv = A === 1 ? '' : ' / ' + A;
+    let pair = 'C ⋆ ' + key + ' = ' + cf(U.dN) + 'd';
+    if (U.mN > 0) pair += ' − ' + cf(U.mN) + 'm';
+    else if (U.mN < 0) pair += ' + ' + cf(-U.mN) + 'm';
+    pair += ' − ' + mn;
+    const par = s => dv ? '(' + s + ')' + dv : s;
+    if (U.type === 'up')
+        return pair + ' ≥ 0  ⇒  the upper bound\n    m ≤ ' + par(cf(U.dN) + '(p+q) − 3·' + mn) +
+               '   ⇔   d ≤ ' + par(cf(U.mN) + '(p+q) − ' + mn);
+    return pair + ' ≥ 0  ⇒  the lower bound\n    m ≥ ' + par('3·' + mn + ' − ' + cf(U.dN) + '(p+q)') +
+           '   ⇔   d ≥ ' + (U.mN === 0 ? mn + dv
+               : par(mn + (U.mN > 0 ? ' − ' + cf(U.mN) : ' + ' + cf(-U.mN)) + '(p+q)'));
+}
+// exact value of U's bound on m at one direction (p,q): (3·min − (p+q)·d_U)/c_U, reduced
+function afMBoundFrac(U, p, q) {
+    let n = 3 * Math.min(p * U.q, q * U.p) - (p + q) * U.dN, c = U.cN;
+    if (c < 0) { n = -n; c = -c; }
+    const g = afGcd(n, c) || 1;
+    return (n / g) + (c / g === 1 ? '' : '/' + (c / g));
+}
+// "0 ≤ m ≤ 12/5" — the m-window the two anchors cut at one direction
+// (below ratio 4 the window is often genuinely empty: max lower > min upper)
+const afMWinStr = (lo, up, pt) => {
+    const val = U => (3 * Math.min(pt.p * U.q, pt.q * U.p) - (pt.p + pt.q) * U.dN) / U.cN;
+    return afMBoundFrac(lo, pt.p, pt.q) + ' ≤ m ≤ ' + afMBoundFrac(up, pt.p, pt.q) +
+        (val(lo) > val(up) ? '  (empty — no class passes)' : '');
+};
+// single-anchor bound values at a run's two edge directions
+function afEdgeBoundStr(U, from, to) {
+    const sgn = U.type === 'up' ? 'm ≤ ' : 'm ≥ ';
+    return 'value at the edges:   s = ' + from.p + '/' + from.q + ':  ' + sgn + afMBoundFrac(U, from.p, from.q) +
+        '    →    s = ' + to.p + '/' + to.q + ':  ' + sgn + afMBoundFrac(U, to.p, to.q);
+}
+// full spell-out for a cone: both anchor inequalities + the edge m-windows
+function afConeBoundsText(up, lo, from, to, mirror) {
+    return 'bounds spelled out (degree column dL−mE at contact pair (p,q), m = 3d−(p+q)):' +
+        '\n' + afBoundLines(up, up.key) +
+        '\n' + afBoundLines(lo, lo.key) +
+        '\nm-window at the edge directions:   s = ' + from.p + '/' + from.q + ':   ' + afMWinStr(lo, up, from) +
+        '     →     s = ' + to.p + '/' + to.q + ':   ' + afMWinStr(lo, up, to) +
+        (mirror ? '\n(mirror side: transpose p ↔ q in the formulas; the m-windows are the same)' : '');
+}
+
 // ---- the sweep: anchors at every coprime direction --------------------------
 // float bounds are exact integers over exact integers (all < 2^53 for the
 // offered parameter ranges); comparisons closer than 1e-9 relative are
@@ -6271,22 +6369,25 @@ function afRenderStrip() {
     const rows = [
         { runs: runsUp, y1: UB0, y2: UB1, what: 'upper-band segments',
           info: r => 'upper band:  s ≈ ' + (r.from.p / r.from.q).toFixed(4) + ' … ' + (r.to.p / r.to.q).toFixed(4) +
-              '\nupper anchor: ' + r.k + ' = ' + afClass(r.U),
-          more: r => 'exact interval: s ∈ [' + r.from.p + '/' + r.from.q + ' , ' + r.to.p + '/' + r.to.q + ']\nthe single curve capping the degree from above here',
+              '\nupper anchor: ' + afCurveStr(r.U, r.k),
+          more: r => 'exact interval: s ∈ [' + r.from.p + '/' + r.from.q + ' , ' + r.to.p + '/' + r.to.q + ']\nthe single curve capping the degree from above here' +
+              (afBoundsOn() ? '\n' + afBoundLines(r.U, r.k) + '\n' + afEdgeBoundStr(r.U, r.from, r.to) : ''),
           keys: r => [r.k], pal: i => AF_PAL[i % AF_PAL.length] },
         { runs: pairRuns, y1: Y0, y2: Y1, what: 'cones',
           info: r => 'cone:  s ≈ ' + (r.from.p / r.from.q).toFixed(4) + ' … ' + (r.to.p / r.to.q).toFixed(4) +
-              '\nupper anchor: ' + r.up.key + ' = ' + afClass(r.up) +
-              '\nlower anchor: ' + (r.lo.q === 0 ? 'E  (m ≥ 0)' : r.lo.key + ' = ' + afClass(r.lo)),
+              '\nupper anchor: ' + afCurveStr(r.up, r.up.key) +
+              '\nlower anchor: ' + (r.lo.q === 0 ? 'E  (m ≥ 0)' : afCurveStr(r.lo, r.lo.key)),
           more: r => 'exact interval: s = p/q ∈ [' + r.from.p + '/' + r.from.q + ' , ' + r.to.p + '/' + r.to.q + ']' +
               '\nexistence of a curve here:  δ ≥ 0,  C⋆(upper) ≥ 0,  C⋆(lower) ≥ 0' +
-              '\n(strip shows the chamber side; the τ-mirror is the same with contact pairs transposed)',
+              '\n(strip shows the chamber side; the τ-mirror is the same with contact pairs transposed)' +
+              (afBoundsOn() ? '\n' + afConeBoundsText(r.up, r.lo, r.from, r.to, false) : ''),
           keys: r => [r.up.key, r.lo.key], pal: i => AF_PAL[i % AF_PAL.length] },
         { runs: runsLo, y1: LB0, y2: LB1, what: 'lower-band segments',
           info: r => 'lower band:  s ≈ ' + (r.from.p / r.from.q).toFixed(4) + ' … ' + (r.to.p / r.to.q).toFixed(4) +
-              '\nlower anchor: ' + (r.U.q === 0 ? 'E  (m ≥ 0)' : r.k + ' = ' + afClass(r.U)),
-          more: r => r.U.q === 0 ? 'E is the trivial constraint m ≥ 0 — always the lower anchor for s > φ⁴'
-                                 : 'curve ratio ' + ratioStr(r.U) + ' — a genuine curve beats m ≥ 0 here (only below φ⁴)',
+              '\nlower anchor: ' + (r.U.q === 0 ? 'E  (m ≥ 0)' : afCurveStr(r.U, r.k)),
+          more: r => (r.U.q === 0 ? 'E is the trivial constraint m ≥ 0 — always the lower anchor for s > φ⁴'
+                                  : 'curve ratio ' + ratioStr(r.U) + ' — a genuine curve beats m ≥ 0 here (only below φ⁴)') +
+              (afBoundsOn() ? '\n' + afBoundLines(r.U, r.k) + (r.U.q === 0 ? '' : '\n' + afEdgeBoundStr(r.U, r.from, r.to)) : ''),
           keys: r => [r.k], pal: i => (r => r.U.q === 0 ? '#e8e8e8' : AF_PAL[(i + 3) % AF_PAL.length]) },
     ];
     for (const row of rows) {
@@ -6341,9 +6442,10 @@ function afRenderStrip() {
         const x = X(sv);
         const v = dirCh(U.p, U.q), dk = v[0] + ',' + v[1];
         const isAnchor = anchorKeys.has(U.key);
-        const info = 'uni ' + U.key + ' = ' + afClass(U) + (isAnchor ? '   [anchor]' : '') + sesShort(dk);
+        const info = 'uni ' + afCurveStr(U, U.key) + (isAnchor ? '   [anchor]' : '') + sesShort(dk);
         const more = 'ratio ' + ratioStr(U) + '   first reached at mutation depth ' + U.dep +
             '\nrole: ' + (U.type === 'up' ? 'upper-type (3m > d)' : 'lower-type (3m < d)') +
+            (afBoundsOn() ? '\n' + afBoundLines(U, U.key) : '') +
             (U.q > 0 ? '\ntwists: Φ ↦ (' + (6 * U.p - U.q) + ',' + U.p + ')' +
                 (U.p > 6 * U.q ? '   Ψ ↦ (' + (U.q + 6 * (U.p - 6 * U.q)) + ',' + (U.p - 6 * U.q) + ')' : '') : '');
         S.push('<line class="af-uni' + (isAnchor ? ' af-anchor' : '') + '" data-key="' + esc(U.key) +
@@ -6379,7 +6481,8 @@ function afRenderStrip() {
         for (let i = 0; i < runsUp.length; i++) {
             const x1 = X(bs[i]), x2 = X(bs[i + 1]);
             if (x2 - x1 < 46) continue;
-            S.push('<text class="af-lab' + (x2 - x1 > 130 ? ' big' : '') + '" x="' + ((x1 + x2) / 2).toFixed(1) + '" y="' + (UB0 - 10) + '">' + esc(runsUp[i].k) + '</text>');
+            const lb = runsUp[i].k + (afDMOn() && x2 - x1 > 120 ? ' = ' + afClass(runsUp[i].U) : '');
+            S.push('<text class="af-lab' + (x2 - x1 > 130 ? ' big' : '') + '" x="' + ((x1 + x2) / 2).toFixed(1) + '" y="' + (UB0 - 10) + '">' + esc(lb) + '</text>');
         }
         const bl = boundsS(runsLo);
         for (let i = 0; i < runsLo.length; i++) {
@@ -6446,13 +6549,14 @@ function afRender() {
         const info = side =>
             'cone' + (side === 'M' ? ' (τ-mirror)' : '') + ':  s ≈ ' +
             (run.from.p / run.from.q).toFixed(4) + ' … ' + (run.to.p / run.to.q).toFixed(4) +
-            '\nupper anchor: ' + (side === 'C' ? run.up.key : keyT(run.up)) + ' = ' + afClass(run.up) +
-            '\nlower anchor: ' + (run.lo.q === 0 ? 'E  (m ≥ 0)' : (side === 'C' ? run.lo.key : keyT(run.lo)) + ' = ' + afClass(run.lo));
+            '\nupper anchor: ' + afCurveStr(run.up, side === 'C' ? run.up.key : keyT(run.up)) +
+            '\nlower anchor: ' + (run.lo.q === 0 ? 'E  (m ≥ 0)' : afCurveStr(run.lo, side === 'C' ? run.lo.key : keyT(run.lo)));
         const more = side =>
             'exact interval: s = p/q ∈ [' + run.from.p + '/' + run.from.q + ' , ' + run.to.p + '/' + run.to.q + ']' +
             (side === 'M' ? '\nτ-mirror: same curves with the two node branches swapped (contact pairs transpose)' : '') +
             '\nexistence of a curve here:  δ ≥ 0,  C⋆(upper) ≥ 0,  C⋆(lower) ≥ 0' +
-            '\n(the two rim bands show each side\u2019s pure decomposition: inner = upper, outer = lower)';
+            '\n(the two rim bands show each side\u2019s pure decomposition: inner = upper, outer = lower)' +
+            (afBoundsOn() ? '\n' + afConeBoundsText(run.up, run.lo, run.from, run.to, side === 'M') : '');
         for (const side of ['C', 'M']) {
             const f = side === 'C' ? dirCh : dirMir;
             const u1 = unitSvg(f(bP[i][0], bP[i][1]));
@@ -6469,9 +6573,10 @@ function afRender() {
         const info = side =>
             'upper band' + (side === 'M' ? ' (τ-mirror)' : '') + ':  s ≈ ' +
             (run.from.p / run.from.q).toFixed(4) + ' … ' + (run.to.p / run.to.q).toFixed(4) +
-            '\nupper anchor: ' + (side === 'C' ? run.k : keyT(run.U)) + ' = ' + afClass(run.U);
+            '\nupper anchor: ' + afCurveStr(run.U, side === 'C' ? run.k : keyT(run.U));
         const more = 'exact interval: s ∈ [' + run.from.p + '/' + run.from.q + ' , ' + run.to.p + '/' + run.to.q + ']' +
-            '\nthe single curve capping the degree from above on this whole range';
+            '\nthe single curve capping the degree from above on this whole range' +
+            (afBoundsOn() ? '\n' + afBoundLines(run.U, run.k) + '\n' + afEdgeBoundStr(run.U, run.from, run.to) : '');
         for (const side of ['C', 'M']) {
             const f = side === 'C' ? dirCh : dirMir;
             const u1 = unitSvg(f(bU[i][0], bU[i][1]));
@@ -6547,10 +6652,11 @@ function afRender() {
         const info = side =>
             'lower band' + (side === 'M' ? ' (τ-mirror)' : '') + ':  s ≈ ' +
             (run.from.p / run.from.q).toFixed(4) + ' … ' + (run.to.p / run.to.q).toFixed(4) +
-            '\nlower anchor: ' + (run.U.q === 0 ? 'E  (m ≥ 0)' : (side === 'C' ? run.k : keyT(run.U)) + ' = ' + afClass(run.U));
+            '\nlower anchor: ' + (run.U.q === 0 ? 'E  (m ≥ 0)' : afCurveStr(run.U, side === 'C' ? run.k : keyT(run.U)));
         const more = 'exact interval: s ∈ [' + run.from.p + '/' + run.from.q + ' , ' + run.to.p + '/' + run.to.q + ']' +
             (run.U.q === 0 ? '\nE is the trivial constraint m ≥ 0 — always the lower anchor for s > φ⁴'
-                           : '\ncurve ratio ' + ratioStr(run.U) + ' — a genuine curve beats m ≥ 0 here (only happens below φ⁴)');
+                           : '\ncurve ratio ' + ratioStr(run.U) + ' — a genuine curve beats m ≥ 0 here (only happens below φ⁴)') +
+            (afBoundsOn() ? '\n' + afBoundLines(run.U, run.k) + (run.U.q === 0 ? '' : '\n' + afEdgeBoundStr(run.U, run.from, run.to)) : '');
         for (const side of ['C', 'M']) {
             const f = side === 'C' ? dirCh : dirMir;
             const u1 = unitSvg(f(bL[i][0], bL[i][1]));
@@ -6588,12 +6694,13 @@ function afRender() {
             const v = f(U.p, U.q);
             const dk = v[0] + ',' + v[1];
             const u = unitSvg(v);
-            const info = 'uni ' + (side === 'C' ? U.key : keyT(U)) + ' = ' + afClass(U) +
+            const info = 'uni ' + afCurveStr(U, side === 'C' ? U.key : keyT(U)) +
                 (isAnchor ? '   [anchor]' : '') + sesShort(dk);
             const more = (side === 'M' ? 'τ-image of ' + U.key + '\n' : '') +
                 'δ = 0: exceptional after resolving the cusp — a potential anchor' +
                 '\nratio ' + ratioStr(U) + '   first reached at mutation depth ' + U.dep +
                 '\nrole: ' + (U.type === 'up' ? 'upper-type (3m > d: caps d from above)' : 'lower-type (3m < d: caps d from below)') +
+                (afBoundsOn() ? '\n' + afBoundLines(U, U.key) : '') +
                 (U.q > 0 ? '\ntwists: Φ ↦ (' + (6 * U.p - U.q) + ',' + U.p + ')' +
                     (U.p > 6 * U.q ? '   Ψ ↦ (' + (U.q + 6 * (U.p - 6 * U.q)) + ',' + (U.p - 6 * U.q) + ')' : '') : '') +
                 '\n(sesqui list shows the δ ≥ 1 terms of the diagram sharing this direction, order < ' + sesOrder + ')';
@@ -6648,8 +6755,10 @@ function afRender() {
             while (da < -Math.PI) da += 2 * Math.PI;
             if (Math.abs(da) < 0.055) continue;
             const am = Math.atan2(u1[1], u1[0]) + da / 2, rr = 0.8 * AF_R;
+            const lb = (side === 'C' ? runsUp[i].k : keyT(runsUp[i].U)) +
+                (afDMOn() && Math.abs(da) > 0.14 ? ' = ' + afClass(runsUp[i].U) : '');
             S.push('<text class="af-lab' + (Math.abs(da) > 0.16 ? ' big' : '') + '" x="' + (rr * Math.cos(am)).toFixed(1) +
-                '" y="' + (rr * Math.sin(am)).toFixed(1) + '">' + esc(side === 'C' ? runsUp[i].k : keyT(runsUp[i].U)) + '</text>');
+                '" y="' + (rr * Math.sin(am)).toFixed(1) + '">' + esc(lb) + '</text>');
         }
     }
     // E labels
@@ -6679,6 +6788,35 @@ function afRender() {
     }
     fig.innerHTML = S.join('\n');
     return shownCount;
+}
+
+// ---- the collapsible table (re-rendered instantly by the annotate toggles) ----
+function afRenderTable() {
+    if (!afData) return;
+    const { curves, runsUp, runsLo, pairRuns, sesByDir, depth, QMAX, SMIN, SMAX, sesOrder, nDirs } = afData;
+    const dm = afDMOn(), bd = afBoundsOn();
+    const cls = U => afClass(U) + (dm && U.q !== 0 ? '  (d=' + U.dN + ', m=' + U.mN + ')' : '');
+    const T = ['<table><tr><th>#</th><th>interval</th><th>≈</th><th>main (upper) anchor</th><th>class</th><th>lower anchor</th><th>class</th>' +
+        (bd ? '<th>m-window (left edge → right edge)</th>' : '') + '<th>#dirs</th></tr>'];
+    for (let i = 0; i < pairRuns.length; i++) {
+        const r = pairRuns[i];
+        T.push('<tr><td>' + (i + 1) + '</td><td>' + r.from.p + '/' + r.from.q + ' .. ' + r.to.p + '/' + r.to.q +
+            '</td><td>' + (r.from.p / r.from.q).toFixed(5) + ' .. ' + (r.to.p / r.to.q).toFixed(5) +
+            '</td><td>' + esc(r.up.key) + '</td><td>' + esc(cls(r.up)) +
+            '</td><td>' + esc(r.lo.key) + '</td><td>' + esc(cls(r.lo)) + '</td>' +
+            (bd ? '<td>' + esc(afMWinStr(r.lo, r.up, r.from) + '   →   ' + afMWinStr(r.lo, r.up, r.to)) + '</td>' : '') +
+            '<td>' + r.n + '</td></tr>');
+    }
+    T.push('</table>');
+    document.getElementById('afTableBody').innerHTML =
+        '<p class="af-note">' + curves.length + ' unicurves (depth ' + depth + ', coordinate-pruned exact BFS), ' +
+        nDirs + ' directions swept (Q ≤ ' + QMAX + ', window ' + SMIN + '..' + SMAX + '), ' +
+        pairRuns.length + ' intersected cones (rows below); bands: ' + runsUp.length + ' upper / ' + runsLo.length + ' lower' +
+        (sesOrder ? ', ' + sesByDir.size + ' directions with sesqui terms (order &lt; ' + sesOrder + '; ' +
+            [...sesByDir.keys()].filter(dk => { const v = dk.split(',').map(Number);
+                const pq = v[0] <= 0 ? [v[1] - 4 * v[0], -v[0]] : [v[1] + 2 * v[0], v[0]];
+                return curves.some(U => U.p === pq[0] && U.q === pq[1]); }).length +
+            ' shared with a unicurve ray, shown as orange dots)' : '') + '.</p>' + T.join('');
 }
 
 // ---- main build ---------------------------------------------------------------
@@ -6784,25 +6922,7 @@ async function afCompute() {
         afRender();
         status.style.display = 'none';
 
-        // table: the pair refinement (upper x lower)
-        const T = ['<table><tr><th>#</th><th>interval</th><th>≈</th><th>main (upper) anchor</th><th>class</th><th>lower anchor</th><th>class</th><th>#dirs</th></tr>'];
-        for (let i = 0; i < pairRuns.length; i++) {
-            const r = pairRuns[i];
-            T.push('<tr><td>' + (i + 1) + '</td><td>' + r.from.p + '/' + r.from.q + ' .. ' + r.to.p + '/' + r.to.q +
-                '</td><td>' + (r.from.p / r.from.q).toFixed(5) + ' .. ' + (r.to.p / r.to.q).toFixed(5) +
-                '</td><td>' + esc(r.up.key) + '</td><td>' + esc(afClass(r.up)) +
-                '</td><td>' + esc(r.lo.key) + '</td><td>' + esc(afClass(r.lo)) + '</td><td>' + r.n + '</td></tr>');
-        }
-        T.push('</table>');
-        document.getElementById('afTableBody').innerHTML =
-            '<p class="af-note">' + curves.length + ' unicurves (depth ' + depth + ', coordinate-pruned exact BFS), ' +
-            dirs.length + ' directions swept (Q ≤ ' + QMAX + ', window ' + SMIN + '..' + SMAX + '), ' +
-            pairRuns.length + ' intersected cones (rows below); bands: ' + runsUp.length + ' upper / ' + runsLo.length + ' lower' +
-            (sesOrder ? ', ' + sesByDir.size + ' directions with sesqui terms (order &lt; ' + sesOrder + '; ' +
-                [...sesByDir.keys()].filter(dk => { const v = dk.split(',').map(Number);
-                    const pq = v[0] <= 0 ? [v[1] - 4 * v[0], -v[0]] : [v[1] + 2 * v[0], v[0]];
-                    return curves.some(U => U.p === pq[0] && U.q === pq[1]); }).length +
-                ' shared with a unicurve ray, shown as orange dots)' : '') + '.</p>' + T.join('');
+        afRenderTable();
     } catch (err) {
         say('Anchor fan failed: ' + err.message);
         afBuilt = false;
@@ -6920,6 +7040,8 @@ window.initAnchorsTab = function () {
         document.getElementById('afRays').addEventListener('change', () => afRender());
         document.getElementById('afShowSes').addEventListener('change', () => afRender());
         document.getElementById('afShowUni').addEventListener('change', () => afRender());
+        document.getElementById('afShowDM').addEventListener('change', () => { afRender(); afRenderTable(); });
+        document.getElementById('afShowBounds').addEventListener('change', () => { afRender(); afRenderTable(); });
         document.getElementById('afView').addEventListener('change', () => afRender());
         document.getElementById('afScale').addEventListener('change', () => afRender());
     }
