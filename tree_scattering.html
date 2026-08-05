@@ -259,6 +259,51 @@
     .af-dashed { background-image: linear-gradient(90deg, currentColor 55%, transparent 45%) !important;
                  background-size: 6px 100%; }
     .af-legend-foot { flex-basis: 100%; color:#98a2ab; font-size: 11.5px; margin-top: 2px; }
+    /* ---- SEEF tab (v0.96) ---- */
+    #tabSEEF.active { display: block; overflow-y: auto; }   /* scroll like the other document-style tabs */
+    #sfControls { margin: 2px 0 8px; font-size: 12.5px; font-family: ui-monospace, Menlo, monospace; color:#333;
+                  display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; }
+    #sfControls select, #sfControls input[type=number] { font: 12.5px ui-monospace, Menlo, monospace; }
+    #sfControls button { font: 12.5px ui-monospace, Menlo, monospace; padding: 2px 10px; cursor: pointer; }
+    #sfControls .sf-preset { padding: 1px 7px; }
+    #sfControls .hint { color:#999; }
+    #sfB { width: 240px; vertical-align: middle; }
+    .sf-figwrap { border: 1px solid #ccc; background:#fff; border-radius: 6px; position: relative; }
+    #sfCanvas { display:block; width:100%; height: min(58vh, 640px); cursor: crosshair; }
+    #sfAnchorWrap { border: 1px solid #ccc; background:#fff; border-radius: 6px; position: relative; margin-top: 6px; }
+    #sfAnchors { display: block; width: 100%; height: 44px; cursor: pointer; }
+    #sfOwnerWrap { border: 1px solid #ccc; background:#fff; border-radius: 6px; position: relative; margin-top: 8px; }
+    #sfOwner { display:block; width:100%; height: 240px; cursor: crosshair; }
+    #sfStatus, #sfOwnerStatus { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#888;
+                font-size:14px; background:#fffe; padding: 6px 14px; border-radius: 6px; }
+    #sfHover { min-height: 18px; color:#555; font-size: 12.5px; margin: 6px 0 0;
+               font-family: ui-monospace, Menlo, monospace; }
+    #sfPinned { margin: 8px 0 0; }
+    .sf-pin { border:1px solid #d8dee4; border-radius:6px; background:#fafbfc; padding:8px 12px; margin:6px 0;
+              font: 12.5px ui-monospace, Menlo, monospace; color:#333; white-space: pre-wrap; cursor: pointer; }
+    .sf-pin:hover { border-color:#c0392b; }
+    /* SEEF key facts (v0.98): typeset-look math — serif, italic variables, CSS
+       stacked fractions, displayed equations (self-contained: no math engine) */
+    #sfKeys { margin-top: 10px; }
+    #sfKeys > summary { cursor: pointer; font: 12.5px ui-monospace, Menlo, monospace; color: #556; }
+    .sf-facts { max-width: 1020px; font: 14px/1.62 'Times New Roman', Georgia, serif; color: #2a3138;
+                padding: 6px 8px 2px; }
+    .sf-facts p { margin: 7px 0; }
+    .sf-facts b { color: #1d2733; }
+    .sf-eq { text-align: center; margin: 11px auto; font-size: 15.5px; color: #1d2733; line-height: 1.45; }
+    .sf-frac { display: inline-block; vertical-align: middle; text-align: center; line-height: 1.25;
+               margin: 0 3px; }
+    .sf-frac > span { display: block; padding: 0 5px; }
+    .sf-frac > span + span { border-top: 1px solid #4a5560; }
+    .sf-frac .sf-frac { font-size: 0.88em; }
+    .sf-regime { margin: 10px 0; padding: 9px 13px 10px; background: #f7f9fa; border: 1px solid #e2e8ec;
+                 border-radius: 7px; }
+    .sf-chip { display: inline-block; font: bold 11px ui-monospace, Menlo, monospace; letter-spacing: .02em;
+               color: #fff; background: #2c5f8a; border-radius: 10px; padding: 2px 9px 3px; margin-right: 7px;
+               vertical-align: 1px; }
+    .sf-regime.mid .sf-chip { background: #7a5fa0; }
+    .sf-regime.hi .sf-chip { background: #a0524a; }
+    .sf-fine { color: #8a949c; font-size: 12px; }
     .af-dot { display:inline-block; width:16px; height:4px; vertical-align:3px; margin-right:5px; border-radius:2px; }
     .af-swatch { display:inline-block; width:14px; height:12px; vertical-align:-1px; margin-right:5px;
                  background:linear-gradient(90deg,#dbe9f6,#f9e6d8,#e2f2dc); border:1px solid #bbb; border-radius:3px; }
@@ -620,6 +665,7 @@
         <button class="tab-btn active" data-tab="tabDiagram">Scattering diagram</button>
         <button class="tab-btn" data-tab="tabExchange">F1 exchange graph</button>
         <button class="tab-btn" data-tab="tabAnchors">F1 anchor fan</button>
+        <button class="tab-btn" data-tab="tabSEEF">SEEF of F<sub>b</sub></button>
         <button class="tab-btn" data-tab="tabConstructions">General sesqui constructions</button>
         <button class="tab-btn" data-tab="tabAbout">About</button>
     </div>
@@ -788,6 +834,174 @@
         </div>
     </div>
 
+
+    <!-- SEEF tab (v0.96) -->
+    <div class="tab-content" id="tabSEEF">
+        <div class="af-inner">
+            <div id="sfControls">
+                <span><b>b</b> = <input type="range" id="sfB" min="0" max="0.95" step="0.001" value="0.25">
+                    <input type="number" id="sfBNum" min="0" max="0.95" step="0.001" value="0.25" style="width:5.5em">
+                    <span class="af-help" data-info="The symplectic form: omega(L) = 1, omega(E) = b, 0 &lt; b &lt; 1.&#10;The curve catalogue is b-independent; only the obstruction values p/(d−mb) move — so this slider is instant.&#10;b = 1/3 is the monotone form (every hat top lands ON 3x/(x+1)).">?</span></span>
+                <span>presets:
+                    <button class="sf-preset" data-b="0">0</button>
+                    <button class="sf-preset" data-b="0.25">1/4</button>
+                    <button class="sf-preset" data-b="0.3333333333333333">1/3</button>
+                    <button class="sf-preset" data-b="0.4">2/5</button>
+                    <button class="sf-preset" data-b="0.5">1/2</button>
+                    <button class="sf-preset" data-b="0.75">3/4</button></span>
+                <span>x up to <input id="sfXmax" type="number" value="12" min="4" max="60" step="1" style="width:4em">
+                    <span class="af-help" data-info="Columns are computed on [1, xmax + pad] (the pad catches rising edges entering from the right).&#10;Wheel-zoom and drag inside the plot; double-click to reset. Needs Recompute.">?</span></span>
+                <span>window <input id="sfWinLo" type="number" value="1" min="1" step="any" style="width:4.5em">
+                    to <input id="sfWinHi" type="number" value="12" min="1" step="any" style="width:4.5em">
+                    <button id="sfWinGo">Go</button>
+                    <select id="sfWinSel">
+                        <option value="" selected>jump to&hellip;</option>
+                        <option value="full">full range</option>
+                        <option value="5.8284,6.8542">(3+2&radic;2, &tau;&#8308;)</option>
+                        <option value="6,8">[6, 8]</option>
+                        <option value="6.8541,7.1708">(6,1) interval (&tau;&#8308;, &beta;&#8326;&#8314;)</option>
+                        <option value="7.1902,7.3130">(29,4) interval</option>
+                        <option value="8,10">[8, 10]</option>
+                        <option value="10,12">[10, 12]</option>
+                    </select><span class="af-help" data-info="Zoom the view to an x-window: type it (e.g. 8 to 10) and Go, pick a named interval, click a cell of the anchor band below the plot, or wheel-zoom/drag in the plot itself.&#10;If the upper end exceeds the computed range, the tab recomputes with a larger x automatically. Instant otherwise.">?</span></span>
+                <span>resolution q &le; <select id="sfQmax">
+                    <option value="40">40</option>
+                    <option value="60" selected>60</option>
+                    <option value="100">100</option>
+                    <option value="150">150 (slower)</option>
+                </select><span class="af-help" data-info="All coprime contact pairs (p,q) with q up to this bound.&#10;The true envelope is the q → ∞ limit; in dense regions (the smooth tails) the finite-q picture sits a fraction of a percent low. Needs Recompute.">?</span></span>
+                <span>family depth <select id="sfDepth">
+                    <option value="10">10</option>
+                    <option value="12" selected>12</option>
+                    <option value="14">14</option>
+                    <option value="16">16 (slow)</option>
+                </select><span class="af-help" data-info="Mutation-BFS depth for the unicurve pool that cuts the degree windows.&#10;The (2n,1) and Fibonacci families are always injected explicitly, so the tails are exact at any depth; more depth refines rare deep slivers. Needs Recompute.">?</span></span>
+                <button id="sfRecompute">Recompute</button>
+                <span>show:
+                    <label><input type="checkbox" id="sfShowSes" checked> sesqui classes</label><span class="af-help" data-info="On: the best class per contact pair — d = dlo of the window for b &lt; 1/3, d = dhi for b &gt; 1/3 (δ ≥ 1 allowed).&#10;Off: only unicuspidal classes (δ = 0) obstruct — compare to see how much the strictly-sesqui curves matter.">?</span>
+                    <label><input type="checkbox" id="sfShowCorners" checked> corners</label><span class="af-help" data-info="Dots at the visible obstruction points: blue = unicuspidal (δ = 0), orange = strictly sesqui (δ ≥ 1).&#10;Click one to pin its details.">?</span>
+                    <label><input type="checkbox" id="sfShowProv" checked> provenance</label><span class="af-help" data-info="Color the envelope by WHY each piece is forced:&#10;blue flat = monotonicity (f nondecreasing) pushing a bound rightward;&#10;green rising = the scaling condition (f(x)/x nonincreasing) pushing it leftward along a line through the origin;&#10;the corners themselves are the actual curve bounds.">?</span>
+                    <label><input type="checkbox" id="sfShowTops"> all tops</label><span class="af-help" data-info="Faint dots at EVERY column's best obstruction value, including dominated ones under the envelope.&#10;Shows the dense cloud the envelope is the roof of (e.g. hugging the strip roof for b &gt; 1/3).">?</span>
+                    <label><input type="checkbox" id="sfShowAnch" checked> anchor band</label><span class="af-help" data-info="The anchor decomposition of the ratio line, drawn as a strip aligned under the plot (the same data as the F1 anchor fan, unrolled): top half = UPPER anchor (the unicurve capping d from above — for b &gt; 1/3 it dictates the local roof), bottom half = LOWER anchor (capping d from below — gray = E, i.e. just m &ge; 0; for b &lt; 1/3 it dictates the staircase owners).&#10;Hover a cell to see the interval and both anchors and to highlight it in the plot; click to zoom to it; shift-click to pin the highlight without zooming. Resolution adapts to the zoom.">?</span>
+                </span>
+                <span>overlay:
+                    <label><input type="checkbox" id="sfOvG" checked> 3x/(x+1)</label><span class="af-help" data-info="The CP²/ball folding curve g. THEOREM (modulo the existence conjecture): for every b ≤ 1/3 the envelope equals g on [τ⁴, ∞) — the m = 0 classes are b-independent and pin the tail.&#10;For b &gt; 1/3 it is strictly exceeded.">?</span>
+                    <label><input type="checkbox" id="sfOvT" checked> T_b</label><span class="af-help" data-info="T_b(x) = 2x/((1−b)x + 2b): the hat tops of the (2n,1) curves nL−(n−1)E sit exactly ON this curve, and for b ≥ 1/3 NO class except the fiber L−E ever exceeds it (w = d−m ≥ q with equality only there).&#10;At b = 1/3 it coincides with 3x/(x+1). The natural candidate for a fiber-folding curve.">?</span>
+                    <label><input type="checkbox" id="sfOvTt"> T&#771;_b</label><span class="af-help" data-info="T~_b(x) = 2x/((1−b)x + 2b + 2(3b−1)/(x−3)): the dense floor for b &gt; 1/3.&#10;High-q classes minimize j = w−q; the (2n,1)-pairings force j ≈ 2q/(x−3), and their tops accumulate on this curve. The envelope oscillates between T~_b and T_b forever (touching T_b at even integers).">?</span>
+                    <label><input type="checkbox" id="sfOvR"> roof R_n</label><span class="af-help" data-info="The EXACT per-strip roof for b &gt; 1/3 (refines T~_b): on x ∈ (2n, 2n+2) the two flanking pairings with (2n,1) and (2n+2,1) force w/q ≥ W_n(x) = max((4n−1−x)/(2n−3), (x−1)/(2n−1)), so every class caps at R_n(x) = 2x/((1−b)(x+1)+(3b−1)W_n(x)).&#10;The two arcs cross at (4n²−2n−1)/(2n−2) — exactly the interval-owner unicurves (11,2), (29,4), (55,6), (89,8), … sitting at their window tops. Conjecturally the tail envelope = max(teeth hats, R_n). See §5b of the analysis document.">?</span>
+                    <label><input type="checkbox" id="sfOvGuides" checked> guides</label><span class="af-help" data-info="Vertical: 3+2√2 ≈ 5.828 (silver; the accumulation point of the b = 1/3 staircase = the three twist-orbit strands), 6, τ⁴ ≈ 6.854 (golden⁴; the b ≤ 1/3 accumulation point).&#10;Horizontal: the asymptote 2/(1−b) (= 3 at b = 1/3) and the fiber level 1/(1−b).">?</span>
+                </span>
+                <span><label><input type="checkbox" id="sfOwnerOn"> owner map (x, b)</label><span class="af-help" data-info="A second panel: for every (x, b) the color shows WHICH curve owns the envelope there (hash color per contact pair; hover to identify, click to jump the b-slider).&#10;The horizontal line marks b = 1/3. Recomputed per view; takes a moment.">?</span></span>
+                <span class="hint">wheel to zoom x, drag to pan, double-click to reset; hover for the owner, click a corner to pin</span>
+            </div>
+            <div class="sf-figwrap">
+                <canvas id="sfCanvas"></canvas>
+                <div id="sfStatus">Open this tab to compute&hellip;</div>
+            </div>
+            <div id="sfAnchorWrap" style="display:none">
+                <canvas id="sfAnchors"></canvas>
+            </div>
+            <div id="sfOwnerWrap" style="display:none">
+                <canvas id="sfOwner"></canvas>
+                <div id="sfOwnerStatus" style="display:none"></div>
+            </div>
+            <div id="sfHover"></div>
+            <div class="af-legend">
+                <span class="af-li"><span class="af-dot" style="background:#2c5f8a;height:3px"></span>flat piece <i>(monotonicity)</i></span>
+                <span class="af-li"><span class="af-dot" style="background:#2e9e7e;height:3px"></span>rising piece <i>(f(x)/x nonincreasing: line through origin)</i></span>
+                <span class="af-li"><span class="af-dot" style="background:#0b2d5c"></span>corner: unicuspidal (&delta; = 0)</span>
+                <span class="af-li"><span class="af-dot" style="background:#e67e22"></span>corner: strictly sesqui (&delta; &ge; 1)</span>
+                <span class="af-li"><span class="af-dot af-dashed" style="color:#999"></span>3x/(x+1)</span>
+                <span class="af-li"><span class="af-dot af-dashed" style="color:#b03f3f"></span>T_b</span>
+                <span class="af-li"><span class="af-dot af-dashed" style="color:#b03fb0"></span>&tau;&#8308;, 3+2&radic;2 guides</span>
+                <div class="af-legend-foot">the drawn function is the CONJECTURAL stabilized ellipsoid embedding function: the smallest nondecreasing f with f(x)/x nonincreasing above every sesquicurve bound c(p/q) &ge; p/(d&minus;mb) &mdash; catalogue = the window filter (&delta; &ge; 0, m &ge; 0, all unicurve pairings), exact vs the KS diagram through order 63 &middot; details in About &rarr; &ldquo;SEEF of F<sub>b</sub> tab&rdquo;</div>
+            </div>
+            <details id="sfKeys" open><summary>key facts (what this picture shows)</summary>
+                <div class="sf-facts">
+                    <p>Every genus-0, index-0 (<i>p</i>,<i>q</i>)-sesquicuspidal curve in class
+                    <i>dL</i> &minus; <i>mE</i> (index zero: <i>p</i> + <i>q</i> = 3<i>d</i> &minus; <i>m</i>) obstructs
+                    the stabilized function at <i>x</i> = <i>p</i>/<i>q</i>, and the two monotonicity properties of
+                    the true function &mdash; <i>f</i> nondecreasing, <i>f</i>(<i>x</i>)/<i>x</i> nonincreasing
+                    (ellipsoid inclusion and scaling) &mdash; spread each bound into a &ldquo;hat&rdquo;:</p>
+                    <div class="sf-eq">
+                        <i>c</i><sub><i>b</i></sub>(<i>p</i>/<i>q</i>) &ge; <i>V</i> =
+                        <span class="sf-frac"><span><i>p</i></span><span><i>d</i> &minus; <i>mb</i></span></span>&thinsp;,
+                        &emsp; <i>h</i>(<i>x</i>) = <i>V</i> &middot; min(1, <i>qx</i>/<i>p</i>).
+                    </div>
+                    <p>The drawn function is the upper envelope of all hats &mdash; the smallest nondecreasing
+                    <i>f</i> with <i>f</i>(<i>x</i>)/<i>x</i> nonincreasing above every bound (the two conditions force
+                    continuity, and the rising staircase edges are exactly the scaling condition&rsquo;s contribution).
+                    The curve catalogue is <b>independent of b</b>: at fixed (<i>p</i>,<i>q</i>) the existing degrees
+                    form a window <i>d</i> &isin; [<i>d</i><sub>lo</sub>, <i>d</i><sub>hi</sub>], and writing
+                    <i>w</i> = <i>d</i> &minus; <i>m</i>,</p>
+                    <div class="sf-eq">
+                        <i>d</i> &minus; <i>mb</i> = &frac12;&thinsp;[&thinsp;(1 &minus; <i>b</i>)(<i>p</i> + <i>q</i>)
+                        &minus; (1 &minus; 3<i>b</i>)&thinsp;<i>w</i>&thinsp;],
+                    </div>
+                    <p>so the strongest class per column is <i>d</i> = <i>d</i><sub>lo</sub> for <i>b</i> &lt; 1/3 and
+                    <i>d</i> = <i>d</i><sub>hi</sub> for <i>b</i> &gt; 1/3; at <i>b</i> = 1/3 every class gives exactly
+                    3<i>p</i>/(<i>p</i> + <i>q</i>).</p>
+
+                    <div class="sf-regime"><span class="sf-chip">b &le; 1/3</span>
+                        <b>The ball&rsquo;s tail, at every such b.</b> Every hat lies under <i>g</i> (since
+                        <i>m</i> &ge; 0), and the <i>m</i> = 0 classes &mdash; whose values do not move with
+                        <i>b</i> &mdash; sit on <i>g</i> at ratios dense above &tau;&#8308;:
+                        <div class="sf-eq">
+                            <i>c</i><sub><i>b</i></sub>(<i>x</i>) = <i>g</i>(<i>x</i>) =
+                            <span class="sf-frac"><span>3<i>x</i></span><span><i>x</i> + 1</span></span>
+                            &ensp;on&ensp; [&tau;&#8308;, &infin;), &emsp; &tau;&#8308; =
+                            <span class="sf-frac"><span>7 + 3&radic;5</span><span>2</span></span> &asymp; 6.8541.
+                        </div>
+                        Below &tau;&#8308;: an infinite staircase at <i>every</i> such <i>b</i> &mdash; the Fibonacci
+                        corners (5,1) = 2<i>L</i>, (13,2) = 5<i>L</i>, (34,5) = 13<i>L</i>, &hellip; stay fixed on
+                        <i>g</i>, while the <i>m</i> &ge; 1 steps grow with <i>b</i> (e.g. (6,1) = 3<i>L</i> &minus; 2<i>E</i>
+                        first appears at <i>b</i> &gt; 0.3).
+                    </div>
+
+                    <div class="sf-regime mid"><span class="sf-chip">b = 1/3</span>
+                        <b>The monotone form melts onto g.</b> Every hat top lands on <i>g</i>; the function equals
+                        <i>g</i> from 3 + 2&radic;2 &asymp; 5.8284 on, and the corners below are exactly the three
+                        orbits of (1,1), (2,1), (4,1) under the twist
+                        &Phi;: (<i>p</i>,<i>q</i>) &#8614; (6<i>p</i> &minus; <i>q</i>, <i>p</i>):
+                        <div class="sf-eq">1, &ensp;2, &ensp;4, &ensp;5,
+                            &ensp;<sup>11</sup>&frasl;<sub>2</sub>, &ensp;<sup>23</sup>&frasl;<sub>4</sub>,
+                            &ensp;<sup>29</sup>&frasl;<sub>5</sub>, &ensp;<sup>64</sup>&frasl;<sub>11</sub>,
+                            &ensp;&hellip; &nearr; 3 + 2&radic;2.</div>
+                        (In the normalization where the fiber has area 1, this tail reads
+                        2<i>x</i>/(<i>x</i> + 1) &mdash; the same statement.)
+                    </div>
+
+                    <div class="sf-regime hi"><span class="sf-chip">b &gt; 1/3</span>
+                        <b>No smooth tail &mdash; an everlasting staircase between two curves.</b> Every class
+                        except the fiber <i>L</i> &minus; <i>E</i> has <i>w</i> &ge; <i>q</i>, with equality only for
+                        the curves (2<i>n</i>,1) = <i>nL</i> &minus; (<i>n</i> &minus; 1)<i>E</i>, whose tops sit
+                        <i>on</i> <i>T</i><sub><i>b</i></sub> at the even integers; dense high-<i>q</i> classes floor
+                        out on <i>T</i>&#771;<sub><i>b</i></sub>:
+                        <div class="sf-eq">
+                            <i>T</i><sub><i>b</i></sub>(<i>x</i>) =
+                            <span class="sf-frac"><span>2<i>x</i></span><span>(1 &minus; <i>b</i>)<i>x</i> + 2<i>b</i></span></span>&thinsp;,
+                            &emsp;
+                            <i>T</i>&#771;<sub><i>b</i></sub>(<i>x</i>) =
+                            <span class="sf-frac"><span>2<i>x</i></span><span>(1 &minus; <i>b</i>)<i>x</i> + 2<i>b</i> +
+                                <span class="sf-frac"><span>2(3<i>b</i> &minus; 1)</span><span><i>x</i> &minus; 3</span></span></span></span>&thinsp;.
+                        </div>
+                        Per strip [2<i>n</i>, 2<i>n</i>+2] the floor sharpens to an exact roof <i>R</i><sub><i>n</i></sub>
+                        (overlay), whose kinks at (4<i>n</i>&sup2; &minus; 2<i>n</i> &minus; 1)/(2<i>n</i> &minus; 2) are the
+                        interval-owner curves (11,2), (29,4), (55,6), &hellip; at their window tops.
+                        The envelope oscillates between roof and teeth forever, with common asymptote
+                        2/(1 &minus; <i>b</i>) = 2/area(fiber); the fiber&rsquo;s flat shelf 1/(1 &minus; <i>b</i>) owns
+                        [1, 2<i>b</i>/(1 &minus; <i>b</i>)] and swallows the staircase region as <i>b</i> &rarr; 1.
+                    </div>
+
+                    <p class="sf-fine">Finite resolution: the drawn envelope uses q &le; Q and a finite unicurve
+                    pool, so in dense regions it sits a fraction of a percent below the true limit (raise Q to watch
+                    it converge); rare deep slivers can be one step too generous at low family depth (the (2n,1) and
+                    Fibonacci families are always injected, so the tails and caps are exact at any depth).</p>
+                </div>
+            </details>
+            <div id="sfPinned"></div>
+        </div>
+    </div>
 
     <!-- sesqui constructions tab -->
     <div class="tab-content" id="tabConstructions">
@@ -2739,6 +2953,46 @@
                 is the tree child of its two adjacent owners. F&#8321; configuration only.
             </p>
 
+            <h3>SEEF of F<sub>b</sub> tab</h3>
+            <p>
+                The <b>stabilized ellipsoid embedding function</b> of F<sub>b</sub> &mdash; the first
+                Hirzebruch surface F&#8321; with &omega;(L) = 1, &omega;(E) = b, 0 &lt; b &lt; 1:
+                c_b(x) = inf { &lambda; : E(1,x) &times; &#8477;<sup>2N</sup> &#8618; &lambda;F<sub>b</sub> &times; &#8477;<sup>2N</sup> }.
+                Every genus-0, index-0 (p,q)-sesquicuspidal curve in class dL&minus;mE
+                (index zero: p+q = 3d&minus;m) forces c_b(p/q) &ge; p/(d&minus;mb), and the working
+                conjecture is that c_b is the <b>smallest nondecreasing function with
+                f(x)/x nonincreasing</b> satisfying all these bounds. Both properties are genuine
+                (E(1,x&prime;) &sub; E(1,x) and E(1,x&prime;) &sub; (x&prime;/x)E(1,x)), they force continuity, and
+                they make &ldquo;smallest&rdquo; well-posed: the answer is the upper envelope of the hats
+                h(x) = V&middot;min(1, xq/p), V = p/(d&minus;mb). Without the scaling condition no smallest
+                continuous majorant exists (one could rise arbitrarily steeply), and the rising
+                staircase edges &mdash; lines through the origin &mdash; are exactly its contribution.
+            </p>
+            <p>
+                The curve catalogue is the window filter of this app (&delta; &ge; 0, m &ge; 0, pairing &ge; 0
+                against every unicurve; exact vs the actual diagram through order 63) and is
+                <b>b-independent</b> &mdash; only the values p/(d&minus;mb) move. With w = d&minus;m the area is
+                [(1&minus;b)(p+q) &minus; (1&minus;3b)w]/2, so the strongest existing class per contact pair is
+                the window edge: d = dlo for b &lt; 1/3, d = dhi for b &gt; 1/3. Structure proved from
+                the filter (and verified in seef_checks_7_21_26.mjs): <b>(i)</b> for b &le; 1/3 all hats
+                lie under g = 3x/(x+1) and the b-independent m = 0 classes pin the tail: c_b = g on
+                [&tau;&#8308;, &infin;) for <i>every</i> b &le; 1/3, with a b-dependent staircase below (Fibonacci at
+                b = 0, progressively enriched as b &uarr; 1/3); <b>(ii)</b> at b = 1/3 every top lands on g;
+                the function is g from 3+2&radic;2 on and the corners below are exactly the three
+                twist strands &Phi;&#8319;(1,1), &Phi;&#8319;(2,1), &Phi;&#8319;(4,1) accumulating at silver;
+                <b>(iii)</b> for b &gt; 1/3 every class except the fiber L&minus;E has w &ge; q &mdash; equality
+                exactly for the (2n,1) curves nL&minus;(n&minus;1)E, whose tops sit ON
+                T_b(x) = 2x/((1&minus;b)x+2b) at even integers &mdash; while dense high-q classes floor out
+                on T&#771;_b(x) = 2x/((1&minus;b)x+2b+2(3b&minus;1)/(x&minus;3)) &mdash; refined per strip by the exact
+                roof R_n with kinks at (4n&sup2;&minus;2n&minus;1)/(2n&minus;2), the interval-owner unicurves
+                (11,2), (29,4), (55,6), &hellip; at their window tops (&sect;5b of the analysis document,
+                verified by <code>seef_bhalf_7_21_26.mjs</code>); the envelope oscillates between
+                T&#771;_b and T_b forever (no smooth tail), with asymptote 2/(1&minus;b), and the fiber&rsquo;s
+                flat shelf 1/(1&minus;b) owns [1, 2b/(1&minus;b)]. The companion analysis document is
+                <code>seef_F1b_7_21_26.md</code>; the engine is <code>seef_engine_7_21_26.mjs</code>
+                (this tab embeds a verbatim copy).
+            </p>
+
             <h3>Symmetries: the Orevkov twists (McDuff&ndash;Siegel)</h3>
             <p>
                 The pair (F&#8321;, N) carries birational symmetries beyond the branch swap &tau;: the
@@ -2779,6 +3033,12 @@
 
             <h3>Changelog</h3>
             <ul class="changelog">
+                <li><b>v1.01</b> &mdash; SEEF tab: x-window selection and the ANCHOR BAND. New &ldquo;window &hellip; to &hellip;&rdquo; inputs with named presets ((3+2&radic;2, &tau;&#8308;), [6,8], the (6,1) and (29,4) intervals, [8,10], [10,12]; an upper end beyond the computed range triggers an automatic recompute), and a new strip under the plot showing the anchor decomposition of the ratio line &mdash; the anchor-fan data unrolled and aligned with the x-axis: top half = upper anchor (caps d from above; for b &gt; 1/3 these cones dictate the roof arcs and their walls are the kinks), bottom half = lower anchor (gray = E/m &ge; 0; for b &lt; 1/3 these dictate the staircase owners). Hover a cell to highlight its interval inside the plot (translucent band), click to zoom to it, shift-click to pin the highlight; resolution adapts to the zoom. Wheel/drag/double-click and the window inputs stay in sync.</li>
+                <li><b>v1.00</b> &mdash; SEEF tab: new &ldquo;roof R_n&rdquo; overlay (b &gt; 1/3) drawing the exact per-strip cap R_n(x) = 2x/((1&minus;b)(x+1)+(3b&minus;1)W_n(x)), W_n = max((4n&minus;1&minus;x)/(2n&minus;3), (x&minus;1)/(2n&minus;1)) &mdash; a rigorous bound from the two flanking (2n,1)-pairings whose arc crossings (4n&sup2;&minus;2n&minus;1)/(2n&minus;2) are exactly the interval-owner unicurves (11,2), (29,4), (55,6), (89,8), &hellip; at their window tops. Companion case study &sect;5b (b = 1/2: the full function in closed form, teeth dying like ~10/x&sup2;, strictly-stabilized regime from 27/4) added to <code>seef_F1b_7_21_26.md</code> with check script <code>seef_bhalf_7_21_26.mjs</code> (14 checks). About and key facts updated.</li>
+                <li><b>v0.99</b> &mdash; SEEF tab: the tab now scrolls vertically like the other document-style tabs (it was still on the flex no-scroll layout of the diagram tab, so everything below the viewport &mdash; key facts, pinned details &mdash; was clipped); the 3+2&radic;2 / 6 / &tau;&#8308; guide labels are staggered vertically so they no longer collide.</li>
+                <li><b>v0.98</b> &mdash; SEEF tab: the &ldquo;key facts&rdquo; panel re-typeset &mdash; serif text with italic variables, displayed equations on their own lines with real stacked fractions (CSS-built; the app stays a single self-contained file, so no external math engine), and the three b-regimes as tinted cards with chips (b &le; 1/3 / b = 1/3 / b &gt; 1/3) instead of one dense bullet list.</li>
+                <li><b>v0.97</b> &mdash; SEEF tab fixes: the &ldquo;?&rdquo; help markers now actually show their explanations (the styled-tooltip handler was scoped to the anchor-fan toolbar; the SEEF toolbar now drives the same shared tooltip element), and the surface is written F<sub>b</sub> throughout the app and documents (the sequential sub-then-superscript F&#8321;<sup>b</sup> read awkwardly).</li>
+                <li><b>v0.96</b> &mdash; NEW TAB &ldquo;SEEF of F<sub>b</sub>&rdquo;: the conjectural stabilized ellipsoid embedding function as the hat-envelope of all sesquicurve bounds p/(d&minus;mb), computed from the window filter (b-independent windows &rArr; instant b-slider). Envelope colored by provenance (flat = monotonicity, rising = f(x)/x nonincreasing), corners colored unicuspidal vs strictly-sesqui, toggles for unicuspidal-only, all tops, overlays (3x/(x+1), T_b, T&#771;_b, guides at 3+2&radic;2, 6, &tau;&#8308;, asymptote and fiber levels), wheel-zoom/pan, click-to-pin class details, and an (x,b) owner map with click-to-set-b. Structure verified in <code>seef_checks_7_21_26.mjs</code> (37 checks: window regressions incl. the (67,11) ks_box ground truth and (2n,1) window tops dhi = n; b &le; 1/3 tail = 3x/(x+1) beyond &tau;&#8308; at all b with resolution-shrinking gap; b = 1/3 = the three twist strands below silver, g beyond; b &gt; 1/3 capped by max(T_b, fiber) with even tops ON T_b and high-q corners on T&#771;_b to 0.2%). Engine: <code>seef_engine_7_21_26.mjs</code> (inline copy in the tab); analysis: <code>seef_F1b_7_21_26.md</code>. About section added.</li>
                 <li><b>v0.95</b> &mdash; anchor fan: two optional &ldquo;annotate&rdquo; toggles (display-only, instant). &ldquo;(d,m)&rdquo; writes the explicit d and m (class dL&minus;mE) of every single-curve anchor mention into figure labels, tooltips, pinned details and the table &mdash; omitted where d, m make no sense as a single pair (E&rsquo;s m &ge; 0 role, cascades, multi-curve sesqui lists). &ldquo;bounds&rdquo; spells out what the two anchor inequalities actually say: the pairing formula rearranged as an explicit upper/lower bound on m (equivalently d), the exact m-window evaluated as fractions at a pinned cone&rsquo;s edge directions, an m-window column in the table, and per-ray inequalities on unicurve hover.</li>
                 <li><b>v0.94</b> &mdash; the interval owned by (29,4) ((7.1902&hellip;, 7.3130&hellip;), endpoints in Q(&radic;165)) added to the By-interval view: the FIRST TWO-BRANCH interval (owner ratio 29/4 inside; cap e&#8322;&#8329; = 14d&minus;9m&minus;min(4p,29q); both endpoints window-top adjunction walls; window theorem verified with a piecewise-cap fan, zero phantoms at q &le; 100). Families: 1 + the (6,1)-bundle T_B (now understood as INTERVAL-BLIND, anchored at the (6,1)-curve: 2,122/2,170 upper classes) + the split system re-centered at k &ge; 2 (k=2, r=0 provably impossible; the owner&rsquo;s own tree [[L1 L2] 3*&Lambda;&#8322;] is its boundary real root); an exactly-characterized window-top shell ({k=2, Q&#8325;(x,r)&gt;1, Q&#8323;(x,U)&gt;1}; 56 classes at q &le; 100) adjudicated by the NEW box-truncated KS tool (ks_box_7_15_26: exact diagram coefficients modulo a monomial-ideal box; selftest 259/259): at order 89, c(152,21,73) = 78 and c(152,21,74) = 0 — the shell classes are REAL, the cap exact, and the certificates lie outside every searched shape (first exotic classes; support-pruned hunt = top open problem). Sharpness: 271/272 boundary classes fail, the unique pass being the self-exempt owner unicurve itself. Master document added: <code>sesqui_intervals_master_7_15_26.html</code> (all foundations + proofs for the three closed intervals, cross-interval structure, audit interface). Folder reorganized (data/ + dated/).</li>
                 <li><b>v0.93</b> &mdash; the interval owned by (6,1) ((&tau;<sup>4</sup>, &beta;&#8326;&#8314;) = (6.8541&hellip;, 7.1708&hellip;), the interval of the 7/13 McDuff note) is CLOSED: two families suffice and are proved complete &mdash; Family 1 (band) + Family 5 re-centered at the owner with k = 0 (blocks (&Lambda;&#8321;, &Lambda;&#8320; = bare L&#8321;-legs); the tree <code>[(m&minus;q)*[2*L1 L3] [(p&minus;2d)*[L2 L3] (2p+3q&minus;5d)*L1]]</code> covers ALL of m &gt; q). Constructions tab reorganized into TWO views: a new &ldquo;By interval&rdquo; sub-tab (per-interval family lists, cross-family matrix, gap/staircase rows; now the landing view) alongside the existing per-family cards; Family-1/2&ndash;4/5/sharpness cards updated with the (6,1)-interval data (43,513 window classes at q &le; 100, zero failures; 1,928 boundaries all fail, both refusals LOCAL there &mdash; root slack = e&#8326; = the (6,1)-pairing, window-top inner vertex Q&#8323; = 1&minus;2&delta; = adjunction; endpoint tangency (8&minus;&beta;&#8326;&#8314;)/(&beta;&#8326;&#8314;&minus;5) = &rho;&#8331;(3)). Also NEW: the exact local rule at vertices with an imprimitive child re-validated against the KS engine over 91 configurations (one-sided rule exact 91/91; the per-copy &ldquo;&kappa; primitive copies&rdquo; reading wrong in 34 &mdash; this retires the gcd/coprimality caveats of the McDuff note and of both external audits). Full document: <code>sesqui_interval_owned_by_6_7_15_26.html</code> (families, proofs, sharpness, note review, comparison).</li>
@@ -5072,6 +5332,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.tab === 'tabDiagram') { sizeCanvas(); drawDiagram(); }
         if (btn.dataset.tab === 'tabExchange' && window.initExchangeTab) window.initExchangeTab();
         if (btn.dataset.tab === 'tabAnchors' && window.initAnchorsTab) window.initAnchorsTab();
+        if (btn.dataset.tab === 'tabSEEF' && window.initSeefTab) window.initSeefTab();
     });
 });
 
@@ -7048,6 +7309,859 @@ window.initAnchorsTab = function () {
     if (afBuilt) return;
     afBuilt = true;
     afCompute();
+};
+})();
+</script>
+<script id="seefTab">
+// ============================================================================
+//  SEEF TAB (v0.96) — the conjectural stabilized ellipsoid embedding function
+//  of F1^b as the hat-envelope of all sesquicurve bounds p/(d − m b).
+//  The SEEF engine below is a VERBATIM copy of seef_engine_7_21_26.mjs (the
+//  standalone referee, exercised by seef_checks_7_21_26.mjs) minus its export
+//  line — keep the two in sync.  Uses the ksEngine global mutateToricModel.
+// ============================================================================
+(function () {
+'use strict';
+
+const SEEF = (() => {
+'use strict';
+
+// ---------- exact integer helpers (safe doubles; |values| < 2^53) ----------
+function isqrtFloor(n) {
+    if (n < 0) return -1;
+    let r = Math.floor(Math.sqrt(n));
+    while ((r + 1) * (r + 1) <= n) r++;
+    while (r * r > n) r--;
+    return r;
+}
+function floorDiv(n, c) {
+    if (c < 0) { n = -n; c = -c; }
+    const q = Math.trunc(n / c), r = n - q * c;
+    return r < 0 ? q - 1 : q;
+}
+const ceilDiv = (n, c) => -floorDiv(-n, c);
+const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) { const t = a % b; a = b; b = t; } return a; };
+
+// ---------- reference curves ----------
+const TAU4 = (7 + 3 * Math.sqrt(5)) / 2;          // 6.8541..., golden ratio^4
+const SILVER = 3 + 2 * Math.sqrt(2);              // 5.8284..., silver ratio^2
+const g3 = x => 3 * x / (x + 1);                  // the CP^2 / ball tail curve
+const Tb = (x, b) => 2 * x / ((1 - b) * x + 2 * b); // even-staircase top curve
+const foldB = (x, b) => Math.max(g3(x), Tb(x, b));
+const twoDelta = (p, q, d) => { const S = p + q; return -8 * d * d + 6 * S * d - (S * S + p * q - 1); };
+
+// ---------- unicurve pool ----------
+function buildPool(mutateToricModel, opts = {}) {
+    const depth = opts.depth ?? 12;
+    const LIM = 2 ** (opts.pruneBits ?? 24);
+    const trunkTo = opts.trunkTo ?? 100;
+    const fibTo = opts.fibTo ?? 1e6;
+    const seen = new Map();
+    const take = (u, dep) => {
+        let p = u[0], q = u[1];
+        if (p === 0 && q > 0) { p = q; q = 0; }
+        const k = p + ',' + q;
+        if (!seen.has(k)) seen.set(k, { p, q, dep });
+    };
+    const start = { vs: [[1, 0], [0, -1], [-1, -2]], pq: [[0, 1], [1, 2], [1, 1], [2, 1]] };
+    start.pq.slice(1).forEach(u => take(u, 0));
+    let frontier = [{ state: start, last: -1 }];
+    for (let dep = 1; dep <= depth; dep++) {
+        const next = [];
+        for (const { state, last } of frontier)
+            for (let i = 0; i < 3; i++) {
+                if (i === last) continue;
+                const r = mutateToricModel(state.vs, state.pq, i);
+                if (r.error) continue;
+                let big = false;
+                for (const arr of [r.vs, r.pqData]) {
+                    for (const v of arr)
+                        if (Math.abs(v[0]) > LIM || Math.abs(v[1]) > LIM) { big = true; break; }
+                    if (big) break;
+                }
+                if (big) continue;
+                r.pqData.slice(1).forEach(u => take(u, dep));
+                next.push({ state: { vs: r.vs, pq: r.pqData }, last: i });
+            }
+        frontier = next;
+    }
+    const byKey = new Map();
+    const curves = [];
+    const push = (p, q, d, m, dep, src) => {
+        const k = p + ',' + q;
+        if (byKey.has(k)) return;
+        const c = d - 3 * m;
+        const U = { p, q, d, m, c, dep, src, key: '(' + p + ',' + q + ')',
+                    type: c < 0 ? 'up' : c > 0 ? 'lo' : 'const' };
+        byKey.set(k, U); curves.push(U);
+    };
+    push(1, 0, 0, -1, 0, 'E');
+    for (const { p, q, dep } of seen.values()) {
+        const S = p + q, disc = S * S - 8 * p * q + 8;
+        const r = isqrtFloor(disc);
+        if (r < 0 || r * r !== disc) continue;
+        for (const sgn of [1, -1]) {
+            const num = 3 * S + sgn * r;
+            if (num % 8 === 0) { const d = num / 8; push(p, q, d, 3 * d - S, dep, 'bfs'); break; }
+            if (r === 0) break;
+        }
+    }
+    for (let n = 2; 2 * n <= trunkTo; n++) push(2 * n, 1, n, n - 1, null, 'even');
+    push(2, 1, 1, 0, null, 'fib');
+    let a0 = 1, a1 = 2;
+    while (3 * a1 - a0 <= fibTo) { const a2 = 3 * a1 - a0; push(a2, a0, a1, 0, null, 'fib'); a0 = a1; a1 = a2; }
+    const uppers = curves.filter(U => U.type === 'up');
+    const lowers = curves.filter(U => U.type === 'lo');
+    const selfD = new Map();
+    for (const U of curves) if (U.q >= 1) {
+        const k = U.p + ',' + U.q;
+        if (!selfD.has(k)) selfD.set(k, []);
+        selfD.get(k).push(U.d);
+    }
+    return { curves, uppers, lowers, byKey, selfD,
+             stats: { depth, nCurves: curves.length, nUp: uppers.length, nLo: lowers.length,
+                      nConst: curves.length - uppers.length - lowers.length } };
+}
+
+// ---------- the d-window of one contact pair (p,q) ----------
+function columnWindow(pool, P, Q) {
+    const S = P + Q, disc = S * S - 8 * P * Q + 8;
+    if (disc < 0) return null;
+    const r = isqrtFloor(disc);
+    let hi = floorDiv(3 * S + r, 8), lo = ceilDiv(3 * S - r, 8);
+    for (const U of pool.uppers) {
+        if (U.p === P && U.q === Q) continue;
+        const b = floorDiv(Math.min(P * U.q, Q * U.p) - S * U.m, U.c);
+        if (b < hi) hi = b;
+    }
+    for (const U of pool.lowers) {
+        if (U.p === P && U.q === Q) continue;
+        const b = ceilDiv(Math.min(P * U.q, Q * U.p) - S * U.m, U.c);
+        if (b > lo) lo = b;
+    }
+    let w = lo > hi ? null : { dlo: lo, dhi: hi };
+    for (const d0 of (pool.selfD.get(P + ',' + Q) ?? [])) {
+        const c0 = d0 - 3 * (3 * d0 - S);
+        if (w === null) { w = { dlo: d0, dhi: d0 }; continue; }
+        if (c0 < 0 && w.dhi > d0) w.dhi = d0;
+        if (c0 > 0 && w.dlo < d0) w.dlo = d0;
+    }
+    return w;
+}
+
+// ---------- columns over a range ----------
+function buildColumns(pool, opts = {}) {
+    const xmax = opts.xmax ?? 12;
+    const qmax = opts.qmax ?? 60;
+    const pad = opts.pad ?? Math.max(2.5, xmax * 0.08);
+    const upTo = xmax + pad;
+    const cols = [];
+    for (let q = 1; q <= qmax; q++)
+        for (let p = q; p <= upTo * q; p++) {
+            if (gcd(p, q) !== 1) continue;
+            const w = columnWindow(pool, p, q);
+            if (!w) continue;
+            cols.push({ p, q, x: p / q, S: p + q, dlo: w.dlo, dhi: w.dhi });
+        }
+    cols.sort((A, C) => A.x - C.x);
+    return cols;
+}
+
+// ---------- obstruction tops at a given b ----------
+function topsForB(cols, b, opts = {}) {
+    const uniOnly = opts.uniOnly ?? false;
+    const tops = [];
+    for (const col of cols) {
+        let dBest = null, vBest = -Infinity;
+        if (uniOnly) {
+            const S = col.S, disc = S * S - 8 * col.p * col.q + 8, r = isqrtFloor(disc);
+            if (r < 0 || r * r !== disc) continue;
+            for (const sgn of [1, -1]) {
+                const num = 3 * S + sgn * r;
+                if (num % 8 === 0) {
+                    const d = num / 8;
+                    if (d >= col.dlo && d <= col.dhi) {
+                        const V = col.p / (d - (3 * d - S) * b);
+                        if (V > vBest) { vBest = V; dBest = d; }
+                    }
+                }
+                if (r === 0) break;
+            }
+            if (dBest === null) continue;
+        } else {
+            dBest = b < 1 / 3 ? col.dlo : b > 1 / 3 ? col.dhi : col.dlo;
+            vBest = col.p / (dBest - (3 * dBest - col.S) * b);
+        }
+        const m = 3 * dBest - col.S;
+        tops.push({ x: col.x, V: vBest, p: col.p, q: col.q, d: dBest, m,
+                    w: dBest - m, delta2: twoDelta(col.p, col.q, dBest),
+                    order: col.p - 3 * col.q, dlo: col.dlo, dhi: col.dhi });
+    }
+    return tops;
+}
+
+// ---------- the envelope ----------
+function envelope(tops, opts = {}) {
+    const tol = opts.tol ?? 1e-12;
+    const n = tops.length;
+    if (n === 0) return { corners: [], segments: [] };
+    const pref = new Array(n); let mx = -Infinity;
+    for (let i = 0; i < n; i++) { pref[i] = mx; if (tops[i].V > mx) mx = tops[i].V; }
+    const suff = new Array(n); let ms = -Infinity;
+    for (let i = n - 1; i >= 0; i--) { suff[i] = ms; const s = tops[i].V / tops[i].x; if (s > ms) ms = s; }
+    const corners = [];
+    for (let i = 0; i < n; i++) {
+        const t = tops[i];
+        if (t.V <= pref[i] * (1 + tol)) continue;
+        if (t.V <= t.x * suff[i] * (1 + tol)) continue;
+        corners.push(t);
+    }
+    const segments = [];
+    if (corners.length) {
+        const c0 = corners[0];
+        segments.push({ type: 'slope', x0: 0, x1: c0.x, top: c0 });
+        for (let i = 0; i + 1 < corners.length; i++) {
+            const a = corners[i], c = corners[i + 1];
+            let xc = c.x * a.V / c.V;
+            if (xc < a.x) xc = a.x;
+            if (xc > c.x) xc = c.x;
+            segments.push({ type: 'flat', x0: a.x, x1: xc, top: a });
+            segments.push({ type: 'slope', x0: xc, x1: c.x, top: c });
+        }
+        const last = corners[corners.length - 1];
+        segments.push({ type: 'flat', x0: last.x, x1: Infinity, top: last });
+    }
+    return { corners, segments };
+}
+function envEval(env, x) {
+    const segs = env.segments;
+    if (!segs.length) return { y: NaN, seg: null };
+    let lo = 0, hi = segs.length - 1;
+    while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (segs[mid].x1 < x) lo = mid + 1; else hi = mid;
+    }
+    const s = segs[lo];
+    const y = s.type === 'flat' ? s.top.V : s.top.V * x / s.top.x;
+    return { y, seg: s };
+}
+
+const clsStr = t => t.m === 0 ? t.d + 'L' : t.d + 'L' + (t.m > 0 ? '−' + t.m + 'E' : '+' + (-t.m) + 'E');
+
+return { buildPool, columnWindow, buildColumns, topsForB, envelope, envEval,
+         g3, Tb, foldB, TAU4, SILVER, twoDelta, clsStr, gcd };
+})();
+// ------------------------- end of engine copy -------------------------------
+
+const Ttil = (x, b) => 2 * x / ((1 - b) * x + 2 * b + 2 * (3 * b - 1) / (x - 3));
+const $ = id => document.getElementById(id);
+
+let inited = false, pool = null, cols = null;
+let bVal = 0.25, xDataMax = 12, xView = [1, 12];
+let curEnv = null, curTops = null;
+let hoverPx = null, pins = [];
+let ownerRows = null, ownerJob = 0, ownerTimer = null;
+let dragX0 = null, dragView = null;
+let anchorRuns = null, anchorHover = null, anchorPin = null, anchorTimer = null;
+let pendingView = null;
+
+function setStatus(msg) {
+    const el = $('sfStatus');
+    el.style.display = msg ? '' : 'none';
+    if (msg) el.textContent = msg;
+}
+const fmtB = () => bVal.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+const fx = (v, n) => Number(v).toFixed(n ?? 4);
+
+function sizeCanvas(cnv) {
+    const dpr = window.devicePixelRatio || 1;
+    const r = cnv.getBoundingClientRect();
+    if (!r.width) return false;
+    const w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
+    if (cnv.width !== w || cnv.height !== h) { cnv.width = w; cnv.height = h; }
+    return true;
+}
+const MARG = { l: 54, r: 14, t: 10, b: 26 };
+function frame(cnv) {
+    const dpr = window.devicePixelRatio || 1;
+    return { dpr, l: MARG.l * dpr, r: cnv.width - MARG.r * dpr,
+             t: MARG.t * dpr, b: cnv.height - MARG.b * dpr };
+}
+function niceStep(span, target) {
+    const raw = span / target, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    for (const f of [1, 2, 2.5, 5, 10]) if (mag * f >= raw) return mag * f;
+    return mag * 10;
+}
+
+function recompute() {
+    const depth = +$('sfDepth').value, qmax = +$('sfQmax').value, xmax = +$('sfXmax').value;
+    setStatus('computing unicurve pool + degree windows…');
+    setTimeout(() => {
+        const pad = Math.max(2.5, xmax * 0.08);
+        pool = SEEF.buildPool(mutateToricModel, { depth, trunkTo: 2 * Math.ceil(xmax + pad) + 10 });
+        cols = SEEF.buildColumns(pool, { xmax, qmax, pad });
+        xDataMax = xmax; xView = [1, xmax];
+        anchorRuns = null; anchorPin = null;
+        setStatus(null);
+        const pv = pendingView; pendingView = null;
+        redraw(); ownerKick(true); anchorsKick(true);
+        if (pv) setView(pv[0], pv[1]);
+    }, 25);
+}
+
+function computeEnv() {
+    const uniOnly = !$('sfShowSes').checked;
+    curTops = SEEF.topsForB(cols, bVal, { uniOnly });
+    curEnv = SEEF.envelope(curTops);
+}
+
+function redraw() {
+    if (!cols) return;
+    computeEnv();
+    draw();
+}
+
+function setView(lo, hi) {
+    lo = Math.max(1, +lo || 1); hi = Math.min(xDataMax, +hi || xDataMax);
+    if (!(hi - lo >= 0.02)) return;
+    xView = [lo, hi];
+    $('sfWinLo').value = Math.round(lo * 1000) / 1000;
+    $('sfWinHi').value = Math.round(hi * 1000) / 1000;
+    draw(); ownerKick(); anchorsKick();
+}
+
+// ---------------- anchor band: the fan decomposition, unrolled --------------
+// At each direction the UPPER anchor = argmin of the d-caps over up-type
+// unicurves, the LOWER anchor = argmax over lo-type (E = the m >= 0 bound).
+// Same data as the anchor-fan tab, drawn as a strip aligned under the plot.
+function computeAnchorRuns(xa, xb, qdec) {
+    const lo = Math.max(3.02, xa), hi = xb;
+    if (!(hi > lo) || !pool) return [];
+    const dirs = [];
+    for (let q = 1; q <= qdec; q++)
+        for (let p = Math.ceil(lo * q); p <= hi * q; p++) {
+            if (SEEF.gcd(p, q) !== 1) continue;
+            dirs.push({ x: p / q, p, q });
+        }
+    dirs.sort((a, c) => a.x - c.x);
+    const runs = [];
+    for (const dir of dirs) {
+        const S = dir.p + dir.q;
+        let up = null, upV = Infinity, loU = null, loV = -Infinity;
+        for (const U of pool.uppers) {
+            const v = (Math.min(dir.p * U.q, dir.q * U.p) - S * U.m) / U.c;
+            if (v < upV - 1e-9 * Math.max(1, Math.abs(v))) { upV = v; up = U; }
+        }
+        for (const U of pool.lowers) {
+            const v = (Math.min(dir.p * U.q, dir.q * U.p) - S * U.m) / U.c;
+            if (v > loV + 1e-9 * Math.max(1, Math.abs(v))) { loV = v; loU = U; }
+        }
+        const key = (up ? up.key : '·') + '|' + (loU ? loU.key : '·');
+        const last = runs[runs.length - 1];
+        if (last && last.key === key) { last.x1 = dir.x; last.n++; }
+        else runs.push({ key, up, lo: loU, x0: dir.x, x1: dir.x, n: 1 });
+    }
+    for (let i = 0; i + 1 < runs.length; i++) {
+        const mid = (runs[i].x1 + runs[i + 1].x0) / 2;
+        runs[i].x1 = mid; runs[i + 1].x0 = mid;
+    }
+    if (runs.length) { runs[0].x0 = Math.min(runs[0].x0, lo); runs[runs.length - 1].x1 = hi; }
+    return runs;
+}
+function anchorsKick(force) {
+    const wrap = $('sfAnchorWrap');
+    if (!$('sfShowAnch').checked || !pool) { if (wrap) wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    if (anchorTimer) clearTimeout(anchorTimer);
+    anchorTimer = setTimeout(() => {
+        const [xa, xb] = xView, width = xb - xa;
+        const qdec = width > 5 ? 60 : width > 2 ? 120 : width > 0.8 ? 200 : 300;
+        anchorRuns = computeAnchorRuns(xa - width * 0.05, xb + width * 0.05, qdec);
+        drawAnchors();
+    }, force ? 10 : 250);
+    drawAnchors();
+}
+function frameBand(cnv) {   // full-height band, x-aligned with the main plot
+    const dpr = window.devicePixelRatio || 1;
+    return { dpr, l: MARG.l * dpr, r: cnv.width - MARG.r * dpr, t: 2 * dpr, b: cnv.height - 2 * dpr };
+}
+function drawAnchors() {
+    const cnvA = $('sfAnchors');
+    if (!$('sfShowAnch').checked || !sizeCanvas(cnvA)) return;
+    const ctx = cnvA.getContext('2d');
+    const F = frameBand(cnvA), dpr = F.dpr;
+    ctx.clearRect(0, 0, cnvA.width, cnvA.height);
+    const [xLo, xHi] = xView;
+    const X = x => F.l + (x - xLo) / (xHi - xLo) * (F.r - F.l);
+    const midY = (F.t + F.b) / 2;
+    ctx.font = `${10.5 * dpr}px ui-monospace, Menlo, monospace`;
+    ctx.fillStyle = '#f2f4f6'; ctx.fillRect(F.l, F.t, F.r - F.l, F.b - F.t);
+    for (const r of (anchorRuns ?? [])) {
+        const a = Math.max(r.x0, xLo), b2 = Math.min(r.x1, xHi);
+        if (a >= b2) continue;
+        const pxa = X(a), pxb = X(b2);
+        ctx.fillStyle = r.up ? ownerColor(r.up) : '#d5dade';
+        ctx.fillRect(pxa, F.t, pxb - pxa, midY - F.t);
+        ctx.fillStyle = r.lo ? (r.lo.q === 0 ? '#9aa4ad' : ownerColor(r.lo)) : '#d5dade';
+        ctx.fillRect(pxa, midY, pxb - pxa, F.b - midY);
+        if (pxb - pxa > 46 * dpr) {
+            ctx.fillStyle = '#fff';
+            if (r.up) ctx.fillText(r.up.key, (pxa + pxb) / 2 - 15 * dpr, midY - 4 * dpr);
+            const lab = r.lo ? (r.lo.q === 0 ? 'E' : r.lo.key) : '';
+            ctx.fillText(lab, (pxa + pxb) / 2 - (lab.length > 2 ? 15 : 4) * dpr, F.b - 5 * dpr);
+        }
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = dpr;
+        ctx.beginPath(); ctx.moveTo(pxb, F.t); ctx.lineTo(pxb, F.b); ctx.stroke();
+    }
+    const hl = anchorHover ?? anchorPin;
+    if (hl) {
+        const a = Math.max(hl.x0, xLo), b2 = Math.min(hl.x1, xHi);
+        if (a < b2) {
+            ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 2 * dpr;
+            ctx.strokeRect(X(a), F.t + dpr, X(b2) - X(a), F.b - F.t - 2 * dpr);
+        }
+    }
+    ctx.strokeStyle = '#ccc'; ctx.lineWidth = dpr;
+    ctx.strokeRect(F.l, F.t, F.r - F.l, F.b - F.t);
+}
+function anchorRunAt(evt) {
+    if (!anchorRuns) return null;
+    const cnvA = $('sfAnchors'), F = frameBand(cnvA), dpr = F.dpr;
+    const rect = cnvA.getBoundingClientRect();
+    const px = (evt.clientX - rect.left) * dpr;
+    if (px < F.l || px > F.r) return null;
+    const x = xView[0] + (px - F.l) / (F.r - F.l) * (xView[1] - xView[0]);
+    for (const r of anchorRuns) if (x >= r.x0 && x <= r.x1) return r;
+    return null;
+}
+
+function draw() {
+    const cnv = $('sfCanvas');
+    if (!sizeCanvas(cnv)) return;
+    const ctx = cnv.getContext('2d');
+    const F = frame(cnv), dpr = F.dpr;
+    ctx.clearRect(0, 0, cnv.width, cnv.height);
+    const [xLo, xHi] = xView;
+    const yLo = Math.max(0.8, SEEF.envEval(curEnv, xLo).y * 0.96);
+    let yHi = SEEF.envEval(curEnv, xHi).y * 1.045;
+    if (!(yHi > yLo)) yHi = yLo + 1;
+    const X = x => F.l + (x - xLo) / (xHi - xLo) * (F.r - F.l);
+    const Y = y => F.b - (y - yLo) / (yHi - yLo) * (F.b - F.t);
+    const px2x = px => xLo + (px - F.l) / (F.r - F.l) * (xHi - xLo);
+    ctx.font = `${11 * dpr}px ui-monospace, Menlo, monospace`;
+
+    // axes + ticks
+    ctx.strokeStyle = '#ccc'; ctx.fillStyle = '#888'; ctx.lineWidth = dpr;
+    ctx.strokeRect(F.l, F.t, F.r - F.l, F.b - F.t);
+    const xs = niceStep(xHi - xLo, 9);
+    for (let x = Math.ceil(xLo / xs) * xs; x <= xHi + 1e-9; x += xs) {
+        const px = X(x);
+        ctx.strokeStyle = '#eee'; ctx.beginPath(); ctx.moveTo(px, F.t); ctx.lineTo(px, F.b); ctx.stroke();
+        ctx.fillText(fx(x, xs < 1 ? 2 : 0), px - 8 * dpr, F.b + 16 * dpr);
+    }
+    const ys = niceStep(yHi - yLo, 6);
+    for (let y = Math.ceil(yLo / ys) * ys; y <= yHi + 1e-9; y += ys) {
+        const py = Y(y);
+        ctx.strokeStyle = '#eee'; ctx.beginPath(); ctx.moveTo(F.l, py); ctx.lineTo(F.r, py); ctx.stroke();
+        ctx.fillStyle = '#888'; ctx.fillText(fx(y, ys < 0.5 ? 2 : 1), 6 * dpr, py + 4 * dpr);
+    }
+
+    const clip = () => { ctx.save(); ctx.beginPath(); ctx.rect(F.l, F.t, F.r - F.l, F.b - F.t); ctx.clip(); };
+
+    // anchor-interval highlight (hover / shift-click pin on the band below)
+    const ahl = anchorHover ?? anchorPin;
+    if (ahl && $('sfShowAnch').checked) {
+        const a = Math.max(ahl.x0, xLo), b2 = Math.min(ahl.x1, xHi);
+        if (a < b2) {
+            ctx.fillStyle = 'rgba(122,95,160,0.10)';
+            ctx.fillRect(X(a), F.t, X(b2) - X(a), F.b - F.t);
+            ctx.strokeStyle = 'rgba(122,95,160,0.65)'; ctx.lineWidth = dpr; ctx.setLineDash([3 * dpr, 3 * dpr]);
+            ctx.beginPath(); ctx.moveTo(X(a), F.t); ctx.lineTo(X(a), F.b); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(X(b2), F.t); ctx.lineTo(X(b2), F.b); ctx.stroke();
+            ctx.setLineDash([]);
+        }
+    }
+
+    // guides
+    if ($('sfOvGuides').checked) {
+        clip();
+        ctx.setLineDash([4 * dpr, 4 * dpr]); ctx.lineWidth = dpr;
+        let gi = 0;   // stagger the labels vertically — the three verticals are close together
+        for (const [gx, lab] of [[SEEF.SILVER, '3+2√2'], [6, '6'], [SEEF.TAU4, 'τ⁴']]) {
+            if (gx < xLo || gx > xHi) continue;
+            ctx.strokeStyle = '#b03fb0';
+            ctx.beginPath(); ctx.moveTo(X(gx), F.t); ctx.lineTo(X(gx), F.b); ctx.stroke();
+            ctx.fillStyle = '#b03fb0'; ctx.fillText(lab, X(gx) + 3 * dpr, F.t + (24 + 12 * (gi++ % 3)) * dpr);
+        }
+        const hor = [[2 / (1 - bVal), '2/(1−b)', '#b03f3f']];
+        if (bVal > 1 / 3) hor.push([1 / (1 - bVal), 'fiber 1/(1−b)', '#888']);
+        ctx.setLineDash([2 * dpr, 5 * dpr]);
+        for (const [gy, lab, col] of hor) {
+            if (gy < yLo || gy > yHi) continue;
+            ctx.strokeStyle = col;
+            ctx.beginPath(); ctx.moveTo(F.l, Y(gy)); ctx.lineTo(F.r, Y(gy)); ctx.stroke();
+            ctx.fillStyle = col; ctx.fillText(lab, F.r - 90 * dpr, Y(gy) - 4 * dpr);
+        }
+        ctx.setLineDash([]); ctx.restore();
+    }
+
+    // overlay curves
+    const drawCurve = (f, color, dash) => {
+        clip();
+        ctx.strokeStyle = color; ctx.lineWidth = 1.3 * dpr; ctx.setLineDash(dash.map(v => v * dpr));
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i <= 320; i++) {
+            const x = xLo + (xHi - xLo) * i / 320, y = f(x);
+            if (!isFinite(y) || y <= 0) { started = false; continue; }
+            const px = X(x), py = Y(y);
+            if (!started) { ctx.moveTo(px, py); started = true; } else ctx.lineTo(px, py);
+        }
+        ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+    };
+    if ($('sfOvG').checked) drawCurve(SEEF.g3, '#999', [5, 4]);
+    if ($('sfOvT').checked) drawCurve(x => SEEF.Tb(x, bVal), '#b03f3f', [5, 4]);
+    if ($('sfOvTt').checked && bVal > 1 / 3) drawCurve(x => x > 3.05 ? Ttil(x, bVal) : NaN, '#b03f3f', [2, 4]);
+    if ($('sfOvR').checked && bVal > 1 / 3) drawCurve(x => {
+        const n = Math.floor(x / 2);
+        if (n < 2 || x - 2 * n < 0.02 || 2 * n + 2 - x < 0.02) return NaN;   // break at the teeth
+        const Wn = Math.max((4 * n - 1 - x) / (2 * n - 3), (x - 1) / (2 * n - 1));
+        return 2 * x / ((1 - bVal) * (x + 1) + (3 * bVal - 1) * Wn);
+    }, '#7a5fa0', [6, 3]);
+
+    // all tops (faint)
+    if ($('sfShowTops').checked) {
+        clip();
+        const inView = curTops.filter(t => t.x >= xLo && t.x <= xHi && t.V >= yLo);
+        ctx.fillStyle = 'rgba(120,130,140,0.45)';
+        const many = inView.length > 4000;
+        const byPx = new Map();
+        for (const t of inView) {
+            if (many) {
+                const k = Math.round(X(t.x) / (2 * dpr));
+                const prev = byPx.get(k);
+                if (prev && prev.V >= t.V) continue;
+                byPx.set(k, t);
+            } else { ctx.beginPath(); ctx.arc(X(t.x), Y(t.V), 1.4 * dpr, 0, 7); ctx.fill(); }
+        }
+        if (many) for (const t of byPx.values()) { ctx.beginPath(); ctx.arc(X(t.x), Y(t.V), 1.4 * dpr, 0, 7); ctx.fill(); }
+        ctx.restore();
+    }
+
+    // envelope
+    const prov = $('sfShowProv').checked;
+    clip();
+    ctx.lineWidth = 2.2 * dpr;
+    for (const s of curEnv.segments) {
+        const a = Math.max(s.x0, xLo), b2 = Math.min(s.x1 === Infinity ? xHi : s.x1, xHi);
+        if (a >= b2) continue;
+        ctx.strokeStyle = prov ? (s.type === 'flat' ? '#2c5f8a' : '#2e9e7e') : '#2c3e50';
+        ctx.beginPath();
+        if (s.type === 'flat') { ctx.moveTo(X(a), Y(s.top.V)); ctx.lineTo(X(b2), Y(s.top.V)); }
+        else { const sl = s.top.V / s.top.x; ctx.moveTo(X(a), Y(sl * a)); ctx.lineTo(X(b2), Y(sl * b2)); }
+        ctx.stroke();
+    }
+    // corners
+    if ($('sfShowCorners').checked) {
+        const inView = curEnv.corners.filter(c => c.x >= xLo && c.x <= xHi);
+        const step = Math.max(1, Math.floor(inView.length / 900));
+        for (let i = 0; i < inView.length; i += step) {
+            const c = inView[i];
+            ctx.fillStyle = c.delta2 === 0 ? '#0b2d5c' : '#e67e22';
+            ctx.beginPath(); ctx.arc(X(c.x), Y(c.V), 3.1 * dpr, 0, 7); ctx.fill();
+        }
+        for (const p of pins) {
+            if (p.x < xLo || p.x > xHi) continue;
+            ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 1.6 * dpr;
+            ctx.beginPath(); ctx.arc(X(p.x), Y(p.V), 5.5 * dpr, 0, 7); ctx.stroke();
+        }
+    }
+    ctx.restore();
+
+    // crosshair
+    if (hoverPx !== null && hoverPx >= F.l && hoverPx <= F.r) {
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = dpr;
+        ctx.beginPath(); ctx.moveTo(hoverPx, F.t); ctx.lineTo(hoverPx, F.b); ctx.stroke();
+    }
+
+    // title
+    ctx.fillStyle = '#98a2ab';
+    ctx.fillText(`b = ${fmtB()}   conjectural SEEF envelope · ${cols.length} columns (q ≤ ${$('sfQmax').value})` +
+        ` · pool ${pool.stats.nCurves} curves (depth ${pool.stats.depth})` +
+        (!$('sfShowSes').checked ? ' · UNICUSPIDAL ONLY' : ''), F.l + 6 * dpr, F.t + 14 * dpr);
+
+    draw.X = X; draw.Y = Y; draw.px2x = px2x; draw.F = F;
+}
+
+// ---------------- owner map ----------------
+function ownerColor(t) {
+    if (t.p === 1 && t.q === 1) return '#777';
+    const h = (t.p * 137.508 + t.q * 97) % 360;
+    return `hsl(${h.toFixed(1)}, 62%, ${t.q === 1 ? 46 : 58}%)`;
+}
+function ownerKick(force) {
+    const wrap = $('sfOwnerWrap');
+    if (!$('sfOwnerOn').checked) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    if (ownerTimer) clearTimeout(ownerTimer);
+    ownerTimer = setTimeout(() => ownerCompute(), force ? 10 : 350);
+}
+function ownerCompute() {
+    if (!cols) return;
+    const cnv = $('sfOwner');
+    if (!sizeCanvas(cnv)) return;
+    const ctx = cnv.getContext('2d');
+    const F = frame(cnv), dpr = F.dpr;
+    const job = ++ownerJob;
+    const uniOnly = !$('sfShowSes').checked;
+    const [xLo, xHi] = xView;
+    const bLo = 0.02, bHi = 0.95;
+    const H = Math.max(40, Math.round((F.b - F.t) / dpr));   // rows in css px
+    ctx.clearRect(0, 0, cnv.width, cnv.height);
+    ctx.font = `${11 * dpr}px ui-monospace, Menlo, monospace`;
+    ctx.strokeStyle = '#ccc'; ctx.lineWidth = dpr;
+    ctx.strokeRect(F.l, F.t, F.r - F.l, F.b - F.t);
+    ctx.fillStyle = '#888';
+    for (const bt of [0.2, 0.4, 0.6, 0.8]) {
+        const py = F.b - (bt - bLo) / (bHi - bLo) * (F.b - F.t);
+        ctx.fillText('b=' + bt, 6 * dpr, py + 4 * dpr);
+    }
+    ownerRows = new Array(H);
+    const rowH = (F.b - F.t) / H;
+    let row = 0;
+    const st = $('sfOwnerStatus');
+    st.style.display = ''; st.textContent = 'computing owner map…';
+    (function chunk() {
+        if (job !== ownerJob) return;
+        const until = Math.min(H, row + 10);
+        for (; row < until; row++) {
+            const bRow = bLo + (bHi - bLo) * (row + 0.5) / H;
+            const env = SEEF.envelope(SEEF.topsForB(cols, bRow, { uniOnly }));
+            const runs = [];
+            const py = F.b - (row + 1) * rowH;
+            let sIdx = 0;
+            const segs = env.segments;
+            let runStart = F.l, runTop = null;
+            const pxStep = 2 * dpr;
+            for (let px = F.l; px <= F.r; px += pxStep) {
+                const x = xLo + (px - F.l) / (F.r - F.l) * (xHi - xLo);
+                while (sIdx < segs.length && segs[sIdx].x1 < x) sIdx++;
+                const top = sIdx < segs.length ? segs[sIdx].top : null;
+                if (top !== runTop) {
+                    if (runTop) { ctx.fillStyle = ownerColor(runTop); ctx.fillRect(runStart, py, px - runStart, rowH + 1);
+                                  runs.push({ x1: x, t: runTop }); }
+                    runTop = top; runStart = px;
+                }
+            }
+            if (runTop) { ctx.fillStyle = ownerColor(runTop); ctx.fillRect(runStart, py, F.r - runStart, rowH + 1);
+                          runs.push({ x1: xHi + 1, t: runTop }); }
+            ownerRows[row] = { b: bRow, runs };
+        }
+        if (row < H) { st.textContent = `computing owner map… ${Math.round(100 * row / H)}%`; setTimeout(chunk, 0); }
+        else {
+            st.style.display = 'none';
+            const py13 = F.b - (1 / 3 - bLo) / (bHi - bLo) * (F.b - F.t);
+            ctx.strokeStyle = '#111'; ctx.setLineDash([5 * dpr, 4 * dpr]);
+            ctx.beginPath(); ctx.moveTo(F.l, py13); ctx.lineTo(F.r, py13); ctx.stroke(); ctx.setLineDash([]);
+            ctx.fillStyle = '#111'; ctx.fillText('b = 1/3', F.r - 60 * dpr, py13 - 4 * dpr);
+        }
+    })();
+    ownerCompute.geom = { F, bLo, bHi, H };
+}
+function ownerAt(evt) {
+    const cnv = $('sfOwner'), g = ownerCompute.geom;
+    if (!g || !ownerRows) return null;
+    const r = cnv.getBoundingClientRect(), dpr = g.F.dpr;
+    const px = (evt.clientX - r.left) * dpr, py = (evt.clientY - r.top) * dpr;
+    if (px < g.F.l || px > g.F.r || py < g.F.t || py > g.F.b) return null;
+    const row = Math.min(g.H - 1, Math.max(0, Math.floor((g.F.b - py) / ((g.F.b - g.F.t) / g.H))));
+    const R = ownerRows[row];
+    if (!R) return null;
+    const x = xView[0] + (px - g.F.l) / (g.F.r - g.F.l) * (xView[1] - xView[0]);
+    let t = null;
+    for (const run of R.runs) if (x <= run.x1) { t = run.t; break; }
+    return t ? { b: R.b, x, t } : null;
+}
+
+// ---------------- interaction ----------------
+function nearestCorner(px, py) {
+    if (!draw.X) return null;
+    let best = null, bd = 12 * draw.F.dpr;
+    for (const c of curEnv.corners) {
+        if (c.x < xView[0] || c.x > xView[1]) continue;
+        const d = Math.hypot(draw.X(c.x) - px, draw.Y(c.V) - py);
+        if (d < bd) { bd = d; best = c; }
+    }
+    return best;
+}
+function cornerInfo(c) {
+    const dRule = bVal < 1 / 3 ? 'b < 1/3 → d = dlo' : bVal > 1 / 3 ? 'b > 1/3 → d = dhi' : 'b = 1/3 → any d';
+    return `(${c.p},${c.q})  x = ${fx(c.x, 4)}  class ${SEEF.clsStr(c)}  (d=${c.d}, m=${c.m}, w=${c.w}, ` +
+        `δ=${c.delta2 / 2}${c.delta2 === 0 ? ' unicuspidal' : ' sesqui'}, order p−3q = ${c.order})\n` +
+        `bound: c(${c.p}/${c.q}) ≥ ${c.p}/(${c.d} − ${c.m}b) = ${fx(c.V, 5)} at b = ${fmtB()}` +
+        `   window d ∈ [${c.dlo}, ${c.dhi}] (${dRule})`;
+}
+function renderPins() {
+    const el = $('sfPinned');
+    el.innerHTML = '';
+    for (const p of pins) {
+        const div = document.createElement('div');
+        div.className = 'sf-pin';
+        div.textContent = '● ' + cornerInfo(p) + '   (click to unpin)';
+        div.addEventListener('click', () => { pins = pins.filter(q => q !== p); renderPins(); draw(); });
+        el.appendChild(div);
+    }
+}
+
+function wire() {
+    // "?" help markers: drive the app's shared styled tooltip (#afTip — created
+    // lazily by whichever tab needs it first; styled in the head CSS)
+    let tip = document.getElementById('afTip');
+    if (!tip) { tip = document.createElement('div'); tip.id = 'afTip'; document.body.appendChild(tip); }
+    const ctrls = $('sfControls');
+    ctrls.addEventListener('mousemove', e => {
+        const t = e.target;
+        if (t && t.classList && t.classList.contains('af-help')) {
+            tip.textContent = t.getAttribute('data-info');
+            tip.style.display = 'block';
+            let x = e.clientX + 14, y = e.clientY + 16;
+            if (x + tip.offsetWidth > window.innerWidth - 8) x = window.innerWidth - tip.offsetWidth - 8;
+            if (y + tip.offsetHeight > window.innerHeight - 8) y = e.clientY - tip.offsetHeight - 12;
+            tip.style.left = x + 'px'; tip.style.top = y + 'px';
+        } else tip.style.display = 'none';
+    });
+    ctrls.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+
+    const bSync = v => {
+        bVal = Math.min(0.95, Math.max(0, +v || 0));
+        $('sfB').value = bVal; $('sfBNum').value = bVal;
+        redraw();
+    };
+    $('sfB').addEventListener('input', e => bSync(e.target.value));
+    $('sfBNum').addEventListener('change', e => bSync(e.target.value));
+    document.querySelectorAll('#sfControls .sf-preset').forEach(btn =>
+        btn.addEventListener('click', () => bSync(btn.dataset.b)));
+    $('sfRecompute').addEventListener('click', recompute);
+    for (const id of ['sfShowCorners', 'sfShowProv', 'sfShowTops', 'sfOvG', 'sfOvT', 'sfOvTt', 'sfOvR', 'sfOvGuides'])
+        $(id).addEventListener('change', () => draw());
+    $('sfShowSes').addEventListener('change', () => { redraw(); ownerKick(true); });
+    $('sfOwnerOn').addEventListener('change', () => ownerKick(true));
+
+    const cnv = $('sfCanvas');
+    cnv.addEventListener('wheel', e => {
+        e.preventDefault();
+        if (!draw.px2x) return;
+        const dpr = draw.F.dpr;
+        const xAt = draw.px2x(e.offsetX * dpr);
+        const f = e.deltaY > 0 ? 1.18 : 1 / 1.18;
+        let lo = xAt - (xAt - xView[0]) * f, hi = xAt + (xView[1] - xAt) * f;
+        lo = Math.max(1, lo); hi = Math.min(xDataMax, hi);
+        if (hi - lo < 0.05) return;
+        setView(lo, hi);
+    }, { passive: false });
+    cnv.addEventListener('mousedown', e => { dragX0 = e.offsetX; dragView = xView.slice(); });
+    window.addEventListener('mouseup', () => { dragX0 = null; });
+    cnv.addEventListener('mousemove', e => {
+        const dpr = draw.F ? draw.F.dpr : 1;
+        if (dragX0 !== null && draw.px2x) {
+            const dx = (draw.px2x(dragX0 * dpr) - draw.px2x(e.offsetX * dpr));
+            let lo = dragView[0] + dx, hi = dragView[1] + dx;
+            const wid = dragView[1] - dragView[0];
+            if (lo < 1) { lo = 1; hi = 1 + wid; }
+            if (hi > xDataMax) { hi = xDataMax; lo = hi - wid; }
+            setView(lo, hi);
+            return;
+        }
+        hoverPx = e.offsetX * dpr;
+        if (!draw.px2x || !curEnv) return;
+        const px = e.offsetX * dpr, py = e.offsetY * dpr;
+        const c = nearestCorner(px, py);
+        if (c) $('sfHover').textContent = '● corner ' + cornerInfo(c).replace('\n', '  |  ');
+        else {
+            const x = draw.px2x(px);
+            const { y, seg } = SEEF.envEval(curEnv, x);
+            if (seg) {
+                const t = seg.top;
+                $('sfHover').textContent = `x = ${fx(x, 4)}:  c(x) = ${fx(y, 5)}  — ` +
+                    (seg.type === 'flat'
+                        ? `flat piece: monotonicity pushes the (${t.p},${t.q}) bound (${SEEF.clsStr(t)} at x = ${fx(t.x, 4)}) rightward`
+                        : `rising piece: f(x)/x nonincreasing pushes the (${t.p},${t.q}) bound (${SEEF.clsStr(t)} at x = ${fx(t.x, 4)}) leftward along the origin line`);
+            }
+        }
+        draw();
+    });
+    cnv.addEventListener('mouseleave', () => { hoverPx = null; $('sfHover').textContent = ''; draw(); });
+    cnv.addEventListener('dblclick', () => setView(1, xDataMax));
+    cnv.addEventListener('click', e => {
+        if (!draw.F) return;
+        const dpr = draw.F.dpr;
+        const c = nearestCorner(e.offsetX * dpr, e.offsetY * dpr);
+        if (!c) return;
+        if (pins.includes(c)) pins = pins.filter(q => q !== c); else pins.push(c);
+        renderPins(); draw();
+    });
+    const applyWin = () => {
+        const lo = +$('sfWinLo').value, hi = +$('sfWinHi').value;
+        if (!(hi > lo)) return;
+        if (hi > xDataMax + 1e-9) { $('sfXmax').value = Math.ceil(hi); pendingView = [lo, hi]; recompute(); }
+        else setView(lo, hi);
+    };
+    $('sfWinGo').addEventListener('click', applyWin);
+    for (const id of ['sfWinLo', 'sfWinHi'])
+        $(id).addEventListener('keydown', e => { if (e.key === 'Enter') applyWin(); });
+    $('sfWinSel').addEventListener('change', e => {
+        const v = e.target.value;
+        e.target.value = '';
+        if (!v) return;
+        if (v === 'full') { setView(1, xDataMax); return; }
+        const [lo, hi] = v.split(',').map(Number);
+        $('sfWinLo').value = lo; $('sfWinHi').value = hi;
+        applyWin();
+    });
+    $('sfShowAnch').addEventListener('change', () => { anchorHover = null; anchorPin = null; anchorsKick(true); draw(); });
+    const anch = $('sfAnchors');
+    anch.addEventListener('mousemove', e => {
+        const r = anchorRunAt(e);
+        anchorHover = r;
+        if (r) {
+            const loStr = r.lo ? (r.lo.q === 0 ? 'E (m ≥ 0)' : r.lo.key + ' = ' + SEEF.clsStr(r.lo)) : '—';
+            $('sfHover').textContent = `anchor interval [${fx(r.x0, 4)}, ${fx(r.x1, 4)}]:  ` +
+                `upper ${r.up ? r.up.key + ' = ' + SEEF.clsStr(r.up) : '—'}  ·  lower ${loStr}` +
+                `   — click to zoom, shift-click to pin/unpin the highlight`;
+        } else $('sfHover').textContent = '';
+        drawAnchors(); draw();
+    });
+    anch.addEventListener('mouseleave', () => { anchorHover = null; $('sfHover').textContent = ''; drawAnchors(); draw(); });
+    anch.addEventListener('click', e => {
+        const r = anchorRunAt(e);
+        if (!r) return;
+        if (e.shiftKey) {
+            anchorPin = (anchorPin && anchorPin.key === r.key && Math.abs(anchorPin.x0 - r.x0) < 1e-9) ? null : r;
+            drawAnchors(); draw(); return;
+        }
+        const m = (r.x1 - r.x0) * 0.06;
+        setView(r.x0 - m, r.x1 + m);
+    });
+    const own = $('sfOwner');
+    own.addEventListener('mousemove', e => {
+        const o = ownerAt(e);
+        if (o) $('sfHover').textContent =
+            `owner map:  b = ${fx(o.b, 3)}, x = ${fx(o.x, 3)}  — owner (${o.t.p},${o.t.q}) = ${SEEF.clsStr(o.t)}` +
+            `  (d=${o.t.d}, δ=${o.t.delta2 / 2})   [click to set b]`;
+    });
+    own.addEventListener('click', e => {
+        const o = ownerAt(e);
+        if (o) bSync(o.b);
+    });
+    window.addEventListener('resize', () => {
+        if (!$('tabSEEF').classList.contains('active')) return;
+        draw(); ownerKick(); anchorsKick();
+    });
+}
+
+window.initSeefTab = function () {
+    if (!inited) { inited = true; wire(); recompute(); }
+    else { draw(); ownerKick(); anchorsKick(); }
 };
 })();
 </script>
